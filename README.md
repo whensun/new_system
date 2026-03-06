@@ -1,183 +1,136 @@
-# Occulus Reparo
+# RISC-V Pipeline Diagram (from `ALL/ALL.ipynb`)
 
-Occulus Reparo is an LLM-based framework designed to automatically generate and execute test cases for RISC-V QEMU. The workflow is notebook-driven and focuses on instruction-level and register-level behavioral exploration under different RISC-V extension configurations.
+This file translates the end-to-end notebook workflow into an advisor-friendly diagram.
 
----
+## 1) High-level pipeline (recommended for slides)
 
-## How to Use
+```mermaid
+flowchart LR
+    %% Inputs
+    A1[RISC-V Unified DB\nall_instructions.golden.adoc]
+    A2[RISC-V Opcodes\nextensions/*]
+    A3[RISC-V Specifications\n3_SPECIFICATION/2_SPLIT\n(929 chunks)]
 
-### 1. Generate Rules
+    %% Instruction branch
+    subgraph I[Instruction Rule Synthesis]
+      I1[1_INSTRUCTION_ALL.txt\nBuild full instruction metadata]
+      I2[2_INSTRUCTION_SOME.txt\nFilter target instructions]
+      I3[3_INSTRUCTION_BOOLEAN.txt\nLLM chunk matching]
+      I4[4_INSTRUCTION_RULE.txt\nLLM rule extraction]
+      I5[5_INSTRUCTION_FINAL.txt]
+      I6[6_INSTRUCTION_TOTAL.txt\nAppend/update cumulative rules]
+      I7[7_INSTRUCTION_SUMMARY.txt]
+    end
 
-Occulus Reparo first generates structured rules extracted from the RISC-V specifications. These rules are later used as input for test-case generation.
+    %% Register branch
+    subgraph R[Register Rule Synthesis]
+      R1[1_REGISTER_ALL.txt\nBuild full register metadata]
+      R2[2_REGISTER_SOME.txt\nFilter target registers]
+      R3[3_REGISTER_BOOLEAN.txt\nLLM chunk matching]
+      R4[4_REGISTER_RULE.txt\nLLM rule extraction]
+      R5[5_REGISTER_EXTENSION.txt]
+      R6[6_REGISTER_FIELD.txt]
+      R7[7_REGISTER_FINAL.txt]
+      R8[8_REGISTER_TOTAL.txt\nAppend/update cumulative rules]
+      R9[9_REGISTER_SUMMARY.txt]
+    end
 
-#### RISC-V Instructions
+    %% Test generation & repair
+    subgraph T[Test-case Generation + Repair]
+      T1[1_TEST_CASE_INPUT.txt\nPrompt-ready constraints]
+      T2[2_TEST_CASE_RAW.txt]
+      T3[3_TEST_CASE_REVISED_*.txt\nStructured/numbered blocks]
+      T4[4_REPAIR_TEST_CASE_OUTPUT.txt\nLLM+execution repair loop]
+      T5[4_REPAIR_TEST_CASE_OUTPUT_2.txt\nRegister/semantic patching]
+      T6[REPAIR_TEST_CASE_OUTPUT_EXTENSION.txt\nFiltered by extension headers]
+    end
 
-Use the notebook: `4_INSTRUCTION.ipynb`
+    %% Emulator validation
+    subgraph Q[QEMU/xv6 Validation]
+      Q1[1_QEMU_XV6_INPUT.txt]
+      Q2[2_QEMU_XV6_RUN.txt\nAssemble/run + register deltas]
+      Q3[3_QEMU_XV6_CHECK.txt\nPass/fail checks]
+    end
 
-Configuration options:
+    A1 --> I1
+    A2 --> I1
+    A3 --> I3
+    I1 --> I2 --> I3 --> I4 --> I5 --> I6 --> I7
 
-* To generate rules for all RISC-V instructions:
+    A2 --> R1
+    A3 --> R3
+    R1 --> R2 --> R3 --> R4 --> R5 --> R6 --> R7 --> R8 --> R9
 
-```python
-IS_USING_EVERYTHING = True
+    I6 --> T1
+    R8 --> T1
+    T1 --> T2 --> T3 --> T4 --> T5 --> T6
+
+    T5 --> Q1
+    Q1 --> Q2 --> Q3
 ```
 
-* To generate rules for specific instructions only:
+## 2) Mapping-focused view (close to your current sketch)
 
-```python
-LIST_INSTRUCTION_WANTED = ['CSRRWI', 'ADDIW']
-IS_USING_EVERYTHING = False
+```mermaid
+flowchart LR
+    S[RISC-V Specifications] --> SC[Split into specification chunks (Python)] --> CH[Specification chunks (929)]
+
+    O[RISC-V Opcodes] --> MX[Metadata extraction (Python)]
+    U[RISC-V Unified DB] --> MX
+
+    MX --> IM[Instruction metadata]
+    MX --> RM[Register metadata]
+
+    CH --> ML1[Matching (LLM)]
+    IM --> ML1
+    ML1 --> M1[Instruction-to-spec chunk mapping]
+
+    CH --> ML2[Matching (LLM)]
+    RM --> ML2
+    ML2 --> M2[Register-to-spec chunk mapping]
+
+    M1 --> IR[Instruction rules]
+    M2 --> RR[Register rules]
+
+    IR --> TG[Test-case generation]
+    RR --> TG
+    TG --> RP[Repair loop]
+    RP --> QV[QEMU/xv6 validation]
 ```
 
-Before selecting an instruction, verify that it exists in: `4_INSTRUCTION/1_OUTPUT/1_INSTRUCTION_ALL.txt`
+## 3) Suggested figure caption (for thesis/advisor)
 
----
+**Figure X.** End-to-end pipeline for deriving instruction/register rules from RISC-V sources, grounding them to specification chunks with LLM-based matching, generating and repairing test cases, and validating behavior in QEMU/xv6.
 
-#### RISC-V Registers
+## 4) How to update this diagram when the pipeline changes
 
-Use the notebook: `5_REGISTER.ipynb`
+If your **new system** changed file names/stages, update the diagram with this quick workflow:
 
-Configuration options:
+1. Open and run `ALL/ALL.ipynb` from top to bottom so the latest pipeline artifacts are regenerated.
+2. Compare current outputs under:
+   - `ALL/4_INSTRUCTION/1_OUTPUT/`
+   - `ALL/5_REGISTER/1_OUTPUT/`
+   - `ALL/6_TEST_CASE/`
+   - `ALL/TEXT/`
+3. In this file, update Mermaid node labels to match the new artifact names/stages.
+4. Keep the same 4 logical groups (Inputs, Rule Synthesis, Test/Repair, QEMU Validation) unless your architecture changed.
+5. Re-render Mermaid (GitHub preview or Mermaid Live Editor) and verify no parse errors.
 
-* To generate rules for all RISC-V registers:
-
-```python
-IS_USING_EVERYTHING = True
-```
-
-* To generate rules for specific registers only:
-
-```python
-LIST_REGISTER_WANTED = ['mseccfg', 'stvec']
-IS_USING_EVERYTHING = False
-```
-
-Before selecting a register, verify that it exists in: `5_REGISTER/1_OUTPUT/1_REGISTER_ALL.txt`
-
----
-
-### 2. Generate Test Cases
-
-Use the notebook: `6_TEST_CASE.ipynb`
-
-Steps:
-
-1. Choose a rule source:
-
-* `4_INSTRUCTION/1_OUTPUT/6_INSTRUCTION_TOTAL.txt`
-* `5_REGISTER/1_OUTPUT/8_REGISTER_TOTAL.txt`
-
-2. Run the notebook.
-
-The generated assembly test cases will be saved to: `6_TEST_CASE/2_TEST_CASE_RAW.txt`
-
----
-
-### 3. Run and Check Test Cases
-
-1. Open: `8_EMULATOR/1_QEMU_XV6/QEMU_XV6.ipynb`
-
-2. (Optional) Configure RISC-V extensions in the Makefile.
-
-Default configuration:
-
-```make
-QEMUOPTS = -machine virt -bios none -kernel $B/bootloader -m 128M -smp $(CPUS) -nographic -cpu rv64
-```
-
-Example: enable Zkr and disable Smepmp:
-
-```make
-QEMUOPTS = -machine virt -bios none -kernel $B/bootloader -m 128M -smp $(CPUS) -nographic -cpu rv64,zkr=true,smepmp=false
-```
-
-3. Copy test cases to: `8_EMULATOR/1_QEMU_XV6/TEXT/1_QEMU_XV6_INPUT.txt`
-
-4. Run the notebook.
-
----
-
-## Installation
-
-### QEMU and RISC-V Toolchain Setup
-
-#### Ubuntu-based Linux Distributions
-
-1. Update the system:
+### Minimal command checklist
 
 ```bash
-sudo apt update -y
-sudo apt upgrade -y
+# from repo root
+python - <<'PY'
+import json
+from pathlib import Path
+nb=json.loads(Path('ALL/ALL.ipynb').read_text())
+print('code cells:', sum(1 for c in nb['cells'] if c['cell_type']=='code'))
+for i,c in enumerate(nb['cells']):
+    if c['cell_type']=='code' and c['source']:
+        first=''.join(c['source']).splitlines()[0]
+        if first.strip().startswith('#'):
+            print(f'{i:02d}: {first.strip()}')
+PY
 ```
 
-2. Install required packages:
-
-```bash
-sudo apt install -y qemu-system-misc autoconf automake autotools-dev curl python3 python3-pip libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build git cmake libglib2.0-dev libslirp-dev
-```
-
-3. Build the RISC-V GNU toolchain:
-
-```bash
-git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git
-cd riscv-gnu-toolchain
-./configure --prefix=/opt/riscv --with-arch=rv64imac_zicsr --with-abi=lp64
-sudo make -j$(nproc)
-```
-
----
-
-#### Arch-based Linux Distributions
-
-1. Update the system:
-
-```bash
-sudo pacman -Syu --noconfirm
-```
-
-2. Install required packages:
-
-```bash
-sudo pacman -S --noconfirm qemu-base autoconf automake python python-pip mpc mpfr gmp gawk base-devel bison flex texinfo gperf libtool patch bc zlib expat ninja git cmake glib2 libslirp
-```
-
-3. Build the RISC-V GNU toolchain:
-
-```bash
-git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git
-cd riscv-gnu-toolchain
-./configure --prefix=/opt/riscv --with-arch=rv64imac_zicsr --with-abi=lp64
-sudo make -j$(nproc)
-```
-
----
-
-### Post-Installation
-
-1. Add the RISC-V toolchain to PATH:
-
-```bash
-echo 'export PATH=/opt/riscv/bin:$PATH' >> ~/.bashrc
-source ~/.bashrc
-```
-
-2. Configure GDB auto-load:
-
-```bash
-mkdir -p ~/.config/gdb
-echo 'set auto-load safe-path /' >> ~/.config/gdb/gdbinit
-```
-
-3. Install required Python dependency:
-
-```bash
-pip install pwntools
-```
-
----
-
-## Notes
-
-* The notebooks are intended to be run sequentially.
-* Extension toggling is essential for exploring QEMU behavioral differences.
-* For installation, you can also check `1_INSTALL` folder.
+Use that list as the source-of-truth stage order, then rename the Mermaid nodes accordingly.
