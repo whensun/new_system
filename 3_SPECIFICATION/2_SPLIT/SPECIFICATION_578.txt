@@ -1,0 +1,14 @@
+## 31.8.5.5. Non-cryptographic Conditioners
+
+As noted in Section 31.8.2.2, physical randomness sources generally require a post-processing step called conditioning to meet the desired quality requirements, which are outlined in Section 31.5.2.
+
+The approach taken in this interface is to allow a combination of non-cryptographic and cryptographic filtering  to  take  place.  The  first  stage  (hardware)  merely  needs  to  be  able  to  distill  the  entropy comfortably above the necessary level.
+
+- ⚫ One may take a set of bits from a noise source and XOR them together to produce a less biased (and more independent) bit. However, such an XOR may introduce "pseudorandomness" and make the output difficult to analyze.
+- ⚫ The von Neumann extractor (von Neumann, 1951) looks at consecutive pairs of bits, rejects 00 and 11, and outputs 0 or 1 for 01 and 10, respectively. It will reduce the number of bits to less than 25% of the original, but the output is provably unbiased (assuming independence).
+- ⚫ Blum's extractor (Blum, 1986) can be used on sources whose behavior resembles N-state Markov chains.  If  its  assumptions  hold,  it  also  removes  dependencies,  creating  an  independent  and identically distributed (IID) source.
+- ⚫ Other linear and non-linear correctors such as those discussed by Dichtl and Lacharme (Lacharme, 2008).
+
+Note  that  the  hardware  may  also  implement  a  full  cryptographic  conditioner  in  the  entropy  source, even though the software driver still needs a cryptographic conditioner, too (Section 31.5.2).
+
+Rationale: The main advantage of non-cryptographic extractors is in their energy efficiency, relative simplicity,  and  amenability  to  mathematical  analysis.  If  well  designed,  they  can  be  evaluated  in conjunction  with  a  stochastic  model  of  the  noise  source  itself.  They  do  not  require  computational hardness assumptions.

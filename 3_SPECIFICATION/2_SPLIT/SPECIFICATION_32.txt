@@ -1,0 +1,9 @@
+## 4.3. Load and Store Instructions
+
+RV64I extends the address space to 64 bits. The execution environment will define what portions of the address space are legal to access.
+
+<image>
+
+The LD instruction loads a 64-bit value from memory into register rd for RV64I.
+
+The LW instruction loads a 32-bit value from memory and sign-extends this to 64 bits before storing it in register rd for RV64I. The LWU instruction, on the other hand, zero-extends the 32-bit value from memory for RV64I. LH and LHU are defined analogously for 16-bit values, as are LB and LBU for 8-bit values. The SD, SW, SH, and SB instructions store 64-bit, 32-bit, 16-bit, and 8-bit values from the low bits of register rs2 to memory respectively.

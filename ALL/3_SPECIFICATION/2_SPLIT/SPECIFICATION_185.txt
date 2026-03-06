@@ -1,0 +1,9 @@
+## 27.6. Usage of C Instructions in LR/SC Sequences
+
+On implementations that support the C extension, compressed forms of the I instructions permitted inside  constrained  LR/SC  sequences,  as  described  in  Section  13.3,  are  also  permitted  inside
+
+constrained LR/SC sequences.
+
+<image>
+
+The implication is that any implementation that claims to support both the A and C extensions  must  ensure  that  LR/SC  sequences  containing  valid  C  instructions  will eventually complete.

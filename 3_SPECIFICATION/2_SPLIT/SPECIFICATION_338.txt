@@ -1,0 +1,25 @@
+## 30.5.3. Vector Masking
+
+Masking is supported on many vector instructions. Element operations that are masked off (inactive) never  generate  exceptions.  The  destination  vector  register  elements  corresponding  to  masked-off elements  are  handled  with  either  a  mask-undisturbed  or  mask-agnostic  policy  depending  on  the setting of the vma bit in vtype (Section 30.3.4.3).
+
+The mask value used to control execution of a masked vector instruction is always supplied by vector register v0 .
+
+<image>
+
+Masks are held in vector registers,  rather  than  in  a  separate  mask  register  file,  to reduce total architectural state and to simplify the ISA.
+
+-  Future vector extensions may provide longer instruction encodings with space for a
+
+<image>
+
+full mask register specifier.
+
+The destination vector register group for a masked vector instruction cannot overlap the source mask register ( v0 ), unless the destination vector register is being written with a mask value (e.g., compares) or the scalar result of a reduction. These instruction encodings are reserved.
+
+<image>
+
+This constraint supports restart with a non-zero vstart value.
+
+Other vector registers can be used to hold working mask values, and mask vector logical operations are provided to perform predicate calculations.
+
+As  specified  in  Section  30.3.4.3,  mask  destination  values  are  always  treated  as  tail-agnostic, regardless of the setting of vta .

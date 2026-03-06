@@ -1,0 +1,5 @@
+## 32.2.15.6. copy
+
+- ⚫ vmv.s.x
+- ⚫ vmv.v.[ivxs]
+- ⚫ vmv[1248]r.v

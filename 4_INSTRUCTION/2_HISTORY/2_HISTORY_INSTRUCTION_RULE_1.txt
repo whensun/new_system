@@ -1,0 +1,544 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: ADD
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, please extract all possible information about ADD instruction from the text below. The information must be only about ADD instruction, not other things. Extract ONLY explicit, testable, normative description about architectural behavior.
+
+Please output in paragraphs. If you want, you can include bullet or numbered points in your output. You can also include tables. However, do not give me any introduction in your output. You just need to output the information that you extract.
+
+If your output includes some sentences that refer to some tables or figures, include those tables or figures too.
+
+Remember, output must be ASCII-only text.
+
+If it happens to be there is no information about ADD instruction from the text below, output NONE
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+Your description must be very clear and unambiguous. If you want, you can output in bullet points also.
+
+Use the exact terminology and wording used in the text below; do not substitute synonyms or paraphrase architectural terms.
+
+The text below:
+
+## 1.3. RISC-V ISA Overview
+
+A RISC-V ISA is defined as a base integer ISA, which must be present in any implementation, plus optional extensions to the base ISA. The base integer ISAs are very similar to that of the early RISC processors except with no branch delay slots and with support for optional variable-length instruction encodings.  A  base  is  carefully  restricted  to  a  minimal  set  of  instructions  sufficient  to  provide  a reasonable target for compilers, assemblers, linkers, and operating systems (with additional privileged operations), and so provides a convenient ISA and software toolchain "skeleton" around which more customized processor ISAs can be built.
+
+Although it is convenient to speak of the RISC-V ISA, RISC-V is actually a family of related ISAs, of which  there  are  currently  four  base  ISAs.  Each  base  integer  instruction  set  is  characterized  by  the width of the integer registers and the corresponding size of the address space and by the number of integer registers. There are two primary base integer variants, RV32I and RV64I, described in Chapter 2 and Chapter 4, which provide 32-bit or 64-bit address spaces respectively. We use the term XLEN to refer to the width of an integer register in bits (either 32 or 64). Chapter 3 describes the RV32E and RV64E  subset  variants  of  the  RV32I  or  RV64I  base  instruction  sets  respectively,  which  have  been added to support small microcontrollers, and which have half the number of integer registers. The base integer instruction sets use a two's-complement representation for signed integer values.
+
+<image>
+
+
+
+Although 64-bit address spaces are a requirement for larger systems, we believe 32bit address spaces will remain adequate for many embedded and client devices for decades  to  come  and  will  be  desirable  to  lower  memory  traffic  and  energy consumption.  In  addition,  32-bit  address  spaces  are  sufficient  for  educational purposes. A larger flat 128-bit address space might eventually be required and could be  accommodated  with  a  new  RV128I  base  ISA  within  the  existing  RISC-V  ISA framework.
+
+The four base ISAs in RISC-V are treated as distinct base ISAs. A common question is why is there not a single ISA, and in particular, why is RV32I not a strict subset of RV64I? Some earlier ISA designs (SPARC, MIPS) adopted a strict superset policy when increasing address space size to support running existing 32-bit binaries on new 64-bit hardware.
+
+The main advantage of explicitly separating base ISAs is that each base ISA can be optimized  for  its  needs  without  requiring  to  support  all  the  operations  needed  for other base ISAs. For example, RV64I can omit instructions and CSRs that are only needed to cope with the narrower registers  in  RV32I.  The  RV32I  variants  can  use encoding space otherwise reserved for instructions only required by wider addressspace variants.
+
+The  main  disadvantage  of  not  treating  the  design  as  a  single  ISA  is  that  it complicates the hardware needed to emulate one base ISA on another (e.g., RV32I on RV64I). However, differences in addressing and illegal-instruction traps generally mean some mode switch would be required in hardware in any case even with full superset  instruction  encodings,  and  the  different  RISC-V  base  ISAs  are  similar enough that supporting multiple versions is relatively low cost. Although some have proposed  that  the  strict  superset  design  would  allow  legacy  32-bit  libraries  to  be linked  with  64-bit  code,  this  is  impractical  in  practice,  even  with  compatible encodings,  due  to  the  differences  in  software  calling  conventions  and  system-call interfaces.
+
+The RISC-V privileged architecture provides fields in misa to control the unprivileged ISA at each level to support emulating different base ISAs on the same hardware. We  note  that  newer  SPARC  and  MIPS  ISA  revisions  have  deprecated  support  for running 32-bit code unchanged on 64-bit systems.
+
+A related question is why there is a different encoding for 32-bit adds in RV32I (ADD) and RV64I (ADDW)? The ADDW opcode could be used for 32-bit adds in RV32I and ADDD for 64-bit adds in RV64I, instead of the existing design which uses the same opcode  ADD  for  32-bit  adds  in  RV32I  and  64-bit  adds  in  RV64I  with  a  different opcode ADDW for 32-bit adds in RV64I. This would also be more consistent with the use of the same LW opcode for 32-bit load in both RV32I and RV64I. The very first versions of RISC-V ISA did have a variant of this alternate design, but the RISC-V design  was  changed  to  the  current  choice  in  January  2011.  Our  focus  was  on supporting 32-bit integers in the 64-bit ISA not on providing compatibility with the 32-bit ISA, and the motivation was to remove the asymmetry that arose from having not  all  opcodes  in  RV32I  have  a  *W  suffix  (e.g.,  ADDW,  but  AND  not  ANDW).  In hindsight, this was perhaps not well-justified and a consequence of designing both ISAs at the same time as opposed to adding one later to sit on top of another, and also  from  a  belief  we  had  to  fold  platform  requirements  into  the  ISA  spec  which would imply that all the RV32I instructions would have been required in RV64I. It is too late to change the encoding now, but this is also of little practical consequence for the reasons stated above.
+
+It has been noted we could enable the *W variants as an extension to RV32I systems to provide a common encoding across RV64I and a future RV32 variant.
+
+RISC-V has been designed to support extensive customization and specialization. Each base integer ISA  can  be  extended  with  one  or  more  optional  instruction-set  extensions.  An  extension  may  be categorized as either standard, custom, or non-conforming. For this purpose, we divide each RISC-V instruction-set  encoding  space  (and  related  encoding  spaces  such  as  the  CSRs)  into  three  disjoint categories: standard , reserved , and custom . Standard extensions and encodings are defined by RISC-V International;  any  extensions  not  defined  by  RISC-V  International  are non-standard .  Each  base  ISA and its standard extensions use only standard encodings, and shall not conflict with each other in their uses  of  these  encodings.  Reserved  encodings  are  currently  not  defined  but  are  saved  for  future standard extensions; once thus used, they become standard encodings. Custom encodings shall never be used for standard extensions and are made available for vendor-specific non-standard extensions. Non-standard  extensions  are  either  custom  extensions,  that  use  only  custom  encodings,  or nonconforming extensions,  that  use  any  standard  or  reserved  encoding.  Instruction-set  extensions  are generally shared but may provide slightly different functionality depending on the base ISA. Chapter 36 describes various ways of extending the RISC-V ISA. We have also developed a naming convention for RISC-V base instructions and instruction-set extensions, described in detail in Chapter 37.
+
+To support more general software development, a set of standard extensions are defined to provide integer multiply/divide, atomic operations, and single and double-precision floating-point arithmetic. The base integer ISA is named "I" (prefixed by RV32 or RV64 depending on integer register width), and  contains  integer  computational  instructions,  integer  loads,  integer  stores,  and  control-flow instructions.  The  standard  integer  multiplication  and  division  extension  is  named  "M",  and  adds instructions to multiply and divide values held in the integer registers. The standard atomic instruction extension, denoted by "A", adds instructions that atomically read, modify, and write memory for interprocessor synchronization. The standard single-precision floating-point extension, denoted by "F", adds floating-point  registers,  single-precision  computational  instructions,  and  single-precision  loads  and stores. The standard double-precision floating-point extension, denoted by "D", expands the floating-
+
+point registers, and adds double-precision computational instructions, loads, and stores. The standard "C" compressed instruction extension provides narrower 16-bit forms of common instructions.
+
+Beyond the base integer ISA and these standard extensions, we believe it is rare that a new instruction will  provide a significant benefit for all applications, although it may be very beneficial for a certain domain. As energy efficiency concerns are forcing greater specialization, we believe it is important to simplify the required portion of an ISA specification. Whereas other architectures usually treat their ISA as a single entity, which changes to a new version as instructions are added over time, RISC-V will endeavor to keep the base and each standard extension constant over time, and instead layer new instructions as further optional extensions. For example, the base integer ISAs will continue as fully supported standalone ISAs, regardless of any subsequent extensions.
+
+###
+
+## 2.4. Integer Computational Instructions
+
+Most integer computational instructions operate on XLEN bits of values held in the integer register file. Integer computational instructions are either encoded as register-immediate operations using the Itype format or as register-register operations using the R-type format. The destination is register rd for both  register-immediate  and  register-register  instructions.  No  integer  computational  instructions cause arithmetic exceptions.
+
+
+
+We  did  not  include  special  instruction-set  support  for  overflow  checks  on  integer arithmetic  operations  in  the  base  instruction  set,  as  many  overflow  checks  can  be cheaply  implemented  using  RISC-V  branches.  Overflow  checking  for  unsigned addition requires only a single additional branch instruction after the addition: add t0, t1, t2; bltu t0, t1, overflow .
+
+For signed addition, if one operand's sign is known, overflow checking requires only a single branch after the addition: addi t0, t1, +imm; blt t0, t1, overflow . This covers the common case of addition with an immediate operand.
+
+For  general  signed  addition,  three  additional  instructions  after  the  addition  are required,  leveraging  the  observation  that  the  sum  should  be  less  than  one  of  the operands if and only if the other operand is negative.
+
+add t0, t1, t2 slti t3, t2, 0 slt t4, t0, t1
+
+bne t3, t4, overflow
+
+In RV64I, checks of 32-bit signed additions can be optimized further by comparing the results of ADD and ADDW on the operands.
+
+###
+
+## 2.4.2. Integer Register-Register Operations
+
+RV32I defines several arithmetic R-type operations. All operations read the rs1 and rs2 registers  as source operands and write the result into register rd .  The funct7 and funct3 fields select the type of operation.
+
+<image>
+
+ADD performs the addition of rs1 and rs2 . SUB performs the subtraction of rs2 from rs1 . Overflows are ignored  and  the  low  XLEN  bits  of  results  are  written  to  the  destination rd .  SLT  and  SLTU  perform signed and unsigned compares respectively, writing 1 to rd if rs1 < rs2 , 0 otherwise. Note, SLTU rd , x0 , rs2 sets rd to 1 if rs2 is not equal to zero, otherwise sets rd to zero (assembler pseudoinstruction SNEZ rd, rs ). AND, OR, and XOR perform bitwise logical operations.
+
+SLL, SRL, and SRA perform logical left, logical right, and arithmetic right shifts on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2 .
+
+###
+
+## 4.2. Integer Computational Instructions
+
+Most integer computational instructions operate on XLEN-bit values. Additional instruction variants are provided  to  manipulate  32-bit  values  in  RV64I,  indicated  by  a  'W'  suffix  to  the  opcode.  These  "*W" instructions ignore the upper 32 bits of their inputs and always produce 32-bit signed values, signextending them to 64 bits, i.e. bits XLEN-1 through 31 are equal.
+
+<image>
+
+The compiler and calling convention maintain an invariant that all 32-bit values are held  in  a  sign-extended  format  in  64-bit  registers.  Even  32-bit  unsigned  integers extend bit 31 into bits 63 through 32. Consequently, conversion between unsigned and signed 32-bit integers is a no-op, as is conversion from a signed 32-bit integer to a signed 64-bit integer. Existing 64-bit wide SLTU and unsigned branch compares still  operate  correctly  on  unsigned  32-bit  integers  under  this  invariant.  Similarly, existing 64-bit wide logical operations on 32-bit sign-extended integers preserve the sign-extension property. A few new instructions (ADD[I]W/SUBW/SxxW) are required for addition and shifts to ensure reasonable performance for 32-bit values.
+
+###
+
+## 4.2.2. Integer Register-Register Operations
+
+<image>
+
+ADDW  and  SUBW  are  RV64I-only  instructions  that  are  defined  analogously  to  ADD  and  SUB  but operate on 32-bit values and produce signed 32-bit results. Overflows are ignored, and the low 32-bits of the result is sign-extended to 64-bits and written to the destination register.
+
+SLL, SRL, and SRA perform logical left, logical right, and arithmetic right shifts on the value in register rs1 by the shift amount held in register rs2 . In RV64I, only the low 6 bits of rs2 are considered for the shift amount.
+
+SLLW, SRLW, and SRAW are RV64I-only instructions that are analogously defined but operate on 32bit values and sign-extend their 32-bit results to 64 bits. The shift amount is given by rs2[4:0] .
+
+###
+
+## 15.1. Word/Doubleword/Quadword CAS (AMOCAS.W/D/Q) Instructions
+
+<image>
+
+For RV32, AMOCAS.W atomically loads a 32-bit data value from address in rs1 , compares the loaded value to the 32-bit value held in rd , and if the comparison is bitwise equal, then stores the 32-bit value held in rs2 to  the  original  address  in rs1 .  The  value  loaded  from  memory  is  placed  into  register rd .  The operation performed by AMOCAS.W for RV32 is as follows:
+
+```
+temp = mem[X(rs1)] if ( temp == X(rd) ) mem[X(rs1)] = X(rs2) X(rd) = temp
+```
+
+AMOCAS.D is similar to AMOCAS.W but operates on 64-bit data values.
+
+For RV32, AMOCAS.D atomically loads 64-bits of a data value from address in rs1 , compares the loaded value to a 64-bit value held in a register pair consisting of rd and rd+1 , and if the comparison is bitwise equal, then stores the 64-bit value held in the register pair rs2 and rs2+1 to the original address in rs1 . The value loaded from memory is placed into the register pair rd and rd+1 . The instruction requires the first register in the pair to be even numbered; encodings with odd numbered registers specified in rs2 and rd are reserved. When the first register of a source register pair is x0 , then both halves of the pair read as zero. When the first register of a destination register pair is x0 , then the entire register result is discarded and neither destination register is written. The operation performed by AMOCAS.D for RV32 is as follows:
+
+```
+temp0 = mem[X(rs1)+0] temp1 = mem[X(rs1)+4] comp0 = (rd == x0)  ? 0 : X(rd) comp1 = (rd == x0)  ? 0 : X(rd+1) swap0 = (rs2 == x0) ? 0 : X(rs2) swap1 = (rs2 == x0) ? 0 : X(rs2+1) if ( temp0 == comp0 ) && ( temp1 == comp1 ) mem[X(rs1)+0] = swap0 mem[X(rs1)+4] = swap1 endif if ( rd != x0 ) X(rd)   = temp0 X(rd+1) = temp1 endif
+```
+
+For RV64, AMOCAS.W atomically loads a 32-bit data value from address in rs1 , compares the loaded value to the lower 32 bits of the value held in rd , and if the comparison is bitwise equal, then stores the lower 32 bits of the value held in rs2 to the original address in rs1 . The 32-bit value loaded from memory is sign-extended  and  is  placed  into  register rd .  The  operation  performed  by AMOCAS.W for  RV64  is  as follows:
+
+```
+temp[31:0] = mem[X(rs1)] if ( temp[31:0] == X(rd)[31:0] ) mem[X(rs1)] = X(rs2)[31:0] X(rd) = SignExtend(temp[31:0])
+```
+
+For RV64, AMOCAS.D atomically loads 64-bits of a data value from address in rs1 , compares the loaded value to a 64-bit value held in rd , and if the comparison is bitwise equal, then stores the 64-bit value held in rs2 to the original address in rs1 . The value loaded from memory is placed into register rd . The operation performed by AMOCAS.D for RV64 is as follows:
+
+```
+temp = mem[X(rs1)] if ( temp == X(rd) ) mem[X(rs1)] = X(rs2) X(rd) = temp
+```
+
+AMOCAS.Q (RV64 only) atomically loads 128-bits of a data value from address in rs1 , compares the loaded value  to  a  128-bit  value  held  in  a  register  pair  consisting  of rd and rd+1 ,  and  if  the  comparison  is bitwise  equal,  then  stores  the  128-bit  value  held  in  the  register  pair rs2 and rs2+1 to  the  original address  in rs1 .  The  value  loaded  from  memory  is  placed  into  the  register  pair rd and rd+1 .  The instruction requires the first register in the pair to be even numbered; encodings with odd numbered registers specified in rs2 and rd are  reserved. When the first register of a source register pair is x0 , then both halves of the pair read as zero. When the first register of a destination register pair is x0 , then the entire register result is discarded and neither destination register is written. The operation performed by AMOCAS.Q is as follows:
+
+```
+temp0 = mem[X(rs1)+0] temp1 = mem[X(rs1)+8] comp0 = (rd == x0)  ? 0 : X(rd) comp1 = (rd == x0)  ? 0 : X(rd+1) swap0 = (rs2 == x0) ? 0 : X(rs2) swap1 = (rs2 == x0) ? 0 : X(rs2+1) if ( temp0 == comp0 ) && ( temp1 == comp1 ) mem[X(rs1)+0] = swap0 mem[X(rs1)+8] = swap1 endif if ( rd != x0 ) X(rd)   = temp0 X(rd+1) = temp1 endif
+```
+
+Some algorithms  may  load  the  previous  data  value  of  a  memory  location  into  the register used as the compare data value source by a Zacas instruction. When using a Zacas  instruction  that  uses  a  register  pair  to  source  the  compare  value,  the  two registers may be loaded using two individual loads. The two individual loads may read an inconsistent pair of values but that is not an issue since the AMOCAS operation itself uses an atomic load-pair from memory to obtain the data value for its comparison.
+
+The  following  example  code  sequence  illustrates  the  use  of AMOCAS.D in  a  RV32 implementation to atomically increment a 64-bit counter.
+
+```
+# a0 - address of the counter. increment: lw   a2, (a0)      # Load current counter value using lw   a3, 4(a0)     # two individual loads. retry: mv   a6, a2        # Save the low 32 bits of the current value. mv   a7, a3        # Save the high 32 bits of the current value. addi a4, a2, 1     # Increment the low 32 bits. sltu a1, a4, a2    # Determine if there is a carry out. add  a5, a3, a1    # Add the carry if any to high 32 bits. amocas.d.aqrl a2, a4, (a0) bne  a2, a6, retry # If amocas.d failed then retry bne  a3, a7, retry # using current values loaded by amocas.d. ret
+```
+
+Just as for AMOs in the A extension, AMOCAS.W/D/Q requires  that  the  address  held  in rs1 be  naturally aligned  to  the  size  of  the  operand  (i.e.,  16-byte  aligned  for quadwords ,  eight-byte  aligned  for doublewords , and four-byte aligned for words ). And the same exception options apply if the address is not naturally aligned.
+
+Just as for AMOs in the A extension, the AMOCAS.W/D/Q optionally provide release consistency semantics, using  the aq and rl bits,  to  help  implement  multiprocessor  synchronization.  The  memory  operation
+
+performed by an AMOCAS.W/D/Q ,  when  successful,  has  acquire  semantics  if aq bit  is  1  and  has  release semantics if rl bit is 1. The memory operation performed by an AMOCAS.W/D/Q , when not successful, has acquire semantics if aq bit is 1 but does not have release semantics, regardless of rl .
+
+A FENCE instruction may be used to order the memory read access and, if produced, the memory write access by an AMOCAS.W/D/Q instruction.
+
+<image>
+
+An unsuccessful AMOCAS.W/D/Q may  either  not  perform  a  memory  write  or  may  write back  the  old  value  loaded  from  memory.  The  memory  write,  if  produced,  does  not have release semantics, regardless of rl .  Irrespective of whether a write is actually performed, the instruction is treated as an AMO for the purposes of the RVWMO PPO rules.
+
+An AMOCAS.W/D/Q instruction always requires write permissions.
+
+The following example code sequence illustrates the use of AMOCAS.Q to  implement the  enqueue  operation  for  a  non-blocking  concurrent  queue  using  the  algorithm outlined in (Michael & Scott, 1996). The algorithm atomically operates on a pointer and  its  associated  modification  counter  using  the AMOCAS.Q instruction  to  avoid  the ABA problem.
+
+<image>
+
+```
+# Enqueue operation of a non-blocking concurrent queue. # Data structures used by the queue: #   structure pointer_t {ptr:   node_t *, count: uint64_t} #   structure node_t    {next: pointer_t, value: data type} #   structure queue_t   {Head: pointer_t, Tail:  pointer_t} # Inputs to the procedure: #   a0 - address of Tail variable #   a4 - address of a new node to insert at tail enqueue: ld   a6, (a0)          # a6 = Tail.ptr ld   a7, 8(a0)         # a7 = Tail.count ld   a2, (a6)          # a2 = Tail.ptr->next.ptr ld   a3, 8(a6)         # a3 = Tail.ptr->next.count ld   t1, (a0) ld   t2, 8(a0) bne  a6, t1, enqueue   # Retry if Tail & next are not consistent bne  a7, t2, enqueue   # Retry if Tail & next are not consistent bne  a2, x0, move_tail # Was tail pointing to the last node? mv   t1, a2            # Save Tail.ptr->next.ptr mv   t2, a3            # Save Tail.ptr->next.count addi a5, a3, 1         # Link the node at the end of the list amocas.q.aqrl a2, a4, (a6) bne  a2, t1, enqueue   # Retry if CAS failed bne  a3, t2, enqueue   # Retry if CAS failed addi a5, a7, 1         # Update Tail to the inserted node amocas.q.aqrl a6, a4, (a0) ret                    # Enqueue done move_tail:               # Tail was not pointing to the last node
+```
+
+```
+addi a3, a7, 1         # Try to swing Tail to the next node amocas.q.aqrl a6, a2, (a0) j    enqueue           # Retry
+```
+
+###
+
+## 19.4.1.2. Load Values
+
+An invalidate operation may change the set of values that can be returned by a load. In particular, an additional condition is added to the Load Value Axiom:
+
+- ⚫ If an invalidate operation i precedes a load r and operates on a byte x returned by r , and no store to x appears between i and r in program order or in the global memory order, then r returns any of the following values for x :
+1. If no clean or flush operations on x precede i in the global memory order, either the initial value of x or the value of any store to x that precedes i
+2. If no store to x precedes a clean or flush operation on x in the global memory order and if the clean or flush operation on x precedes i in the global memory order, either the initial value of x or the value of any store to x that precedes i
+3. If a store to x precedes a clean or flush operation on x in the global memory order and if the clean or flush operation on x precedes i in  the  global  memory  order,  either  the  value  of  the latest store to x that precedes the latest clean or flush operation on x or the value of any store to x that both precedes i and succeeds the latest clean or flush operation on x that precedes i
+4. The value of any store to x by a non-coherent agent regardless of the above conditions
+
+<image>
+
+The  first  three  bullets  describe  the  possible  load  values  at  different  points  in  the global memory order relative to clean or flush operations. The final bullet implies that the load value may be produced by a non-coherent agent at any time.
+
+###
+
+## 20.5. Single-Precision Load and Store Instructions
+
+Floating-point loads and stores use the same base+offset addressing mode as the integer base ISAs, with a base address in register rs1 and a 12-bit signed byte offset. The FLW instruction loads a single-
+
+precision  floating-point  value  from  memory  into  floating-point  register rd .  FSW  stores  a  singleprecision value from floating-point register rs2 to memory.
+
+<image>
+
+FLW and FSW are only guaranteed to execute atomically if the effective address is naturally aligned.
+
+FLW and FSW do not modify the bits being transferred; in particular, the payloads of non-canonical NaNs are preserved.
+
+As  described  in  Section  2.6,  the  execution  environment  defines  whether  misaligned  floating-point loads and stores are handled invisibly or raise a contained or fatal trap.
+
+###
+
+## 24.4.1. Zfbfmin - Scalar BF16 Converts
+
+This extension provides the minimal set of instructions needed to enable scalar support of the BF16 format. It enables BF16 as an interchange format as it provides conversion between BF16 values and FP32 values.
+
+This extension depends upon the single-precision floating-point extension F , and the FLH , FSH , FMV.X.H , and FMV.H.X instructions as defined in the Zfh extension.
+
+<image>
+
+<image>
+
+While  conversion  instructions  tend  to  include  all  supported  formats,  in  these extensions we only support conversion between BF16 and FP32 as we are targeting a special  use  case.  These  extensions  are  intended  to  support  the  case  where  BF16 values  are  used  as  reduced  precision  versions  of  FP32  values,  where  use  of  BF16 provides a two-fold advantage for storage, bandwidth, and computation. In this use case,  the  BF16  values  are  typically  multiplied  by  each  other  and  accumulated  into FP32 sums. These sums are typically converted to BF16 and then used as subsequent inputs. The operations on the BF16 values can be performed on the CPU or a loosely coupled coprocessor.
+
+Subsequent  extensions  might  provide  support  for  native  BF16  arithmetic.  Such extensions  could  add  additional  conversion  instructions  to  allow  all  supported formats to be converted to and from BF16.
+
+BF16 addition, subtraction, multiplication, division, and square-root operations can be faithfully emulated by converting the BF16 operands to single-precision, performing the  operation  using  single-precision  arithmetic,  and  then  converting  back  to  BF16. Performing BF16 fused multiply-addition using this method can produce results that differ by 1-ulp on some inputs for the RNE and RMM rounding modes.
+
+Conversions  between  BF16  and  formats  larger  than  FP32  can  be  emulated.  Exact widening conversions from BF16 can be synthesized by first converting to FP32 and then  converting  from  FP32  to  the  target  precision.  Conversions  narrowing  to  BF16 can be synthesized by first converting to FP32 through a series of halving steps and
+
+then converting from FP32 to BF16. As with the fused multiply-addition instruction described  above,  this  method  of  converting  values  to  BF16  can  be  off  by  1-ulp  on some inputs for the RNE and RMM rounding modes.
+
+| Mnemonic    | Instruction          |
+|-------------|----------------------|
+| FCVT.BF16.S | Convert FP32 to BF16 |
+| FCVT.S.BF16 | Convert BF16 to FP32 |
+| FLH         |                      |
+| FSH         |                      |
+| FMV.H.X     |                      |
+| FMV.X.H     |                      |
+
+###
+
+## Chapter 25. "Zfa" Extension for Additional Floating-Point Instructions, Version 1.0
+
+This chapter describes the Zfa standard extension, which adds instructions for immediate loads, IEEE 754-2019 minimum and maximum operations, round-to-integer  operations,  and  quiet  floating-point comparisons.  For  RV32D,  the  Zfa  extension  also  adds  instructions  to  transfer  double-precision floating-point values to and from integer registers, and for RV64Q, it adds analogous instructions for quad-precision floating-point values. The Zfa extension depends on the F extension.
+
+###
+
+## 28.12.10. c.zext.w
+
+Synopsis:
+
+Zero extend word, 16-bit encoding
+
+Mnemonic:
+
+c.zext.w rd'/rs1'
+
+Encoding (RV64):
+
+<image>
+
+Description:
+
+This instruction takes a single source/destination operand. It zero-extends the least-significant word of the operand to XLEN bits by inserting zeros into all of the bits more significant than 31.
+
+<image>
+
+rd'/rs1' is from the standard 8-register set x8-x15.
+
+Prerequisites:
+
+Zba is also required.
+
+32-bit equivalent:
+
+add.uw rd'/rs1', rd'/rs1', zero
+
+<image>
+
+The SAIL module variable for rd'/rs1' is called rsdc.
+
+Operation:
+
+X(rsdc) = EXTZ(X(rsdc)[31..0]);
+
+###
+
+## 29.6.1. strlen
+
+The orc.b instruction allows for the efficient detection of NUL bytes in an XLEN-sized chunk of data:
+
+- ⚫ the result of orc.b on a chunk that does not contain any NUL bytes will be all-ones, and
+- ⚫ after a bitwise-negation of the result of orc.b , the number of data bytes before the first NUL byte (if any) can be detected by ctz / clz (depending on the endianness of data).
+
+A full example of a strlen function, which uses these techniques and also demonstrates the use of it
+
+OP-IMM
+
+for unaligned/partial data, is the following:
+
+```
+#include <sys/asm.h> .text .globl strlen .type  strlen, @function strlen: andi    a3, a0, (SZREG-1)   // offset andi    a1, a0, -SZREG      // align pointer .Lprologue: li      a4, SZREG sub     a4, a4, a3          // XLEN - offset slli    a3, a3, 3           // offset * 8 REG_L   a2, 0(a1)           // chunk /* * Shift the partial/unaligned chunk we loaded to remove the bytes * from before the start of the string, adding NUL bytes at the end. */ #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__ srl     a2, a2 ,a3          // chunk >> (offset * 8) #else sll     a2, a2, a3 #endif orc.b   a2, a2 not     a2, a2 /* * Non-NUL bytes in the string have been expanded to 0x00, while * NUL bytes have become 0xff.  Search for the first set bit * (corresponding to a NUL byte in the original chunk). */ #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__ ctz     a2, a2 #else clz     a2, a2 #endif /* * The first chunk is special: compare against the number of valid * bytes in this chunk. */ srli    a0, a2, 3 bgtu    a4, a0, .Ldone addi    a3, a1, SZREG li      a4, -1 .align 2 /* * Our critical loop is 4 instructions and processes data in 4 byte * or 8 byte chunks. */ .Lloop: REG_L   a2, SZREG(a1)
+```
+
+```
+addi    a1, a1, SZREG orc.b   a2, a2 beq     a2, a4, .Lloop .Lepilogue: not     a2, a2 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__ ctz     a2, a2 #else clz     a2, a2 #endif sub     a1, a1, a3 add     a0, a0, a1 srli    a2, a2, 3 add     a0, a0, a2 .Ldone: ret
+```
+
+###
+
+## 30.3.4.2. Vector Register Grouping ( vlmul[2:0] )
+
+Multiple vector registers can be grouped together, so that a single vector instruction can operate on multiple vector registers. The term vector register group is used herein to refer to one or more vector registers  used  as  a  single  operand  to  a  vector  instruction.  Vector  register  groups  can  be  used  to provide  greater  execution  efficiency  for  longer  application  vectors,  but  the  main  reason  for  their inclusion is to allow double-width or larger elements to be operated on with the same vector length as single-width elements. The vector length multiplier, LMUL , when greater than 1, represents the default number of vector registers that are combined to form a vector register group. Implementations must support LMUL integer values of 1, 2, 4, and 8.
+
+<image>
+
+The vector architecture includes instructions that take multiple source and destination vector operands with different element widths, but the same number of elements. The effective LMUL (EMUL) of each vector operand is determined by the number of registers required to hold the elements. For example, for a widening add operation, such as add 32-bit values to produce 64-bit results, a double-width result requires twice the LMUL of the single-width inputs.
+
+LMUL can also be a  fractional  value,  reducing  the  number  of  bits  used  in  a  single  vector  register. Fractional  LMUL  is  used  to  increase  the  number  of  effective  usable  vector  register  groups  when operating on mixed-width values.
+
+<image>
+
+With only integer LMUL values, a loop operating on a range of sizes would have to allocate at least one whole vector register (LMUL=1) for the narrowest data type and then  would  consume  multiple  vector  registers  (LMUL>1)  to  form  a  vector  register group  for  each  wider  vector  operand.  This  can  limit  the  number  of  vector  register groups available. With fractional LMUL, the widest values need occupy only a single vector register while narrower values can occupy a fraction of a single vector register, allowing all 32 architectural vector register names to be used for different values in a vector  loop  even  when  handling  mixed-width  values.  Fractional  LMUL  implies portions  of  vector  registers  are  unused,  but  in  some  cases,  having  more  shorter register-resident vectors improves  efficiency  relative to fewer  longer  registerresident vectors.
+
+Implementations must provide fractional  LMUL  settings  that  allow  the  narrowest  supported  type  to occupy  a  fraction  of  a  vector  register  corresponding  to  the  ratio  of  the  narrowest  supported  type's width to that of the largest supported type's width. In general, the requirement is to support LMUL ≥ SEWMIN/ELEN, where SEWMIN is the narrowest supported SEW value and ELEN is the widest supported SEW  value.  In  the  standard  extensions,  SEWMIN=8.  For  standard  vector  extensions  with  ELEN=32, fractional  LMULs  of  1/2  and  1/4  must  be  supported.  For  standard  vector  extensions  with  ELEN=64, fractional LMULs of 1/2, 1/4, and 1/8 must be supported.
+
+<image>
+
+When LMUL < SEWMIN/ELEN, there is no guarantee an implementation would have enough  bits  in  the  fractional  vector  register  to  store  at  least  one  element,  as VLEN=ELEN  is  a  valid  implementation  choice.  For  example,  with  VLEN=ELEN=32, and SEWMIN=8, an LMUL of 1/8 would only provide four bits of storage in a vector register.
+
+For a given supported fractional LMUL setting, implementations must support SEW settings between SEWMIN and LMUL * ELEN, inclusive.
+
+The use of vtype encodings with LMUL < SEWMIN/ELEN is reserved , but implementations can set vill if they do not support these configurations.
+
+<image>
+
+<image>
+
+Requiring all  implementations to set vill in  this  case  would  prohibit  future  use  of this case in an extension, so to allow for a future definition of LMUL<SEWMIN/ELEN behavior, we consider the use of this case to be reserved.
+
+It  is  recommended  that  assemblers  provide  a  warning  (not  an  error)  if  a vsetvli instruction attempts to write an LMUL < SEWMIN/ELEN.
+
+LMUL is set by the signed vlmul field in vtype (i.e., LMUL = 2 vlmul[2:0] ).
+
+The derived value VLMAX = LMUL*VLEN/SEW represents the maximum number of elements that can be operated on with a single vector instruction given the current SEW and LMUL settings as shown in the table below.
+
+|   vlmul[2:0] |   vlmul[2:0] |   vlmul[2:0] | LMUL   | #groups   | VLMAX      | Registers grouped with register n   |
+|--------------|--------------|--------------|--------|-----------|------------|-------------------------------------|
+|            1 |            0 |            0 | -      | -         | -          | reserved                            |
+|            1 |            0 |            1 | 1/8    | 32        | VLEN/SEW/8 | v n (single register in group)      |
+|            1 |            1 |            0 | 1/4    | 32        | VLEN/SEW/4 | v n (single register in group)      |
+|            1 |            1 |            1 | 1/2    | 32        | VLEN/SEW/2 | v n (single register in group)      |
+|            0 |            0 |            0 | 1      | 32        | VLEN/SEW   | v n (single register in group)      |
+|            0 |            0 |            1 | 2      | 16        | 2*VLEN/SEW | v n , v n +1                        |
+|            0 |            1 |            0 | 4      | 8         | 4*VLEN/SEW | v n , …, v n +3                     |
+|            0 |            1 |            1 | 8      | 4         | 8*VLEN/SEW | v n , …, v n +7                     |
+
+When  LMUL=2,  the  vector  register  group  contains  vector  register v n and  vector  register v n +1, providing twice the vector length in bits. Instructions specifying an LMUL=2 vector register group with an odd-numbered vector register are reserved.
+
+When LMUL=4, the vector register group contains four vector registers, and instructions specifying an LMUL=4  vector  register  group  using  vector  register  numbers  that  are  not  multiples  of  four  are reserved.
+
+When LMUL=8, the vector register group contains eight vector registers, and instructions specifying an LMUL=8 vector register group using register numbers that are not multiples of eight are reserved.
+
+Mask registers are always contained in a single vector register, regardless of LMUL.
+
+###
+
+## 30.6.4. Example of stripmining and changes to SEW
+
+The SEW and LMUL settings can be changed dynamically to provide high throughput on mixed-width operations in a single loop.
+
+```
+# Example: Load 16-bit values, widen multiply to 32b, shift 32b result # right by 3, store 32b values. # On entry: #  a0 holds the total number of elements to process #  a1 holds the address of the source array #  a2 holds the address of the destination array loop: vsetvli a3, a0, e16, m4, ta, ma  # vtype = 16-bit integer vectors; # also update a3 with vl (# of elements this iteration) vle16.v v4, (a1)        # Get 16b vector slli t1, a3, 1          # Multiply # elements this iteration by 2 bytes/source element add a1, a1, t1          # Bump pointer vwmul.vx v8, v4, x10    # Widening multiply into 32b in <v8--v15> vsetvli x0, x0, e32, m8, ta, ma  # Operate on 32b values vsrl.vi v8, v8, 3 vse32.v v8, (a2)        # Store vector of 32b elements slli t1, a3, 2          # Multiply # elements this iteration by 4 bytes/destination element add a2, a2, t1          # Bump pointer sub a0, a0, a3          # Decrement count by vl bnez a0, loop           # Any more?
+```
+
+###
+
+## 30.7.7. Unit-stride Fault-Only-First Loads
+
+The unit-stride fault-only-first load instructions are used to vectorize loops with data-dependent exit conditions ("while" loops). These instructions execute as a regular load except that they will only take a trap  caused  by  a  synchronous  exception  on  element  0.  If  element  0  raises  an  exception, vl is  not modified, and the trap is taken. If an element > 0 raises an exception, the corresponding trap is not taken,  and  the  vector  length vl is  reduced  to  the  index  of  the  element  that  would  have  raised  an exception.
+
+Load instructions may overwrite active destination vector register group elements past the element index  at  which  the  trap  is  reported.  Similarly,  fault-only-first  load  instructions  may  update  active destination  elements  past  the  element  that  causes  trimming  of  the  vector  length  (but  not  past  the original vector length). The values of these spurious updates do not have to correspond to the values in memory at the addressed memory locations. Non-idempotent memory locations can only be accessed when  it  is  known  the  corresponding  element  load  operation  will  not  be  restarted  due  to  a  trap  or vector-length trimming.
+
+```
+# Vector unit-stride fault-only-first loads # vd destination, rs1 base address, vm is mask encoding (v0.t or <missing>)
+```
+
+```
+vle8ff.v    vd, (rs1), vm  #    8-bit unit-stride fault-only-first load vle16ff.v   vd, (rs1), vm  #   16-bit unit-stride fault-only-first load vle32ff.v   vd, (rs1), vm  #   32-bit unit-stride fault-only-first load vle64ff.v   vd, (rs1), vm  #   64-bit unit-stride fault-only-first load
+```
+
+```
+strlen example using unit-stride fault-only-first instruction # size_t strlen(const char *str) # a0 holds *str strlen: mv a3, a0             # Save start loop: vsetvli a1, x0, e8, m8, ta, ma  # Vector of bytes of maximum length vle8ff.v v8, (a3)      # Load bytes csrr a1, vl           # Get bytes read vmseq.vi v0, v8, 0    # Set v0[i] where v8[i] = 0 vfirst.m a2, v0       # Find first set bit add a3, a3, a1        # Bump pointer bltz a2, loop         # Not found? add a0, a0, a1        # Sum start + bump add a3, a3, a2        # Add index sub a0, a3, a0        # Subtract start address+bump ret
+```
+
+<image>
+
+There is a security concern with fault-on-first loads, as they can be used to probe for valid  effective  addresses.  The  unit-stride  versions  only  allow  probing  a  region immediately contiguous to a known region, and so reduce the security impact when used in unprivileged code. However, code running in S-mode can establish arbitrary page translations that allow probing of random guest physical addresses provided by a hypervisor. Strided and scatter/gather fault-only-first instructions are not provided due  to  lack  of  encoding  space,  but  they  can  also  represent  a  larger  security  hole, allowing  even  unprivileged  software  to  easily  check  multiple  random  pages  for accessibility  without  experiencing  a  trap.  This  standard  does  not  address  possible security mitigations for fault-only-first instructions.
+
+Even  when  an  exception  is  not  raised,  implementations  are  permitted  to  process  fewer  than vl elements  and  reduce vl accordingly,  but  if vstart =0  and vl >0,  then  at  least  one  element  must  be processed.
+
+When  the  fault-only-first  instruction  takes  a  trap  due  to  an  interrupt,  implementations  should  not reduce vl and should instead set a vstart value.
+
+<image>
+
+When the fault-only-first instruction would trigger a debug data-watchpoint trap on an element  after  the  first,  implementations  should  not  reduce vl but  instead  should trigger the debug trap as otherwise the event might be lost.
+
+###
+
+## 30.7.8.3. Vector Indexed Segment Loads and Stores
+
+Vector indexed segment loads and stores move contiguous segments where each segment is located at an address given by adding the scalar base address in the rs1 field to byte offsets in vector register vs2 .  Both  ordered  and  unordered  forms  are  provided,  where  the  ordered  forms  access  segments  in element order. However, even for the ordered form, accesses to the fields within an individual segment are not ordered with respect to each other.
+
+The data vector register group has EEW=SEW, EMUL=LMUL, while the index vector register group has EEW encoded in the instruction with EMUL=(EEW/SEW)*LMUL. The EMUL * NFIELDS ≤ 8 constraint applies to the data vector register group.
+
+```
+# Format vluxseg<nf>ei<eew>.v vd, (rs1), vs2, vm   # Indexed-unordered segment loads vloxseg<nf>ei<eew>.v vd, (rs1), vs2, vm   # Indexed-ordered segment loads vsuxseg<nf>ei<eew>.v vs3, (rs1), vs2, vm  # Indexed-unordered segment stores vsoxseg<nf>ei<eew>.v vs3, (rs1), vs2, vm  # Indexed-ordered segment stores # Examples vsetvli a1, t0, e8, m1, ta, ma vluxseg3ei8.v v4, (x5), v3   # Load bytes at addresses x5+v3[i]   into v4[i], #  and bytes at addresses x5+v3[i]+1 into v5[i], #  and bytes at addresses x5+v3[i]+2 into v6[i]. # Examples vsetvli a1, t0, e32, m1, ta, ma vsuxseg2ei32.v v2, (x5), v5   # Store words from v2[i] to address x5+v5[i] #   and words from v3[i] to address x5+v5[i]+4
+```
+
+For vector indexed segment loads, the destination vector register groups cannot overlap the source vector register group (specified by vs2 ), else the instruction encoding is reserved.
+
+<image>
+
+This  constraint  supports  restart  of  indexed  segment  loads  that  raise  exceptions partway through loading a structure.
+
+###
+
+## 30.13.3. Vector Widening Floating-Point Add/Subtract Instructions
+
+```
+# Widening FP add/subtract, 2*SEW = SEW +/- SEW vfwadd.vv vd, vs2, vs1, vm  # vector-vector vfwadd.vf vd, vs2, rs1, vm  # vector-scalar
+```
+
+```
+vfwsub.vv vd, vs2, vs1, vm  # vector-vector vfwsub.vf vd, vs2, rs1, vm  # vector-scalar # Widening FP add/subtract, 2*SEW = 2*SEW +/- SEW vfwadd.wv  vd, vs2, vs1, vm  # vector-vector vfwadd.wf  vd, vs2, rs1, vm  # vector-scalar vfwsub.wv  vd, vs2, vs1, vm  # vector-vector vfwsub.wf  vd, vs2, rs1, vm  # vector-scalar
+```
+
+###
+
+## 30.14.2. Vector Widening Integer Reduction Instructions
+
+The  unsigned vwredsumu.vs instruction  zero-extends  the  SEW-wide  vector  elements  before  summing them,  then  adds  the  2*SEW-width  scalar  element,  and  stores  the  result  in  a  2*SEW-width  scalar element.
+
+The vwredsum.vs instruction sign-extends the SEW-wide vector elements before summing them.
+
+For both vwredsumu.vs and vwredsum.vs , overflows wrap around.
+
+```
+# Unsigned sum reduction into double-width accumulator vwredsumu.vs vd, vs2, vs1, vm   # 2*SEW = 2*SEW + sum(zero-extend(SEW)) # Signed sum reduction into double-width accumulator vwredsum.vs  vd, vs2, vs1, vm   # 2*SEW = 2*SEW + sum(sign-extend(SEW))
+```
+
+###
+
+## 30.15.7. Example using vector mask instructions
+
+The following is an example of vectorizing a data-dependent exit loop.
+
+```
+# char* strcpy(char *dst, const char* src) strcpy: mv a2, a0             # Copy dst li t0, -1             # Infinite AVL loop: vsetvli x0, t0, e8, m8, ta, ma  # Max length vectors of bytes vle8ff.v v8, (a1)        # Get src bytes csrr t1, vl           # Get number of bytes fetched vmseq.vi v1, v8, 0      # Flag zero bytes vfirst.m a3, v1         # Zero found? add a1, a1, t1        # Bump pointer vmsif.m v0, v1          # Set mask up to and including zero byte. vse8.v v8, (a2), v0.t    # Write out bytes add a2, a2, t1        # Bump pointer bltz a3, loop         # Zero byte not found, so loop ret
+```
+
+```
+# char* strncpy(char *dst, const char* src, size_t n) strncpy: mv a3, a0             # Copy dst loop: vsetvli x0, a2, e8, m8, ta, ma   # Vectors of bytes. vle8ff.v v8, (a1)        # Get src bytes vmseq.vi v1, v8, 0      # Flag zero bytes csrr t1, vl           # Get number of bytes fetched vfirst.m a4, v1         # Zero found? vmsbf.m v0, v1          # Set mask up to before zero byte. vse8.v v8, (a3), v0.t    # Write out non-zero bytes bgez a4, zero_tail    # Zero remaining bytes. sub a2, a2, t1        # Decrement count. add a3, a3, t1        # Bump dest pointer add a1, a1, t1        # Bump src pointer bnez a2, loop         # Anymore? ret
+```
+
+```
+zero_tail: sub a2, a2, a4          # Subtract count on non-zero bytes. add a3, a3, a4          # Advance past non-zero bytes. vsetvli t1, a2, e8, m8, ta, ma   # Vectors of bytes. vmv.v.i v0, 0           # Splat zero. zero_loop: vse8.v v0, (a3)          # Store zero. sub a2, a2, t1        # Decrement count. add a3, a3, t1        # Bump pointer vsetvli t1, a2, e8, m8, ta, ma   # Vectors of bytes. bnez a2, zero_loop    # Anymore? ret
+```
+
+###
+
+## 30.15.8. Vector Iota Instruction
+
+The viota.m instruction  reads  a  source  vector  mask  register  and  writes  to  each  element  of  the destination vector register group the sum of all the bits of elements in the mask register whose index is less than the element, e.g., a parallel prefix sum of the mask values.
+
+This instruction can be masked, in which case only the enabled elements contribute to the sum.
+
+```
+viota.m vd, vs2, vm # Example 7 6 5 4 3 2 1 0   Element number 1 0 0 1 0 0 0 1   v2 contents viota.m v4, v2 # Unmasked 2 2 2 1 1 1 1 0   v4 result 1 1 1 0 1 0 1 1   v0 contents 1 0 0 1 0 0 0 1   v2 contents 2 3 4 5 6 7 8 9   v4 contents viota.m v4, v2, v0.t # Masked, vtype.vma=0 1 1 1 5 1 7 1 0   v4 results
+```
+
+The result value is zero-extended to fill the destination element if SEW is wider than the result. If the result value would overflow the destination SEW, the least-significant SEW bits are retained.
+
+Traps on viota.m are  always  reported  with  a vstart of  0,  and  execution  is  always  restarted  from  the beginning  when  resuming  after  a  trap  handler.  An  illegal-instruction  exception  is  raised  if vstart is non-zero.
+
+The destination register group cannot overlap the source register and, if masked, cannot overlap the mask register ( v0 ).
+
+The viota.m instruction can be combined with memory scatter instructions (indexed stores) to perform vector compress functions.
+
+```
+# Compact non-zero elements from input memory array to output memory array # # size_t compact_non_zero(size_t n, const int* in, int* out) # { #   size_t i; #   int *p = out; # #   for (i=0; i<n; i++) #   { #       const int v = *in++; #       if (v != 0) #           *p++ = v; #   } # #   return (size_t) (p - out); # } # # a0 = n # a1 = &in # a2 = &out compact_non_zero: li a6, 0                      # Clear count of non-zero elements loop: vsetvli a5, a0, e32, m8, ta, ma   # 32-bit integers vle32.v v8, (a1)               # Load input vector sub a0, a0, a5               # Decrement number done slli a5, a5, 2               # Multiply by four bytes vmsne.vi v0, v8, 0             # Locate non-zero values add a1, a1, a5               # Bump input pointer vcpop.m a5, v0                 # Count number of elements set in v0 viota.m v16, v0                # Get destination offsets of active elements add a6, a6, a5               # Accumulate number of elements vsll.vi v16, v16, 2, v0.t      # Multiply offsets by four bytes slli a5, a5, 2               # Multiply number of non-zero elements by four bytes vsuxei32.v v8, (a2), v16, v0.t # Scatter using scaled viota results under mask add a2, a2, a5               # Bump output pointer bnez a0, loop                # Any more? mv a0, a6                    # Return count ret
+```
+
+###
+
+## 31.8.4.4. Information Flows
+
+Some of the most devastating practical attacks against real-life cryptosystems have used inconsequential-looking additional information, such as padding error messages (Bardou et al., 2012) or timing information (Moghimi et al., 2020). In cryptography, such out-of-band information sources are called "oracles."
+
+To guarantee that no sensitive data is read twice and that different callers don't get correlated output, it  is  required that hardware implements wipe-on-read on the randomness pathway during each read (successful  poll).  For  the  same  reasons,  only  complete  and  fully  processed  random  words  shall  be made available via entropy (ES16 status of seed ).
+
+This also applies to the raw noise source. The raw source interface has been delegated to an optional vendor-specific  test  interface.  Importantly  the  test  interface  and  the  main  interface  should  not  be operational at the same time.
+
+The noise source state shall be protected from adversarial knowledge or influence to the greatest extent possible. The methods used for this shall be documented, including a description of the (conceptual) security boundary's role in protecting the noise source from adversarial observation or influence.
+
+- NIST SP 800-90B, Noise Source Requirements
+
+An entropy source is a singular resource, subject to depletion and also covert channels (Evtyushkin & Ponomarev, 2016). Observation of the entropy can be the same as the observation of the noise source output, as cryptographic conditioning is mandatory only as a post-processing step. SP 800-90B and other security standards mandate protection of noise bits from observation and also influence.
+
+###
+
+## 24.1. Introduction
+
+RISC-V Pointer Masking (PM) is a feature that, when enabled, causes the CPU to ignore the upper bits of the effective address (these terms will be defined more precisely in the Background section). This allows these bits to be used in whichever way the application chooses. The version of the extension being described here specifically targets tag checks : When an address is accessed, the tag stored in the masked bits can be compared against a range-based tag. This is used for dynamic safety checkers such as HWASAN (Serebryany et al., 2018). Such tools can be applied in all privilege modes (U, S and M).
+
+HWASAN leverages tags in the upper bits of the address to identify memory errors such as use-afterfree or buffer overflow errors. By storing a pointer tag in the upper bits of the address and checking it against a memory tag stored in a side table, it can identify whether a pointer is pointing to a valid location. Doing this without hardware support introduces significant overheads since the pointer tag needs  to  be  manually  removed  for  every  conventional  memory  operation.  Pointer  masking  support reduces these overheads.
+
+Pointer masking only adds the ability to ignore pointer tags during regular memory accesses. The tag checks themselves can be implemented in software or hardware. If implemented in software, pointer masking still provides performance benefits since non-checked accesses do not need to transform the address before every memory access. Hardware implementations are expected to provide even larger benefits due to performing tag checks out-of-band and hardening security guarantees derived from these  checks.  We  anticipate  that  future  extensions  may  build  on  pointer  masking  to  support  this functionality in hardware.
+
+It  is  worth  mentioning  that  while  HWASAN  is  the  primary  use-case  for  the  current  pointer  masking extension,  a  number  of  other  hardware/software  features  may  be  implemented  leveraging  Pointer Masking. Some of these use cases include sandboxing, object type checks and garbage collection bits in  runtime  systems. Note that the current version of the spec does not explicitly address these use cases, but future extensions may build on it to do so.
+
+While we describe the high-level concepts of pointer masking as if it was a single extension, it is, in reality,  a  family  of  extensions that implementations or profiles may choose to individually include or exclude (see Section 24.2.7).
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+**ADD (integer register‑register operation)**  
+
+- **Operation**: "ADD performs the addition of rs1 and rs2."  
+- **Result width**: "Overflows are ignored and the low XLEN bits of results are written to the destination rd."  
+- **Source and destination registers**: "All operations read the rs1 and rs2 registers as source operands and write the result into register rd."  
+- **Encoding**: "The funct7 and funct3 fields select the type of operation." (ADD is selected by a specific combination of funct7 = 0b0000000 and funct3 = 0b000 in the R‑type format.)  
+- **Exception behavior**: "No integer computational instructions cause arithmetic exceptions." (therefore ADD never raises an arithmetic exception).
+======================================================= END - 1 ========================================================

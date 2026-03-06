@@ -1,0 +1,10 @@
+## 2.6. CSR Width Modulation
+
+If the width of a CSR is changed (for example, by changing SXLEN or UXLEN, as described in Section 3.1.6.3), the values of the writable fields and bits of the new-width CSR are, unless specified otherwise, determined from the previous-width CSR as though by this algorithm:
+
+1. The value of the previous-width CSR is copied to a temporary register of the same width.
+2. For the read-only bits of the previous-width CSR, the bits at the same positions in the temporary register are set to zeros.
+3. The width of the temporary register is changed to the new width. If the new width W is  narrower than the previous width, the least-significant W bits of the temporary register are retained and the more-significant  bits  are  discarded.  If  the  new  width  is  wider  than  the  previous  width,  the temporary register is zero-extended to the wider width.
+4. Each writable field of the new-width CSR takes the value of the bits at the same positions in the temporary register.
+
+Changing the width of a CSR is not a read or write of the CSR and thus does not trigger any side effects.

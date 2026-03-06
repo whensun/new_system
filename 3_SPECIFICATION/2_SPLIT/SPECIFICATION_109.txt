@@ -1,0 +1,13 @@
+## 20.3. NaN Generation and Propagation
+
+Except when otherwise stated, if the result of a floating-point operation is NaN, it is the canonical NaN. The canonical NaN has a positive sign and all significand bits clear except the MSB, a.k.a. the quiet bit. For single-precision floating-point, this corresponds to the pattern 0x7fc00000 .
+
+We considered propagating NaN payloads, as is recommended by the standard, but this  decision  would  have  increased  hardware  cost.  Moreover,  since  this  feature  is optional in the standard, it cannot be used in portable code.
+
+<image>
+
+<image>
+
+Implementers  are  free  to  provide  a  NaN  payload  propagation  scheme  as  a nonstandard  extension  enabled  by  a  nonstandard  operating  mode.  However,  the canonical NaN scheme described above must always be supported and should be the default mode.
+
+We require implementations to return the standard-mandated default values in the case of exceptional conditions, without any further intervention on the part of userlevel  software  (unlike  the  Alpha  ISA  floating-point  trap  barriers).  We  believe  full hardware handling of exceptional cases will become more common, and so wish to avoid complicating the user-level ISA to optimize other approaches. Implementations  can  always  trap  to  machine-mode  software  handlers  to  provide exceptional default values.

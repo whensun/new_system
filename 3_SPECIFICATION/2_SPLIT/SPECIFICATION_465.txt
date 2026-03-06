@@ -1,0 +1,3 @@
+## 31.3.1. Zbkb - Bitmanip instructions for Cryptography
+
+This extension contains bit-manipulation instructions that are particularly useful for cryptography, most of which are also in the Zbb extension. Please refer to Bit-manipulation for Cryptography.

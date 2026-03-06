@@ -1,0 +1,5 @@
+## 31.3.2. Zbkc - Carry-less multiply instructions
+
+Constant  time  carry-less  multiply  for  Galois/Counter  Mode.  These  are  separated  from  the  Bitmanipulation  for  Cryptography  because  they  have  a  considerable  implementation  overhead  which cannot be amortised across other instructions.
+
+Please refer to Carry-less multiplication for Cryptography.

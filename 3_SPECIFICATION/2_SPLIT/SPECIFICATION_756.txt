@@ -1,0 +1,9 @@
+## 3.6.3.2. Reservability PMA
+
+For LR/SC ,  there  are  three  levels  of  support  indicating  combinations  of  the  reservability  and eventuality  properties: RsrvNone , RsrvNonEventual ,  and RsrvEventual .  RsrvNone  indicates  that  no LR/SC operations are supported (the location is non-reservable). RsrvNonEventual indicates that the operations  are  supported  (the  location  is  reservable),  but  without  the  eventual  success  guarantee described  in  the  unprivileged  ISA  specification.  RsrvEventual  indicates  that  the  operations  are supported and provide the eventual success guarantee.
+
+<image>
+
+We  recommend  providing  RsrvEventual  support  for  main  memory  regions  where possible.  Most  I/O  regions  will  not  support  LR/SC  accesses,  as  these  are  most conveniently  built  on  top  of  a  cache-coherence  scheme,  but  some  may  support RsrvNonEventual or RsrvEventual.
+
+When LR/SC is used for memory locations marked RsrvNonEventual, software should provide alternative fall-back mechanisms used when lack of progress is detected.

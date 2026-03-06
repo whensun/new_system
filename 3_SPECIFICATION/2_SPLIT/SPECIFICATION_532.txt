@@ -1,0 +1,15 @@
+## 31.5.2.3. Virtual Sources: Security Requirement
+
+<image>
+
+A virtual source is not an ISA compliance requirement. It is defined for the benefit of the RISC-V security ecosystem so that virtual systems may have a consistent level of security.
+
+A  virtual  source  is  not  a  physical  entropy  source  but  provides  additional  protection  against  covert channels, depletion attacks, and host identification in operating environments that can not be entirely trusted with direct access to a hardware resource. Despite limited trust, implementers should try to guarantee  that  even  such  environments  have  sufficient  entropy  available  for  secure  cryptographic operations.
+
+A virtual source traps access to the seed CSR, emulates it, or otherwise implements it, possibly without direct access to a physical entropy source. The output can be cryptographically secure pseudorandomness instead of real entropy, but must have at least 256-bit security, as defined below. A virtual  source  is  intended  especially  for  guest  operating  systems,  sandboxes,  emulators,  and  similar use cases.
+
+As a technical definition, a random-distinguishing attack against the output should require computational resources comparable or greater than those required for exhaustive key search on a secure  block  cipher  with  a  256-bit  key  (e.g.,  AES  256).  This  applies  to  both  classical  and  quantum computing models, but only classical information flows. The virtual source security requirement maps to Post-Quantum Security Category 5 (NIST, 2016).
+
+Any implementation of the seed CSR that limits the security strength shall not reduce it to less than 256 bits. If the security level is under 256 bits, then the interface must not be available.
+
+A virtual entropy source does not need to implement WAIT or BIST states. It should fail ( DEAD ) if the host DRBG or entropy source fails and there is insufficient seeding material for the host DRBG.

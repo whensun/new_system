@@ -1,0 +1,7 @@
+## 36.4. Adding aligned 64-bit instruction extensions
+
+The simplest approach to provide space for extensions that are too large for the base 32-bit fixedwidth instruction format is to add naturally aligned 64-bit instructions. The implementation must still support the 32-bit base instruction format, but can require that 64-bit instructions are aligned on 64bit boundaries to simplify instruction fetch, with a 32-bit NOP instruction used as alignment padding where necessary.
+
+<image>
+
+We anticipate processor generators that produce instruction-fetch units capable of automatically  handling  any  combination  of  supported  variable-length  instruction encodings.

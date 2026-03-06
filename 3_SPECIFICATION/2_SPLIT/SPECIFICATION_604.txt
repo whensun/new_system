@@ -1,0 +1,12 @@
+## 32.2.10. Zvknc - NIST Algorithm Suite with carryless multiply
+
+This extension is shorthand for the following set of other extensions:
+
+| Included Extension   | Description   |
+|----------------------|---------------|
+| Zvkn                 | Zvkn          |
+| Zvbc                 | Zvbc          |
+
+<image>
+
+This extension combines the NIST Algorithm Suite with the vector carryless multiply extension to enable AES-GCM.

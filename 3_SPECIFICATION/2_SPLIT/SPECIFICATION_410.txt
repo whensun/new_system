@@ -1,0 +1,7 @@
+## 30.14.1. Vector Single-Width Integer Reduction Instructions
+
+All  operands and results of single-width reduction instructions have the same SEW width. Overflows wrap around on arithmetic sums.
+
+```
+# Simple reductions, where [*] denotes all active elements: vredsum.vs  vd, vs2, vs1, vm   # vd[0] =  sum( vs1[0] , vs2[*] ) vredmaxu.vs vd, vs2, vs1, vm   # vd[0] = maxu( vs1[0] , vs2[*] ) vredmax.vs  vd, vs2, vs1, vm   # vd[0] =  max( vs1[0] , vs2[*] ) vredminu.vs vd, vs2, vs1, vm   # vd[0] = minu( vs1[0] , vs2[*] ) vredmin.vs  vd, vs2, vs1, vm   # vd[0] =  min( vs1[0] , vs2[*] ) vredand.vs  vd, vs2, vs1, vm   # vd[0] =  and( vs1[0] , vs2[*] ) vredor.vs   vd, vs2, vs1, vm   # vd[0] =   or( vs1[0] , vs2[*] ) vredxor.vs  vd, vs2, vs1, vm   # vd[0] =  xor( vs1[0] , vs2[*] )
+```

@@ -1,0 +1,41 @@
+## 28.13.12. cm.mva01s
+
+Synopsis:
+
+Move two s0-s7 registers into a0-a1
+
+Mnemonic:
+
+cm.mva01s r1s' , r2s'
+
+Encoding (RV32, RV64):
+
+<image>
+
+Assembly Syntax:
+
+```
+cm.mva01s r1s', r2s'
+```
+
+Description: This instruction moves r1s' into a0 and r2s' into a1 .  The execution is atomic, so it is not possible to observe state where only one of a0 or a1 have been updated.
+
+The encoding uses sreg number specifiers instead of xreg number specifiers to save encoding space. The mapping between them is specified in the pseudocode below.
+
+<image>
+
+The  s  register  mapping  is  taken  from  the  UABI,  and  may  not  match  the  currently unratified EABI. cm.mva01s.e may be included in the future.
+
+Prerequisites:
+
+None
+
+32-bit equivalent:
+
+No direct equivalent encoding exists.
+
+Operation:
+
+```
+//This is not SAIL, it's pseudocode. The SAIL hasn't been written yet. if (RV32E && (r1sc>1 || r2sc>1)) { reserved(); } xreg1 = {r1sc[2:1]>0,r1sc[2:1]==0,r1sc[2:0]}; xreg2 = {r2sc[2:1]>0,r2sc[2:1]==0,r2sc[2:0]}; X[10] = X[xreg1]; X[11] = X[xreg2];
+```

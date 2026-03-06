@@ -1,0 +1,7 @@
+## Chapter 23. "Ssdbltrp" Double Trap Extension, Version 1.0
+
+The Ssdbltrp extension addresses a double trap (See Section 3.1.6.2) privilege modes lower than M. It enables HS-mode to invoke a critical error handler in a virtual machine on a double trap in VS-mode. It also allows M-mode to invoke a critical error handler in the OS/Hypervisor on a double trap in S/HSmode.
+
+The  Ssdbltrp  extension  adds  the menvcfg .DTE  (See  Section  3.1.18)  and  the sstatus .SDT  fields  (See Section 12.1.1).  If  the  hypervisor  extension  is  additionally  implemented,  then  the  extension  adds  the henvcfg .DTE (See Section 21.2.5) and the vsstatus .SDT fields (See Section 21.2.11).
+
+See Section 12.1.1.5 for the operational details.

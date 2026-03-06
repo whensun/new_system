@@ -1,0 +1,11 @@
+## 2.4.3. NOP Instruction
+
+<image>
+
+The NOP instruction does not change any architecturally visible state, except for advancing the pc and incrementing any applicable performance counters. NOP is encoded as ADDI x0, x0, 0 .
+
+NOPs can be used to align code segments to microarchitecturally significant address boundaries, or to leave space for inline code modifications. Although there are many possible  ways  to  encode  a  NOP,  we  define  a  canonical  NOP  encoding  to  allow microarchitectural  optimizations  as  well  as  for  more  readable  disassembly  output. The other NOP encodings are made available for HINT Instructions.
+
+<image>
+
+ADDI  was  chosen  for  the  NOP  encoding  as  this  is  most  likely  to  take  fewest resources to execute across a range of systems (if not optimized away in decode). In particular,  the  instruction  only  reads  one  register.  Also,  an  ADDI  functional  unit  is more likely  to  be  available  in  a  superscalar  design  as  adds  are  the  most  common operation. In particular, address-generation functional units can execute ADDI using the  same  hardware  needed  for  base+offset  address  calculations,  while  registerregister ADD or logical/shift operations require additional hardware.

@@ -1,0 +1,15 @@
+## 30.3.11. State of Vector Extension at Reset
+
+The vector extension must have a consistent state at reset. In particular, vtype and vl must have values that can be read and then restored with a single vsetvl instruction.
+
+<image>
+
+It  is  recommended  that  at  reset, vtype.vill is  set,  the  remaining  bits  in vtype are zero, and vl is set to zero.
+
+The vstart , vxrm , vxsat CSRs can have arbitrary values at reset.
+
+<image>
+
+Most uses of the vector unit will require an initial vset{i}vl{i} , which will reset vstart . The vxrm and vxsat fields should be reset explicitly in software before use.
+
+The vector registers can have arbitrary values at reset.

@@ -1,0 +1,27 @@
+## 30.7.1. Vector Load/Store Instruction Encoding
+
+Vector  loads  and  stores  are  encoded  within  the  scalar  floating-point  load  and  store  major  opcodes (LOAD-FP/STORE-FP). The vector load and store encodings repurpose a portion of the standard scalar floating-point load/store 12-bit immediate field to provide further vector instruction encoding, with bit 25 holding the standard vector mask bit (see Section 30.5.3.1).
+
+Format for Vector Load Instructions under LOAD-FP major opcode
+
+<image>
+
+Format for Vector Store Instructions under STORE-FP major opcode
+
+<image>
+
+| Field                 | Description                                                                       |
+|-----------------------|-----------------------------------------------------------------------------------|
+| rs1[4:0]              | specifies x register holding base address                                         |
+| rs2[4:0]              | specifies x register holding stride                                               |
+| vs2[4:0]              | specifies v register holding address offsets                                      |
+| vs3[4:0]              | specifies v register holding store data                                           |
+| vd[4:0]               | specifies v register destination of load                                          |
+| vm                    | specifies whether vector masking is enabled (0 = mask enabled, 1 = mask disabled) |
+| width[2:0]            | specifies size of memory elements, and distinguishes from FP scalar               |
+| mew                   | extended memory element width. See Section 30.7.3                                 |
+| mop[1:0]              | specifies memory addressing mode                                                  |
+| nf[2:0]               | specifies the number of fields in each segment, for segment load/stores           |
+| lumop[4:0]/sumop[4:0] | are additional fields encoding variants of unit-stride instructions               |
+
+Vector  memory  unit-stride  and  constant-stride  operations  directly  encode  EEW  of  the  data  to  be transferred statically in the instruction to reduce the number of vtype changes when accessing memory in a mixed-width routine. Indexed operations use the explicit EEW encoding in the instruction to set the size of the indices used, and use SEW/LMUL to specify the data width.

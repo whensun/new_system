@@ -1,0 +1,13 @@
+## 32.2.15. Zvkt - Vector Data-Independent Execution Latency
+
+The Zvkt extension requires all implemented instructions from the following list to be executed with data-independent  execution  latency  as  defined  in  the  RISC-V  Scalar  Cryptography  Extensions specification.
+
+Data-independent execution latency (DIEL) applies to all data operands of an instruction, even those that are not a part of the body or that are inactive. However, DIEL does not apply to other values such as vl, vtype, and the mask (when used to control execution of a masked vector instruction). Also, DIEL does not apply to constant values specified in the instruction encoding such as the use of the zero register ( x0 ), and, in the case of immediate forms of an instruction, the values in the immediate fields (i.e., imm, and uimm).
+
+In some cases --- which are explicitly specified in the lists below --- operands that are used as control rather than data are exempt from DIEL.
+
+<image>
+
+DIEL helps protect against side-channel timing attacks that are used to determine data values that are intended to be kept secret. Such values include cryptographic keys, plain text, and partially encrypted text. DIEL is not intended to keep software (and  cryptographic  algorithms  contained  therein)  secret  as  it  is  assumed  that  an adversary  would  already  know  these.  This  is  why  DIEL  doesn't  apply  to  constants embedded in instruction encodings.
+
+It  is  important  that  the  values  of  elements  that  are  not  in  the  body  or  that  are masked off do not affect the execution latency of the instruction. Sometimes such elements contain data that also needs to be kept secret.

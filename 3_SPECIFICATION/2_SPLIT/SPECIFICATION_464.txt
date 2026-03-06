@@ -1,0 +1,17 @@
+## 31.3. Extensions Overview
+
+The group of extensions introduced by the Scalar Cryptography Instruction Set Extension is listed here.
+
+Detection  of  individual  cryptography  extensions  uses  the  unified  software-based  RISC-V  discovery method.
+
+<image>
+
+<image>
+
+At the time of writing, these discovery mechanisms are still a work in progress.
+
+A note on extension rationale
+
+Specialist encryption and decryption instructions are separated into different functional groups because some use cases (e.g., Galois/Counter Mode in TLS 1.3) do not require decryption functionality.
+
+The NIST and ShangMi algorithms suites are separated because their usefulness is heavily dependent on the countries a device is expected to operate in. NIST ciphers are  a  part  of  most  standardised  internet  protocols,  while  ShangMi  ciphers  are required for use in China.

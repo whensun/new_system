@@ -1,0 +1,7 @@
+## 30.17. Exception Handling
+
+On a trap during a vector instruction (caused by either a synchronous exception or an asynchronous interrupt), the existing *epc CSR is written with a pointer to the trapping vector instruction, while the vstart CSR contains the element index on which the trap was taken.
+
+<image>
+
+We  chose  to  add  a vstart CSR  to  allow  resumption  of  a  partially  executed  vector instruction to reduce interrupt latencies and to simplify forward-progress guarantees. This  is  similar  to  the  scheme  in  the  IBM  3090  vector  facility.  To  ensure  forward progress without the vstart CSR, implementations would have to guarantee an entire vector instruction can always complete atomically without generating a trap. This is particularly difficult to ensure in the presence of strided or scatter/gather operations and demand-paged virtual memory.

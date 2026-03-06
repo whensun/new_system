@@ -1,0 +1,13 @@
+## 30.3.3. Vector Context Status in vsstatus
+
+When the hypervisor extension is present, a vector context status field, VS , is added to vsstatus[10:9] . It is defined analogously to the floating-point context status field, FS .
+
+When V=1, both vsstatus.VS and mstatus.VS are in effect: attempts to execute any vector instruction, or to access the vector CSRs, raise an illegal-instruction exception when either field is set to Off.
+
+When V=1 and neither vsstatus.VS nor mstatus.VS is set to Off, executing any instruction that changes vector  state,  including  the  vector  CSRs,  will  change  both mstatus.VS and vsstatus.VS to Dirty. Implementations may also change mstatus.VS or vsstatus.VS from Initial or Clean to Dirty at any time, even when there is no change in vector state.
+
+If vsstatus.VS is  Dirty, vsstatus.SD is  1;  otherwise, vsstatus.SD is  set  in  accordance  with  existing specifications.
+
+If mstatus.VS is Dirty, mstatus.SD is  1;  otherwise, mstatus.SD is  set  in  accordance  with  existing specifications.
+
+For implementations with a writable misa.V field, the vsstatus.VS field may exist even if misa.V is clear.

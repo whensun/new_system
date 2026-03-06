@@ -1,0 +1,52 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: ADD
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for ADD instruction, rewrite the following description as a list of rules. Each rule must explain about ADD instruction. Essentially, for each rule, it is about ADD instruction, not other things.
+
+Do not lose any information about ADD instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is ADD."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+Exclude purely structural or descriptive properties (such as register width, naming, or existence) unless they imply observable architectural behavior.
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word ADD.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+**ADD (integer register‑register operation)**  
+
+- **Operation**: "ADD performs the addition of rs1 and rs2."  
+- **Result width**: "Overflows are ignored and the low XLEN bits of results are written to the destination rd."  
+- **Source and destination registers**: "All operations read the rs1 and rs2 registers as source operands and write the result into register rd."  
+- **Encoding**: "The funct7 and funct3 fields select the type of operation." (ADD is selected by a specific combination of funct7 = 0b0000000 and funct3 = 0b000 in the R‑type format.)  
+- **Exception behavior**: "No integer computational instructions cause arithmetic exceptions." (therefore ADD never raises an arithmetic exception).
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: ADD must compute the sum of the architectural values read from registers rs1 and rs2.  
+RULE 2: ADD must ignore any overflow and write only the low XLEN bits of the sum to register rd.  
+RULE 3: ADD must read the current values of registers rs1 and rs2 as its source operands.  
+RULE 4: ADD must write the computed result into the architectural destination register rd.  
+RULE 5: ADD must never raise an arithmetic exception.
+======================================================= END - 1 ========================================================

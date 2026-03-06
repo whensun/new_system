@@ -1,0 +1,27 @@
+## 11.4. State Enable Access Control
+
+When Smstateen  is  implemented,  the mstateen0 .CTR  bit  controls  access  to  CTR  register  state  from privilege modes less privileged than M-mode. When mstateen0 .CTR=1, accesses to CTR register state behave as described in Section 7.2 and Section 11.2 above, while SCTRCLR behaves as described in Section  11.3.1.  When mstateen0 .CTR=0  and  the  privilege  mode  is  less  privileged  than  M-mode,  the following operations raise an illegal-instruction exception:
+
+- ⚫ Attempts to access sctrctl , vsctrctl , sctrdepth , or sctrstatus
+- ⚫ Attempts  to  access sireg* when siselect is  in  0x200..0x2FF,  or vsireg* when vsiselect is  in 0x200..0x2FF
+- ⚫ Execution of the SCTRCLR instruction
+
+When mstateen0 .CTR=0, qualified control transfers executed in privilege modes less privileged than Mmode will continue to implicitly update entry registers and sctrstatus .
+
+If  the  H  extension  is  implemented  and mstateen0 .CTR=1,  the hstateen0 .CTR  bit  controls  access  to supervisor  CTR  state  when  V=1.  This  state  includes sctrctl (really vsctrctl ), sctrstatus ,  and sireg* (really vsireg* )  when siselect (really vsiselect )  is  in  0x200..0x2FF. hstateen0 .CTR is read-only 0 when mstateen0 .CTR=0.
+
+When mstateen0 .CTR=1  and hstateen0 .CTR=1,  VS-mode  accesses  to  supervisor  CTR  state  behave  as described  in  Section  7.2  and  Section  11.2  above,  while  SCTRCLR  behaves  as  described  in  Section 11.3.1.  When mstateen0 .CTR=1  and hstateen0 .CTR=0,  both  VS-mode  accesses  to  supervisor  CTR  state and VS-mode execution of SCTRCLR raise a virtual-instruction exception.
+
+<image>
+
+sctrdepth is  not  included  in  the  above  list  of  supervisor  CTR  state  controlled  by hstateen0 .CTR  since  accesses  to sctrdepth from  VS-mode  raise  a  virtual-instruction exception regardless of the value of hstateen0 .CTR.
+
+When hstateen0 .CTR=0, qualified control transfers executed while V=1 will continue to implicitly update entry registers and sctrstatus .
+
+<image>
+
+See Chapter 5 for how bit 60 in mstateen0 and hstateen0 can also restrict access to sireg* / siselect and vsireg* / vsiselect from  privilege  modes  less  privileged  than  Mmode.
+
+<image>
+
+Implementations that support Smctr/Ssctr but not Smstateen/Ssstateen  may observe reduced performance. Because Smctr/Ssctr introduces a significant number of  new  CSRs,  it  is  desirable  to  avoid  save/restore  of  CTR  state  when  possible.  A hypervisor is likely to leverage State Enable to trap on the initial guest access to CTR state,  delegating  CTR  and  enabling  save/restore  of  guest  CTR  state  only  once  the guest has begun to use it. Without Smstateen/Ssstateen, a hypervisor is required to save/restore guest CTR state on every context switch.

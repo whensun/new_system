@@ -1,0 +1,13 @@
+## 31.3.11. Zks - ShangMi Algorithm Suite
+
+This extension is shorthand for the following set of other extensions:
+
+| Included Extension   | Description                                    |
+|----------------------|------------------------------------------------|
+| Zbkb-sc              | Bitmanipulation instructions for cryptography. |
+| Zbkc-sc              | Carry-less multiply instructions.              |
+| Zbkx-sc              | Cross-bar Permutation instructions.            |
+| Zksed                | SM4 block cipher instructions.                 |
+| Zksh                 | SM3 hash function instructions.                |
+
+A core which implements Zks must implement all of the above extensions.

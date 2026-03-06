@@ -1,0 +1,9 @@
+## 22.1. Quad-Precision Load and Store Instructions
+
+New 128-bit variants of LOAD-FP and STORE-FP instructions are added, encoded with a new value for the funct3 width field.
+
+<image>
+
+FLQ and FSQ are only guaranteed to execute atomically if the effective address is naturally aligned and XLEN=128.
+
+FLQ and FSQ do not modify the bits being transferred; in particular, the payloads of non-canonical NaNs are preserved.

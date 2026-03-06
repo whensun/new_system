@@ -1,0 +1,7 @@
+## 21.2.14. Virtual Supervisor Scratch ( vsscratch ) Register
+
+The vsscratch register  is  a  VSXLEN-bit  read/write  register  that  is  VS-mode's  version  of  supervisor register sscratch ,  formatted  as  shown  in  Figure  105.  When  V=1, vsscratch substitutes  for  the  usual sscratch ,  so  instructions  that  normally  read  or  modify sscratch actually  access vsscratch instead.  The contents of vsscratch never directly affect the behavior of the machine.
+
+Figure 105. Virtual supervisor scratch register vsscratch .
+
+<image>

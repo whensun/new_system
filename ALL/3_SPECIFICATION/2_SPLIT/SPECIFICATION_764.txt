@@ -1,0 +1,9 @@
+## 3.7.1.2. Locking and Privilege Mode
+
+The L bit indicates that the PMP entry is locked, i.e., writes to the configuration register and associated address registers are ignored. Locked PMP entries remain locked until the hart is reset. If PMP entry i is locked, writes to pmp i cfg and pmpaddr i are ignored. Additionally, if PMP entry i is locked and pmp i cfg.A is set to TOR, writes to pmpaddr i -1 are ignored.
+
+<image>
+
+Setting the L bit locks the PMP entry even when the A field is set to OFF.
+
+In addition to locking the PMP entry, the L bit indicates whether the R/W/X permissions are enforced on M-mode accesses. When the L bit is set, these permissions are enforced for all privilege modes. When  the  L  bit  is  clear,  any  M-mode  access  matching  the  PMP  entry  will  succeed;  the  R/W/X permissions apply only to S and U modes.

@@ -1,0 +1,3 @@
+## 24.3.3. Smmpm
+
+Smmpm adds  a  new  2-bit  WARL  field  ( PMM )  to  bits  33:32  of mseccfg .  The  presence  of Smmpm implies  the presence  of  the mseccfg register,  even  if  it  would  not  otherwise  be  present.  Setting PMM enables  or disables pointer masking for M mode, according to the values in Table 2.

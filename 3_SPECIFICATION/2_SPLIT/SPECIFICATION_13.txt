@@ -1,0 +1,17 @@
+## 2.4. Integer Computational Instructions
+
+Most integer computational instructions operate on XLEN bits of values held in the integer register file. Integer computational instructions are either encoded as register-immediate operations using the Itype format or as register-register operations using the R-type format. The destination is register rd for both  register-immediate  and  register-register  instructions.  No  integer  computational  instructions cause arithmetic exceptions.
+
+
+
+We  did  not  include  special  instruction-set  support  for  overflow  checks  on  integer arithmetic  operations  in  the  base  instruction  set,  as  many  overflow  checks  can  be cheaply  implemented  using  RISC-V  branches.  Overflow  checking  for  unsigned addition requires only a single additional branch instruction after the addition: add t0, t1, t2; bltu t0, t1, overflow .
+
+For signed addition, if one operand's sign is known, overflow checking requires only a single branch after the addition: addi t0, t1, +imm; blt t0, t1, overflow . This covers the common case of addition with an immediate operand.
+
+For  general  signed  addition,  three  additional  instructions  after  the  addition  are required,  leveraging  the  observation  that  the  sum  should  be  less  than  one  of  the operands if and only if the other operand is negative.
+
+add t0, t1, t2 slti t3, t2, 0 slt t4, t0, t1
+
+bne t3, t4, overflow
+
+In RV64I, checks of 32-bit signed additions can be optimized further by comparing the results of ADD and ADDW on the operands.

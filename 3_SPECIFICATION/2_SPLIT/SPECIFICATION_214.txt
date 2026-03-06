@@ -1,0 +1,3 @@
+## 28.13.2.1. Stack pointer adjustment handling
+
+The instructions all automatically adjust the stack pointer by enough to cover the memory required for the registers being saved or restored. Additionally the spimm field  in  the  encoding allows the stack pointer  to  be  adjusted  in  additional  increments  of  16-bytes.  There  is  only  a  small  restricted  range available  in  the  encoding;  if  the  range  is  insufficient  then  a  separate c.addi16sp can  be  used  to increase the range.

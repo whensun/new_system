@@ -1,0 +1,13 @@
+## 36.2. RISC-V Extension Design Philosophy
+
+We intend to support a large number of independently developed extensions by encouraging extension developers to operate within instruction encoding spaces, and by providing tools to pack these into a standard-compatible  global  encoding  by  allocating  unique  prefixes.  Some  extensions  are  more naturally  implemented  as  brownfield  augmentations  of  existing  extensions,  and  will  share  whatever prefix is allocated to their parent greenfield extension. The standard extension prefixes avoid spurious incompatibilities in the encoding of core functionality, while allowing custom packing of more esoteric extensions.
+
+This  capability  of  repacking  RISC-V  extensions  into  different  standard-compatible  global  encodings can be used in a number of ways.
+
+One  use-case  is  developing  highly  specialized  custom  accelerators,  designed  to  run  kernels  from important application domains. These might want to drop all but the base integer ISA and add in only the  extensions  that  are  required  for  the  task  in  hand.  The  base  ISAs  have  been  designed  to  place minimal  requirements  on  a  hardware  implementation,  and  has  been  encoded  to  use  only  a  small fraction of a 32-bit instruction encoding space.
+
+Another  use-case  is  to  build  a  research  prototype  for  a  new  type  of  instruction-set  extension.  The researchers might not want to expend the effort to implement a variable-length instruction-fetch unit, and so would like to prototype their extension using a simple 32-bit fixed-width instruction encoding. However,  this  new  extension  might  be  too  large  to  coexist  with  standard  extensions  in  the  32-bit
+
+space. If the research experiments do not need all of the standard extensions, a standard-compatible global  encoding  might  drop  the  unused  standard  extensions  and  reuse  their  prefixes  to  place  the proposed  extension  in  a  non-standard  location  to  simplify  engineering  of  the  research  prototype. Standard tools will  still  be  able  to  target  the  base  and  any  standard  extensions  that  are  present  to reduce development time. Once the instruction-set extension has been evaluated and refined, it could then be made available for packing into a larger variable-length encoding space to avoid conflicts with all standard extensions.
+
+The following sections describe increasingly sophisticated strategies for developing implementations with  new  instruction-set  extensions.  These  are  mostly  intended  for  use  in  highly  customized, educational, or experimental architectures rather than for the main line of RISC-V ISA development.

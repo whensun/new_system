@@ -1,0 +1,42 @@
+## 3.1.16. Machine Trap Value ( mtval ) Register
+
+The mtval register is an MXLEN-bit read-write register formatted as shown in Figure 23. When a trap is taken into M-mode, mtval is either set to zero or written with exception-specific information to assist software in handling the trap. Otherwise, mtval is never written by the implementation, though it may be explicitly  written  by  software.  The  hardware  platform  will  specify  which  exceptions  must  set mtval informatively,  which  may  unconditionally  set  it  to  zero,  and  which  may  exhibit  either  behavior, depending on the underlying event that caused the exception. If the hardware platform specifies that no exceptions set mtval to a nonzero value, then mtval is read-only zero.
+
+If mtval is written with a nonzero value when a breakpoint, address-misaligned, access-fault, or pagefault exception occurs on an instruction fetch, load, or store, then mtval will contain the faulting virtual address.
+
+When page-based virtual memory is enabled, mtval is written with the faulting virtual address, even for physical-memory access-fault exceptions. This design reduces datapath cost for most implementations, particularly those with hardware page-table walkers.
+
+Figure 23. Machine Trap Value ( mtval ) register.
+
+<image>
+
+If mtval is  written  with  a  nonzero  value  when  a  misaligned  load  or  store  causes  an  access-fault  or page-fault  exception,  then mtval will  contain  the  virtual  address  of  the  portion  of  the  access  that caused the fault.
+
+If mtval is written with a nonzero value when an instruction access-fault or page-fault exception occurs on a hart with variable-length instructions, then mtval will contain the virtual address of the portion of the instruction that caused the fault, while mepc will point to the beginning of the instruction.
+
+The mtval register  can  optionally  also  be  used  to  return  the  faulting  instruction  bits  on  an  illegalinstruction  exception  ( mepc points  to  the  faulting  instruction  in  memory).  If mtval is  written  with  a nonzero value when an illegal-instruction exception occurs, then mtval will contain the shortest of:
+
+- ⚫ the actual faulting instruction
+
+- ⚫ the first ILEN bits of the faulting instruction
+- ⚫ the first MXLEN bits of the faulting instruction
+
+The value loaded into mtval on an illegal-instruction exception is right-justified and all unused upper bits are cleared to zero.
+
+Capturing  the  faulting  instruction  in mtval reduces  the  overhead  of  instruction emulation,  potentially  avoiding  several  partial  instruction  loads  if  the  instruction  is misaligned, and likely data cache misses or slow uncached accesses when loads are used to fetch the instruction into a data register. There is also a problem of atomicity if another agent is manipulating the instruction memory, as might occur in a dynamic translation system.
+
+<image>
+
+A  requirement  is  that  the  entire  instruction  (or  at  least  the  first  MXLEN  bits)  are fetched into mtval before taking the trap. This should not constrain implementations, which  would  typically  fetch  the  entire  instruction  before  attempting  to  decode  the instruction, and avoids complicating software handlers.
+
+A value of zero in mtval signifies either that the feature is not supported, or an illegal zero instruction was fetched. A load from the instruction memory pointed to by mepc can be used to distinguish these two cases (or alternatively, the system configuration information  can  be  interrogated  to  install  the  appropriate  trap  handling  before runtime).
+
+On a trap caused by a software-check exception, the mtval register holds the cause for the exception. The following encodings are defined:
+
+- ⚫ 0 - No information provided.
+- ⚫ 2 - Landing Pad Fault. Defined by the Zicfilp extension (Section 22.1).
+- ⚫ 3 - Shadow Stack Fault. Defined by the Zicfiss extension (Section 22.2).
+
+For other traps, mtval is set to zero, but a future standard may redefine mtval 's setting for other traps.
+
+If mtval is not read-only zero, it is a WARL register that must be able to hold all valid virtual addresses and the value zero. It need not be capable of holding all possible invalid addresses. Prior to writing mtval ,  implementations may convert an invalid address into some other invalid address that mtval is capable of holding. If the feature to return the faulting instruction bits is implemented, mtval must also be able to hold all values less than 2 N , where N is the smaller of MXLEN and ILEN.

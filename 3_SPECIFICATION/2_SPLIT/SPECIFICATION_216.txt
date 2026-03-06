@@ -1,0 +1,9 @@
+## 28.13.3. PUSH/POP Fault handling
+
+Correct execution requires that sp refers  to  idempotent  memory (also see Non-idempotent memory handling), because the core must be able to handle traps detected during the sequence. The entire PUSH/POP  sequence  is  re-executed  after  returning  from  the  trap  handler,  and  multiple  traps  are possible during the sequence.
+
+If a trap occurs during the sequence then xEPC is updated with the PC of the instruction, xTVAL (if not read-only-zero) updated with the bad address if it was an access fault and xCAUSE updated with the type of trap.
+
+<image>
+
+It  is  implementation  defined  whether  interrupts  can  also  be  taken  during  the sequence execution.

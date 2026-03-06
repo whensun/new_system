@@ -1,0 +1,31 @@
+## 31.4.9. aes64im
+
+## Synopsis
+
+This instruction accelerates the inverse MixColumns step of the AES Block Cipher, and is used to aid creation of the decryption KeySchedule.
+
+## Mnemonic
+
+aes64im rd, rs1
+
+## Encoding
+
+<image>
+
+## Description
+
+The instruction applies the inverse MixColumns transformation to two columns of the state array, packed into a single 64-bit register. It is used to create the inverse cipher KeySchedule, according to  the  equivalent  inverse  cipher  construction  in  (NIST,  2001)  (Page  23,  Section  5.3.5).  This instruction must always be  implemented such that its execution latency does not depend on the data being operated on.
+
+## Operation
+
+```
+function clause execute (AES64IM(rs1, rd)) = { let w0 : bits(32) = aes_mixcolumn_inv(X(rs1)[31.. 0]); let w1 : bits(32) = aes_mixcolumn_inv(X(rs1)[63..32]); X(rd)  = w1 @ w0; RETIRE_SUCCESS }
+```
+
+## Included in
+
+| Extension   | Minimum version   | Lifecycle state   |
+|-------------|-------------------|-------------------|
+| Zknd (RV64) | v1.0.0            | Ratified          |
+| Zkn (RV64)  | v1.0.0            | Ratified          |
+| Zk (RV64)   | v1.0.0            | Ratified          |

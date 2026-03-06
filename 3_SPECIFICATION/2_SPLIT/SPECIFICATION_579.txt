@@ -1,0 +1,11 @@
+## 31.8.5.6. Cryptographic Conditioners
+
+For  secure  use,  cryptographic  conditioners  are  always  required  on  the  software  side  of  the  ISA
+
+boundary. They may also be implemented on the hardware side if necessary. In any case, the entropy ES16  output  must  always  be  compressed  2:1  (or  more)  before  being  used  as  keying  material  or considered "full entropy."
+
+Examples of cryptographic conditioners include the random pool of the Linux operating system, secure hash functions (SHA-2/3, SHAKE (NIST, 2015; NIST, 2015)), and the AES / CBC-MAC construction in Appendix F, SP 800-90B (Turan et al., 2018).
+
+In some constructions, such as the Linux RNG and SHA-3/SHAKE (NIST, 2015) based generators, the cryptographic conditioning and output (DRBG) generation are provided by the same component.
+
+Rationale: For many low-power targets constructions the type of hardware AES CBC-MAC conditioner used  by  Intel  (Mechalas,  2018)  and  AMD  (AMD,  2017)  would  be  too  complex  and  energy-hungry  to implement solely to serve the seed CSR.  On  the  other  hand,  simpler  non-cryptographic  conditioners may  be  too  wasteful  on  input  entropy  if  high-quality  random  output  is  required -(ARM  TrustZone TRBG  (ARM,  2017)  outputs  only  10Kbit/sec  at  200  MHz.)  Hence  a  resource-saving  compromise  is made between hardware and software generation.

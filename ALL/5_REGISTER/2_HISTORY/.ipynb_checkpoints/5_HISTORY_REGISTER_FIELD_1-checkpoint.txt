@@ -1,0 +1,69 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: mseccfg
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, based on the rules below, output all fields for mseccfg register. Do not give any introduction.
+
+The rules below:
+
+REGISTER: mseccfg
+WIDTH: 64
+RULE 1: If the entropy‑source extension Zkr is not implemented, the sseed and useed bits in mseccfg are hard‑wired to zero and writes to those bits have no effect.
+RULE 2: mseccfg is readable and writable only in machine mode.
+RULE 3: All undefined bits in mseccfg are reserved and must read as zero; writes to those bits have no defined effect.
+RULE 4: All defined fields in mseccfg are WARL.
+RULE 5: If the sseed bit in mseccfg is 1, accesses to the seed CSR from supervisor mode (S‑mode or HS‑mode) are permitted; if sseed is 0, any such access raises an illegal‑instruction exception.
+RULE 6: If the useed bit in mseccfg is 1, accesses to the seed CSR from user mode are permitted; if useed is 0, any such access raises an illegal‑instruction exception.
+RULE 7: Accesses to the seed CSR from machine mode are always permitted regardless of the values of sseed or useed in mseccfg.
+RULE 8: If the sseed bit in mseccfg is 1, a virtual‑supervisor (VS) or virtual‑user (VU) attempt to read‑write the seed CSR raises a virtual‑instruction exception; if sseed is 0, the same attempt raises an illegal‑instruction exception.
+RULE 9: The useed bit in mseccfg has no effect on the exception type raised for VS/VU accesses to the seed CSR.
+RULE 10: If the MMWP bit in mseccfg is set to 1, the default PMP policy for machine mode on unmapped memory regions changes from ignore to deny, and MMWP cannot be cleared until a PMP reset.
+RULE 11: If the MML bit in mseccfg is set to 1, a pmpcfg.L=1 rule becomes machine‑mode‑only, a pmpcfg.L=0 rule becomes supervisor/user‑mode‑only, the pmpcfg.RW=01 encoding is repurposed for shared‑region rules, and MML cannot be cleared until a PMP reset.
+RULE 12: If the MML bit in mseccfg is 0, the pmpcfg.RW=01 encoding remains reserved for future use.
+RULE 13: If the RLB bit in mseccfg is 1, locked PMP rules may be removed or modified and locked PMP entries may be edited.
+RULE 14: If any PMP entry has pmpcfg.L=1, the RLB bit in mseccfg remains 0 and any write to RLB is ignored until a PMP reset.
+RULE 15: If the PMM field in mseccfg (bits 33‑32) is set to a value defined by the Smmpm extension, pointer masking for machine mode is enabled or disabled according to that encoding.
+RULE 16: If the MLPE bit in mseccfg is 1, the Zicfilp extension is enabled in machine mode.
+RULE 17: If the MLPE bit in mseccfg is 0, the Zicfilp extension is disabled in machine mode, the hart never updates the expected landing‑pad (ELP) state (it remains NO_LP_EXPECTED), and the LPAD instruction executes as a no‑op.
+RULE 18: Software may test whether the sseed or useed bits in mseccfg are writable by writing 1 to the bit and reading it back; a read‑back value of 1 indicates the bit is writable, while a read‑back value of 0 indicates the bit is read‑only zero.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+**mseccfg CSR (64‑bit)**  
+
+| Bits | Field | Description (per the rules) | WARL? | Remarks |
+|------|-------|-----------------------------|-------|---------|
+| 0    | **sseed** | Permission bit that enables supervisor‑mode (S/HS) accesses to the `seed` CSR when set to 1. If cleared, such accesses raise an illegal‑instruction exception. | Yes | If the entropy‑source extension **Zkr** is *not* implemented, this bit is hard‑wired to 0 and writes have no effect (Rule 1). |
+| 1    | **useed** | Permission bit that enables user‑mode accesses to the `seed` CSR when set to 1. If cleared, user accesses raise an illegal‑instruction exception. | Yes | Same Zkr‑not‑implemented condition as `sseed` (Rule 1). |
+| 2    | **MMWP** | "Machine‑Mode Memory‑Write‑Protect" – when 1, the default PMP policy for machine mode on unmapped memory changes from **ignore** to **deny**. Once set, it cannot be cleared until a PMP reset. | Yes | Writes with value 0 are ignored after it becomes 1 (Rule 10). |
+| 3    | **MML** | "Machine‑Mode Lock" – when 1, PMP lock semantics are altered: <br>• `pmpcfg.L=1` rules become machine‑mode‑only.<br>• `pmpcfg.L=0` rules become supervisor/user‑mode‑only.<br>• `pmpcfg.RW=01` encoding is repurposed for *shared‑region* rules.<br>Cannot be cleared until a PMP reset. | Yes | When 0, `pmpcfg.RW=01` is reserved (Rule 12). |
+| 4    | **RLB** | "Relaxed‑Lock‑Bypass" – when 1, locked PMP entries may be edited or removed, and locked entries may be modified. | Yes | If any PMP entry has `pmpcfg.L=1`, the hardware forces RLB = 0 and ignores writes to it until a PMP reset (Rule 14). |
+| 5‑31| **RESERVED** | Reserved, must read as zero; writes have no defined effect. | No | Rule 3. |
+| 33‑32| **PMM** | "Pointer‑Masking Mode" – two‑bit field that selects the machine‑mode pointer‑masking behavior defined by the **Smmpm** extension. Value 0 = disabled; other encodings enable/disable pointer masking per Smmpm definition. | Yes | Only meaningful when the Smmpm extension is present. |
+| 34‑54| **RESERVED** | Reserved, reads return zero; writes are ignored. | No | Rule 3. |
+| 55   | **MLPE** | "Machine‑Mode Linear‑Pointer‑Enable" – when 1, the **Zicfilp** extension is enabled in machine mode; when 0, Zicfilp is disabled, the hart never updates the Expected Landing‑Pad (ELP) state, and the `lpad` instruction becomes a no‑op. | Yes | Rule 16 / 17. |
+| 56‑63| **RESERVED** | Reserved, reads as zero; writes ignored. | No | Rule 3. |
+
+### Additional Operational Notes  
+
+* **Access Rights** – `mseccfg` is readable and writable **only** in **machine mode** (Rule 2).  
+* **Write‑ability Test** – Software can test whether `sseed` or `useed` are writable by writing a 1 to the bit and reading it back; a read‑back of 1 indicates the bit is writable, otherwise it is hard‑wired zero (Rule 18).  
+* **Effect on Seed CSR Exceptions** –  
+  * Machine‑mode accesses to the `seed` CSR are always allowed (Rule 7).  
+  * When `sseed` = 1, supervisor‑mode accesses are permitted; otherwise they raise an illegal‑instruction exception (Rule 5).  
+  * When `useed` = 1, user‑mode accesses are permitted; otherwise they raise an illegal‑instruction exception (Rule 6).  
+  * For virtual‑supervisor (VS) or virtual‑user (VU) accesses: if `sseed` = 1 the attempt raises a **virtual‑instruction** exception; if `sseed` = 0 it raises an **illegal‑instruction** exception (Rule 8). The `useed` bit does **not** affect the exception type for VS/VU accesses (Rule 9).  
+
+All defined fields are **WARL** (Write‑Any‑Read‑Legal) – i.e., any value can be written, but reads may return a subset of legal values as defined by the implementation.  
+
+---  
+
+*All bits not listed above are reserved and must read as zero; writes to them have no defined effect (Rule 3).*
+======================================================= END - 1 ========================================================

@@ -1,0 +1,33 @@
+## 29.5.1. add.uw
+
+## Synopsis
+
+Add unsigned word
+
+## Mnemonic
+
+add.uw rd , rs1 , rs2
+
+## Pseudoinstructions
+
+zext.w rd , rs1 -> add.uw rd , rs1 , zero
+
+## Encoding
+
+<image>
+
+## Description
+
+This  instruction  performs  an  XLEN-wide  addition  between rs2 and  the  zero-extended  leastsignificant word of rs1 .
+
+## Operation
+
+```
+let base = X(rs2); let index = EXTZ(X(rs1)[31..0]); X(rd) = base + index;
+```
+
+## Included in
+
+| Extension                             |   Minimum version | Lifecycle state   |
+|---------------------------------------|-------------------|-------------------|
+| Zba (Address generation instructions) |              0.93 | Ratified          |

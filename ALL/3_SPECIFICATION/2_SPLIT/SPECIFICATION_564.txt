@@ -1,0 +1,11 @@
+## 31.8.3.2. NIST SP 800-90B
+
+See Section 31.5.2.1.
+
+SP 800-90C (Barker et al., 2021) states that each conditioned block of n bits is required to have n+64 bits of input entropy to attain full entropy. Hence NIST SP 800-90B (Turan et al., 2018) min-entropy assessment must guarantee at least 128 + 64 = 192 bits input entropy per 256-bit block ((Barker et al., 2021), Sections 4.1. and 4.3.2). Only then a hashing of 16 * 16 = 256 bits from the entropy source will produce the desired 128 bits of full entropy. This follows from the specific requirements, threat model, and distinguishability proof contained in SP 800-90C (Barker et al., 2021), Appendix A. The implied min-entropy rate is 192/256=12/16=0.75. The expected Shannon entropy is much larger.
+
+In FIPS 140-3 / SP 800-90 classification, an RBG2(P) construction is a cryptographically secure RBG with  continuous  access  to  a  physical  entropy  source  ( seed )  and  output  generated  by  a  fully  seeded, secure DRBG. The entropy source can also be used to build RBG3 full entropy sources (Barker et al., 2021). The concatenation of output words corresponds to the Get\_ES\_Bitstring function.
+
+The  128-bit  output  block  size  was  selected  because  that  is  the  output  size  of  the  CBC-MAC conditioner specified in Appendix F of (Turan et al., 2018) and also the smallest key size we expect to see in applications.
+
+If NIST SP 800-90B certification is chosen, the entropy source should implement at least the health tests defined in Section 4.4 of (Turan et al., 2018): the repetition count test and adaptive proportion test, or show that the same flaws will be detected by vendor-defined tests.

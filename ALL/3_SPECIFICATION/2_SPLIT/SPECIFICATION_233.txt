@@ -1,0 +1,5 @@
+## 28.14.1. jvt
+
+The base of the table is in the jvt CSR (see jvt CSR, table jump base vector and control register), each table entry is XLEN bits.
+
+If the same function is called with and without linking then it must have two entries in the table. This is typically caused by the same function being called with and without tail calling.

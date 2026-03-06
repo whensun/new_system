@@ -1,0 +1,9 @@
+## 31.8.4.2. T2: Continuous checks
+
+If an error is detected in continuous tests or environmental sensors, the entropy source will enter a nooutput state. We define that a non-critical alarm is signaled if the entropy source returns to BIST state from live ( WAIT or ES16 )  states. Critical failures will result in DEAD state immediately. A hardware-based continuous testing mechanism must not make statistical information externally available, and it must be zeroized periodically or upon demand via reset, power-up, or similar signal.
+
+Rationale. Physical  attacks  can  occur  while  the  device  is  running.  The  design  should  avoid  guiding such active attacks by revealing detailed status information. Upon detection of an attack, the default action should be aimed at damage control -to prevent weak crypto keys from being generated.
+
+The  statistical  nature  of  some  tests  makes  "type-1"  false  positives  a  possibility.  There  may  also  be requirements for signaling  of  non-fatal  alarms;  AIS  31  specifies  "noise  alarms"  that  can  go  off  with non-negligible probability even if the device is functioning correctly; these can be signaled with BIST . There rarely is anything that can or should be done about a non-fatal alarm condition in an operatorfree, autonomous system.
+
+The state of statistical runtime health checks (such as counters) is potentially correlated with some secret keying material, hence the zeroization requirement.

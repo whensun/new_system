@@ -1,0 +1,9 @@
+## 30.4. Mapping of Vector Elements to Vector Register State
+
+The following diagrams illustrate how different width elements are packed into the bytes of a vector register depending on the current SEW and LMUL settings, as well as implementation VLEN. Elements are packed into each vector register with the least-significant byte in the lowest-numbered bits.
+
+The mapping was chosen to provide the simplest and most portable model for software, but might appear  to  incur  large  wiring  cost  for  wider  vector  datapaths  on  certain  operations.  The  vector instruction  set  was  expressly  designed  to  support  implementations  that  internally  rearrange  vector data for different SEW to reduce datapath wiring costs, while externally preserving the simple software model.
+
+<image>
+
+For example, microarchitectures can track the EEW with which a vector register was written,  and  then  insert  additional  scrambling  operations  to  rearrange  data  if  the register is accessed with a different EEW.

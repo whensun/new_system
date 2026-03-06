@@ -1,0 +1,13 @@
+## 30.13.17. Single-Width Floating-Point/Integer Type-Convert Instructions
+
+Conversion  operations  are  provided  to  convert  to  and  from  floating-point  values  and  unsigned  and signed integers, where both source and destination are SEW wide.
+
+```
+vfcvt.xu.f.v vd, vs2, vm       # Convert float to unsigned integer. vfcvt.x.f.v  vd, vs2, vm       # Convert float to signed integer. vfcvt.rtz.xu.f.v vd, vs2, vm   # Convert float to unsigned integer, truncating. vfcvt.rtz.x.f.v  vd, vs2, vm   # Convert float to signed integer, truncating. vfcvt.f.xu.v vd, vs2, vm       # Convert unsigned integer to float. vfcvt.f.x.v  vd, vs2, vm       # Convert signed integer to float.
+```
+
+The conversions follow the same rules on exceptional conditions as the scalar conversion instructions. The  conversions  use  the  dynamic  rounding  mode  in frm ,  except  for  the rtz variants,  which  round towards zero.
+
+<image>
+
+The rtz variants are provided to accelerate truncating conversions from floating-point to integer, as is common in languages like C and Java.

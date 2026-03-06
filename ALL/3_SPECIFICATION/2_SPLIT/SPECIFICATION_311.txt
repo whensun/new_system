@@ -1,0 +1,3 @@
+## 30.1. Introduction
+
+This spec includes the complete set of currently frozen vector instructions. Other instructions that have been considered during development but are not present in this document are not included in the review and ratification process, and may be completely revised or abandoned. Section 30.18 lists the standard  vector  extensions  and  which  instructions  and  element  widths  are  supported  by  each extension.

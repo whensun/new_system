@@ -1,0 +1,21 @@
+## 28.14. Table Jump Overview
+
+cm.jt (Jump via table) and cm.jalt (Jump and link via table) are referred to as table jump.
+
+Table jump uses a 256-entry XLEN wide table in instruction memory to contain function addresses. The table must be a minimum of 64-byte aligned.
+
+Table entries follow the current data endianness. This is different from normal instruction fetch which is always little-endian.
+
+cm.jt and cm.jalt encodings  index  the  table,  giving  access  to  functions  within  the  full  XLEN  wide address space.
+
+This  is  used  as  a  form  of  dictionary  compression  to  reduce  the  code  size  of jal / auipc+jalr / jr / auipc+jr instructions.
+
+Table  jump  allows  the  linker  to  replace  the  following  instruction  sequences  with  a cm.jt or cm.jalt encoding, and an entry in the table:
+
+- ⚫ 32-bit j calls
+- ⚫ 32-bit jal ra calls
+- ⚫ 64-bit auipc+jr calls to fixed locations
+- ⚫ 64-bit auipc+jalr ra calls to fixed locations
+- ⚫ The auipc+jr/jalr sequence is used because the offset from the PC is out of the ±1MB range.
+
+If a return address stack is implemented, then as cm.jalt is equivalent to jal ra , it pushes to the stack.

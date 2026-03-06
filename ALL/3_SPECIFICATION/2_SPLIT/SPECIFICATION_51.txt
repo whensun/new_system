@@ -1,0 +1,7 @@
+## Chapter 12. M Extension for Integer Multiplication and Division, Version 2.0
+
+This chapter describes the standard integer multiplication and division instruction extension, which is named M and contains instructions that multiply or divide values held in two integer registers.
+
+<image>
+
+We  separate  integer  multiply  and  divide  out  from  the  base  to  simplify  low-end implementations, or for applications where integer multiply and divide operations are either infrequent or better handled in attached accelerators.

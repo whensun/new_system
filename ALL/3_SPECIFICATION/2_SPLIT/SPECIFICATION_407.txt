@@ -1,0 +1,28 @@
+## 30.13.18. Widening Floating-Point/Integer Type-Convert Instructions
+
+A  set  of  conversion  instructions  is  provided  to  convert  between  narrower  integer  and  floating-point datatypes to a type of twice the width.
+
+```
+vfwcvt.xu.f.v vd, vs2, vm       # Convert float to double-width unsigned integer. vfwcvt.x.f.v  vd, vs2, vm       # Convert float to double-width signed integer. vfwcvt.rtz.xu.f.v vd, vs2, vm   # Convert float to double-width unsigned
+```
+
+| integer, truncating. vfwcvt.rtz.x.f.v vd, vs2, vm truncating.   | # Convert float to double-width signed integer,   |
+|-----------------------------------------------------------------|---------------------------------------------------|
+| vfwcvt.f.xu.v vd, vs2, vm float.                                | # Convert unsigned integer to double-width        |
+| vfwcvt.f.x.v vd, vs2, vm                                        | # Convert signed integer to double-width float.   |
+| vfwcvt.f.f.v vd, vs2, vm float.                                 | # Convert single-width float to double-width      |
+
+These instructions have the same constraints on vector register overlap as other widening instructions (see Section 30.10.2).
+
+-  A double-width IEEE floating-point value can always represent a single-width integer
+
+<image>
+
+<image>
+
+exactly.
+
+- A double-width IEEE floating-point value can always represent a single-width IEEE floating-point value exactly.
+-  A  full set of floating-point widening  conversions  is not  supported  as  single instructions,  but  any  widening  conversion  can  be  implemented  as  several  doubling steps with equivalent results and no additional exception flags raised.
+
+<image>

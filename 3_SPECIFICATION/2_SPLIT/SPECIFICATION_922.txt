@@ -1,0 +1,20 @@
+## 24.3. ISA Extensions
+
+This section describes the pointer masking extensions Smmpm , Smnpm and Ssnpm .  All  of  these extensions are privileged ISA extensions and do not add any new CSRs. For the definitions of Sspm and Supm , see Section 24.2.7.
+
+<image>
+
+Future extensions may introduce additional CSRs to allow different privilege modes to  modify  their  own  pointer  masking  settings.  This  may  be  required  for  future  use cases in managed runtime systems that are not currently addressed as part of this extension.
+
+Each extension introduces a 2-bit WARL field ( PMM )  that  may  take  on  the  following  values  to  set  the pointer masking settings for a particular privilege mode.
+
+Table 55. Possible values of PMM WARL field.
+
+|   Value | Description                                                      |
+|---------|------------------------------------------------------------------|
+|      00 | Pointer masking is disabled (PMLEN=0)                            |
+|      01 | Reserved                                                         |
+|      10 | Pointer masking is enabled with PMLEN=XLEN-57 (PMLEN=7 on RV64)  |
+|      11 | Pointer masking is enabled with PMLEN=XLEN-48 (PMLEN=16 on RV64) |
+
+All of these fields are read-only 0 on RV32 systems.

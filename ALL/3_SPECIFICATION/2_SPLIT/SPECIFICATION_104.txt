@@ -1,0 +1,25 @@
+## 19.7.6. prefetch.r
+
+## Synopsis
+
+Provide a HINT to hardware that a cache block is likely to be accessed by a data read in the near future
+
+## Mnemonic
+
+prefetch.r offset ( base )
+
+## Encoding
+
+<image>
+
+## Description
+
+A prefetch.r instruction indicates to hardware that the cache block whose effective address is the sum of the base address specified in rs1 and the sign-extended offset encoded in imm[11:0] , where imm[4:0] equals 0b00000 , is likely to be accessed by a data read (i.e. load) in the near future.
+
+<image>
+
+An implementation may opt to cache a copy of the cache block in a cache accessed by a data read in order to improve memory access latency, but this behavior is not required.
+
+## Operation
+
+TODO

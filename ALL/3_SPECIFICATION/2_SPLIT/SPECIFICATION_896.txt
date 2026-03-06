@@ -1,0 +1,9 @@
+## 21.5. Two-Stage Address Translation
+
+Whenever the current  virtualization  mode  V  is  1,  two-stage  address  translation  and  protection  is  in effect. For any virtual memory access, the original virtual address is converted in the first stage by VSlevel address translation, as controlled by the vsatp register, into a guest physical address .  The guest physical  address  is  then  converted  in  the  second  stage  by  guest  physical  address  translation,  as controlled by the hgatp register, into a supervisor physical address. The two stages are known also as VS-stage and G-stage translation. Although there is no option to disable two-stage address translation when V=1, either stage of translation can be effectively disabled by zeroing the corresponding vsatp or hgatp register.
+
+The vsstatus field MXR, which makes execute-only pages readable by explicit loads, only overrides VSstage  page  protection.  Setting  MXR  at  VS-level  does  not  override  guest-physical  page  protections. Setting MXR at HS-level, however, overrides both VS-stage and G-stage execute-only permissions.
+
+When V=1, memory accesses that would normally bypass address translation are subject to G-stage address  translation  alone.  This  includes  memory  accesses  made  in  support  of  VS-stage  address translation, such as reads and writes of VS-level page tables.
+
+Machine-level  physical  memory  protection  applies  to  supervisor  physical  addresses  and  is  in  effect regardless of virtualization mode.

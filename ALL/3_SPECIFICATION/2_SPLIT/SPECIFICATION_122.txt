@@ -1,0 +1,5 @@
+## 21.6. Double-Precision Floating-Point Compare Instructions
+
+The  double-precision  floating-point  compare  instructions  are  defined  analogously  to  their  singleprecision counterparts, but operate on double-precision operands.
+
+<image>

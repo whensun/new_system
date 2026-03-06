@@ -1,0 +1,34 @@
+## 30.3.4.1. Vector Selected Element Width ( vsew[2:0] )
+
+The value in vsew sets the dynamic selected element width (SEW). By default, a vector register is viewed as being divided into VLEN/SEW elements.
+
+Table 45. vsew[2:0] (selected element width) encoding
+
+<image>
+
+|   vsew[2:0] | vsew[2:0]   | vsew[2:0]   | SEW      |
+|-------------|-------------|-------------|----------|
+|           0 | 0           | 0           | 8        |
+|           0 | 0           | 1           | 16       |
+|           0 | 1           | 0           | 32       |
+|           0 | 1           | 1           | 64       |
+|           1 | X           | X           | Reserved |
+
+While it is anticipated the larger vsew[2:0] encodings ( 100 -111 ) will be used to encode larger SEW, the encodings are formally reserved at this point.
+
+Table 46. Example VLEN = 128 bits
+
+|   SEW |   Elements per vector register |
+|-------|--------------------------------|
+|    64 |                              2 |
+|    32 |                              4 |
+|    16 |                              8 |
+|     8 |                             16 |
+
+The supported element width may vary with LMUL.
+
+<image>
+
+The current set of standard vector extensions do not vary supported element width with  LMUL.  Some future  extensions  may  support  larger  SEWs  only  when  bits  from multiple vector registers are combined using LMUL. In this case, software that relies on large SEW should attempt to use the largest LMUL, and hence the fewest vector register groups, to increase the number of implementations on which the code will run.  The vill bit  in vtype should  be  checked  after  setting vtype to  see  if  the configuration is supported, and an alternate code path should be provided if it is not. Alternatively, a profile can mandate the minimum SEW at each LMUL setting.
+
+<image>

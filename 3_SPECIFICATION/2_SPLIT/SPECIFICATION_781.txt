@@ -1,0 +1,5 @@
+## 6.3. Smepmp software discovery
+
+Since all  fields  defined  on mseccfg as  part  of  this  proposal  are  locked  when  set  ( MMWP / MML )  or  locked when cleared ( RLB ), software can't poll them for determining the presence of Smepmp. It is expected that  BootROM  will  set mseccfg.MMWP and/or mseccfg.MML during  early  boot,  before  jumping  to  the
+
+firmware, so that the firmware will be able to determine the presence of Smepmp by reading mseccfg and checking the state of mseccfg.MMWP and mseccfg.MML .

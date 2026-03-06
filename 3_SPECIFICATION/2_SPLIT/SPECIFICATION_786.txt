@@ -1,0 +1,5 @@
+## Chapter 8. "Smrnmi" Extension for Resumable Non-Maskable Interrupts, Version 1.0
+
+The  base  machine-level  architecture  supports  only  unresumable  non-maskable  interrupts  (UNMIs), where the NMI jumps to a handler in machine mode, overwriting the current mepc and mcause register values. If the hart had been executing machine-mode code in a trap handler, the previous values in mepc and mcause would not be recoverable and so execution is not generally resumable.
+
+The Smrnmi extension adds support for resumable non-maskable interrupts (RNMIs) to RISC-V. The extension adds four new CSRs ( mnepc , mncause , mnstatus , and mnscratch ) to hold the interrupted state, and one new instruction, MNRET, to resume from the RNMI handler.

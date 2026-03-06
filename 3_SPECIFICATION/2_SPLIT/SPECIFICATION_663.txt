@@ -1,0 +1,43 @@
+## 33.2.7. Atomic Swap from a Shadow Stack Location
+
+<image>
+
+For RV32, SSAMOSWAP.W atomically loads a 32-bit data value from address of a shadow stack location in rs1 ,  puts  the  loaded  value  into  register rd ,  and  stores  the  32-bit  value  held  in rs2 to  the  original address in rs1 . SSAMOSWAP.D (RV64 only) is similar to SSAMOSWAP.W but operates on 64-bit data values.
+
+```
+if privilege_mode != M && menvcfg.SSE == 0 raise illegal-instruction exception else if S-mode not implemented raise illegal-instruction exception else if privilege_mode == U && senvcfg.SSE == 0 raise illegal-instruction exception else if privilege_mode == VS && henvcfg.SSE == 0 raise virtual-instruction  exception else if privilege_mode == VU && senvcfg.SSE == 0 raise virtual-instruction  exception else X(rd) = mem[X(rs1)] mem[X(rs1)] = X(rs2) endif
+```
+
+Listing 9. SSAMOSWAP.W for RV32 and SSAMOSWAP.D (RV64 only) operation
+
+For RV64, SSAMOSWAP.W atomically loads a 32-bit data value from address of a shadow stack location in rs1 , sign-extends the loaded value and puts it in rd , and stores the lower 32 bits of the value held in rs2 to the original address in rs1 .
+
+```
+if privilege_mode != M && menvcfg.SSE == 0 raise illegal-instruction exception else if S-mode not implemented raise illegal-instruction exception else if privilege_mode == U && senvcfg.SSE == 0 raise illegal-instruction exception else if privilege_mode == VS && henvcfg.SSE == 0 raise virtual-instruction  exception else if privilege_mode == VU && senvcfg.SSE == 0 raise virtual-instruction  exception else temp[31:0] = mem[X(rs1)] X(rd) = SignExtend(temp[31:0]) mem[X(rs1)] = X(rs2)[31:0] endif
+```
+
+Listing 10. SSAMOSWAP.W for RV64
+
+Just as for AMOs in the A extension, SSAMOSWAP.W/D requires that the address held in rs1 be naturally aligned to the size of the operand (i.e., eight-byte aligned for doublewords ,  and four-byte aligned for
+
+words ). The same exception options apply if the address is not naturally aligned.
+
+Just as for AMOs in the A extension, SSAMOSWAP.W/D optionally provides release consistency semantics, using the aq and rl bits, to help implement multiprocessor synchronization. An SSAMOSWAP.W/D operation has acquire semantics if aq=1 and release semantics if rl=1 .
+
+Stack  switching  is  a  common  operation  in  user  programs  as  well  as  supervisor programs. When a stack switch is performed the stack pointer of the currently active stack  is  saved  into  a  context  data  structure  and  the  new  stack  is  made  active  by loading a new stack pointer from a context data structure.
+
+<image>
+
+
+
+When  shadow  stacks  are  active  for  a  program,  the  program  needs  to  additionally switch the shadow stack pointer. If the pointer to the top of the deactivated shadow stack  is  held  in  a  context  data  structure,  then  it  may  be  susceptible  to  memory corruption vulnerabilities. To protect the pointer value, the program may store it at the  top  of  the  deactivated  shadow  stack  itself  and  thereby  create  a  checkpoint.  A legal checkpoint is defined as one that holds a value of X , where X is the address at which the checkpoint is positioned on the shadow stack.
+
+An  example  sequence  to  restore  the  shadow  stack  pointer  from  the  new  shadow stack and save the old shadow stack pointer on the old shadow stack is as follows:
+
+```
+# a0 hold pointer to top of new shadow stack to switch to stack_switch: ssrdp ra beqz ra, 2f                    # skip if Zicfiss not active ssamoswap.d ra, x0,  (a0)      # ra=*[a0] and *[a0]=0 beq         ra, a0,  1f        # [a0] must be == [ra] unimp                          # else crash 1: addi        ra, ra,  XLEN/8    # pop the checkpoint csrrw       ra, ssp, ra        # swap ssp: ra=ssp, ssp=ra addi        ra, ra,  -(XLEN/8) # checkpoint = "old ssp XLEN/8" ssamoswap.d x0, ra,  (ra)      # Save checkpoint at "old ssp XLEN/8" 2:
+```
+
+This sequence uses the ra register. If the privilege mode at which this sequence is executed can be interrupted, then the trap handler should save the ra on the shadow stack  itself.  There  it  is  guarded  against  tampering  and  can  be  restored  prior  to returning from the trap.
+
+When a new shadow stack is created by the supervisor, it needs to store a checkpoint at  the  highest  address  on  that  stack.  This  enables  the  shadow  stack  pointer  to  be switched using the process outlined in this note. The SSAMOSWAP.W/D instruction can be used to store this checkpoint. When the old value at the memory location operated on by SSAMOSWAP.W/D is not required, rd can be set to x0 .

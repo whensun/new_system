@@ -1,0 +1,13 @@
+## 12.1.1.3. Endianness Control in sstatus Register
+
+The UBE bit is a WARL field that controls the endianness of explicit memory accesses made from Umode, which may differ from the endianness of memory accesses in S-mode. An implementation may make UBE be a read-only field that always specifies the same endianness as for S-mode.
+
+UBE controls whether explicit load and store memory accesses made from U-mode are little-endian (UBE=0) or big-endian (UBE=1).
+
+UBE has no effect on instruction fetches, which are implicit memory accesses that are always littleendian.
+
+For implicit accesses to supervisor-level memory management data structures, such as page tables, Smode endianness always applies and UBE is ignored.
+
+<image>
+
+Standard  RISC-V  ABIs  are  expected  to  be  purely  little-endian-only  or  big-endianonly,  with  no  accommodation  for  mixing  endianness.  Nevertheless,  endianness control has been defined so as to permit an OS of one endianness to execute usermode programs of the opposite endianness.

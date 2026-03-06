@@ -1,0 +1,43 @@
+## 31.4.5. aes64ds
+
+## Synopsis
+
+AES final round decryption instruction for RV64.
+
+## Mnemonic
+
+aes64ds rd, rs1, rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+Uses the two 64-bit source registers to represent the entire AES state, and produces half of  the next round output, applying the Inverse ShiftRows and SubBytes steps. This instruction must always be implemented such that its execution latency does not depend on the data being operated on.
+
+Note To Software Developers
+
+The following code snippet shows the final round of the AES block decryption. t0 and t1 hold the current round state. t2 and t3 hold the next round state.
+
+```
+aes64ds t2, t0, t1 aes64ds t3, t1, t0
+```
+
+Note the reversed register order of the second instruction.
+
+<image>
+
+## Operation
+
+```
+function clause execute (AES64DS(rs2, rs1, rd)) = { let sr : bits(64) = aes_rv64_shiftrows_inv(X(rs2)[63..0], X(rs1)[63..0]); let wd : bits(64) = sr[63..0]; X(rd) = aes_apply_inv_sbox_to_each_byte(wd); RETIRE_SUCCESS }
+```
+
+## Included in
+
+| Extension   | Minimum version   | Lifecycle state   |
+|-------------|-------------------|-------------------|
+| Zknd (RV64) | v1.0.0            | Ratified          |
+| Zkn (RV64)  | v1.0.0            | Ratified          |
+| Zk (RV64)   | v1.0.0            | Ratified          |

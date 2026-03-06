@@ -1,0 +1,7 @@
+## 31.2.2. Sail Specifications
+
+RISC-V maintains a formal model of the ISA specification, implemented in the Sail ISA specification language ( SAIL ISA Specification Language ,  n.d.). Note that Sail refers to the specification language itself,  and  that  there  is  a model of RISC-V ,  written  using  Sail.  It  is  not  correct  to  refer  to  "the  Sail model". This is ambiguous, given there are many models of different ISAs implemented using Sail. We refer to the Sail implementation of RISC-V as "the RISC-V Sail model".
+
+The Cryptography extension uses inline Sail code snippets from the actual model to give canonical descriptions of instruction functionality. Each instruction is accompanied by its expression in Sail, and includes calls to supporting functions which are too verbose to include directly in the specification. This supporting code is listed in Section 31.10. The Sail Manual is recommended reading in order to best understand the code snippets.
+
+Note that this document contains only a subset of the formal model: refer to the formal model Github repository for the complete model.

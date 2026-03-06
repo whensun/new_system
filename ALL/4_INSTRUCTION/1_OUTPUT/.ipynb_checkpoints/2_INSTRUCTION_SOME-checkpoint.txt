@@ -1,0 +1,5 @@
+INSTRUCTION: ADDIW
+FORMAT: addiw rd, rs1, imm12
+
+INSTRUCTION: CSRRWI
+FORMAT: csrrwi rd, csr, zimm5

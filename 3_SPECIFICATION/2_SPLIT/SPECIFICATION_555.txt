@@ -1,0 +1,29 @@
+## 31.7.4.6. Crossbar Permutation Instructions
+
+```
+RV32, RV64: xperm4 rd, rs1, rs2
+```
+
+```
+xperm8 rd, rs1, rs2
+```
+
+See Crossbar permutations for a complete description of these instructions.
+
+The xperm4 instruction operates on nibbles. GPR[rs1] contains a vector of XLEN/4 4-bit elements. GPR[rs2] contains  a  vector  of XLEN/4 4-bit  indexes.  The  result  is  each  element  in GPR[rs2] replaced  by  the indexed element in GPR[rs1] , or zero if the index into GPR[rs2] is out of bounds.
+
+The xperm8 instruction operates on bytes. GPR[rs1] contains a vector of XLEN/8 8-bit elements. GPR[rs2] contains  a  vector  of XLEN/8 8-bit  indexes.  The  result  is  each  element  in GPR[rs2] replaced  by  the indexed element in GPR[rs1] , or zero if the index into GPR[rs2] is out of bounds.
+
+<image>
+
+Notes to software developers
+
+The instruction can be used to implement arbitrary bit permutations. For
+
+cryptography, they can accelerate bit-sliced implementations, permutation layers of block ciphers, masking based countermeasures and SBox operations.
+
+Lightweight  block  ciphers  using  4-bit  SBoxes  include:  PRESENT  (Bogdanov  et  al., 2007), Rectangle (Zhang et al., 2015), GIFT (Banik et al., 2017), Twine (Suzaki et al., 2012), Skinny, MANTIS (Beierle et al., 2016), Midori (Banik et al., 2015).
+
+National  ciphers  using  8-bit  SBoxes  include:  Camellia  (Aoki  et  al.,  2000)  (Japan), Aria  (Kwon  et  al.,  2003)  (Korea),  AES  (NIST,  2001)  (USA,  Belgium),  SM4  (GB/T 32907-2016: SM4 Block Cipher Algorithm, 2016) (China) Kuznyechik (Russia).
+
+All of these SBoxes can be implemented efficiently, in constant time, using the xperm8 instruction [1] .  Note  that  this  technique  is  also  suitable  for  masking  based  sidechannel countermeasures.

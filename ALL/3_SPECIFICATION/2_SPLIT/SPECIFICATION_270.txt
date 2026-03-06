@@ -1,0 +1,29 @@
+## 29.5.14. clz
+
+## Synopsis
+
+Count leading zero bits
+
+## Mnemonic
+
+clz rd , rs
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction counts the number of 0's before the first 1, starting at the most-significant bit (i.e., XLEN-1) and progressing to bit 0. Accordingly, if the input is 0, the output is XLEN, and if the mostsignificant bit of the input is a 1, the output is 0.
+
+## Operation
+
+```
+val HighestSetBit : forall ('N : Int), 'N >= 0. bits('N) -> int function HighestSetBit x = { foreach (i from (xlen - 1) to 0 by 1 in dec) if [x[i]] == 0b1 then return(i) else (); return -1; } let rs = X(rs); X[rd] = (xlen - 1) - HighestSetBit(rs);
+```
+
+## Included in
+
+| Extension                    | Minimum version   | Lifecycle state   |
+|------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation) | v1.0              | Ratified          |

@@ -1,0 +1,19 @@
+## 32.2. Extensions Overview
+
+The  section  introduces  all  of  the  extensions  in  the  Vector  Cryptography  Instruction  Set  Extension Specification.
+
+The  Zvknhb  and  Zvbc  Vector  Crypto  Extensions  --and  accordingly  the  composite  extensions  Zvkn, Zvknc, Zvkng, and Zvksc-- depend on Zve64x.
+
+All of the other Vector Crypto Extensions depend on Zve32x .
+
+Note: If Zve32x is  supported  then Zvkb or Zvbb provide  support  for  EEW  of  8,  16,  and  32.  If Zve64x is supported then Zvkb or Zvbb also add support for EEW 64.
+
+All cryptography-specific instructions defined in this Vector Crypto specification (i.e., those in Zvkned, Zvknh[ab],  Zvkg,  Zvksed  and  Zvksh  but not Zvbb,Zvkb,  or  Zvbc)  shall  be  executed  with  dataindependent execution latency as defined in the RISC-V Scalar Cryptography Extensions specification. It is important to note that the Vector Crypto instructions are independent of the implementation of the Zkt extension and do not require that Zkt is implemented.
+
+This  specification  includes  a  Zvkt  extension  that,  when  implemented,  requires  certain  vector instructions (including Zvbb, Zvkb, and Zvbc) to be executed with data-independent execution latency.
+
+Detection  of  individual  cryptography  extensions  uses  the  unified  software-based  RISC-V  discovery method.
+
+<image>
+
+At the time of writing, these discovery mechanisms are still a work in progress.

@@ -1,0 +1,12 @@
+## 27.3. Load and Store Instructions
+
+To increase the reach of 16-bit instructions, data-transfer instructions use zero-extended immediates that are scaled by the size of the data in bytes: × 4 for words, × 8 for double words, and × 16 for quad words.
+
+RVC provides two variants of loads and stores. One uses the ABI stack pointer, x2 , as the base address and can target any data register. The other can reference one of 8 base address registers and one of 8 data registers.
+
+| 000   | 001   | 010   | 011   | 100   | 101   | 110   | 111   |
+|-------|-------|-------|-------|-------|-------|-------|-------|
+| x8    | x9    | x10   | x11   | x12   | x13   | x14   | x15   |
+| s0    | s1    | a0    | a1    | a2    | a3    | a4    | a5    |
+| f8    | f9    | f10   | f11   | f12   | f13   | f14   | f15   |
+| fs0   | fs1   | fa0   | fa1   | fa2   | fa3   | fa4   | fa5   |

@@ -1,0 +1,11 @@
+## 12.5.1. Addressing and Memory Protection
+
+Sv48 implementations support a 48-bit virtual address space, divided into pages. An Sv48 address is partitioned as shown in Figure 71. Instruction fetch addresses and load and store effective addresses, which are 64 bits, must have bits 63-48 all equal to bit 47, or else a page-fault exception will occur. The 36-bit VPN is translated into a 44-bit PPN via a four-level page table, while the 12-bit page offset is untranslated.
+
+Figure 73. Sv48 page table entry.
+
+<image>
+
+The PTE format for Sv48 is shown in Figure 73. Bits 63-54 and 9-0 have the same meaning as for Sv39.  Any  level  of  PTE  may  be  a  leaf  PTE,  so  in  addition  to  pages,  Sv48  supports megapages , gigapages , and terapages , each of which must be virtually and physically aligned to a boundary equal to its size. A page-fault exception is raised if the physical address is insufficiently aligned.
+
+The  algorithm  for  virtual-to-physical  address  translation  is  the  same  as  in  Section  12.3.2,  except LEVELS equals 4 and PTESIZE equals 8.

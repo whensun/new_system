@@ -1,0 +1,6 @@
+## 32.2.15.9. multiply
+
+- ⚫ vmul[h].v[vx]
+- ⚫ vmulh[s]u.v[vx]
+- ⚫ vwmul.v[vx]
+- ⚫ vwmul[s]u.v[vx]

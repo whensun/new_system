@@ -1,0 +1,5 @@
+## 30.13.2. Vector Single-Width Floating-Point Add/Subtract Instructions
+
+```
+# Floating-point add vfadd.vv vd, vs2, vs1, vm   # Vector-vector vfadd.vf vd, vs2, rs1, vm   # vector-scalar # Floating-point subtract vfsub.vv vd, vs2, vs1, vm   # Vector-vector vfsub.vf vd, vs2, rs1, vm   # Vector-scalar vd[i] = vs2[i] - f[rs1] vfrsub.vf vd, vs2, rs1, vm  # Scalar-vector vd[i] = f[rs1] - vs2[i]
+```

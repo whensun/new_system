@@ -1,0 +1,15 @@
+## 11.5.4. RAS (Return Address Stack) Emulation Mode
+
+When the  optional x ctrctl .RASEMU bit  is  implemented  and  set  to  1,  transfer  recording  behavior  is altered to emulate the behavior of a return-address stack (RAS).
+
+- ⚫ Indirect and direct calls are recorded as normal
+- ⚫ Function  returns  pop  the  most  recent  call,  by  decrementing  the  WRPTR  then  invalidating  the WRPTR entry (by setting ctrsource.V=0). As a result, logical entry 0 is invalidated and moves to logical entry depth-1, while logical entries 1..depth-1 move to 0..depth-2.
+- ⚫ Co-routine swaps affect both a return and a call. Logical entry 0 is overwritten, and WRPTR is not modified.
+- ⚫ Other transfer types are inhibited
+- ⚫ Transfer type filtering bits ( x ctrctl [47:32]) and external trap enable bits ( x ctrctl . x TE) are ignored
+
+Profiling  tools  often  collect  call  stacks  along  with  each  sample.  Stack  walking, however, is a complex and often slow process that may require recompilation (e.g., -fno-omit-frame-pointer)  to  work  reliably.  With  RAS  emulation,  tools  can  ask  CTR hardware to save call stacks even for unmodified code.
+
+<image>
+
+<image>

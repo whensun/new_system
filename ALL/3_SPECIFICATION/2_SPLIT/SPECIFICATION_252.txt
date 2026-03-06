@@ -1,0 +1,13 @@
+## 29.4.3. Zbc: Carry-less multiplication
+
+Carry-less multiplication is the multiplication in the polynomial ring over GF(2).
+
+clmul produces the lower half of the carry-less product and clmulh produces the upper half of the 2 ✕ XLEN carry-less product.
+
+clmulr produces bits 2 ✕ XLEN -2:XLEN-1 of the 2 ✕ XLEN carry-less product.
+
+| RV32   | RV64   | Mnemonic              | Instruction                     |
+|--------|--------|-----------------------|---------------------------------|
+| ✓      | ✓      | clmul rd , rs1 , rs2  | Carry-less multiply (low-part)  |
+| ✓      | ✓      | clmulh rd , rs1 , rs2 | Carry-less multiply (high-part) |
+| ✓      | ✓      | clmulr rd , rs1 , rs2 | Carry-less multiply (reversed)  |

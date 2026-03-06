@@ -1,0 +1,37 @@
+## 21.6.2. Trap Entry
+
+When a trap occurs in HS-mode or U-mode, it goes to M-mode, unless delegated by medeleg or mideleg , in which case it goes to HS-mode. When a trap occurs in VS-mode or VU-mode, it goes to M-mode, unless delegated by medeleg or mideleg , in which case it goes to HS-mode, unless further delegated by hedeleg or hideleg , in which case it goes to VS-mode.
+
+When a trap is taken into M-mode, virtualization mode V gets set to 0, and fields MPV and MPP in mstatus (or mstatush ) are set according to Table 45. A trap into M-mode also writes fields GVA, MPIE, and MIE in mstatus / mstatush and writes CSRs mepc , mcause , mtval , mtval2 , and mtinst .
+
+Table 45. Value of mstatus / mstatush fields MPV and MPP after a trap into M-mode.  Upon trap return, MPV is ignored when MPP=3.
+
+| Previous Mode   |   MPV |   MPP |
+|-----------------|-------|-------|
+| U-mode          |     0 |     0 |
+| HS-mode         |     0 |     1 |
+| M-mode          |     0 |     3 |
+| VU-mode         |     1 |     0 |
+| VS-mode         |     1 |     1 |
+
+When a trap is taken into HS-mode, virtualization mode V is set to 0, and hstatus .SPV and sstatus .SPP are  set  according  to  Table  46.  If  V  was  1  before  the  trap,  field  SPVP  in hstatus is  set  the  same  as
+
+sstatus .SPP; otherwise, SPVP is left unchanged. A trap into HS-mode also writes field GVA in hstatus , fields SPIE and SIE in sstatus , and CSRs sepc , scause , stval , htval , and htinst .
+
+Table 46. Value of hstatus field SPV and sstatus field SPP after a trap into HS-mode.
+
+| Previous Mode   |   SPV |   SPP |
+|-----------------|-------|-------|
+| U-mode          |     0 |     0 |
+| HS-mode         |     0 |     1 |
+| VU-mode         |     1 |     0 |
+| VS-mode         |     1 |     1 |
+
+When a trap is taken into VS-mode, vsstatus .SPP is set according to Table 47. Register hstatus and the HS-level sstatus are not modified, and the virtualization mode V remains 1. A trap into VS-mode also writes fields SPIE and SIE in vsstatus and writes CSRs vsepc , vscause , and vstval .
+
+Table 47. Value of vsstatus field SPP after a trap into VS-mode.
+
+| Previous Mode   |   SPP |
+|-----------------|-------|
+| VU-mode         |     0 |
+| VS-mode         |     1 |

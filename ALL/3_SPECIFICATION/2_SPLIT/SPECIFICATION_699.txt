@@ -1,0 +1,9 @@
+## 37.10. Version Numbers
+
+Recognizing that instruction sets may expand or alter over time, we encode extension version numbers following  the  extension  name.  Version  numbers  are  divided  into  major  and  minor  version  numbers, separated by a "p". If the minor version is "0", then "p0" can be omitted from the version string. To avoid ambiguity, no extension name may end with a number or a "p" preceded by a number.
+
+Because  the  "P"  extension  for  Packed  SIMD  can  be  confused  for  the  decimal  point  in  a  version number, it must be preceded by an underscore if it follows another extension with a version number. For example, "rv32i2p2" means version 2.2 of RV32I, whereas "rv32i2\_p2" means version 2.0 of RV32I with version 2.0 of the P extension.
+
+Changes in major version numbers imply a loss of backwards compatibility, whereas changes in only the minor version number must be backwards-compatible. For example, the original 64-bit standard ISA  defined  in  release  1.0  of  this  manual  can  be  written  in  full  as  "RV64I1p0M1p0A1p0F1p0D1p0", more concisely as "RV64I1M1A1F1D1".
+
+We introduced the version numbering scheme with the second release. Hence, we define the default version of a standard extension to be the version present at that time, e.g., "RV32I" is equivalent to "RV32I2".

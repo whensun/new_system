@@ -1,0 +1,699 @@
+# 1 # Extension Must Be Active: NONE
+addi a0, x0, 10
+addi a1, x0, 15
+add a2, a0, a1
+# Result: a2 = 25
+
+# 2 # Extension Must Be Active: NONE
+csrr a0, 0x747
+andi a0, a0, 0x300
+# Result: a0 = 0
+
+# 3 # Extension Must Be Active: NONE
+csrr t0, 0x747
+andi t1, t0, 0x200
+# Result: t1 = 0
+
+# 4 # Extension Must Be Active: NONE
+csrr a0, 0x747
+andi a0, a0, 0x100
+# Result: a0 = 0
+
+# 5 # Extension Must Be Active: NONE
+li t0, 0x200
+csrrc x0, 0x747, t0
+call machine_to_user
+csrr a0, 0x15
+# Result: a0 = 0
+
+# 6 # Extension Must Be Active: NONE
+li t0, 0
+csrw 0x747, t0 # Clear mseccfg, ensuring USEED=0
+csrr t0, 0x747 # Read back mseccfg
+andi t0, t0, 0x100 # Isolate USEED bit (bit 8)
+call machine_to_user # Switch to U-mode
+csrr t1, 0x15 # Attempt to read seed CSR (should trap)
+# Result: t0 = 0
+
+# 7 # Extension Must Be Active: NONE
+csrr t0, 0x747
+andi t1, t0, 0x300
+# Result: t1 = 0
+
+# 8 # Extension Must Be Active: NONE
+li t1, 0x300
+csrs 0x747, t1
+csrr t0, 0x747
+andi t0, t0, 0x300
+# Result: t0 = 0x300
+
+# 9 # Extension Must Be Active: NONE
+csrrwi zero, 0x747, 4
+csrr t0, 0x747
+li t1, 4
+and t0, t0, t1
+# Result: t0 = 0x4
+
+# 10 # Extension Must Be Active: NONE
+li t0, 0
+csrw mseccfg, t0 # Ensure RLB = 0
+li t1, 0x80
+csrw pmpcfg0, t1 # Set PMP L field (bit7) = 1
+li t2, 4 # Bit mask for RLB (bit 2)
+csrs mseccfg, t2 # Attempt to set RLB = 1 (should be ignored)
+csrr t3, mseccfg
+andi a0, t3, 4 # Isolate RLB field
+# Result: a0 = 0
+
+# 11 # Extension Must Be Active: NONE
+csrr a0, 0x747
+ori a0, a0, 0x2
+csrw 0x747, a0
+csrr a1, 0x747
+andi a1, a1, -3
+csrw 0x747, a1
+csrr a2, 0x747
+srli a2, a2, 1
+andi a2, a2, 1
+# Result: a2 = 1
+
+# 12 # Extension Must Be Active: NONE
+li t0, 0x2
+csrr t1, mseccfg
+or t1, t1, t0
+csrw mseccfg, t1
+csrr a0, mseccfg
+andi a0, a0, 0x2
+# Result: a0 = 0x2
+
+# 13 # Extension Must Be Active: NONE
+li t0, 1
+csrrs x1, 0x747, t0
+csrrc x2, 0x747, t0
+csrr x3, 0x747
+andi x3, x3, 1
+# Result: x3 = 1
+
+# 14 # Extension Must Be Active: NONE
+csrrwi x0, 0x747, 1 # Set mseccfg.MML = 1
+addi t0, x0, 0x80 # t0 = 0x80 (pmpcfg0.L = 1)
+csrw pmpcfg0, t0 # Write PMP configuration with L=1
+csrrs a0, 0x747, x0 # a0 = mseccfg CSR value
+andi a0, a0, 1 # a0 = a0 & 0x1 (extract MML bit)
+# Result: a0 = 1
+
+# 15 # Extension Must Be Active: NONE
+li t0, 0xdeadbeefdeadbeef
+li t1, 0x1000
+sd t0, 0(t1)
+li t0, 1
+csrw mseccfg, t0
+li t0, -1
+csrw pmpaddr0, t0
+li t0, 0
+csrw pmpcfg0, t0
+call machine_to_supervisor
+li t1, 0x1000
+ld a0, 0(t1)
+# Result: a0 = 0xdeadbeefdeadbeef
+
+# 16 # Extension Must Be Active: Zicfilp
+li t0, 0x8000000000000000 # Set MLPE bit (assumed MSB) to 1
+csrw 0x747, t0 # Write to mseccfg CSR
+csrr t1, 0x747 # Read back mseccfg
+andi t1, t1, 0x8000000000000000 # Isolate MLPE field
+# Result: t1 != 0
+
+# 17 # Extension Must Be Active: NONE
+csrrs a0, 0x747, x0
+andi a0, a0, 0x1
+# Result: a0 = 0
+
+# 18 # Extension Must Be Active: NONE
+li t0, 0
+csrw 0x747, t0 # clear mseccfg, ensures MLPE = 0
+lpad 0 # should be a no‑op when MLPE = 0
+csrr t1, 0x747
+andi t1, t1, 0x80000000 # mask to isolate the MLPE bit (implementation‑defined position)
+mv a0, t1
+# Result: a0 = 0
+
+# 19 # Extension Must Be Active: NONE
+li t0, 0x200000000
+csrw mseccfg, t0
+csrr t1, mseccfg
+li t2, 0x300000000
+and t1, t1, t2
+# Result: t1 = 0x200000000
+
+# 20 # Extension Must Be Active: NONE
+csrr a0, 0x747
+li t0, 0xFFFFFFFFFCFFFFFCF8
+and a0, a0, t0
+# Result: a0 = 0
+
+# 21 # Extension Must Be Active: NONE
+li a0, 1 # set MML=1 (bit0) in a0
+csrw 0x747, a0 # write to mseccfg CSR
+csrr a0, 0x747 # read back mseccfg into a0
+li a1, -2 # a1 = 0xFFFFFFFFFFFFFFFE (mask to clear MML bit)
+and a0, a0, a1 # clear MML bit, leaving only other fields
+# Result: a0 = 0
+
+# 22 # Extension Must Be Active: NONE
+csrw mstatus, zero # clear mstatus (implementation-defined bits cleared for predictability)
+csrs mstatus, 8 # set MIE (bit 3) to 1
+call machine_to_supervisor # transition to S-mode (privilege y = S)
+ecall # trap from S-mode back to M-mode (privilege x = M)
+csrr a0, mstatus # read mstatus in M-mode after the trap
+andi a0, a0, 0x880 # mask MPIE (bit7), MIE (bit3) and MPP (bits12‑11) => expect 0x880
+# Result: a0 = 0x880
+
+# 23 # Extension Must Be Active: NONE
+csrr t0, mstatus
+li t1, ~((1 << 7) | (1 << 3) | (0x3 << 11)) # clear MPIE, MIE, MPP
+and t0, t0, t1
+li t1, (1 << 11) # set MPP = S
+or t0, t0, t1
+csrw mstatus, t0
+
+call machine_to_supervisor
+
+csrr t0, sstatus
+li t1, ~((1 << 5) | (1 << 1) | (1 << 8)) # clear SPIE, SIE, SPP
+and t0, t0, t1
+li t1, (1 << 8) # set SPP = M
+or t0, t0, t1
+csrw sstatus, t0
+
+sret
+
+csrr a0, mstatus
+# Result: a0 & 0x8 = 0 & a0 & 0x80 != 0
+
+# 24 # Extension Must Be Active: NONE
+li t0, 0x20000 # set MPRV (bit 17)
+csrs mstatus, t0
+li t0, 0x1800 # clear MPP bits (bits 12..11)
+csrc mstatus, t0
+li t0, 0x800 # set MPP = S (01)
+csrs mstatus, t0
+call machine_to_supervisor # MRET to S-mode, should clear MPRV
+li t0, 0x100 # set SPP = 1 (return to M-mode)
+csrs sstatus, t0
+sret # back to M-mode
+csrr t0, mstatus
+andi a0, t0, 0x20000
+# Result: a0 = 0
+
+# 25 # Extension Must Be Active: NONE
+li t0, 0x4000000000 # set MDT = 1
+csrw mstatus, t0
+li t1, 0x8 # attempt to write MIE = 1
+csrw mstatus, t1
+csrr t2, mstatus
+andi t3, t2, 0x8 # isolate MIE bit
+# Result: t3 = 0
+
+# 26 # Extension Must Be Active: NONE
+csrw 0x300, zero # Clear all mstatus bits (MDT=0, MIE=0)
+li t0, 0x8 # Bit mask for MIE (bit 3)
+csrw 0x300, t0 # Write mstatus with MIE=1 while MDT=0
+csrr t1, 0x300 # Read back mstatus
+and t1, t1, 0x8 # Isolate MIE field
+# Result: t1 = 0x8
+
+# 27 # Extension Must Be Active: NONE
+csrr t0, mstatus # read mstatus
+li t1, 0xFFFFFFFFFFFBFFFF # mask to clear MDT (bit 42)
+and t0, t0, t1
+csrw mstatus, t0 # write back with MDT = 0
+
+la t0, trap_handler # set mtvec to our handler
+csrw mtvec, t0
+
+ecall # generate trap to M‑mode
+
+trap_handler:
+csrr a0, mstatus # read mstatus in handler
+li t1, 0x0000040000000000 # MDT bit mask
+and a0, a0, t1 # isolate MDT
+# Result: a0 = 0x4000000000
+
+# 28 # Extension Must Be Active: NONE
+li t0, 0x4000000000 # set bit 42 (MDT) in t0
+csrs mstatus, t0 # set mstatus.MDT = 1
+la t1, trap_handler # load address of trap handler
+csrw mtvec, t1 # set mtvec to handler
+ecall # cause a trap to M-mode
+trap_handler:
+csrr t2, mstatus # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0 # isolate MDT bit
+srli t2, t2, 42 # shift to LSB
+mv a0, t2 # store result in a0 (0 or 1)
+mret
+# Result: a0 = 1
+
+# 29 # Extension Must Be Active: NONE
+li t2, 0x4000001800
+csrw mstatus, t2
+mret
+csrr t0, mstatus
+li t1, 0x4000000000
+and t0, t0, t1
+# Result: t0 = 0
+
+# 30 # Extension Must Be Active: NONE
+li t0, 0x1122334455667788
+li t1, 0x1000
+sd t0, 0(t1) # store test value at a user‑mode address
+li t2, 0x20000 # mask for MPRV bit (bit 17)
+csrrc zero, mstatus, t2 # clear MPRV -> MPRV = 0
+call machine_to_user
+ld a0, 0(t1) # load in U‑mode, should use current privilege
+# Result: a0 = 0x1122334455667788
+
+# 31 # Extension Must Be Active: NONE
+csrr t0, mstatus
+ori t0, t0, 0x20000 # set MPRV (bit 17)
+csrw mstatus, t0
+li t1, 0x80001000 # user-accessible address
+li t2, 0xdeadbeef
+sd t2, 0(t1) # explicit store (should use U‑level privilege)
+ld t3, 0(t1) # explicit load
+# Result: t3 = 0xdeadbeef
+
+# 32 # Extension Must Be Active: NONE
+li t0, 0x20000 # set MPRV bit (bit 17)
+li t1, 0x800 # set MPP = 1 (bit 11)
+or t0, t0, t1
+csrrs zero, mstatus, t0 # write MPRV=1, MPP=1
+li t1, 0x8000000000 # mask for MPV bit (bit 39)
+csrrc zero, mstatus, t1 # clear MPV=0
+csrr a0, mstatus # read back mstatus
+li t2, 0x20800 # mask for MPRV and MPP bits
+and a0, a0, t2 # isolate the fields
+# Result: a0 = 0x20800
+
+# 33 # Extension Must Be Active: NONE
+li t0, 0x26000
+csrs mstatus, t0
+csrr a0, mstatus
+li t1, 0x26000
+and a0, a0, t1
+# Result: a0 = 0x26000
+
+# 34 # Extension Must Be Active: NONE
+li t1, 0x8000020000 # mask for MPV, MPRV, MPP
+li t2, 0x20000 # bit 17 = MPRV
+csrs mstatus, t2
+li t3, 0x8000000000 # bit 39 = MPV
+csrs mstatus, t3
+li t4, 0x1800 # bits 12..11 (MPP) mask
+csrrc mstatus, t4 # clear MPP = 0
+csrr t0, mstatus
+and t0, t0, t1
+# Result: t0 = 0x8000020000
+
+# 35 # Extension Must Be Active: NONE
+csrr t0, mstatus
+li t1, 0x8000021800
+or t0, t0, t1
+csrw mstatus, t0
+csrr a0, mstatus
+li t2, 0x8000021800
+and a0, a0, t2
+# Result: a0 = 0x8000021800
+
+# 36 # Extension Must Be Active: NONE
+li t1, 0x80000 # 1 << 19 = MXR bit mask
+csrrc t0, 0x300, t1 # Clear MXR (set to 0)
+addi sp, sp, -8
+li t2, 0xdeadbeefdeadbeef
+sd t2, 0(sp)
+ld a0, 0(sp)
+# Result: a0 = 0xdeadbeefdeadbeef
+
+# 37 # Extension Must Be Active: NONE
+csrr t0, mstatus # read mstatus
+li t1, 1
+slli t1, t1, 19 # t1 = 1 << 19 (MXR bit)
+or t0, t0, t1
+csrw mstatus, t0 # set MXR = 1
+
+li t2, 0 # clear result register
+li t3, 0x1000 # address of execute‑only page
+ld t2, 0(t3) # load from the page (should succeed)
+
+# Result: t2 = 0xdeadbeefdeadbeef
+
+# 38 # Extension Must Be Active: NONE
+li t0, 0x80000
+csrrs x0, mstatus, t0
+csrr t1, mstatus
+and t1, t1, t0
+# Result: t1 = 0
+
+# 39 # Extension Must Be Active: NONE
+li t0, 0x40000 # t0 = 1 << 18 (SUM bit)
+csrrc x0, 0x300, t0 # Clear SUM in mstatus
+call machine_to_supervisor
+li a1, 0x1000 # Assume 0x1000 is a user‑accessible page
+lw a0, 0(a1) # Supervisor load; should fault because SUM = 0
+# Result: a0 = 0
+
+# 40 # Extension Must Be Active: S
+li t0, 0x40000
+csrrs x0, mstatus, t0
+csrr a0, mstatus
+andi a0, a0, 0x40000
+# Result: a0 = 0x40000
+
+# 41 # Extension Must Be Active: NONE
+li t2, 0xF000000000000000
+csrrc zero, satp, t2
+li t3, 0x40000
+csrrs zero, mstatus, t3
+csrr t0, mstatus
+andi t0, t0, 0x40000
+mv a0, t0
+# Result: a0 = 0
+
+# 42 # Extension Must Be Active: NONE
+# Clear MBE (bit 37) and MPRV (bit 17) in mstatus
+li t0, (1 << 37) # mask for MBE
+csrrc zero, mstatus, t0 # clear MBE
+li t0, (1 << 17) # mask for MPRV
+csrrc zero, mstatus, t0 # clear MPRV
+
+# Set up a known little‑endian byte pattern in memory
+li t1, 0x80001000 # base address for test data
+
+li t0, 0x44
+sb t0, 0(t1) # byte 0 (least‑significant)
+li t0, 0x33
+sb t0, 1(t1) # byte 1
+li t0, 0x22
+sb t0, 2(t1) # byte 2
+li t0, 0x11
+sb t0, 3(t1) # byte 3 (most‑significant)
+
+# Perform a non‑instruction‑fetch load
+lw a0, 0(t1) # expect little‑endian assembly
+
+# Result: a0 = 0x11223344
+
+# 43 # Extension Must Be Active: NONE
+li t0, 0x2000000000 # 1 << 37, set MBE
+csrrs x0, mstatus, t0
+
+li t1, 0x20000 # 1 << 17, clear MPRV
+csrrc x0, mstatus, t1
+
+addi a0, sp, -8 # address on stack
+li t2, 0x11223344
+sw t2, 0(a0) # store word with big‑endian ordering
+
+lbu a1, 0(a0) # load first byte; should be 0x11 in big‑endian
+
+# Result: a1 = 0x11
+
+# 44 # Extension Must Be Active: NONE
+li t1, 0x1000000000 # t1 = 1 << 36 (SBE mask)
+csrrc x0, mstatus, t1 # clear SBE
+li t1, 0x20000 # t1 = 1 << 17 (MPRV mask)
+csrrc x0, mstatus, t1 # clear MPRV
+addi sp, sp, -8 # allocate stack space for test word
+li t2, 0x44
+sb t2, 0(sp) # store byte 0x44 at lowest address
+li t2, 0x33
+sb t2, 1(sp)
+li t2, 0x22
+sb t2, 2(sp)
+li t2, 0x11
+sb t2, 3(sp) # memory now holds 0x44 0x33 0x22 0x11
+call machine_to_supervisor # transition to S‑mode
+lw a0, 0(sp) # load word; should observe little‑endian order
+# Result: a0 = 0x11223344
+
+# 45 # Extension Must Be Active: NONE
+csrr t0, mstatus
+li t1, (1 << 36) # set SBE
+or t0, t0, t1
+csrw mstatus, t0 # write back mstatus with SBE=1
+
+li t1, (1 << 17) # clear MPRV (ensure MPRV=0)
+csrrc x0, mstatus, t1 # clear bit 17
+
+call machine_to_supervisor # switch to S‑mode
+
+# ---- S‑mode code starts here ----
+li t0, 0x80001000 # address to test
+li t2, 0x11223344 # value to store (big‑endian test)
+sw t2, 0(t0) # store word from S‑mode (should use big‑endian)
+sret # return to M‑mode
+# ---- back in M‑mode ----
+
+li t0, 0x80001000
+lw t1, 0(t0) # load word in M‑mode (little‑endian)
+
+# Result
+# Result: t1 = 0x44332211
+
+# 46 # Extension Must Be Active: NONE
+li t1, (1 << 6) | (1 << 17) # mask for UBE and MPRV bits
+csrrc x0, mstatus, t1 # clear UBE=0 and MPRV=0
+call machine_to_user # switch to U‑mode
+li t0, 0x80002000 # test memory address
+li t1, 0x01020304 # value to store
+sw t1, 0(t0) # non‑fetch store (U‑mode)
+lbu a0, 0(t0) # load byte 0
+lbu a1, 1(t0) # load byte 1
+lbu a2, 2(t0) # load byte 2
+lbu a3, 3(t0) # load byte 3
+# Result: a0 = 0x04 & a1 = 0x03 & a2 = 0x02 & a3 = 0x01
+
+# 47 # Extension Must Be Active: NONE
+# Set MPRV = 0 (clear bit 17)
+li t1, 0x20000 # bit 17 mask
+csrrc x0, mstatus, t1
+# Set UBE = 1 (set bit 6)
+li t2, 0x40 # bit 6 mask
+csrrs x0, mstatus, t2
+
+# Prepare a memory location on the stack
+addi s0, sp, -8 # s0 = address to use
+
+# Store bytes in little‑endian order (0x44,0x33,0x22,0x11)
+li t3, 0x44
+sb t3, 0(s0)
+li t3, 0x33
+sb t3, 1(s0)
+li t3, 0x22
+sb t3, 2(s0)
+li t3, 0x11
+sb t3, 3(s0)
+
+# Switch to U‑mode
+call machine_to_user
+
+# In U‑mode, load word; UBE=1 should cause big‑endian interpretation
+lw a0, 0(s0)
+
+# Result: a0 = 0x44332211
+
+# 48 # Extension Must Be Active: H
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+csrr a0, mstatus
+srli a0, a0, 39
+andi a0, a0, 1
+trap_handler:
+csrr a1, mstatus
+srli a1, a1, 39
+andi a1, a1, 1
+mv a0, a1
+mret
+# Result: a0 = 1
+
+# 49 # Extension Must Be Active: H
+li t0, 0x4000000000
+csrrs x0, mstatus, t0
+csrr t1, mstatus
+li a0, 0x4000000000
+and t1, t1, a0
+# Result: t1 = 0x4000000000
+
+# 50 # Extension Must Be Active: H
+li t0, (1 << 21) # set mstatus.TW
+csrs mstatus, t0
+call machine_to_virtual
+li t1, 0
+sd t1, 0(sp) # store in VS‑mode (should not trap)
+li a0, 1
+# Result: a0 = 1
+
+# 51 # Extension Must Be Active: NONE
+li t0, 0x100000
+csrs mstatus, t0
+call machine_to_supervisor
+csrr a0, satp
+addi a0, a0, 1
+# Result: a0 = 0
+
+# 52 # Extension Must Be Active: NONE
+li t0, (1 << 21)
+csrrs zero, mstatus, t0
+call machine_to_user
+addi a0, zero, 0
+wrs.nto
+addi a0, zero, 1
+# Result: a0 = 0
+
+# 53 # Extension Must Be Active: NONE
+li t0, 0x400000
+csrs mstatus, t0
+call machine_to_supervisor
+sret
+# Result: a0 = 2
+
+# 54 # Extension Must Be Active: F
+li t0, 0x2000 # set bit 13 (FS = 01)
+csrrs x0, mstatus, t0 # write to mstatus, setting FS field
+csrr t1, mstatus # read back mstatus
+andi t1, t1, 0x6000 # isolate FS bits (bits 13..14)
+# Result: t1 != 0
+
+# 55 # Extension Must Be Active: NONE
+li t0, 0x6000
+csrrs x0, mstatus, t0
+csrr t1, mstatus
+andi t1, t1, 0x6000
+mv a0, t1
+# Result: a0 = 0
+
+# 56 # Extension Must Be Active: NONE
+csrr t0, 0x300
+andi t0, t0, 0x6000
+# Result: t0 = 0
+
+# 57 # Extension Must Be Active: F
+li t1, 0x2000 # Set mstatus.FS = Initial (01)
+csrw mstatus, t1
+fadd.s ft0, ft0, ft0 # FP operation that changes FP state
+csrr t0, mstatus
+andi t0, t0, 0x6000 # Mask FS field (bits 14:13)
+# Result: t0 = 0x6000
+
+# 58 # Extension Must Be Active: NONE
+csrrw x0, mstatus, x0
+fadd.s ft0, ft0, ft0
+# Result: a0 = 0
+
+# 59 # Extension Must Be Active: V
+li t0, 0x1800
+csrrw x0, 0x300, t0
+csrr a0, 0x300
+li t1, 0x1800
+and a0, a0, t1
+# Result: a0 != 0
+
+# 60 # Extension Must Be Active: NONE
+li t1, 0x600
+csrrs x0, mstatus, t1
+csrr t2, mstatus
+andi t3, t2, 0x600
+# Result: t3 = 0
+
+# 61 # Extension Must Be Active: NONE
+csrr t0, mstatus
+andi t0, t0, 0x600
+# Result: t0 = 0
+
+# 62 # Extension Must Be Active: V
+vsetvli a0, x0, e32, m1
+csrr a1, mstatus
+andi a1, a1, 0x600
+# Result: a1 != 0
+
+# 63 # Extension Must Be Active: NONE
+csrr t0, mstatus
+li t1, -0x600 # ~((0x3) << 9) clears bits 10:9 (VS field)
+and t0, t0, t1
+csrw mstatus, t0
+
+# Perform some operation that does not modify vector state
+csrr t2, time
+
+# Read back VS field
+csrr a0, mstatus
+srli a0, a0, 9
+andi a0, a0, 0x3
+# Result: a0 = 2
+
+# 64 # Extension Must Be Active: V
+li t0, 0x600 # mask for VS field (bits 10..9)
+csrrc x0, mstatus, t0 # clear VS bits -> mstatus.VS = Off
+li a0, 0x12345678 # known value to check after trap
+vadd.vv v0, v0, v0 # vector instruction should raise illegal‑instruction exception
+# Result: a0 = 0x12345678
+
+# 65 # Extension Must Be Active: NONE
+li t0, 0x600
+csrs mstatus, t0
+csrr t1, mstatus
+li t2, 0x8000000000000000
+and a0, t1, t2
+# Result: a0 != 0
+
+# 66 # Extension Must Be Active: Zfinx
+li x1, 0x6000 # set FS bits to 11
+csrw 0x300, x1 # write mstatus
+fadd.s f0, f0, f0 # floating‑point instruction should not trap
+csrr x2, 0x300 # read mstatus
+andi x2, x2, 0x6000 # isolate FS field
+# Result: x2 = 0
+
+# 67 # Extension Must Be Active: Zicbom
+li a0, 0xdeadbeef # sentinel value
+# Enable MPRV (bit 17) to make effective privilege depend on MPP
+li t0, (1 << 17)
+csrs mstatus, t0
+# Clear MPV (bit 39) just to be explicit
+li t0, (1 << 39)
+csrc mstatus, t0
+# Set MPP to U-mode (bits 12..11 = 00) so effective privilege is not M
+li t0, (3 << 11) # mask for MPP field
+csrc mstatus, t0
+# Ensure SUM and MXR are cleared (bits 18 and 19)
+li t0, (1 << 18) | (1 << 19)
+csrc mstatus, t0
+# Attempt a Cache‑Management Operation
+cflush.d.l1 a0, a0
+# If no trap occurs, overwrite sentinel
+li a0, 1
+# Result: a0 = 0xdeadbeef
+
+# 68 # Extension Must Be Active: H
+la t0, trap_handler
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+trap_handler:
+csrr t1, mstatus
+li t2, 0x800000000
+and a0, t1, t2
+mret
+csrr t1, mstatus
+li t2, 0x800000000
+and a1, t1, t2
+j .
+# Result: a0 = 0x800000000 & a1 = 0
+
+# 69 # Extension Must Be Active: H
+csrr a0, mstatus
+li t0, 0x4000000000
+and a0, a0, t0
+# Result: a0 = 0x0 | a0 = 0x4000000000

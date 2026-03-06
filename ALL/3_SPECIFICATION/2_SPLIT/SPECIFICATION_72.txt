@@ -1,0 +1,3 @@
+## 17.1.4. Memory Model Axioms
+
+An execution of a RISC-V program obeys the RVWMO memory consistency model only if there exists a global memory order conforming to preserved program order and satisfying the load value axiom , the atomicity axiom , and the progress axiom .

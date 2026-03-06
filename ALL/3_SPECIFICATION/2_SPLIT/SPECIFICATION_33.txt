@@ -1,0 +1,59 @@
+## 4.4. HINT Instructions
+
+All instructions that are microarchitectural HINTs in RV32I (see Chapter 2) are also HINTs in RV64I. The  additional  computational  instructions  in  RV64I  expand  both  the  standard  and  custom  HINT encoding spaces.
+
+Table 6 lists all RV64I HINT code points. 91% of the HINT space is reserved for standard HINTs, but none are  presently  defined.  The  remainder  of  the  HINT  space  is  designated  for  custom  HINTs;  no standard HINTs will ever be defined in this subspace.
+
+Table 6. RV64I HINT instructions.
+
+| Instruction   | Constraints                             | Code Points   | Purpose                            |
+|---------------|-----------------------------------------|---------------|------------------------------------|
+| LUI           | rd = x0                                 |               | Designated for future standard use |
+| AUIPC         | rd = x0                                 |               | Designated for future standard use |
+| ADDI          | rd = x0 , and either rs1 ≠ x0 or imm ≠0 |               | Designated for future standard use |
+| ANDI          | rd = x0                                 |               | Designated for future standard use |
+| ORI           | rd = x0                                 |               | Designated for future standard use |
+| XORI          | rd = x0                                 |               | Designated for future standard use |
+| ADDIW         | rd = x0                                 |               | Designated for future standard use |
+| ADD           | rd = x0 , rs1 ≠ x0                      |               | Designated for future standard use |
+| ADD           | rd = x0 , rs1 = x0 , rs2 ≠ x2 - x5      | 28            | Designated for future standard use |
+
+| Instruction   | Constraints                                               | Code Points   | Purpose                                                                            |
+|---------------|-----------------------------------------------------------|---------------|------------------------------------------------------------------------------------|
+| ADD           | rd = x0 , rs1 = x0 , rs2 = x2 - x5                        | 4             | ( rs2 = x2 ) NTL.P1 ( rs2 = x3 ) NTL.PALL ( rs2 = x4 ) NTL.S1 ( rs2 = x5 ) NTL.ALL |
+| SLLI          | rd = x0 , rs1 = x0 , shamt =31                            | 1             | Semihosting entry marker                                                           |
+| SRAI          | rd = x0 , rs1 = x0 , shamt =7                             | 1             | Semihosting exit marker                                                            |
+| SUB           | rd = x0                                                   |               | Designated for future standard use                                                 |
+| AND           | rd = x0                                                   |               | Designated for future standard use                                                 |
+| OR            | rd = x0                                                   |               | Designated for future standard use                                                 |
+| XOR           | rd = x0                                                   |               | Designated for future standard use                                                 |
+| SLL           | rd = x0                                                   |               | Designated for future standard use                                                 |
+| SRL           | rd = x0                                                   |               | Designated for future standard use                                                 |
+| SRA           | rd = x0                                                   |               | Designated for future standard use                                                 |
+| ADDW          | rd = x0                                                   |               | Designated for future standard use                                                 |
+| SUBW          | rd = x0                                                   |               | Designated for future standard use                                                 |
+| SLLW          | rd = x0                                                   |               | Designated for future standard use                                                 |
+| SRLW          | rd = x0                                                   |               | Designated for future standard use                                                 |
+| SRAW          | rd = x0                                                   |               | Designated for future standard use                                                 |
+| FENCE         | rd = x0 , rs1 ≠ x0 , fm =0, and either pred =0 or succ =0 |               | Designated for future standard use                                                 |
+| FENCE         | rd ≠ x0 , rs1 = x0 , fm =0, and either pred =0 or succ =0 |               | Designated for future standard use                                                 |
+| FENCE         | rd = rs1 = x0 , fm =0, pred =0, succ ≠0                   | 15            | Designated for future standard use                                                 |
+| FENCE         | pred =0 or succ =0, pred ≠W, succ =0                      | 15            | Designated for future standard use                                                 |
+| FENCE         | rd = rs1 = x0 , fm =0, pred =W, succ =0                   | 1             | PAUSE                                                                              |
+
+| Instruction   | Constraints                                | Code Points   | Purpose                   |
+|---------------|--------------------------------------------|---------------|---------------------------|
+| SLTI          | rd = x0                                    |               | Designated for custom use |
+| SLTIU         | rd = x0                                    |               | Designated for custom use |
+| SLLI          | rd = x0 , and either rs1 ≠ x0 or shamt ≠31 |               | Designated for custom use |
+| SRLI          | rd = x0                                    |               | Designated for custom use |
+| SRAI          | rd = x0 , and either rs1 ≠ x0 or shamt ≠7  |               | Designated for custom use |
+| SLLIW         | rd = x0                                    |               | Designated for custom use |
+| SRLIW         | rd = x0                                    |               | Designated for custom use |
+| SRAIW         | rd = x0                                    |               | Designated for custom use |
+| SLT           | rd = x0                                    |               | Designated for custom use |
+| SLTU          | rd = x0                                    |               | Designated for custom use |
+
+<image>
+
+slli x0, x0, 0x1f and srai x0, x0, 7 were previously designated as custom HINTs, but they have been appropriated for use in semihosting calls, as described in Section 2.8.  To  reflect  their  usage  in  practice,  the  base  ISA  spec  has  been  changed  to designate them as standard HINTs.

@@ -1,0 +1,23 @@
+## 3.6.2. Supported Access Type PMAs
+
+Access types specify which access widths, from 8-bit byte to long multi-word burst, are supported, and also whether misaligned accesses are supported for each access width.
+
+<image>
+
+Although  software  running  on  a  RISC-V  hart  cannot  directly  generate  bursts  to memory, software might have to program DMA engines to access I/O devices and might therefore need to know which access sizes are supported.
+
+Main  memory  regions  always  support  read  and  write  of  all  access  widths  required  by  the  attached devices, and can specify whether instruction fetch is supported.
+
+Some platforms might mandate that all of main memory support instruction fetch. Other platforms might prohibit instruction fetch from some main memory regions.
+
+<image>
+
+In some cases, the design of a processor or device accessing main memory might support other widths, but must be able to function with the types supported by the main memory.
+
+I/O regions can specify which combinations of read, write, or execute accesses to which data widths are supported.
+
+For systems with page-based virtual memory, I/O and memory regions can specify which combinations of hardware page-table reads and hardware page-table writes are supported.
+
+<image>
+
+Unix-like  operating  systems  generally  require  that  all  of  cacheable  main  memory supports page-table walks.

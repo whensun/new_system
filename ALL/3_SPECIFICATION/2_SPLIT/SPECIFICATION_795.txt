@@ -1,0 +1,3 @@
+## 9.3. Virtualizing scountovf
+
+For implementations that support Smcdeleg/Ssccfg, Sscofpmf, and the H extension, when menvcfg .CDE=1,  attempts  to  read scountovf from  VS-mode  or  VU-mode  raise  a  virtual-instruction exception.

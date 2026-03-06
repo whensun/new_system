@@ -1,0 +1,9 @@
+## 2.3.2. Write/Read Only Legal Values (WLRL)
+
+Some read/write CSR fields specify behavior for only a subset of possible bit encodings, with other bit encodings reserved. Software should not write anything other than legal values to such a field, and should not assume a read will return a legal value unless the last write was of a legal value, or the register  has  not  been  written  since  another  operation  (e.g.,  reset)  set  the  register  to  a  legal  value. These fields are labeled WLRL in the register descriptions.
+
+<image>
+
+Hardware implementations need only  implement  enough  state  bits  to  differentiate between  the  supported  values,  but  must  always  return  the  complete  specified  bitencoding of any supported value when read.
+
+Implementations  are  permitted  but  not  required  to  raise  an  illegal-instruction  exception  if  an instruction  attempts  to  write  a  non-supported  value  to  a WLRL field.  Implementations  can  return arbitrary bit patterns on the read of a WLRL field when the last write was of an illegal value, but the value returned should deterministically depend on the illegal written value and the value of the field prior to the write.

@@ -1,0 +1,17 @@
+## 25.5. Move Instructions
+
+For  RV32  only,  if  the  D  extension  is  implemented,  the  FMVH.X.D  instruction  moves  bits  63:32  of floating-point  register rs1 into  integer  register rd .  It  is  encoded  in  the  OP-FP  major  opcode  with funct3 =0, rs2 =1, and funct7 =1110001.
+
+<image>
+
+FMVH.X.D  is  used  in  conjunction  with  the  existing  FMV.X.W  instruction  to  move  a double-precision floating-point number to a pair of x-registers.
+
+For RV32 only, if the D extension is implemented, the FMVP.D.X instruction moves a double-precision number from a pair  of  integer  registers  into  a  floating-point  register.  Integer  registers rs1 and rs2 supply bits 31:0 and 63:32, respectively; the result is written to floating-point register rd . FMVP.D.X is encoded in the OP-FP major opcode with funct3 =0 and funct7 =1011001.
+
+For  RV64  only,  if  the  Q  extension  is  implemented,  the  FMVH.X.Q  instruction  moves  bits  127:64  of floating-point  register rs1 into  integer  register rd .  It  is  encoded  in  the  OP-FP  major  opcode  with funct3 =0, rs2 =1, and funct7 =1110011.
+
+<image>
+
+FMVH.X.Q  is  used  in  conjunction  with  the  existing  FMV.X.D  instruction  to  move  a quad-precision floating-point number to a pair of x-registers.
+
+For RV64 only, if the Q extension is implemented, the FMVP.Q.X instruction moves a double-precision number from a pair  of  integer  registers  into  a  floating-point  register.  Integer  registers rs1 and rs2 supply bits 63:0 and 127:64, respectively; the result is written to floating-point register rd . FMVP.Q.X is encoded in the OP-FP major opcode with funct3 =0 and funct7 =1011011.

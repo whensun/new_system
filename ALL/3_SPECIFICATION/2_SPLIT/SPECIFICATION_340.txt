@@ -1,0 +1,27 @@
+## 30.5.4. Prestart, Active, Inactive, Body, and Tail Element Definitions
+
+The destination element indices operated on during a vector instruction's execution can be divided into three disjoint subsets.
+
+- ⚫ The prestart elements are those whose element index is less than the initial value in the vstart register. The prestart elements do not raise exceptions and do not update the destination vector register.
+- ⚫ The body elements are those whose element index is greater than or equal to the initial value in the vstart register, and less than the current vector length setting in vl . The body can be split into two disjoint subsets:
+- ⚫ The active elements during a vector instruction's execution are the elements within the body
+
+- and where the current mask is enabled at that element position. The active elements can raise exceptions and update the destination vector register group.
+- ⚫ The inactive elements are the elements within the body but where the current mask is disabled at that element position. The inactive elements do not raise exceptions and do not update any destination vector register group unless masked agnostic is specified ( vtype.vma =1),  in  which case inactive elements may be overwritten with 1s.
+- ⚫ The tail elements during a vector instruction's execution are the elements past the current vector length setting specified in vl .  The  tail  elements  do  not  raise  exceptions, and do not update any destination vector register group unless tail agnostic is specified ( vtype.vta =1), in which case tail elements  may  be  overwritten  with  1s,  or  with  the  result  of  the  instruction  in  the  case  of  maskproducing instructions except for mask loads. When LMUL < 1, the tail includes the elements past VLMAX that are held in the same vector register.
+
+```
+for element index x prestart(x) = (0 <= x < vstart) body(x)     = (vstart <= x < vl) tail(x)     = (vl <= x < max(VLMAX,VLEN/SEW)) mask(x)     = unmasked || v0.mask[x] == 1 active(x)   = body(x) && mask(x) inactive(x) = body(x) && !mask(x)
+```
+
+When vstart ≥ vl , there are no body elements, and no elements are updated in any destination vector register group, including that no tail elements are updated with agnostic values.
+
+<image>
+
+As  a  consequence,  when vl =0,  no  elements,  including  agnostic  elements,  are updated in the destination vector register group regardless of vstart .
+
+Instructions that write an x register or f register do so even when vstart ≥ vl , including when vl =0.
+
+<image>
+
+Some instructions such as vslidedown and vrgather may read indices past vl or even VLMAX in source vector register groups. The general policy is to return the value 0 when the index is greater than VLMAX in the source vector register group.

@@ -1,0 +1,5 @@
+## 31.3.9. Zkr - Entropy Source Extension
+
+The  entropy  source  extension  defines  the seed CSR  at  address 0x015 .  This  CSR  provides  up  to  16 physical entropy bits that can be used to seed cryptographic random bit generators.
+
+See  Section  31.5  for  the  normative  specification  and  access  control  notes.  Section  31.8  contains design rationale and further recommendations to implementers.

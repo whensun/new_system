@@ -1,0 +1,9 @@
+## 31.6.5. Zkt listings
+
+The following instructions are included in the Zkt subset They are listed here grouped by their original parent extension.
+
+Note to implementers
+
+You  do  not  need  to  implement  all  of  these  instructions  to  implement Zkt .  Rather, every  one  of  these  instructions  that  the  core  does  implement  must  adhere  to  the requirements of Zkt .
+
+<image>

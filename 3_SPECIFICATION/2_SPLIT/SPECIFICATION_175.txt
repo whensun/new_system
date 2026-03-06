@@ -1,0 +1,44 @@
+## 27.3.1. Stack-Pointer-Based Loads and Stores
+
+<image>
+
+These instructions use the CI format.
+
+C.LWSP loads a 32-bit value from memory into register rd . It computes an effective address by adding the zero -extended offset, scaled by 4, to the stack pointer, x2 . It expands to lw rd, offset(x2) . C.LWSP is valid only when rd ≠ x0 ; the code points with rd = x0 are reserved.
+
+C.LDSP  is  an  RV64C-only  instruction  that  loads  a  64-bit  value  from  memory  into  register rd .  It computes its effective address by adding the zero-extended offset, scaled by 8, to the stack pointer, x2 . It  expands  to ld  rd,  offset(x2) .  C.LDSP  is  valid  only  when rd ≠ x0 ;  the  code  points  with rd = x0 are reserved.
+
+C.FLWSP is an RV32FC-only instruction that loads a single-precision floating-point value from memory into floating-point register rd .  It  computes its effective address by adding the zero -extended offset, scaled by 4, to the stack pointer, x2 . It expands to flw rd, offset(x2) .
+
+C.FLDSP  is  an  RV32DC/RV64DC-only  instruction  that  loads  a  double-precision  floating-point  value from  memory  into  floating-point  register rd .  It  computes  its  effective  address  by  adding  the zero -extended offset, scaled by 8, to the stack pointer, x2 . It expands to fld rd, offset(x2) .
+
+<image>
+
+These instructions use the CSS format.
+
+C.SWSP stores a 32-bit value in register rs2 to memory. It computes an effective address by adding the zero -extended offset, scaled by 4, to the stack pointer, x2 . It expands to sw rs2, offset(x2) .
+
+C.SDSP is an RV64C-only instruction that stores a 64-bit value in register rs2 to memory. It computes an  effective  address  by  adding  the zero -extended  offset,  scaled  by  8,  to  the  stack  pointer, x2 .  It expands to sd rs2, offset(x2) .
+
+C.FSWSP is an RV32FC-only instruction that stores a single-precision floating-point value in floatingpoint register rs2 to  memory. It computes an effective address by adding the zero -extended offset, scaled by 4, to the stack pointer, x2 . It expands to fsw rs2, offset(x2) .
+
+C.FSDSP is an RV32DC/RV64DC-only instruction that stores a double-precision floating-point value in floating-point register rs2 to memory. It computes an effective address by adding the zero -extended offset, scaled by 8, to the stack pointer, x2 . It expands to fsd rs2, offset(x2) .
+
+<image>
+
+Register save/restore code at function entry/exit represents a significant portion of static  code size. The stack-pointer-based compressed loads and stores in RVC are
+
+effective  at  reducing  the  save/restore  static  code  size  by  a  factor  of  2  while improving performance by reducing dynamic instruction bandwidth.
+
+A common mechanism used in other ISAs to further reduce save/restore code size is load-multiple  and  store-multiple  instructions.  We  considered  adopting  these  for RISC-V but noted the following drawbacks to these instructions:
+
+- ⚫ These instructions complicate processor implementations.
+- ⚫ For  virtual  memory  systems,  some  data  accesses  could  be  resident  in  physical memory  and  some  could  not,  which  requires  a  new  restart  mechanism  for partially executed instructions.
+- ⚫ Unlike  the  rest  of  the  RVC  instructions,  there  is  no  IFD  equivalent  to  Load Multiple and Store Multiple.
+- ⚫ Unlike the rest of the RVC instructions, the compiler would have to be aware of these load-multiple and store-multiple instructions to both allocate registers in the expected order and also to schedule the loads and stores contiguously and in the proper order, to maximize the chances of them being detected and replaced by  an  assembler  or  linker  with  the  equivalent  load-multiple  or  store-multiple compressed instruction.
+- ⚫ Simple microarchitectural implementations will constrain how other instructions can be scheduled around the load and store multiple instructions, leading to a potential performance loss.
+- ⚫ The  desire  for  sequential  register  allocation  might  conflict  with  the  featured registers selected for the CIW, CL, CS, CA, and CB formats.
+
+Furthermore,  much  of  the  gains  can  be  realized  in  software  by  replacing  prologue and epilogue code with subroutine calls to common prologue and epilogue code, a technique described in Section 5.6 of (Waterman, 2016).
+
+While reasonable architects might come to different conclusions, we decided to omit load  and  store  multiple  and  instead  use  the  software-only  approach  of  calling save/restore millicode routines to attain the greatest code size reduction.

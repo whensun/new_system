@@ -1,0 +1,11 @@
+## 12.6.1. Addressing and Memory Protection
+
+Sv57 implementations support a 57-bit virtual address space, divided into pages. An Sv57 address is partitioned as shown in Figure 74. Instruction fetch addresses and load and store effective addresses, which are 64 bits, must have bits 63-57 all equal to bit 56, or else a page-fault exception will occur. The 45-bit VPN is translated into a 44-bit PPN via a five-level page table, while the 12-bit page offset is untranslated.
+
+Figure 76. Sv57 page table entry.
+
+<image>
+
+The PTE format for Sv57 is shown in Figure 76. Bits 63-54 and 9-0 have the same meaning as for Sv39.  Any  level  of  PTE  may  be  a  leaf  PTE,  so  in  addition  to  pages,  Sv57  supports megapages , gigapages , terapages ,  and petapages ,  each  of  which  must  be  virtually  and  physically  aligned  to  a boundary  equal  to  its  size.  A  page-fault  exception  is  raised  if  the  physical  address  is  insufficiently aligned.
+
+The  algorithm  for  virtual-to-physical  address  translation  is  the  same  as  in  Section  12.3.2,  except LEVELS equals 5 and PTESIZE equals 8.

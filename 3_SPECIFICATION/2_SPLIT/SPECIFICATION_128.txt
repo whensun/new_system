@@ -1,0 +1,5 @@
+## 22.4. Quad-Precision Floating-Point Compare Instructions
+
+The  quad-precision  floating-point  compare  instructions  are  defined  analogously  to  their  doubleprecision counterparts, but operate on quad-precision operands.
+
+<image>

@@ -1,0 +1,29 @@
+## 29.5.3. bclr
+
+## Synopsis
+
+Single-Bit Clear (Register)
+
+## Mnemonic
+
+bclr rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction returns rs1 with a single bit cleared at the index specified in rs2 . The index is read from the lower log2(XLEN) bits of rs2 .
+
+## Operation
+
+```
+let index = X(rs2) & (XLEN - 1); X(rd) = X(rs1) & ~(1 << index)
+```
+
+## Included in
+
+| Extension                     | Minimum version   | Lifecycle state   |
+|-------------------------------|-------------------|-------------------|
+| Zbs (Single-bit instructions) | v1.0              | Ratified          |

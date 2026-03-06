@@ -1,0 +1,9 @@
+## 30.14.3. Vector Single-Width Floating-Point Reduction Instructions
+
+```
+# Simple reductions. vfredosum.vs vd, vs2, vs1, vm # Ordered sum vfredusum.vs vd, vs2, vs1, vm # Unordered sum vfredmax.vs  vd, vs2, vs1, vm # Maximum value vfredmin.vs  vd, vs2, vs1, vm # Minimum value
+```
+
+<image>
+
+Older assembler mnemonic vfredsum is retained as alias for vfredusum .

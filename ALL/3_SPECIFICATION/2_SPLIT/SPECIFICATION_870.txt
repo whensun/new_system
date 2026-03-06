@@ -1,0 +1,49 @@
+## 21.2.1. Hypervisor Status ( hstatus ) Register
+
+The hstatus register  is  an  HSXLEN-bit  read/write  register  formatted  as  shown  in  Figure  79  when HSXLEN=32 and Figure 80 when HSXLEN=64. The hstatus register provides facilities analogous to the mstatus register for tracking and controlling the exception behavior of a VS-mode guest.
+
+Figure 79. Hypervisor status register ( hstatus ) when HSXLEN=32
+
+<image>
+
+| 31   |       |    |      |    |     | 23   | 22   | 21       | 20   | 18   | 17    | 16   |
+|------|-------|----|------|----|-----|------|------|----------|------|------|-------|------|
+|      |       |    | WPRI |    |     |      | VTSR | VTW      | VTVM | WPRI | VGEIN |      |
+| 15   |       | 12 | 11   | 10 | 8 9 | 7    | 6    | 5        | 4    |      |       | 0    |
+|      | VGEIN |    | WPRI |    | HU  | SPVP | SPV  | VSBE GVA |      | WPRI |       |      |
+
+Figure 80. Hypervisor status register ( hstatus ) when HSXLEN=64.
+
+<image>
+
+The VSXL field controls the effective XLEN for VS-mode (known as VSXLEN), which may differ from the XLEN  for  HS-mode  (HSXLEN).  When  HSXLEN=32,  the  VSXL  field  does  not  exist,  and  VSXLEN=32. When HSXLEN=64, VSXL is a WARL field that is encoded the same as the MXL field of misa , shown in Table  9.  In  particular,  an  implementation  may  make  VSXL  be  a  read-only  field  whose  value  always ensures that VSXLEN=HSXLEN.
+
+If HSXLEN is changed from 32 to a wider width, and if field VSXL is not restricted to a single value, it gets the value corresponding to the widest supported width not wider than the new HSXLEN.
+
+The hstatus fields  VTSR, VTW, and VTVM are defined analogously to the mstatus fields  TSR,  TW, and TVM, but affect execution only in VS-mode, and cause virtual-instruction exceptions instead of illegalinstruction  exceptions.  When  VTSR=1,  an  attempt  in  VS-mode  to  execute  SRET  raises  a  virtualinstruction exception. When VTW=1 (and assuming mstatus .TW=0), an attempt in VS-mode to execute WFI  raises  a  virtual-instruction  exception  if  the  WFI  does  not  complete  within  an  implementationspecific,  bounded  time  limit.  An  implementation  may  have  WFI  always  raise  a  virtual-instruction exception in VS-mode when VTW=1 (and mstatus .TW=0), even if  there  are  pending  globally-disabled interrupts  when  the  instruction  is  executed.  When  VTVM=1,  an  attempt  in  VS-mode  to  execute SFENCE.VMA or SINVAL.VMA or to access CSR satp raises a virtual-instruction exception.
+
+The VGEIN (Virtual Guest External Interrupt Number) field selects a guest external interrupt source for VS-level external interrupts. VGEIN is a WLRL field that must be able to hold values between zero and the maximum guest external interrupt number (known as GEILEN), inclusive. When VGEIN=0, no guest external  interrupt  source  is  selected  for  VS-level  external  interrupts.  GEILEN  may  be  zero,  in  which case VGEIN may be read-only zero. Guest external interrupts are explained in Section 21.2.4, and the
+
+use of VGEIN is covered further in Section 21.2.3.
+
+Field  HU  (Hypervisor  in  U-mode)  controls  whether  the  virtual-machine  load/store  instructions,  HLV, HLVX, and HSV, can be used also in U-mode. When HU=1, these instructions can be executed in Umode the same as in HS-mode. When HU=0, all hypervisor instructions cause an illegal-instruction exception in U-mode.
+
+<image>
+
+The HU bit allows a portion of a hypervisor to be run in U-mode for greater protection against software bugs, while still retaining access to a virtual machine's memory.
+
+The SPV bit (Supervisor  Previous  Virtualization  mode)  is  written  by  the  implementation  whenever  a trap is taken into HS-mode. Just as the SPP bit in sstatus is set to the (nominal) privilege mode at the time of the trap, the SPV bit in hstatus is set to the value of the virtualization mode V at the time of the trap. When an SRET instruction is executed when V=0, V is set to SPV.
+
+When V=1 and a trap is taken into HS-mode, bit SPVP (Supervisor Previous Virtual Privilege) is set to the nominal privilege mode at the time of the trap, the same as sstatus .SPP. But if V=0 before a trap, SPVP is left unchanged on trap entry. SPVP controls the effective privilege of explicit memory accesses made by the virtual-machine load/store instructions, HLV, HLVX, and HSV.
+
+<image>
+
+Without SPVP, if instructions HLV, HLVX, and HSV looked instead to sstatus .SPP for the  effective  privilege  of  their  memory  accesses,  then,  even  with  HU=1,  U-mode could not access virtual machine memory at VS-level, because to enter U-mode using SRET always leaves SPP=0. Unlike SPP, field SPVP is untouched by transitions backand-forth between HS-mode and U-mode.
+
+Field GVA (Guest Virtual Address) is written by the implementation whenever a trap is taken into HSmode. For any trap (breakpoint, address misaligned, access fault, page fault, or guest-page fault) that writes a guest virtual address to stval ,  GVA is set to 1. For any other trap into HS-mode, GVA is set to 0.
+
+<image>
+
+For breakpoint and memory access traps that write a nonzero value to stval , GVA is redundant  with  field  SPV  (the  two  bits  are  set  the  same)  except  when  the  explicit memory access  of  an  HLV,  HLVX,  or  HSV  instruction  causes  a  fault.  In  that  case, SPV=0 but GVA=1.
+
+The VSBE bit is a WARL field that controls the endianness of explicit memory accesses made from VSmode. If VSBE=0, explicit load and store memory accesses made from VS-mode are little-endian, and if VSBE=1, they are big-endian. VSBE also controls the endianness of all implicit accesses to VS-level memory  management  data  structures,  such  as  page  tables.  An  implementation  may  make  VSBE  a read-only field that always specifies the same endianness as HS-mode.

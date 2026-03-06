@@ -1,0 +1,29 @@
+## 31.4.48. xperm4
+
+## Synopsis
+
+Nibble-wise lookup of indices into a vector.
+
+## Mnemonic
+
+xperm4 rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+The  xperm4  instruction  operates  on  nibbles.  The rs1 register  contains  a  vector  of  XLEN/4  4-bit elements. The rs2 register contains a vector of XLEN/4 4-bit indexes. The result is each element in rs2 replaced by the indexed element in rs1 , or zero if the index into rs2 is out of bounds.
+
+## Operation
+
+```
+val xperm4_lookup : (bits(4), xlenbits) -> bits(4) function xperm4_lookup (idx, lut) = { (lut >> (idx @ 0b00))[3..0] } function clause execute ( XPERM4 (rs2,rs1,rd)) = { result : xlenbits = EXTZ(0b0); foreach(i from 0 to xlen by 4) { result[i+3..i] = xperm4_lookup(X(rs2)[i+3..i], X(rs1)); }; X(rd) = result; RETIRE_SUCCESS }
+```
+
+## Included in
+
+| Extension                    | Minimum version   | Lifecycle state   |
+|------------------------------|-------------------|-------------------|
+| Zbkx (Crossbar permutations) | v1.0              | Ratified          |

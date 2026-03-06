@@ -1,0 +1,7 @@
+## Chapter 23. "Zfh" and "Zfhmin" Extensions for Half-Precision Floating-Point, Version 1.0
+
+This  chapter  describes  the  Zfh  standard  extension  for  16-bit  half-precision  binary  floating-point instructions compliant with the IEEE 754-2008 arithmetic standard. The Zfh extension depends on the single-precision  floating-point  extension,  F.  The  NaN-boxing  scheme  described  in  Section  21.2  is extended to allow a half-precision value to be NaN-boxed inside a single-precision value (which may be  recursively  NaN-boxed  inside  a  double-  or  quad-precision  value  when  the  D  or  Q  extension  is present).
+
+<image>
+
+This extension primarily provides instructions that consume half-precision operands and produce half-precision results. However, it is also common to compute on halfprecision data using higher intermediate precision. Although this extension provides explicit conversion  instructions that suffice to implement  that  pattern, future extensions  might  further  accelerate  such  computation  with  additional  instructions that implicitly widen their operands-e.g., half half single single-or implicitly narrow their results-e.g., half single half.

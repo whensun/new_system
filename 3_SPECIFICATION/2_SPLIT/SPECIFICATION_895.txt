@@ -1,0 +1,9 @@
+## 21.4.5. Machine Trap Instruction ( mtinst ) Register
+
+The mtinst register is an MXLEN-bit read/write register formatted as shown in Figure 116. When a trap is  taken  into  M-mode, mtinst is  written  with  a  value  that,  if  nonzero,  provides  information  about  the instruction  that  trapped,  to  assist  software  in  handling  the  trap.  The  values  that  may  be  written  to mtinst on a trap are documented in Section 21.6.3.
+
+Figure 116. Machine trap instruction ( mtinst ) register.
+
+<image>
+
+mtinst is  a WARL register  that  need  only  be  able  to  hold  the  values  that  the  implementation  may automatically write to it on a trap.

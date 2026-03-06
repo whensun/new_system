@@ -1,0 +1,3 @@
+## 30.13.1. Vector Floating-Point Exception Flags
+
+A vector floating-point exception at any active floating-point element sets the standard FP exception flags in the fflags register. Inactive elements do not set FP exception flags.

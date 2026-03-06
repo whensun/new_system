@@ -1,0 +1,15 @@
+## 12.1.1.1. Base ISA Control in sstatus Register
+
+The UXL field controls the value of XLEN for U-mode, termed UXLEN , which may differ from the value of XLEN for S-mode, termed SXLEN . The encoding of UXL is the same as that of the MXL field of misa , shown in Table 9.
+
+When SXLEN=32, the UXL field does not exist, and UXLEN=32. When SXLEN=64, it is a WARL field that encodes the current value of UXLEN. In particular, an implementation may make UXL be a readonly field whose value always ensures that UXLEN=SXLEN.
+
+If  UXLEN≠SXLEN, instructions executed in the narrower mode must ignore source register operand bits above the configured XLEN, and must sign-extend results to fill the widest supported XLEN in the destination register.
+
+If UXLEN SXLEN, user-mode instruction-fetch addresses and load and store effective addresses are taken  modulo .  For  example,  when  UXLEN=32  and  SXLEN=64,  user-mode  memory  accesses reference the lowest 4 GiB of the address space.
+
+Some  HINT  instructions  are  encoded  as  integer  computational  instructions  that  overwrite  their destination register with its current value, e.g., c.addi x8, 0 . When such a HINT is executed with XLEN <  SXLEN  and  bits  SXLEN..XLEN  of  the  destination  register  not  all  equal  to  bit  XLEN-1,  it  is implementation-defined whether bits SXLEN..XLEN of the destination register are unchanged or are overwritten with copies of bit XLEN-1.
+
+<image>
+
+This definition allows implementations to elide register writeback for some HINTs, while  allowing  them  to  execute  other  HINTs  in  the  same  manner  as  other  integer computational instructions. The implementation choice is observable only by S-mode with SXLEN > UXLEN; it is invisible to U-mode.

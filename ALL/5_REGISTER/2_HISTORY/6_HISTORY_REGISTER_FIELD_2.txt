@@ -1,0 +1,43 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: scountinhibit
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, from the description below, extract the fields for scountinhibit register. The register of scountinhibit is a 64-bit register.
+
+OUTPUT FORMAT:
+FIELDS: <high_bit>..<low_bit>=<FIELD_NAME>, <high_bit>..<low_bit>=<FIELD_NAME>, ...
+
+RULES:
++ Range Delimiter -> Always use two dots (..) for inclusive ranges (e.g., 7..0). Repeat the index for single-bit fields (e.g., 3..3).
++ Coverage -> Define every bit from 63 down to 0, in contiguous, non-overlapping ranges. No gaps.
++ Reserved Bits -> If the description says something like "unused", "future use", or "reserved", then the <FIELD_NAME> must be WPRI.
++ Unknown Positions -> If a field's bit range is not given in the description, append the field at the end. The <high_bit> and the <low_bit> become "UNKNOWN". For example, "UNKNOWN..UNKNOWN=<FIELD_NAME>".
++ Ordering -> Based on the position or the bit range, list fields strictly from high to low, separated by ", " (comma and space).
++ No Overlaps -> Ensure bit ranges don't overlap.
+
+Do not output any introduction.
+
+The description:
+
+**Register:** scountinhibit  
+**Width:** SXLEN  
+
+| Bits | Name | Description |
+|------|------|-------------|
+| 0    | CY   | Inhibit the **cycle** counter when set. |
+| 1    | TM   | Inhibit the **timer** counter when set (if the implementation provides a timer counter). |
+| 2    | IR   | Inhibit the **instret** (instructions‑retired) counter when set. |
+| 3‑(SXLEN‑1) | HPM[n] (n = 0 … SXLEN‑4) | Inhibit the corresponding **hardware performance monitoring (HPM) counter** hpmcounter3 + n when set. Each bit masks one HPM counter; e.g., bit 3 masks hpmcounter3, bit 4 masks hpmcounter4, … up to the highest implemented HPM counter. |
+| (Unused/Reserved) | — | Reads as zero; writes are ignored. |
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+FIELDS: 63..3=HPM, 2..2=IR, 1..1=TM, 0..0=CY
+======================================================= END - 1 ========================================================

@@ -1,0 +1,3 @@
+## 31.3.13. Zkt - Data Independent Execution Latency
+
+This  extension  allows  CPU  implementers  to  indicate  to  cryptographic  software  developers  that  a subset of RISC-V instructions are guaranteed to be implemented such that their execution latency is independent of the data values they operate on. A complete description of this extension is found in Section 31.6.

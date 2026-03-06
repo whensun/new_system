@@ -1,0 +1,9 @@
+## 21.2.9. Hypervisor Trap Instruction ( htinst ) Register
+
+The htinst register is an HSXLEN-bit read/write register formatted as shown in Figure 95. When a trap is taken into HS-mode, htinst is  written with a value that, if nonzero, provides information about the instruction  that  trapped,  to  assist  software  in  handling  the  trap.  The  values  that  may  be  written  to htinst on a trap are documented in Section 21.6.3.
+
+Figure 95. Hypervisor trap instruction ( htinst ) register.
+
+<image>
+
+htinst is  a WARL register  that  need  only  be  able  to  hold  the  values  that  the  implementation  may automatically write to it on a trap.

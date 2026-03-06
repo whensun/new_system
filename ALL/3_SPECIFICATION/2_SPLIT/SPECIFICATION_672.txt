@@ -1,0 +1,19 @@
+## 34.5.4. c.sdsp
+
+## Synopsis
+
+Stack-pointer based store doubleword from even/odd register pair, 16-bit encoding
+
+## Mnemonic
+
+c.sdsp rs2, offset(sp)
+
+## Encoding (RV32)
+
+<image>
+
+## Description
+
+Stores a stack-pointer relative 64-bit value from registers rs2' and rs2'+1 . It computes an effective address by adding the zero -extended offset, scaled by 8, to the stack pointer, x2 .  It expands to sd rs2, offset(x2) .
+
+Included in: Zclsd

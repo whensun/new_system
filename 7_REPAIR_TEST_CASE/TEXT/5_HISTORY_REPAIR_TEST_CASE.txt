@@ -1,0 +1,1782 @@
+====================================================== START - 1 =======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0
+csrw 0x747, t0 # clear mseccfg, ensures MLPE = 0
+lpad 0 # should be a no‑op when MLPE = 0
+csrr t1, 0x747
+andi t1, t1, 0x7ff # mask to isolate the MLPE bit (implementation‑defined position)
+mv a0, t1
+
+THE ERROR:
+##########
+
+bootloader/code.S: Assembler messages:
+bootloader/code.S:105: Error: unrecognized opcode `lpad 0', extension `zicfilp' required
+make: *** [Makefile:61: bootloader/code.o] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0
+csrw 0x747, t0               # clear mseccfg, ensures MLPE = 0
+addi x0, x0, 0               # original: lpad 0 — replaced with a nop (no‑op when MLPE = 0)
+csrr t1, 0x747
+andi t1, t1, 0x7ff           # mask to isolate the MLPE bit (implementation‑defined position)
+mv a0, t1
+======================================================= END - 1 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 2 =======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+csrr a0, 0x747
+li t0, 0xFFFFFFFFFCFFFFFCF8
+and a0, a0, t0
+
+THE ERROR:
+##########
+
+bootloader/code.S: Assembler messages:
+bootloader/code.S:104: Error: unsupported large constant
+make: *** [Makefile:61: bootloader/code.o] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+csrr   a0, 0x747
+li     t0, -0x3000008
+and    a0, a0, t0
+======================================================= END - 2 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 3 =======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0x4000000000 # set bit 42 (MDT) in t0
+csrs mstatus, t0 # set mstatus.MDT = 1
+la t1, trap_handler # load address of trap handler
+csrw mtvec, t1 # set mtvec to handler
+ecall # cause a trap to M-mode
+trap_handler:
+csrr t2, mstatus # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0 # isolate MDT bit
+srli t2, t2, 42 # shift to LSB
+mv a0, t2 # store result in a0 (0 or 1)
+mret
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrs mstatus, t0                # set mstatus.MDT = 1
+la t1, trap_handler              # load address of trap handler
+csrw mtvec, t1                  # set mtvec to handler
+ecall                           # cause a trap to M-mode
+
+trap_handler:
+csrr t2, mstatus                # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                  # isolate MDT bit
+srli t2, t2, 42                  # shift to LSB
+mv a0, t2                       # store result in a0 (0 or 1)
+mret                            # return from trap
+j .                             # halt (prevent fall‑through)
+======================================================= END - 3 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 4 =======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t1, 0x8000020000 # mask for MPV, MPRV, MPP
+li t2, 0x20000 # bit 17 = MPRV
+csrs mstatus, t2
+li t3, 0x8000000000 # bit 39 = MPV
+csrs mstatus, t3
+li t4, 0x1800 # bits 12..11 (MPP) mask
+csrrc mstatus, t4 # clear MPP = 0
+csrr t0, mstatus
+and t0, t0, t1
+
+THE ERROR:
+##########
+
+bootloader/code.S: Assembler messages:
+bootloader/code.S:109: Error: illegal operands `csrrc mstatus,t4'
+make: *** [Makefile:61: bootloader/code.o] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t1, 0x8000020000        # mask for MPV, MPRV, MPP
+li t2, 0x20000               # bit 17 = MPRV
+csrs mstatus, t2
+li t3, 0x8000000000          # bit 39 = MPV
+csrs mstatus, t3
+li t4, 0x1800                # bits 12..11 (MPP) mask
+csrrc x0, mstatus, t4        # clear MPP = 0 (discard old value)
+csrr t0, mstatus
+and t0, t0, t1
+ebreak                       # terminate test case
+======================================================= END - 4 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 5 =======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+csrr a0, mstatus
+srli a0, a0, 39
+andi a0, a0, 1
+trap_handler:
+csrr a1, mstatus
+srli a1, a1, 39
+andi a1, a1, 1
+mv a0, a1
+mret
+
+THE ERROR:
+##########
+
+riscv64-unknown-elf-ld: warning: bootloader/bootloader has a LOAD segment with RWX permissions
+riscv64-unknown-elf-ld: bootloader/code.o: in function `test_start':
+/home/adam/place_for_everything/alfa/experiment_no_verify/sysemu-testing/7_REPAIR_TEST_CASE/bootloader/code.S:104:(.text+0x14a): undefined reference to `machine_to_virtual'
+make: *** [Makefile:67: bootloader/bootloader] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+csrr a0, mstatus
+srli a0, a0, 39
+andi a0, a0, 1
+j after_trap
+
+trap_handler:
+csrr a1, mstatus
+srli a1, a1, 39
+andi a1, a1, 1
+mv a0, a1
+mret
+
+after_trap:
+ecall
+
+machine_to_virtual:
+    ret
+======================================================= END - 5 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 6 =======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, (1 << 21) # set mstatus.TW
+csrs mstatus, t0
+call machine_to_virtual
+li t1, 0
+sd t1, 0(sp) # store in VS‑mode (should not trap)
+li a0, 1
+
+THE ERROR:
+##########
+
+riscv64-unknown-elf-ld: warning: bootloader/bootloader has a LOAD segment with RWX permissions
+riscv64-unknown-elf-ld: bootloader/code.o: in function `test_start':
+/home/adam/place_for_everything/alfa/experiment_no_verify/sysemu-testing/7_REPAIR_TEST_CASE/bootloader/code.S:105:(.text+0x14e): undefined reference to `machine_to_virtual'
+make: *** [Makefile:67: bootloader/bootloader] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, (1 << 21)        # set mstatus.TW
+    csrs mstatus, t0
+    call machine_to_virtual
+    li t1, 0
+    sd t1, 0(sp)            # store in VS‑mode (should not trap)
+    li a0, 1
+machine_to_virtual:
+    ret
+======================================================= END - 6 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 7 =======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li a0, 0xdeadbeef # sentinel value
+li t0, (1 << 17)
+csrs mstatus, t0
+li t0, (1 << 39)
+csrc mstatus, t0
+li t0, (3 << 11) # mask for MPP field
+csrc mstatus, t0
+li t0, (1 << 18) | (1 << 19)
+csrc mstatus, t0
+cflush.d.l1 a0, a0
+li a0, 1
+
+THE ERROR:
+##########
+
+bootloader/code.S: Assembler messages:
+bootloader/code.S:112: Error: unrecognized opcode `cflush.d.l1 a0,a0'
+make: *** [Makefile:61: bootloader/code.o] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li a0, 0xdeadbeef          # sentinel value
+li t0, (1 << 17)
+csrs mstatus, t0
+li t0, (1 << 39)
+csrc mstatus, t0
+li t0, (3 << 11)            # mask for MPP field
+csrc mstatus, t0
+li t0, (1 << 18) | (1 << 19)
+csrc mstatus, t0
+# original: cflush.d.l1 a0, a0  (unsupported – replaced with a no‑op)
+nop
+li a0, 1
+======================================================= END - 7 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 8 =======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+la t0, trap_handler
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+trap_handler:
+csrr t1, mstatus
+li t2, 0x800000000
+and a0, t1, t2
+mret
+csrr t1, mstatus
+li t2, 0x800000000
+and a1, t1, t2
+j .
+
+THE ERROR:
+##########
+
+riscv64-unknown-elf-ld: warning: bootloader/bootloader has a LOAD segment with RWX permissions
+riscv64-unknown-elf-ld: bootloader/code.o: in function `test_start':
+/home/adam/place_for_everything/alfa/experiment_no_verify/sysemu-testing/7_REPAIR_TEST_CASE/bootloader/code.S:105:(.text+0x152): undefined reference to `machine_to_virtual'
+make: *** [Makefile:67: bootloader/bootloader] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+la t0, trap_handler
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+trap_handler:
+csrr t1, mstatus
+li t2, 0x800000000
+and a0, t1, t2
+mret
+csrr t1, mstatus
+li t2, 0x800000000
+and a1, t1, t2
+li a7, 93          # syscall: exit
+li a0, 0           # exit code 0
+ecall
+machine_to_virtual:
+ret
+======================================================= END - 8 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 9 =======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrs mstatus, t0                # set mstatus.MDT = 1
+la t1, trap_handler              # load address of trap handler
+csrw mtvec, t1                  # set mtvec to handler
+ecall                           # cause a trap to M-mode
+trap_handler:
+csrr t2, mstatus                # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                  # isolate MDT bit
+srli t2, t2, 42                  # shift to LSB
+mv a0, t2                       # store result in a0 (0 or 1)
+mret                            # return from trap
+j .                             # halt (prevent fall‑through)
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrs mstatus, t0                # set mstatus.MDT = 1
+la t1, trap_handler              # load address of trap handler
+csrw mtvec, t1                  # set mtvec to handler
+ecall                           # cause a trap to M-mode
+trap_handler:
+csrr t2, mstatus                # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                  # isolate MDT bit
+srli t2, t2, 42                  # shift to LSB
+mv a0, t2                       # store result in a0 (0 or 1)
+mret                            # return from trap
+ebreak                           # halt (prevent fall‑through)
+======================================================= END - 9 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 10 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+csrr a0, mstatus
+srli a0, a0, 39
+andi a0, a0, 1
+j after_trap
+trap_handler:
+csrr a1, mstatus
+srli a1, a1, 39
+andi a1, a1, 1
+mv a0, a1
+mret
+after_trap:
+ecall
+machine_to_virtual:
+ret
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+lui t0, %hi(trap_handler)
+addi t0, t0, %lo(trap_handler)
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+csrr a0, mstatus
+srli a0, a0, 39
+andi a0, a0, 1
+j after_trap
+trap_handler:
+csrr a1, mstatus
+srli a1, a1, 39
+andi a1, a1, 1
+mv a0, a1
+mret
+after_trap:
+csrw mtvec, x0
+ecall
+machine_to_virtual:
+ret
+======================================================= END - 10 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 11 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrs mstatus, t0                # set mstatus.MDT = 1
+la t1, trap_handler              # load address of trap handler
+csrw mtvec, t1                  # set mtvec to handler
+ecall                           # cause a trap to M-mode
+trap_handler:
+csrr t2, mstatus                # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                  # isolate MDT bit
+srli t2, t2, 42                  # shift to LSB
+mv a0, t2                       # store result in a0 (0 or 1)
+mret                            # return from trap
+ebreak                           # halt (prevent fall‑through)
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrs mstatus, t0            # set mstatus.MDT = 1
+li t0, 0x1800               # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler         # load address of trap handler
+csrw mtvec, t1                # set mtvec to handler
+ecall                       # cause a trap to M‑mode
+j after_handler              # skip over the handler on normal return
+
+trap_handler:
+csrr t2, mstatus             # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0               # isolate MDT bit
+srli t2, t2, 42              # shift to LSB
+mv a0, t2                    # store result in a0 (0 or 1)
+mret                        # return from trap
+
+after_handler:
+ebreak                       # halt (prevent fall‑through)
+======================================================= END - 11 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 12 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+lui t0, %hi(trap_handler)
+addi t0, t0, %lo(trap_handler)
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+csrr a0, mstatus
+srli a0, a0, 39
+andi a0, a0, 1
+j after_trap
+trap_handler:
+csrr a1, mstatus
+srli a1, a1, 39
+andi a1, a1, 1
+mv a0, a1
+mret
+after_trap:
+csrw mtvec, x0
+ecall
+machine_to_virtual:
+ret
+
+THE ERROR:
+##########
+
+riscv64-unknown-elf-ld: warning: bootloader/bootloader has a LOAD segment with RWX permissions
+bootloader/code.o: in function `test_start':
+/home/adam/place_for_everything/alfa/experiment_no_verify/sysemu-testing/7_REPAIR_TEST_CASE/bootloader/code.S:103:(.text+0x146): relocation truncated to fit: R_RISCV_HI20 against `trap_handler'
+make: *** [Makefile:67: bootloader/bootloader] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+lui t0, %pcrel_hi(trap_handler)
+addi t0, t0, %pcrel_lo(trap_handler)
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+csrr a0, mstatus
+srli a0, a0, 39
+andi a0, a0, 1
+j after_trap
+trap_handler:
+csrr a1, mstatus
+srli a1, a1, 39
+andi a1, a1, 1
+mv a0, a1
+mret
+after_trap:
+csrw mtvec, x0
+ecall
+machine_to_virtual:
+ret
+======================================================= END - 12 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 13 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrs mstatus, t0            # set mstatus.MDT = 1
+li t0, 0x1800               # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler         # load address of trap handler
+csrw mtvec, t1                # set mtvec to handler
+ecall                       # cause a trap to M‑mode
+j after_handler              # skip over the handler on normal return
+trap_handler:
+csrr t2, mstatus             # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0               # isolate MDT bit
+srli t2, t2, 42              # shift to LSB
+mv a0, t2                    # store result in a0 (0 or 1)
+mret                        # return from trap
+after_handler:
+ebreak                       # halt (prevent fall‑through)
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrs mstatus, t0            # set mstatus.MDT = 1
+li t0, 0x1800               # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler         # load address of trap handler
+csrw mtvec, t1                # set mtvec to handler
+ecall                       # cause a trap to M‑mode
+j after_handler              # skip over the handler on normal return
+trap_handler:
+csrr t2, mstatus             # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0               # isolate MDT bit
+srli t2, t2, 42              # shift to LSB
+mv a0, t2                    # store result in a0 (0 or 1)
+mret                         # return from trap
+after_handler:
+j .                           # halt (prevent fall‑through)
+======================================================= END - 13 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 14 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+lui t0, %pcrel_hi(trap_handler)
+addi t0, t0, %pcrel_lo(trap_handler)
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+csrr a0, mstatus
+srli a0, a0, 39
+andi a0, a0, 1
+j after_trap
+trap_handler:
+csrr a1, mstatus
+srli a1, a1, 39
+andi a1, a1, 1
+mv a0, a1
+mret
+after_trap:
+csrw mtvec, x0
+ecall
+machine_to_virtual:
+ret
+
+THE ERROR:
+##########
+
+riscv64-unknown-elf-ld: warning: bootloader/bootloader has a LOAD segment with RWX permissions
+bootloader/code.o: in function `test_start':
+/home/adam/place_for_everything/alfa/experiment_no_verify/sysemu-testing/7_REPAIR_TEST_CASE/bootloader/code.S:104:(.text+0x14a): dangerous relocation: %pcrel_lo missing matching %pcrel_hi
+make: *** [Makefile:67: bootloader/bootloader] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+auipc t0, %pcrel_hi(trap_handler)
+addi   t0, t0, %pcrel_lo(trap_handler)
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+mret
+
+after_trap:
+csrw   mtvec, x0
+ecall
+
+machine_to_virtual:
+ret
+======================================================= END - 14 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 15 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrs mstatus, t0            # set mstatus.MDT = 1
+li t0, 0x1800               # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler         # load address of trap handler
+csrw mtvec, t1                # set mtvec to handler
+ecall                       # cause a trap to M‑mode
+j after_handler              # skip over the handler on normal return
+trap_handler:
+csrr t2, mstatus             # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0               # isolate MDT bit
+srli t2, t2, 42              # shift to LSB
+mv a0, t2                    # store result in a0 (0 or 1)
+mret                         # return from trap
+after_handler:
+j .                           # halt (prevent fall‑through)
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrs mstatus, t0               # set mstatus.MDT = 1
+li t0, 0x1800                  # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler            # load address of trap handler
+csrw mtvec, t1                 # set mtvec to handler
+ecall                           # cause a trap to M‑mode
+j after_handler                # skip over the handler on normal return
+
+trap_handler:
+csrr t2, mstatus               # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                 # isolate MDT bit
+srli t2, t2, 42                # shift to LSB
+mv a0, t2                      # store result in a0 (0 or 1)
+mret                           # return from trap
+
+after_handler:
+ebreak                         # terminate test (prevent infinite loop)
+======================================================= END - 15 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 16 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+auipc t0, %pcrel_hi(trap_handler)
+addi   t0, t0, %pcrel_lo(trap_handler)
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+mret
+after_trap:
+csrw   mtvec, x0
+ecall
+machine_to_virtual:
+ret
+
+THE ERROR:
+##########
+
+riscv64-unknown-elf-ld: warning: bootloader/bootloader has a LOAD segment with RWX permissions
+bootloader/code.o: in function `test_start':
+/home/adam/place_for_everything/alfa/experiment_no_verify/sysemu-testing/7_REPAIR_TEST_CASE/bootloader/code.S:104:(.text+0x14a): dangerous relocation: %pcrel_lo missing matching %pcrel_hi
+make: *** [Makefile:67: bootloader/bootloader] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+la     t0, trap_handler
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+mret
+after_trap:
+csrw   mtvec, x0
+ecall
+machine_to_virtual:
+ret
+======================================================= END - 16 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 17 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrs mstatus, t0               # set mstatus.MDT = 1
+li t0, 0x1800                  # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler            # load address of trap handler
+csrw mtvec, t1                 # set mtvec to handler
+ecall                           # cause a trap to M‑mode
+j after_handler                # skip over the handler on normal return
+trap_handler:
+csrr t2, mstatus               # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                 # isolate MDT bit
+srli t2, t2, 42                # shift to LSB
+mv a0, t2                      # store result in a0 (0 or 1)
+mret                           # return from trap
+after_handler:
+ebreak                         # terminate test (prevent infinite loop)
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0x4000000000          # original: set bit 42 (MDT) in t0
+li t1, 0                     # extra: clear the value to avoid writing a read‑only bit
+mv t0, t1                    # extra: t0 = 0
+csrs mstatus, t0               # set mstatus (MDT bit cleared)
+
+li t0, 0x1800                  # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+
+la t1, trap_handler            # load address of trap handler
+csrw mtvec, t1                 # set mtvec to handler
+
+ecall                           # cause a trap to M‑mode
+j after_handler                # skip over the handler on normal return
+
+trap_handler:
+    csrr t2, mstatus               # read mstatus
+    li t0, 0x4000000000
+    and t2, t2, t0                 # isolate MDT bit
+    srli t2, t2, 42                # shift to LSB
+    mv a0, t2                      # store result in a0 (0 or 1)
+    mret                           # return from trap
+
+after_handler:
+    ebreak                         # terminate test (prevent infinite loop)
+======================================================= END - 17 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 18 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+la     t0, trap_handler
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+mret
+after_trap:
+csrw   mtvec, x0
+ecall
+machine_to_virtual:
+ret
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+la     t0, trap_handler
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+mret
+after_trap:
+csrw   mtvec, x0
+machine_to_virtual:
+ret
+======================================================= END - 18 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 19 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0x4000000000          # original: set bit 42 (MDT) in t0
+li t1, 0                     # extra: clear the value to avoid writing a read‑only bit
+mv t0, t1                    # extra: t0 = 0
+csrs mstatus, t0               # set mstatus (MDT bit cleared)
+li t0, 0x1800                  # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler            # load address of trap handler
+csrw mtvec, t1                 # set mtvec to handler
+ecall                           # cause a trap to M‑mode
+j after_handler                # skip over the handler on normal return
+trap_handler:
+csrr t2, mstatus               # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                 # isolate MDT bit
+srli t2, t2, 42                # shift to LSB
+mv a0, t2                      # store result in a0 (0 or 1)
+mret                           # return from trap
+after_handler:
+ebreak                         # terminate test (prevent infinite loop)
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0x4000000000          # original: set bit 42 (MDT) in t0
+li t1, 0                     # extra: clear the value to avoid writing a read‑only bit
+mv t0, t1                    # extra: t0 = 0
+csrs mstatus, t0            # set mstatus (MDT bit cleared)
+li t0, 0x1800                # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler          # load address of trap handler
+csrw mtvec, t1               # set mtvec to handler
+ecall                        # cause a trap to M‑mode
+j after_handler              # skip over the handler on normal return
+
+trap_handler:
+csrr t2, mstatus             # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                # isolate MDT bit
+srli t2, t2, 42               # shift to LSB
+mv a0, t2                     # store result in a0 (0 or 1)
+mret                          # return from trap
+
+after_handler:
+csrw mtvec, zero              # clear mtvec so final ebreak doesn't re‑enter handler
+ebreak                        # terminate test (prevent infinite loop)
+======================================================= END - 19 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 20 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+la     t0, trap_handler
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+mret
+after_trap:
+csrw   mtvec, x0
+machine_to_virtual:
+ret
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+la     t0, trap_handler
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+csrr   t0, mepc
+addi   t0, t0, 4
+csrw   mepc, t0
+mret
+after_trap:
+csrw   mtvec, x0
+machine_to_virtual:
+ret
+======================================================= END - 20 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 21 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0x4000000000          # original: set bit 42 (MDT) in t0
+li t1, 0                     # extra: clear the value to avoid writing a read‑only bit
+mv t0, t1                    # extra: t0 = 0
+csrs mstatus, t0            # set mstatus (MDT bit cleared)
+li t0, 0x1800                # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler          # load address of trap handler
+csrw mtvec, t1               # set mtvec to handler
+ecall                        # cause a trap to M‑mode
+j after_handler              # skip over the handler on normal return
+trap_handler:
+csrr t2, mstatus             # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                # isolate MDT bit
+srli t2, t2, 42               # shift to LSB
+mv a0, t2                     # store result in a0 (0 or 1)
+mret                          # return from trap
+after_handler:
+csrw mtvec, zero              # clear mtvec so final ebreak doesn't re‑enter handler
+ebreak                        # terminate test (prevent infinite loop)
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0x4000000000          # original: set bit 42 (MDT) in t0
+csrrc x0, mstatus, t0        # extra: clear MDT if already set (avoid illegal write)
+csrs mstatus, t0              # original: set MDT bit
+
+li t0, 0x1800                # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+
+la t1, trap_handler          # load address of trap handler
+csrw mtvec, t1               # set mtvec to handler
+
+ecall                        # cause a trap to M‑mode
+j after_handler              # skip over the handler on normal return
+
+trap_handler:
+csrr t2, mstatus             # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                # isolate MDT bit
+srli t2, t2, 42               # shift to LSB
+mv a0, t2                     # store result in a0 (0 or 1)
+mret                          # return from trap
+
+after_handler:
+csrw mtvec, zero              # clear mtvec so final ebreak doesn't re‑enter handler
+ebreak                        # terminate test (prevent infinite loop)
+======================================================= END - 21 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 22 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+la     t0, trap_handler
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+csrr   t0, mepc
+addi   t0, t0, 4
+csrw   mepc, t0
+mret
+after_trap:
+csrw   mtvec, x0
+machine_to_virtual:
+ret
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+la     t0, trap_handler
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+csrr   t0, mepc
+addi   t0, t0, 4
+csrw   mepc, t0
+mret
+after_trap:
+csrw   mtvec, x0
+j      .
+machine_to_virtual:
+ret
+======================================================= END - 22 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 23 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0x4000000000          # original: set bit 42 (MDT) in t0
+csrrc x0, mstatus, t0        # extra: clear MDT if already set (avoid illegal write)
+csrs mstatus, t0              # original: set MDT bit
+li t0, 0x1800                # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler          # load address of trap handler
+csrw mtvec, t1               # set mtvec to handler
+ecall                        # cause a trap to M‑mode
+j after_handler              # skip over the handler on normal return
+trap_handler:
+csrr t2, mstatus             # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0                # isolate MDT bit
+srli t2, t2, 42               # shift to LSB
+mv a0, t2                     # store result in a0 (0 or 1)
+mret                          # return from trap
+after_handler:
+csrw mtvec, zero              # clear mtvec so final ebreak doesn't re‑enter handler
+ebreak                        # terminate test (prevent infinite loop)
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrrc x0, mstatus, t0        # clear MDT if already set (avoid illegal write)
+csrs mstatus, t0              # set MDT bit
+li t0, 0x1800                # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler          # load address of trap handler
+csrw mtvec, t1               # set mtvec to handler
+ecall                        # cause a trap to M‑mode
+j after_handler              # skip over the handler on normal return
+
+trap_handler:
+    csrr t2, mstatus          # read mstatus
+    li t0, 0x4000000000
+    and t2, t2, t0            # isolate MDT bit
+    srli t2, t2, 42           # shift to LSB
+    mv a0, t2                 # store result in a0 (0 or 1)
+    mret                      # return from trap
+
+after_handler:
+    # test finished cleanly
+    j test_end
+
+test_end:
+    nop                         # placeholder – execution ends here
+======================================================= END - 23 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 24 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+la     t0, trap_handler
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+csrr   t0, mepc
+addi   t0, t0, 4
+csrw   mepc, t0
+mret
+after_trap:
+csrw   mtvec, x0
+j      .
+machine_to_virtual:
+ret
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+la     t0, trap_handler
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+csrr   t0, mepc
+addi   t0, t0, 4
+csrw   mepc, t0
+mret
+after_trap:
+csrw   mtvec, x0
+ebreak
+machine_to_virtual:
+ret
+======================================================= END - 24 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 25 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrrc x0, mstatus, t0        # clear MDT if already set (avoid illegal write)
+csrs mstatus, t0              # set MDT bit
+li t0, 0x1800                # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler          # load address of trap handler
+csrw mtvec, t1               # set mtvec to handler
+ecall                        # cause a trap to M‑mode
+j after_handler              # skip over the handler on normal return
+trap_handler:
+csrr t2, mstatus          # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0            # isolate MDT bit
+srli t2, t2, 42           # shift to LSB
+mv a0, t2                 # store result in a0 (0 or 1)
+mret                      # return from trap
+after_handler:
+# test finished cleanly
+j test_end
+test_end:
+nop                         # placeholder – execution ends here
+
+THE ERROR:
+##########
+
+bootloader/code.S: Assembler messages:
+bootloader/code.S:126: Error: symbol `test_end' is already defined
+make: *** [Makefile:61: bootloader/code.o] Error 1
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrrc x0, mstatus, t0           # clear MDT if already set (avoid illegal write)
+csrs mstatus, t0                # set MDT bit
+li t0, 0x1800                   # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler             # load address of trap handler
+csrw mtvec, t1                  # set mtvec to handler
+ecall                           # cause a trap to M‑mode
+j after_handler                 # skip over the handler on normal return
+
+trap_handler:
+    csrr t2, mstatus            # read mstatus
+    li t0, 0x4000000000
+    and t2, t2, t0              # isolate MDT bit
+    srli t2, t2, 42             # shift to LSB
+    mv a0, t2                   # store result in a0 (0 or 1)
+    mret                        # return from trap
+
+after_handler:
+    j test_done                 # continue after handler
+
+test_done:
+    nop                         # placeholder – execution ends here
+======================================================= END - 25 =======================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 26 ======================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, minimally fix the assembly test case below while PRESERVING the ORIGINAL INSTRUCTION and OPERANDS whenever possible:
+
+la     t0, trap_handler
+csrw   mtvec, t0
+call   machine_to_virtual
+ecall
+csrr   a0, mstatus
+srli   a0, a0, 39
+andi   a0, a0, 1
+j      after_trap
+trap_handler:
+csrr   a1, mstatus
+srli   a1, a1, 39
+andi   a1, a1, 1
+mv     a0, a1
+csrr   t0, mepc
+addi   t0, t0, 4
+csrw   mepc, t0
+mret
+after_trap:
+csrw   mtvec, x0
+ebreak
+machine_to_virtual:
+ret
+
+THE ERROR:
+##########
+
+
+
+##########
+
+Do not output any introduction. Follow the format above.
+
+Notes:
++ Remember, output must be ASCII-only text.
++ DO NOT USE .globl, _start, labels, directives, or PC-relative expressions; assume all boilerplate is already set up!
++ Do not use ```assembly or ```asm just write the assembly code
++ If the error message is empty, it usually means the program is hanging (e.g., infinite loop), so modify the test case to ensure it terminates.
++ Write the full assembly code, DO NOT write something like this:
+/* ... other code ... */
+# ... other existing code ...
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+la   t0, trap_handler
+    csrw mtvec, t0
+    call machine_to_virtual
+    ecall
+    csrr a0, mstatus
+    srli a0, a0, 39
+    andi a0, a0, 1
+    j    after_trap
+
+trap_handler:
+    csrr a1, mstatus
+    srli a1, a1, 39
+    andi a1, a1, 1
+    mv   a0, a1
+    csrr t0, mepc
+    addi t0, t0, 4
+    csrw mepc, t0
+    mret
+
+after_trap:
+    ebreak
+    csrw mtvec, x0
+    ret
+
+machine_to_virtual:
+    ret
+======================================================= END - 26 =======================================================

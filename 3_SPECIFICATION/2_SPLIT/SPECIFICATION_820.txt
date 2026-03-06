@@ -1,0 +1,9 @@
+## 12.1. Supervisor CSRs
+
+A number of CSRs are provided for the supervisor.
+
+<image>
+
+The supervisor should only view CSR state that should be visible to a supervisor-level operating system. In particular, there is no information about the existence (or nonexistence)  of  higher  privilege  levels  (machine  level  or  other)  visible  in  the  CSRs accessible by the supervisor.
+
+Many supervisor CSRs are a subset of the equivalent machine-mode CSR, and the machine-mode chapter should be read first to help understand the supervisor-level CSR descriptions.

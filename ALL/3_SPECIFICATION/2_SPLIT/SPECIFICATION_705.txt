@@ -1,0 +1,7 @@
+## Chapter 2. Control and Status Registers (CSRs)
+
+The SYSTEM major opcode is used to encode all privileged instructions in the RISC-V ISA. These can be divided into two main classes: those that atomically read-modify-write control and status registers (CSRs), which are defined in the Zicsr extension, and all other privileged instructions. The privileged architecture requires the Zicsr extension; which other privileged instructions are required depends on the privileged-architecture feature set.
+
+In  addition  to  the  unprivileged  state  described  in  Volume  I  of  this  manual,  an  implementation  may contain additional CSRs, accessible by some subset of the privilege levels using the CSR instructions described in Volume I. In this chapter, we map out the CSR address space. The following chapters describe the function of each of the CSRs according to privilege level, as well as the other privileged instructions which are generally closely associated with a particular privilege level. Note that although CSRs and instructions are associated with one privilege level, they are also accessible at all higher privilege levels.
+
+Standard CSRs do not have side effects on reads but may have side effects on writes.

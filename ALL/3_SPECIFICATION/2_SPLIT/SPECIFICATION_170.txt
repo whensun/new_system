@@ -1,0 +1,9 @@
+## 26.6. Privileged Architecture Implications
+
+In the standard privileged architecture defined in Volume II, the mstatus field FS is hardwired to 0 if the Zfinx extension is implemented, and FS no longer affects the trapping behavior of floating-point instructions or fcsr accesses.
+
+The misa bits F, D, and Q are hardwired to 0 when the Zfinx extension is implemented.
+
+<image>
+
+A  future  discoverability  mechanism  might  be  used  to  probe  the  existence  of  the Zfinx, Zhinx, and Zdinx extensions.

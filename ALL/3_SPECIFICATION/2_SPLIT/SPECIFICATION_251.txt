@@ -1,0 +1,7 @@
+## 29.4.2.8. Byte-reverse
+
+rev8 reverses the byte-ordering of rs .
+
+| RV32   | RV64   | Mnemonic     | Instruction           |
+|--------|--------|--------------|-----------------------|
+| ✓      | ✓      | rev8 rd , rs | Byte-reverse register |

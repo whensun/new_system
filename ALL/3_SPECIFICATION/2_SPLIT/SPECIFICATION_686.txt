@@ -1,0 +1,5 @@
+## 36.3.3. Available 22-bit instruction encoding spaces
+
+A  22-bit  encoding  space  corresponds  to  a  funct3  minor  opcode  space  in  the  base  and  standard extension encodings. Several major opcodes have a funct3 field minor opcode that is not completely occupied, leaving available several 22-bit encoding spaces.
+
+Usually  a  major  opcode  selects  the  format  used  to  encode  operands  in  the  remaining  bits  of  the instruction, and ideally, an extension should follow the operand format of the major opcode to simplify hardware decoding.

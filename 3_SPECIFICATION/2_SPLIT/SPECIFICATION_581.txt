@@ -1,0 +1,15 @@
+## 31.8.5.8. Quantum vs. Classical Random
+
+The  NCSC  believes  that  classical  RNGs  will  continue  to  meet  our  needs  for government and military applications for the foreseeable future.
+
+- U.K. NCSC QRNG Guidance, March 2020
+
+A  Quantum  Random  Number  Generator  (QRNG)  is  a  TRNG  whose  source  of  randomness  can  be unambiguously identified to be a specific quantum phenomenon such as quantum state superposition, quantum state entanglement, Heisenberg uncertainty,  quantum  tunneling,  spontaneous  emission,  or radioactive decay (ITU, 2019).
+
+Direct  quantum entropy is theoretically the best possible kind of entropy. A typical TRNG based on electronic  noise  is  also  largely  based  on  quantum  phenomena  and  is  equally  unpredictable  -  the difference is that the relative amount of quantum and classical physics involved is difficult to quantify for a classical TRNG.
+
+QRNGs are designed in a way that allows the amount of quantum-origin entropy to be modeled and estimated. This distinction is important in the security model used by QKD (Quantum Key Distribution) security  mechanisms  which  can  be  used  to  protect  the  physical  layer  (such  as  fiber  optic  cables) against interception by using quantum mechanical effects directly.
+
+This  security  model  means  that  many  of  the  available  QRNG  devices  do  not  use  cryptographic conditioning  and  may  fail  cryptographic  statistical  requirements  (Hurley-Smith  &  Hernández-Castro, 2020). Many implementers may consider them to be entropy sources instead.
+
+Relatively little  research has gone into QRNG implementation security, but many QRNG designs are arguably more susceptible to leakage than classical generators (such as ring oscillators) as they tend to  employ  external  components  and  mixed  materials.  As  an  example,  amplification  of  a  photon detector  signal  may  be  observable  in  power  analysis,  which  classical  noise-based  sources  are designed to resist.

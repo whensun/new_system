@@ -1,0 +1,41 @@
+## 28.12.4. c.sb
+
+Synopsis:
+
+Store byte, 16-bit encoding
+
+Mnemonic:
+
+c.sb rs2' , uimm ( rs1' )
+
+Encoding (RV32, RV64):
+
+<image>
+
+FUNCT3
+
+The immediate offset is formed as follows:
+
+```
+uimm[31:2] = 0; uimm[1]    = encoding[5]; uimm[0]    = encoding[6];
+```
+
+Description:
+
+This instruction stores the least significant byte of rs2' to the memory address formed by adding rs1' to the zero extended immediate uimm .
+
+<image>
+
+Prerequisites:
+
+None
+
+Operation:
+
+```
+//This is not SAIL, it's pseudocode. The SAIL hasn't been written yet. mem[X(rs1c)+EXTZ(uimm)][7..0] = X(rs2c)
+```
+
+rs1' and rs2' are from the standard 8-register set x8-x15.
+
+C0

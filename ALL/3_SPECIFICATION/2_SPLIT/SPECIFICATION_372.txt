@@ -1,0 +1,11 @@
+## 30.11.6. Vector Single-Width Shift Instructions
+
+A full set of vector shift instructions are provided, including logical shift left ( sll ),  and  logical  (zeroextending srl )  and arithmetic (sign-extending sra )  shift  right.  The data to be shifted is in the vector register group specified by vs2 and the shift amount value can come from a vector register group vs1 , a scalar integer register rs1 , or a zero-extended 5-bit immediate. Only the low lg2(SEW) bits of the shiftamount value are used to control the shift amount.
+
+```
+# Bit shift operations vsll.vv vd, vs2, vs1, vm   # Vector-vector
+```
+
+```
+vsll.vx vd, vs2, rs1, vm   # vector-scalar vsll.vi vd, vs2, uimm, vm   # vector-immediate vsrl.vv vd, vs2, vs1, vm   # Vector-vector vsrl.vx vd, vs2, rs1, vm   # vector-scalar vsrl.vi vd, vs2, uimm, vm   # vector-immediate vsra.vv vd, vs2, vs1, vm   # Vector-vector vsra.vx vd, vs2, rs1, vm   # vector-scalar vsra.vi vd, vs2, uimm, vm   # vector-immediate
+```

@@ -1,0 +1,5 @@
+## 30.3.1. Vector Registers
+
+The vector extension adds 32 architectural vector registers, v0 -v31 to the base scalar RISC-V ISA.
+
+Each vector register has a fixed VLEN bits of state.

@@ -1,0 +1,28 @@
+## 31.4.16. orn
+
+## Synopsis
+
+OR with inverted operand
+
+## Mnemonic
+
+orn rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction performs the bitwise logical OR operation between rs1 and the bitwise inversion of rs2 .
+
+## Operation
+
+<formula>
+
+## Included in
+
+| Extension                    | Minimum version   | Lifecycle state   |
+|------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation) | v1.0.0            | Ratified          |
+| Zbkb (Zbkb-sc)               | v1.0.0-rc4        | Ratified          |

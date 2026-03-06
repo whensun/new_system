@@ -1,0 +1,31 @@
+## 30.7.8.1. Vector Unit-Stride Segment Loads and Stores
+
+The  vector  unit-stride  load  and  store  segment  instructions  move  packed  contiguous  segments  into multiple destination vector register groups.
+
+<image>
+
+Where the segments hold structures with heterogeneous-sized fields, software can later unpack  individual structure fields using additional instructions after  the segment load brings data into the vector registers.
+
+The assembler prefixes vlseg / vsseg are used for unit-stride segment loads and stores respectively.
+
+```
+# Format # In this syntax, <nf> equals NFIELDS and is an integer in the range [2, 8]. vlseg<nf>e<eew>.v vd, (rs1), vm      # Unit-stride segment load template vsseg<nf>e<eew>.v vs3, (rs1), vm     # Unit-stride segment store template # Examples vlseg8e8.v vd, (rs1), vm   # Load eight vector registers with eight byte fields. vsseg3e32.v vs3, (rs1), vm  # Store packed vector of 3*4-byte segments from vs3,vs3+1,vs3+2 to memory
+```
+
+For loads, the vd register will hold the first field loaded from the segment. For stores, the vs3 register is read to provide the first field to be stored to each segment.
+
+```
+# Example 1 # Memory structure holds packed RGB pixels (24-bit data structure, 8bpp) vsetvli a1, t0, e8, m1, ta, ma vlseg3e8.v v8, (a0), vm # v8 holds the red pixels # v9 holds the green pixels # v10 holds the blue pixels # Example 2 # Memory structure holds complex values, 32b for real and 32b for imaginary vsetvli a1, t0, e32, m1, ta, ma vlseg2e32.v v8, (a0), vm # v8 holds real # v9 holds imaginary
+```
+
+There are also fault-only-first versions of the unit-stride instructions.
+
+```
+# Template for vector fault-only-first unit-stride segment loads.
+```
+
+vlseg<nf>e<eew>ff.v vd, (rs1),  vm    # Unit-stride fault-only-first segment loads
+
+For fault-only-first  segment loads, if  an  exception  is  detected  partway  through  accessing  the  zeroth segment,  the  trap  is  taken.  If  an  exception  is  detected  partway  through  accessing  a  subsequent segment, vl is  reduced  to  the  index  of  that  segment.  In  both  cases,  it  is  implementation-defined whether a subset of the segment is loaded.
+
+These instructions may overwrite destination vector register group elements past the point at which a trap is reported or past the point at which vector length is trimmed.

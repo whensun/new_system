@@ -1,0 +1,21 @@
+## 2.1. CSR Address Mapping Conventions
+
+The  standard  RISC-V  ISA  sets  aside  a  12-bit  encoding  space  (csr[11:0])  for  up  to  4,096  CSRs.  By convention,  the  upper  4  bits  of  the  CSR  address  (csr[11:8])  are  used  to  encode  the  read  and  write accessibility of the CSRs according to privilege level as shown in Table 3. The top two bits (csr[11:10]) indicate whether the register is read/write ( 00 , 01 ,  or 10 )  or  read-only ( 11 ).  The  next  two  bits  (csr[9:8]) encode the lowest privilege level that can access the CSR.
+
+<image>
+
+The  CSR  address  convention  uses  the  upper  bits  of  the  CSR  address  to  encode default access privileges. This simplifies error checking in the hardware and provides a larger CSR space, but does constrain the mapping of CSRs into the address space.
+
+Implementations  might  allow  a  more-privileged  level  to  trap  otherwise  permitted CSR accesses by a less-privileged level to allow these accesses to be intercepted. This change should be transparent to the less-privileged software.
+
+Instructions  that  access  a  non-existent  CSR  are  reserved.  Attempts  to  access  a  CSR  without appropriate privilege level raise illegal-instruction exceptions or, as described in Section 21.6.1, virtualinstruction  exceptions.  Attempts  to  write  a  read-only  register  raise  illegal-instruction  exceptions.  A read/write register might also contain some bits that are read-only, in which case writes to the readonly bits are ignored.
+
+Table 3 also indicates the convention to allocate CSR addresses between standard and custom uses. The CSR addresses designated for custom uses will not be redefined by future standard extensions.
+
+Machine-mode standard  read-write  CSRs 0x7A0 -0x7BF are  reserved  for  use  by  the  debug  system.  Of these CSRs, 0x7A0 -0x7AF are accessible to machine mode, whereas 0x7B0 -0x7BF are only visible to debug mode.  Implementations  should  raise  illegal-instruction  exceptions  on  machine-mode  access  to  the latter set of registers.
+
+<image>
+
+Effective  virtualization  requires  that  as  many  instructions  run  natively  as  possible inside  a  virtualized  environment,  while  any  privileged  accesses  trap  to  the  virtual machine monitor. (Goldberg, 1974) CSRs that are read-only at some lower privilege level  are  shadowed  into  separate  CSR  addresses  if  they  are  made  read-write  at  a
+
+higher privilege level. This avoids trapping permitted lower-privilege accesses while still causing traps on illegal accesses. Currently, the counters are the only shadowed CSRs.

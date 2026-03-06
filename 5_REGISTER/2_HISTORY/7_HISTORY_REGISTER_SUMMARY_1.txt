@@ -1,0 +1,198 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: mseccfg
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+You are summarizing RISC-V register semantics strictly from the provided rules.
+
+Register: mseccfg
+
+Rules (subset):
+RULE 1: After a reset, the bits mseccfg.sseed and mseccfg.useed each contain a defined reset value and are never undefined.
+RULE 2: If the implementation does not provide S-mode, then mseccfg.sseed is permanently zero.
+RULE 3: If the implementation does not provide U-mode, then mseccfg.useed is permanently zero.
+RULE 4: If the Zkr extension is not implemented, then both mseccfg.sseed and mseccfg.useed are permanently zero.
+RULE 5: If an implementation makes mseccfg.sseed a read‑only constant zero, then writing a one to mseccfg.sseed and subsequently reading it returns zero.
+RULE 6: If an implementation makes mseccfg.useed a read‑only constant zero, then writing a one to mseccfg.useed and subsequently reading it returns zero.
+RULE 7: In Machine mode, a CSR read‑write instruction addressing the seed CSR always succeeds regardless of the values of mseccfg.sseed or mseccfg.useed.
+RULE 8: In Machine mode, a CSR read‑only instruction addressing the seed CSR raises an illegal‑instruction exception regardless of the values of mseccfg.sseed or mseccfg.useed.
+RULE 9: In User mode, if mseccfg.useed is zero, any attempt to access the seed CSR raises an illegal‑instruction exception.
+RULE 10: In User mode, if mseccfg.useed is one, a CSR read‑write instruction accessing the seed CSR completes without raising an exception.
+RULE 11: In Supervisor or Hypervisor mode, if mseccfg.sseed is zero, any attempt to access the seed CSR raises an illegal‑instruction exception.
+RULE 12: In Supervisor or Hypervisor mode, if mseccfg.sseed is one, a CSR read‑write instruction accessing the seed CSR completes without raising an exception.
+RULE 13: In Virtual‑Supervisor or Virtual‑User mode, any access to the seed CSR raises an exception regardless of the values of mseccfg.sseed or mseccfg.useed.
+RULE 14: In Virtual‑Supervisor or Virtual‑User mode, a CSR read‑only instruction accessing the seed CSR raises an illegal‑instruction exception.
+RULE 15: In Virtual‑Supervisor or Virtual‑User mode, a CSR read‑write instruction accessing the seed CSR raises a virtual‑instruction exception when mseccfg.sseed is one, and raises an illegal‑instruction exception when mseccfg.sseed is zero.
+RULE 16: In Virtual‑Supervisor or Virtual‑User mode, the value of mseccfg.useed has no effect on the type of exception raised for seed CSR accesses.
+RULE 17: If software writes a non‑zero value to the sseed field of the mseccfg CSR, a security boundary is created that controls the flow of Sensitive Security Parameters for the component that accesses the entropy source.
+RULE 18: If software writes a non‑zero value to the useed field of the mseccfg CSR, a security boundary is created that controls the flow of Sensitive Security Parameters for the component that accesses the entropy source.
+RULE 19: If a security boundary created by setting mseccfg.sseed or mseccfg.useed is in effect, then Sensitive Security Parameters cannot be transferred from the entropy source to any external software.
+RULE 20: If a component writes to the mseccfg.sseed or mseccfg.useed fields while executing in a privilege level other than Machine mode, the security boundary is still established.
+RULE 21: If a security boundary established by mseccfg.sseed or mseccfg.useed is in effect, the module can manage the complete key lifecycle—from generation in the entropy source through zeroisation—without the key ever crossing the boundary to external software.
+RULE 22: If the MLPE bit in mseccfg is set to 1, then the Zicfilp extension becomes enabled in M‑mode.
+RULE 23: If the MLPE bit in mseccfg is set to 0, then the Zicfilp extension is not enabled in M‑mode.
+RULE 24: If the MLPE bit in mseccfg is set to 0, then the hart does not update the ELP state and the state remains NO_LP_EXPECTED.
+RULE 25: If the MLPE bit in mseccfg is set to 0, then execution of the LPAD instruction behaves as a no‑operation.
+RULE 26: If XLEN equals 64, then the alias register mseccfgh does not exist.
+RULE 27: If the Zicfilp extension is implemented, then during a hart reset the MLPE field of the mseccfg register is reset to 0.
+RULE 28: If the processor performs a hard reset and backward‑compatible behavior is required, mseccfg resets to zero; otherwise its reset value is implementation‑specific.
+RULE 29: If the current privilege mode is not Machine mode, any attempt to read or write mseccfg triggers an illegal‑instruction trap.
+RULE 30: If a CSR write attempts to modify any reserved bit of mseccfg, the write has no defined effect and the bit continues to read as zero.
+RULE 31: If a CSR read of mseccfg occurs, the read returns the current values of defined fields and zero for all reserved bits.
+RULE 32: If mseccfg.RLB is 1, locked PMP rules may be removed or modified and locked PMP entries may be edited.
+RULE 33: If mseccfg.RLB is 0 and at least one PMP entry has pmpcfg.L set to 1, any subsequent write to the RLB field of mseccfg is ignored until a PMP reset occurs.
+RULE 34: If mseccfg.MMWP is set to 1, any CSR write that attempts to clear MMWP has no effect until a PMP reset occurs.
+RULE 35: If mseccfg.MMWP is 1, Machine‑mode accesses to memory regions that have no matching PMP rule are denied rather than ignored.
+RULE 36: If mseccfg.MML is set to 1, any CSR write that attempts to clear MML has no effect until a PMP reset occurs.
+RULE 37: If mseccfg.MML is 1, a PMP entry with pmpcfg.L set to 1 is interpreted as an M‑mode‑only rule instead of a locked rule enforced in all modes.
+RULE 38: If mseccfg.MML is 1, a PMP entry with pmpcfg.L cleared to 0 is interpreted as an S/U‑mode‑only rule.
+RULE 39: If mseccfg.MML is 1, a PMP entry whose pmpcfg.RW encoding is 01 denotes a Shared‑Region rule.
+RULE 40: If mseccfg.MML is 1, a PMP entry whose pmpcfg.LRWX encoding is 1111 denotes a Shared‑Region rule.
+RULE 41: If mseccfg.MML is 1 and a PMP entry is an M‑mode‑only rule, the rule is enforced for Machine mode, denied for Supervisor and User modes, and remains locked until a PMP reset unless mseccfg.RLB is 1.
+RULE 42: If mseccfg.MML is 1 and a PMP entry is an S/U‑mode‑only rule, the rule is enforced for Supervisor and User modes and denied for Machine mode.
+RULE 43: If mseccfg.MML is 1 and a PMP entry is a Shared‑Region rule with pmpcfg.L cleared to 0, the region is non‑executable, Machine mode has read/write permission, and Supervisor/User mode has read permission when pmpcfg.X is 0 or read/write permission when pmpcfg.X is 1.
+RULE 44: If mseccfg.MML is 1 and a Shared‑Region rule has pmpcfg.L set to 1, the region is non‑writable and executable in all modes, Machine mode additionally has read permission when pmpcfg.X is 1, and the rule remains locked until a PMP reset unless mseccfg.RLB is 1.
+RULE 45: If mseccfg.MML is 1 and a Shared‑Region rule uses the encoding pmpcfg.LRWX=1111, the rule provides read‑only sharing of data between Machine and Supervisor/User modes and remains locked until a PMP reset unless mseccfg.RLB is 1.
+RULE 46: If mseccfg.MML is 1 and a PMP write attempts to create an executable M‑mode‑only rule or an executable Shared‑Region rule that would be locked, the write is ignored and the previous pmpcfg value is retained, unless mseccfg.RLB is 1.
+RULE 47: If Machine‑mode code attempts to fetch or execute instructions from a region that matches an M‑mode‑only PMP rule or a locked Shared‑Region PMP rule with executable privileges, execution is permitted.
+RULE 48: If Machine‑mode code attempts to fetch or execute instructions from a region that lacks a matching PMP rule or that matches an S/U‑mode‑only PMP rule, execution is denied.
+RULE 49: If mseccfg.MML is 0, the PMP encoding pmpcfg.RW=01 remains reserved for future use and must not be interpreted as a Shared‑Region rule.
+RULE 50: If mseccfg.RLB is 1, lock enforcement on PMP entries, including those created while mseccfg.MML is 1, is temporarily relaxed, allowing modifications that would otherwise be prohibited.
+
+Task:
+Write a concise technical summary (3-5 sentences, one paragraph) capturing only the semantics explicitly stated in the rules, including register purpose, fields, access control, privilege/virtualization constraints, and exception behavior.
+- Do NOT assume, infer, or add information not present in the rules.
+- Do NOT omit important constraints, field conditions, or corner cases.
+- Merge repeated ideas while preserving meaning.
+- Prefer canonical RISC-V wording and precise terminology.
+Remember, output must be ASCII-only text.
+Return only the paragraph text.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+The mseccfg CSR holds configuration bits that control access to the entropy‑source seed CSR (sseed and useed), enable the Zicfilp extension via the MLPE bit, and modify PMP behaviour through the RLB, MMWP and MML fields (other bits are reserved). After reset the sseed and useed fields contain defined reset values (never undefined); they are permanently zero if S‑mode or U‑mode are absent, if the Zkr extension is not implemented, or if they are implemented as read‑only constant zero, and the MLPE field resets to zero when Zicfilp is implemented (otherwise its reset value is implementation‑specific, with a hard‑reset possibly forcing zero); the alias register mseccfgh does not exist when XLEN = 64. Only Machine mode may read or write mseccfg; any access from a lower privilege level raises an illegal‑instruction trap, reserved bits read as zero and writes to them have no defined effect. Seed‑CSR access follows the defined privilege rules: in Machine mode a read‑write access always succeeds while a read‑only access always raises illegal‑instruction; in Supervisor/Hypervisor mode a read‑write access succeeds only if sseed = 1 (otherwise illegal); in User mode a read‑write access succeeds only if useed = 1 (otherwise illegal); in Virtual‑Supervisor or Virtual‑User modes every access raises an exception, with read‑only always illegal and read‑write raising a virtual‑instruction exception when sseed = 1 and illegal when sseed = 0, irrespective of useed. Writing a non‑zero value to sseed or useed creates a security boundary that blocks transfer of Sensitive Security Parameters to external software and remains effective regardless of the privilege level that performed the write, while the RLB, MMWP and MML bits control lockability and interpretation of PMP entries, allowing modification of locked entries when RLB = 1, preventing writes that would clear MMWP or MML until a PMP reset, and redefining PMP encodings for shared, S/U‑only and M‑mode‑only rules as specified.
+======================================================= END - 1 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 2 =======================================================
+GLOBAL NUMBER: 2
+LOCAL NUMBER: 2
+NAME: mseccfg
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+You are summarizing RISC-V register semantics strictly from the provided rules.
+
+Register: mseccfg
+
+Rules (subset):
+RULE 51: If any PMP entry has pmpcfg.L set to 1 while mseccfg.RLB is 0, writes to the RLB field of mseccfg are ignored until a PMP reset clears the lock bits.
+RULE 52: If a CSR write to mseccfg attempts to set a defined field to a value that violates its WARL constraints, the write is ignored and the field retains its previous value.
+RULE 53: If mseccfg.MML is set to 1, PMP permission checking is performed according to the truth tables that map the PMP entry bits L, R, W, and X to access rights for M‑mode and S/U‑mode.
+RULE 54: If mseccfg.MML is set to 1 and a PMP entry has L=0, R=0, W=0, X=0, then any access in either M‑mode or S/U‑mode causes an access exception (the region is inaccessible).
+RULE 55: If mseccfg.MML is set to 1 and a PMP entry has L=0, R=0, W=0, X=1, then an access in M‑mode causes an access exception while the same entry is treated as execute‑only in S/U‑mode.
+RULE 56: If mseccfg.MML is set to 1 and a PMP entry has L=0, R=0, W=1, X=0, then the entry provides read/write access in M‑mode and read‑only access in S/U‑mode.
+RULE 57: If mseccfg.MML is set to 1 and a PMP entry has L=0, R=0, W=1, X=1, then the entry provides read/write access in both M‑mode and S/U‑mode.
+RULE 58: If mseccfg.MML is set to 1 and a PMP entry has L=0, R=1, W=0, X=0, then an access in M‑mode causes an access exception while the entry is read‑only in S/U‑mode.
+RULE 59: If mseccfg.MML is set to 1 and a PMP entry has L=0, R=1, W=0, X=1, then an access in M‑mode causes an access exception while the entry is read/execute in S/U‑mode.
+RULE 60: If mseccfg.MML is set to 1 and a PMP entry has L=0, R=1, W=1, X=0, then an access in M‑mode causes an access exception while the entry is read/write in S/U‑mode.
+RULE 61: If mseccfg.MML is set to 1 and a PMP entry has L=0, R=1, W=1, X=1, then an access in M‑mode causes an access exception while the entry is read/write/execute in S/U‑mode.
+RULE 62: If mseccfg.MML is set to 1 and a PMP entry has L=1, R=0, W=0, X=0, then the region is a locked inaccessible region that causes an access exception for both M‑mode and S/U‑mode.
+RULE 63: If mseccfg.MML is set to 1 and a PMP entry has L=1, R=0, W=0, X=1, then the entry is a locked execute‑only region for M‑mode and causes an access exception for S/U‑mode.
+RULE 64: If mseccfg.MML is set to 1 and a PMP entry has L=1, R=0, W=1, X=0, then the entry is a locked shared code region that is execute‑only for both M‑mode and S/U‑mode.
+RULE 65: If mseccfg.MML is set to 1 and a PMP entry has L=1, R=0, W=1, X=1, then the entry is a locked shared code region that is execute‑only for S/U‑mode and read/execute for M‑mode.
+RULE 66: If mseccfg.MML is set to 1 and a PMP entry has L=1, R=1, W=0, X=0, then the entry is a locked read‑only region for M‑mode and causes an access exception for S/U‑mode.
+RULE 67: If mseccfg.MML is set to 1 and a PMP entry has L=1, R=1, W=0, X=1, then the entry is a locked read/execute region for M‑mode and causes an access exception for S/U‑mode.
+RULE 68: If mseccfg.MML is set to 1 and a PMP entry has L=1, R=1, W=1, X=0, then the entry is a locked read/write region for M‑mode and causes an access exception for S/U‑mode.
+RULE 69: If mseccfg.MML is set to 1 and a PMP entry has L=1, R=1, W=1, X=1, then the entry is a locked shared data region that is read‑only for both M‑mode and S/U‑mode.
+RULE 70: If mseccfg.RLB is clear (0), then any PMP entry whose L bit is set (locked entry) cannot be cleared or modified until a PMP reset occurs.
+RULE 71: If mseccfg.RLB is set (1), then the immutability restriction on locked PMP entries is lifted, allowing such entries to be cleared or modified without waiting for a PMP reset.
+RULE 72: If a PMP entry is locked (L=1) and mseccfg.RLB is clear, then attempts to change the entry's configuration bits have no architectural effect until a PMP reset.
+RULE 73: If the MMWP field of mseccfg is written with a value of 1, the MMWP field becomes locked and cannot be changed until a hart reset.
+RULE 74: If the MML field of mseccfg is written with a value of 1, the MML field becomes locked and cannot be changed until a hart reset.
+RULE 75: If the RLB field of mseccfg is written with a value of 0, the RLB field becomes locked and cannot be changed until a hart reset.
+RULE 76: If software attempts to write a locked field of mseccfg, the write is ignored and the field value remains unchanged, preventing a write‑then‑read discovery loop.
+RULE 77: If BootROM sets the MMWP field of mseccfg before transferring control to firmware, the MMWP field is locked before firmware execution begins.
+RULE 78: If BootROM sets the MML field of mseccfg before transferring control to firmware, the MML field is locked before firmware execution begins.
+RULE 79: If firmware reads the MMWP field of mseccfg after BootROM initialization and finds it set, firmware infers that Smepmp is present.
+RULE 80: If firmware reads the MML field of mseccfg after BootROM initialization and finds it set, firmware infers that Smepmp is present.
+RULE 81: If the bit mseccfg.RLB is set, firmware may add Shared‑Region PMP entries that grant executable permission even after the bit mseccfg.MML has been set.
+RULE 82: When the temporary boot purpose is completed, the bit mseccfg.RLB must be cleared.
+RULE 83: If mseccfg.RLB is cleared and a PMP entry with the lock bit pmpcfg.L is subsequently written, the bit mseccfg.RLB becomes locked and cannot be set again.
+RULE 84: If mseccfg.MML is set and mseccfg.RLB is cleared, attempts to create a Shared‑Region PMP entry with executable permission are prohibited.
+RULE 85: When mseccfg.MML is set, a PMP entry with pmpcfg.L = 1 is enforced only in Machine mode, whereas a PMP entry with pmpcfg.L = 0 is enforced only in Supervisor or User modes.
+RULE 86: The encoding pmpcfg.RW = 01 for Shared‑Region PMP entries is defined only when mseccfg.MML is set, therefore such entries can be created only after mseccfg.MML becomes 1.
+RULE 87: If mseccfg.MML is set and a Shared‑Region PMP entry requires executable permission, the entry can be created only if mseccfg.RLB is also set.
+RULE 88: After any PMP entry with the lock bit pmpcfg.L has been programmed, all bits of mseccfg that are currently cleared become immutable and cannot be changed thereafter.
+RULE 89: When mseccfg.RLB is set, PMP entries that are locked (pmpcfg.L = 1) must have higher priority than unlocked entries in the PMP priority order.
+RULE 90: If the bit mseccfg.MMWP is set, Machine mode is prohibited from reading or executing any address that is not explicitly permitted by a PMP entry.
+RULE 91: If the bit mseccfg.MMWP is cleared, Machine mode may read or execute any address that is not covered by a PMP entry.
+RULE 92: When the boot process finishes, the bit mseccfg.RLB must be cleared and subsequently locked to eliminate the Rule‑Lock Bypass vulnerability.
+RULE 93: If software reads the architectural predicate xLPE for Machine privilege, the read returns the current value of the MLPE field in mseccfg.
+RULE 94: If Supervisor mode is implemented, the definition of the Machine‑mode xLPE predicate is the current value of the MLPE field in mseccfg.
+RULE 95: If Supervisor mode is not implemented, the definition of the Machine‑mode xLPE predicate is the current value of the MLPE field in mseccfg.
+RULE 96: If the Machine‑mode LPE enable state is evaluated, its value is obtained solely from the MLPE field in mseccfg.
+RULE 97: If the processor determines the Machine‑mode LPE state, it consults the MLPE field in mseccfg in the same way regardless of whether Supervisor mode exists.
+RULE 98: If the Smmpm extension is implemented, then the mseccfg CSR must be present and accessible.
+RULE 99: If software reads bits 33 and 32 of the mseccfg CSR, the returned value reflects the current PMM field setting.
+RULE 100: If software writes a value to bits 33 and 32 of the mseccfg CSR that encodes pointer masking enabled for M‑mode, then pointer masking for M‑mode becomes enabled.
+
+Task:
+Write a concise technical summary (3-5 sentences, one paragraph) capturing only the semantics explicitly stated in the rules, including register purpose, fields, access control, privilege/virtualization constraints, and exception behavior.
+- Do NOT assume, infer, or add information not present in the rules.
+- Do NOT omit important constraints, field conditions, or corner cases.
+- Merge repeated ideas while preserving meaning.
+- Prefer canonical RISC-V wording and precise terminology.
+Remember, output must be ASCII-only text.
+Return only the paragraph text.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+The mseccfg CSR configures the Smepmp security extensions and contains the fields MML, RLB, MMWP, MLPE and the two‑bit PMM field (bits 33‑32). When MML=1, PMP entries are interpreted according to the truth‑tables of rules 53‑69: entries with L=1 are enforced only in Machine mode, entries with L=0 only in Supervisor/User mode, and each combination of R,W,X bits yields the access permissions or access exceptions described in those rules; MML becomes locked when set, requires MML=1 to use the Shared‑Region RW=01 encoding, and together with RLB controls whether shared‑region executable entries may be created. The RLB field governs the immutability of locked PMP entries: if RLB=0, any entry with L=1 cannot be cleared or modified and writes to RLB are ignored while such an entry exists; if RLB=1, the immutability restriction is lifted, locked entries must have higher priority, shared‑region executable entries are allowed, and writing RLB=0 locks the field, after which the boot process must clear and lock RLB, and any programmed locked entry makes all currently cleared bits of mseccfg permanent. If MMWP=1, the field locks and Machine mode is prohibited from reading or executing any address not explicitly permitted by a PMP entry; if MMWP=0, Machine mode may access unmapped addresses, and the field becomes immutable after being set. Writes that violate a field’s WARL constraints or target a locked field are ignored; reads of MLPE provide the architectural xLPE predicate regardless of supervisor‑mode presence, and bits 33‑32 reflect and can enable pointer‑masking for Machine mode.
+======================================================= END - 2 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 3 =======================================================
+GLOBAL NUMBER: 3
+LOCAL NUMBER: 3
+NAME: mseccfg
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+You are summarizing RISC-V register semantics strictly from the provided rules.
+
+Register: mseccfg
+
+Rules (subset):
+RULE 101: If software writes a value to bits 33 and 32 of the mseccfg CSR that encodes pointer masking disabled for M‑mode, then pointer masking for M‑mode becomes disabled.
+RULE 102: If software writes a value to bits 33 and 32 of the mseccfg CSR that is not a supported PMM encoding, then the hardware substitutes a supported PMM encoding and the PMM field holds that substituted value.
+
+Task:
+Write a concise technical summary (3-5 sentences, one paragraph) capturing only the semantics explicitly stated in the rules, including register purpose, fields, access control, privilege/virtualization constraints, and exception behavior.
+- Do NOT assume, infer, or add information not present in the rules.
+- Do NOT omit important constraints, field conditions, or corner cases.
+- Merge repeated ideas while preserving meaning.
+- Prefer canonical RISC-V wording and precise terminology.
+Remember, output must be ASCII-only text.
+Return only the paragraph text.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+The mseccfg CSR contains a PMM field in bits 33‑32 that controls pointer masking for M‑mode. If software writes a value whose bits 33‑32 encode the disabled pointer‑masking setting for M‑mode, pointer masking for M‑mode becomes disabled. If a write supplies a value for bits 33‑32 that is not a supported PMM encoding, the hardware substitutes a supported encoding and the PMM field holds that substituted value. No additional behavior or constraints are defined by the given rules.
+======================================================= END - 3 ========================================================

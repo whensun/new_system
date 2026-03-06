@@ -1,0 +1,95 @@
+## 28.13.8. cm.pop
+
+Synopsis:
+
+Destroy stack frame: load ra and 0 to 12 saved registers from the stack frame, deallocate the stack frame.
+
+Mnemonic:
+
+cm.pop {reg\_list}, stack\_adj
+
+Encoding (RV32, RV64):
+
+<image>
+
+FUNCT3
+
+<image>
+
+C2
+
+rlist values 0 to 3 are reserved for a future EABI variant called cm.pop.e
+
+Assembly Syntax:
+
+```
+cm.pop {reg_list},  stack_adj cm.pop {xreg_list}, stack_adj
+```
+
+The variables used in the assembly syntax are defined below.
+
+```
+RV32E: switch (rlist){ case  4: {reg_list="ra";         xreg_list="x1";} case  5: {reg_list="ra, s0";     xreg_list="x1, x8";} case  6: {reg_list="ra, s0-s1";  xreg_list="x1, x8-x9";} default: reserved(); } stack_adj      = stack_adj_base + spimm * 16;
+```
+
+```
+RV32I, RV64: switch (rlist){ case  4: {reg_list="ra";         xreg_list="x1";} case  5: {reg_list="ra, s0";     xreg_list="x1, x8";} case  6: {reg_list="ra, s0-s1";  xreg_list="x1, x8-x9";} case  7: {reg_list="ra, s0-s2";  xreg_list="x1, x8-x9, x18";} case  8: {reg_list="ra, s0-s3";  xreg_list="x1, x8-x9, x18-x19";} case  9: {reg_list="ra, s0-s4";  xreg_list="x1, x8-x9, x18-x20";} case 10: {reg_list="ra, s0-s5";  xreg_list="x1, x8-x9, x18-x21";} case 11: {reg_list="ra, s0-s6";  xreg_list="x1, x8-x9, x18-x22";} case 12: {reg_list="ra, s0-s7";  xreg_list="x1, x8-x9, x18-x23";} case 13: {reg_list="ra, s0-s8";  xreg_list="x1, x8-x9, x18-x24";}
+```
+
+```
+case 14: {reg_list="ra, s0-s9";  xreg_list="x1, x8-x9, x18-x25";} //note - to include s10, s11 must also be included case 15: {reg_list="ra, s0-s11"; xreg_list="x1, x8-x9, x18-x27";} default: reserved(); } stack_adj      = stack_adj_base + spimm * 16;
+```
+
+```
+RV32E: stack_adj_base = 16; Valid values: stack_adj      = [16|32|48|64];
+```
+
+```
+RV32I: switch (rlist) { case  4.. 7: stack_adj_base = 16; case  8..11: stack_adj_base = 32; case 12..14: stack_adj_base = 48; case     15: stack_adj_base = 64; } Valid values: switch (rlist) { case  4.. 7: stack_adj = [16|32|48| 64]; case  8..11: stack_adj = [32|48|64| 80]; case 12..14: stack_adj = [48|64|80| 96]; case     15: stack_adj = [64|80|96|112]; }
+```
+
+```
+RV64: switch (rlist) { case  4.. 5: stack_adj_base =  16; case  6.. 7: stack_adj_base =  32; case  8.. 9: stack_adj_base =  48; case 10..11: stack_adj_base =  64; case 12..13: stack_adj_base =  80; case     14: stack_adj_base =  96; case     15: stack_adj_base = 112; } Valid values: switch (rlist) { case  4.. 5: stack_adj = [ 16| 32| 48| 64]; case  6.. 7: stack_adj = [ 32| 48| 64| 80];
+```
+
+```
+case  8.. 9: stack_adj = [ 48| 64| 80| 96]; case 10..11: stack_adj = [ 64| 80| 96|112]; case 12..13: stack_adj = [ 80| 96|112|128]; case     14: stack_adj = [ 96|112|128|144]; case     15: stack_adj = [112|128|144|160]; }
+```
+
+Description:
+
+This instruction pops (loads) the registers in reg\_list from stack memory, and then adjusts the stack pointer by stack\_adj .
+
+<image>
+
+All  ABI  register  mappings  are  for  the  UABI.  An  EABI  version  is  planned  once  the EABI is frozen.
+
+For further information see PUSH/POP Register Instructions.
+
+Stack Adjustment Calculation:
+
+stack\_adj\_base is the minimum number of bytes, in multiples of 16-byte address increments, required to cover the registers in the list.
+
+spimm is the number of additional 16-byte address increments allocated for the stack frame.
+
+The total stack adjustment represents the total size of the stack frame, which is stack\_adj\_base added to spimm scaled by 16, as defined above.
+
+Prerequisites:
+
+None
+
+32-bit equivalent:
+
+No direct equivalent encoding exists
+
+Operation:
+
+The first  section  of  pseudocode may be executed multiple times before the instruction successfully completes.
+
+```
+//This is not SAIL, it's pseudocode. The SAIL hasn't been written yet. if (XLEN==32) bytes=4; else bytes=8; addr=sp+stack_adj-bytes; for(i in 27,26,25,24,23,22,21,20,19,18,9,8,1)  { //if register i is in xreg_list if (xreg_list[i]) { switch(bytes) { 4:  asm("lw x[i], 0(addr)"); 8:  asm("ld x[i], 0(addr)"); } addr-=bytes; } }
+```
+
+The final section of pseudocode executes atomically, and only executes if the section above completes without any exceptions or interrupts.
+
+//This is not SAIL, it's pseudocode. The SAIL hasn't been written yet. sp+=stack\_adj;

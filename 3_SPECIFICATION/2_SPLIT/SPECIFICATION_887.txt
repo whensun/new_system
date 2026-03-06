@@ -1,0 +1,31 @@
+## 21.2.18. Virtual Supervisor Address Translation and Protection ( vsatp ) Register
+
+The vsatp register is a VSXLEN-bit read/write register that is VS-mode's version of supervisor register satp ,  formatted  as  shown  in  Figure  109  for  VSXLEN=32  and  Figure  110  for  VSXLEN=64.  When  V=1, vsatp substitutes for the usual satp ,  so  instructions that normally read or modify satp actually access vsatp instead. vsatp controls VS-stage address translation, the first stage of two-stage translation for guest virtual addresses (see Section 21.5).
+
+Figure 109. Virtual supervisor address translation and protection vsatp register when VSXLEN=32.
+
+<image>
+
+| 31          |             | 22 21      |
+|-------------|-------------|------------|
+| Mode (WARL) | ASID (WARL) | PPN (WARL) |
+| 1           | 9           | 22         |
+
+Figure 110. Virtual supervisor address translation and protection vsatp register when VSXLEN=64.
+
+<image>
+
+| 63          | 60 59       | 60 59       | 0          |
+|-------------|-------------|-------------|------------|
+| Mode (WARL) | Mode (WARL) | ASID (WARL) | PPN (WARL) |
+| 4           |             | 16          | 44         |
+
+The vsatp register is considered active for the purposes of the address-translation algorithm unless the effective privilege mode is U and hstatus .HU=0. However, even when vsatp is  active,  VS-stage pagetable entries' A bits must not be set as a result of speculative execution, unless the effective privilege mode is VS or VU.
+
+<image>
+
+In  particular,  virtual-machine  load/store  (HLV,  HLVX,  or  HSV)  instructions  that  are misspeculatively executed must not cause VS-stage A bits to be set.
+
+When V=0, a write to vsatp with an unsupported MODE value is either ignored as it is for satp , or the fields  of vsatp are  treated  as WARL in  the  normal  way.  However,  when  V=1,  a  write  to satp with  an unsupported MODE value is ignored and no write to vsatp is effected.
+
+When  V=0, vsatp does  not  directly  affect  the  behavior  of  the  machine,  unless  a  virtual-machine load/store (HLV, HLVX, or HSV) or the MPRV feature in the mstatus register is used to execute a load or store as though V=1.

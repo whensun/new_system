@@ -1,0 +1,23 @@
+## 30.16.5. Vector Compress Instruction
+
+The  vector  compress  instruction  allows  elements  selected  by  a  vector  mask  register  from  a  source vector  register  group  to  be  packed  into  contiguous  elements  at  the  start  of  the  destination  vector register group.
+
+vcompress.vm vd, vs2, vs1  # Compress into vd elements of vs2 where vs1 is enabled
+
+The vector mask register specified by vs1 indicates which of the first vl elements of vector register group vs2 should be extracted and packed into contiguous elements at the beginning of vector register vd .  The  remaining  elements  of vd are  treated  as  tail  elements  according  to  the  current  tail  policy (Section 30.3.4.3).
+
+```
+Example use of vcompress instruction 8 7 6 5 4 3 2 1 0   Element number 1 1 0 1 0 0 1 0 1   v0 8 7 6 5 4 3 2 1 0   v1 1 2 3 4 5 6 7 8 9   v2 vsetivli     t0, 9, e8, m1, tu, ma vcompress.vm v2, v1, v0 1 2 3 4 8 7 5 2 0   v2
+```
+
+vcompress is  encoded  as  an  unmasked  instruction  ( vm=1 ).  The  equivalent  masked  instruction  ( vm=0 )  is reserved.
+
+The destination vector register group cannot overlap the source vector register group or the source mask register, otherwise the instruction encoding is reserved.
+
+A trap on a vcompress instruction is always reported with a vstart of 0. Executing a vcompress instruction with a non-zero vstart raises an illegal-instruction exception.
+
+<image>
+
+Although possible, vcompress is one of the more difficult instructions to restart with a non-zero vstart ,  so  assumption is implementations will choose not do that but will instead  restart  from  element  0.  This  does  mean  elements  in  destination  register
+
+after vstart will already have been updated.

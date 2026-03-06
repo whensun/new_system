@@ -1,0 +1,30 @@
+## 31.4.15. clmulh
+
+## Synopsis
+
+Carry-less multiply (high-part)
+
+## Mnemonic
+
+clmulh rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+clmulh produces the upper half of the 2·XLEN carry-less product.
+
+## Operation
+
+```
+let rs1_val = X(rs1); let rs2_val = X(rs2); let output : xlenbits = 0; foreach (i from 1 to xlen by 1) { output = if   ((rs2_val >> i) & 1) then output ^ (rs1_val >> (xlen - i)); else output; } X[rd] = output
+```
+
+## Included in
+
+| Extension                       | Minimum version   | Lifecycle state   |
+|---------------------------------|-------------------|-------------------|
+| Zbc (Carry-less multiplication) | 1.0.0             | Ratified          |
+| Zbkc (Zbkc-sc)                  | v1.0.0-rc4        | Ratified          |

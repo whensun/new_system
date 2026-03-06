@@ -1,0 +1,9 @@
+## 30.13.15. Vector Floating-Point Merge Instruction
+
+A vector-scalar floating-point merge instruction is provided, which operates on all body elements from vstart up to the current vector length in vl regardless of mask value.
+
+The vfmerge.vfm instruction  is  encoded  as  a  masked  instruction  ( vm=0 ).  At  elements  where  the  mask value is zero, the first vector operand is copied to the destination element, otherwise a scalar floatingpoint register value is copied to the destination element.
+
+```
+vfmerge.vfm vd, vs2, rs1, v0  # vd[i] = v0.mask[i] ? f[rs1] : vs2[i]
+```

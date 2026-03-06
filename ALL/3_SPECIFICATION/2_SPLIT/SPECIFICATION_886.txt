@@ -1,0 +1,9 @@
+## 21.2.17. Virtual Supervisor Trap Value ( vstval ) Register
+
+The vstval register is a VSXLEN-bit read/write register that is VS-mode's version of supervisor register stval ,  formatted  as  shown  in  Figure  108.  When  V=1, vstval substitutes  for  the  usual stval ,  so instructions that normally read or modify stval actually access vstval instead. When V=0, vstval does not directly affect the behavior of the machine.
+
+vstval is a WARL register that must be able to hold the same set of values that stval can hold.
+
+Figure 108. Virtual supervisor trap value register ( vstval ).
+
+<image>

@@ -1,0 +1,3 @@
+## 8.4. MNRET Instruction
+
+MNRET  is  an  M-mode-only  instruction  that  uses  the  values  in mnepc and mnstatus to  return  to  the program counter, privilege mode, and virtualization mode of the interrupted context. This instruction also sets mnstatus .NMIE. If MNRET changes the privilege mode to a mode less privileged than M, it also sets mstatus .MPRV to 0. If the Zicfilp extension is implemented, then if the new privileged mode is y , MNRET sets ELP to the logical AND of y LPE (see Section 22.1.1) and mnstatus .MNPELP.

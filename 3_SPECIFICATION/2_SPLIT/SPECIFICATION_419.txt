@@ -1,0 +1,19 @@
+## 30.15.2. Vector count population in mask vcpop.m
+
+vcpop.m rd, vs2, vm
+
+<image>
+
+This instruction previously had the assembler mnemonic vpopc.m but was renamed to be consistent with the scalar instruction. The assembler instruction alias vpopc.m is being retained for software compatibility.
+
+The source operand is a single vector register holding mask register values as described in Section 30.4.5.
+
+The vcpop.m instruction  counts  the  number  of  mask  elements  of  the  active  elements  of  the  vector source mask register that have the value 1 and writes the result to a scalar x register.
+
+The operation can be performed under a mask, in which case only the masked elements are counted.
+
+vcpop.m rd, vs2, v0.t # x[rd] = sum\_i ( vs2.mask[i] && v0.mask[i] )
+
+The vcpop.m instruction writes x[rd] even if vl =0 (with the value 0, since no mask elements are active).
+
+Traps on vcpop.m are  always  reported  with  a vstart of  0.  The vcpop.m instruction  will  raise  an  illegalinstruction exception if vstart is non-zero.

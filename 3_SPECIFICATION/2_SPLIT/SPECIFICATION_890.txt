@@ -1,0 +1,3 @@
+## 21.4. Machine-Level CSRs
+
+The hypervisor extension augments or modifies machine CSRs mstatus , mstatush , mideleg , mip ,  and mie , and adds CSRs mtval2 and mtinst .

@@ -1,0 +1,29 @@
+## 6.2. Proposal
+
+1. Machine  Security  Configuration  (mseccfg) is  a  new  RW  Machine  mode  CSR,  used  for configuring  various  security  mechanisms  present  on  the  hart,  and  only  accessible  to  Machine mode. It is 64 bits wide, and is at address 0x747 on RV64 and 0x747 (low 32bits), 0x757 (high 32bits) on RV32 . All mseccfg fields defined on this proposal are WARL, and the remaining bits are reserved  for  future  standard  use  and  should  always  read  zero.  The  reset  value  of  mseccfg  is implementation-specific, otherwise if backwards compatibility is a requirement it should reset to zero on hard reset.
+2. On mseccfg we  introduce  a  field  on  bit  2  called Rule  Locking  Bypass  (mseccfg.RLB) with  the following functionality:
+- a. When mseccfg.RLB is  1 locked PMP rules may be removed/modified and locked PMP entries may be edited.
+- b. When mseccfg.RLB is  0  and pmpcfg.L is  1  in  any  rule  or  entry  (including  disabled  entries),  then mseccfg.RLB remains  0  and  any  further  modifications  to mseccfg.RLB are  ignored  until  a PMP reset .
+
+<image>
+
+Note that this feature is intended to be used as a debug mechanism, or as a temporary workaround during the boot process for simplifying software, and optimizing the allocation of memory and PMP rules. Using this functionality under  normal  operation,  after  the  boot  process  is  completed,  should  be avoided since it weakens the protection of M-mode-only rules. Vendors who don't need this functionality may hardwire this field to 0.
+
+3. On mseccfg we introduce a field in bit 1 called Machine-Mode Allowlist Policy (mseccfg.MMWP) . This  is  a  sticky  bit,  meaning  that  once  set  it  cannot  be  unset  until  a PMP reset .  When  set  it changes the default  PMP policy  for  M-mode  when  accessing  memory  regions  that  don't  have  a matching PMP rule, to denied instead of ignored .
+4. On mseccfg we introduce a field in bit 0 called Machine Mode Lockdown (mseccfg.MML) . This is a sticky bit, meaning that once set it cannot be unset until a PMP reset .  When mseccfg.MML is set the system's behavior changes in the following way:
+- a. The  meaning  of pmpcfg.L changes:  Instead  of  marking  a  rule  as locked and enforced in  all modes, it now marks a rule as M-mode-only when set and S/U-mode-only when unset. The formerly reserved encoding of pmpcfg.RW=01 ,  and  the  encoding pmpcfg.LRWX=1111 ,  now  encode a Shared-Region .
+
+An M-mode-only rule is enforced on Machine mode and denied in Supervisor or User mode. It also  remains locked so  that  any  further  modifications  to  its  associated  configuration  or
+
+address registers are ignored until a PMP reset , unless mseccfg.RLB is set.
+
+An S/U-mode-only rule  is enforced on  Supervisor  and  User  modes  and denied on  Machine mode.
+
+A Shared-Region rule is enforced on all modes, with restrictions depending on the pmpcfg.L and pmpcfg.X bits:
+
+- + A Shared-Region rule  where pmpcfg.L is  not  set  can be used for sharing data between Mmode and S/U-mode, so is not executable. M-mode has read/write access to that region, and S/U-mode has read access if pmpcfg.X is not set, or read/write access if pmpcfg.X is set.
+- + A Shared-Region rule where pmpcfg.L is set can be used for sharing code between M-mode and S/U-mode, so is not writable. Both M-mode and S/U-mode have execute access on the region, and M-mode also has read access if pmpcfg.X is set. The rule remains locked so that any further modifications to its associated configuration or address registers are ignored until a PMP reset , unless mseccfg.RLB is set.
+- + The  encoding pmpcfg.LRWX=1111 can  be  used  for  sharing  data  between  M-mode  and  S/U mode, where both modes only have read-only access to the region. The rule remains locked so that any further modifications to its associated configuration or address registers are ignored until a PMP reset , unless mseccfg.RLB is set.
+- b. Adding  a  rule  with  executable  privileges  that  either  is M-mode-only or  a locked SharedRegion is  not  possible  and  such pmpcfg writes  are  ignored,  leaving pmpcfg unchanged.  This restriction can be temporarily lifted by setting mseccfg.RLB e.g. during the boot process.
+- c. Executing  code  with  Machine  mode  privileges  is  only  possible  from  memory  regions  with  a matching M-mode-only rule  or  a locked Shared-Region rule  with  executable  privileges. Executing code from a region without a matching rule or with a matching S/U-mode-only rule is denied .
+- d. If mseccfg.MML is  not set, the combination of pmpcfg.RW=01 remains reserved for future standard use.

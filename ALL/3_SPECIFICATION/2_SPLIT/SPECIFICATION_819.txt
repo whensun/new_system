@@ -1,0 +1,7 @@
+## Chapter 12. Supervisor-Level ISA, Version 1.13
+
+This chapter describes the RISC-V supervisor-level architecture, which contains a common core that is used with various supervisor-level address translation and protection schemes.
+
+<image>
+
+Supervisor  mode  is  deliberately  restricted  in  terms  of  interactions  with  underlying physical hardware, such as physical memory and device interrupts, to support clean virtualization.  In  this  spirit,  certain  supervisor-level  facilities,  including  requests  for timer and interprocessor interrupts, are provided by implementation-specific mechanisms. In some systems, a supervisor execution environment (SEE) provides these  facilities  in  a  manner  specified  by  a  supervisor  binary  interface  (SBI).  Other systems supply these facilities directly, through some other implementation-defined mechanism.

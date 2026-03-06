@@ -1,0 +1,83 @@
+REGISTER: fcsr
+EXTENSIONS: F, D, Q, Zfinx, Zdinx, Zhinx
+
+REGISTER: fflags
+EXTENSIONS: F, D, Q, V
+
+REGISTER: frm
+EXTENSIONS: F, D, Q, V, Zvfbfmin, Zvfbfwma
+
+REGISTER: hpmcounter18
+EXTENSIONS: Zihpm, Zicsr, Sscofpmf, H
+
+REGISTER: mcause
+EXTENSIONS: Smdbltrp, Ssdbltrp, Smrnmi, H, Sscofpmf
+
+REGISTER: mcounteren
+EXTENSIONS: H, Smcdeleg, Smcntrpmf, Smcsrind, Smstateen, Ssccfg, Sscofpmf, Sscsrind
+
+REGISTER: mcountinhibit
+EXTENSIONS: Smcdeleg, Ssccfg, Sscofpmf
+
+REGISTER: mcycle
+EXTENSIONS: Smcdeleg, Ssccfg, Smstateen, Smcsrind, Sscsrind, Smcntrpmf, H
+
+REGISTER: medeleg
+EXTENSIONS: S, H, N
+
+REGISTER: menvcfg
+EXTENSIONS: Svpbmt, Svadu, Smcdeleg, Sstc, Zicboz, Zicbom, Smnpm, Zicfilp, Zicfiss, Ssdbltrp, Svade
+
+REGISTER: mepc
+EXTENSIONS: Smrnmi
+
+REGISTER: mhpmcounter18
+EXTENSIONS: Sscofpmf
+
+REGISTER: mhpmevent18
+EXTENSIONS: Sscofpmf, Smstateen, Smcsrind, Sscsrind, Smcdeleg, Ssccfg
+
+REGISTER: mideleg
+EXTENSIONS: S, N, Sscofpmf, Smcdeleg, Ssccfg, Smaia, Ssaia, H
+
+REGISTER: satp
+EXTENSIONS: Svpbmt, Svnapot, Svadu, Svade
+
+REGISTER: scause
+EXTENSIONS: H, Sscofpmf, Ssdbltrp
+
+REGISTER: scounteren
+EXTENSIONS: S, H
+
+REGISTER: scountinhibit
+EXTENSIONS: Smcdeleg, Ssccfg
+
+REGISTER: sepc
+EXTENSIONS: Ssdbltrp
+
+REGISTER: sstatus
+EXTENSIONS: F, V, Ssdbltrp, Zicfilp
+
+REGISTER: stvec
+EXTENSIONS: Ssdbltrp, H
+
+REGISTER: vcsr
+EXTENSIONS: V
+
+REGISTER: vl
+EXTENSIONS: V
+
+REGISTER: vlenb
+EXTENSIONS: V
+
+REGISTER: vstart
+EXTENSIONS: V
+
+REGISTER: vtype
+EXTENSIONS: V, Zvkt
+
+REGISTER: vxrm
+EXTENSIONS: V
+
+REGISTER: vxsat
+EXTENSIONS: V

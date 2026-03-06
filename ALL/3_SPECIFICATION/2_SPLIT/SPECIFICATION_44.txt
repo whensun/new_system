@@ -1,0 +1,32 @@
+## 10.1. "Zcmop" Compressed May-Be-Operations Extension, Version 1.0
+
+This  section  defines  the  "Zcmop"  extension,  which  defines  eight  16-bit  MOP  instructions  named C.MOP. n ,  where n is an odd integer between 1 and 15, inclusive. C.MOP. n is encoded in the reserved encoding space corresponding to C.LUI x n ,  0, as shown in Table 10. Unlike the MOPs defined in the Zimop extension, the C.MOP. n instructions are defined to not write any register. Their encoding allows future extensions to define them to read register x[ n ] .
+
+The Zcmop extension depends upon the Zca extension.
+
+<image>
+
+<image>
+
+Very  few  suitable  16-bit  encoding  spaces  exist.  This  space  was  chosen  because  it already has unusual behavior with respect to the rd / rs1 field-it  encodes c.addi16sp when the field contains x2 --and is therefore of lower value for most purposes.
+
+Table 10. C.MOP.n instruction encoding.
+
+| Mnemonic   |         Encoding | Redefinable to read register   |
+|------------|------------------|--------------------------------|
+| C.MOP.1    | 0110000010000001 | x1                             |
+| C.MOP.3    | 0110000110000001 | x3                             |
+| C.MOP.5    | 0110001010000001 | x5                             |
+| C.MOP.7    | 0110001110000001 | x7                             |
+| C.MOP.9    | 0110010010000001 | x9                             |
+| C.MOP.11   | 0110010110000001 | x11                            |
+| C.MOP.13   | 0110011010000001 | x13                            |
+| C.MOP.15   | 0110011110000001 | x15                            |
+
+<image>
+
+The recommended assembly syntax for C.MOP.n is simply the nullary C.MOP.n. The possibly accessed register is implicitly x n .
+
+<image>
+
+The  expectation  is  that  each  Zcmop  instruction  is  equivalent  to  some  Zimop instruction, but the choice of expansion (if any) is left to the extension that redefines the MOP. Note, a Zcmop instruction that does not write a value can expand into a write to x0 .

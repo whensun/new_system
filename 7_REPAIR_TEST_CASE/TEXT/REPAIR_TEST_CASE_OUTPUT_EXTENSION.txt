@@ -1,0 +1,21 @@
+# 16 # Extension Must Be Active: Zicfilp
+li t0, 0x8000000000000000 # Set MLPE bit (assumed MSB) to 1
+csrw mseccfg, t0 # Write to mseccfg CSR
+csrr t1, mseccfg # Read back mseccfg
+andi t1, t1, 0x7ff # Isolate MLPE field
+# Result: t1 != 0
+
+# 54 # Extension Must Be Active: F
+li t0, 0x2000 # set bit 13 (FS = 01)
+csrrs zero, mstatus, t0 # write to mstatus, setting FS field
+csrr t1, mstatus # read back mstatus
+andi t1, t1, 0x7ff # isolate FS bits (bits 13..14)
+# Result: t1 != 0
+
+# 66 # Extension Must Be Active: Zfinx
+li ra, 0x6000 # set FS bits to 11
+csrw mstatus, ra # write mstatus
+fadd.s ft0, ft0, ft0 # floating‑point instruction should not trap
+csrr sp, mstatus # read mstatus
+andi sp, sp, 0x7ff # isolate FS field
+# Result: sp = 0

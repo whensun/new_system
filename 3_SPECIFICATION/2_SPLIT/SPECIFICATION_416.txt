@@ -1,0 +1,17 @@
+## 30.14.4. Vector Widening Floating-Point Reduction Instructions
+
+Widening  forms  of  the  sum  reductions  are  provided  that  read  and  write  a  double-width  reduction result.
+
+```
+# Simple reductions. vfwredosum.vs vd, vs2, vs1, vm # Ordered sum vfwredusum.vs vd, vs2, vs1, vm # Unordered sum
+```
+
+<image>
+
+Older assembler mnemonic vfwredsum is retained as alias for vfwredusum .
+
+The reduction of the SEW-width elements is performed as in the single-width reduction case, with the elements in vs2 promoted to 2*SEW bits before adding to the 2*SEW-bit accumulator.
+
+<image>
+
+vfwredosum.vs handles inactive elements and NaN payloads analogously to vfredosum.vs ; vfwredusum.vs does so analogously to vfredusum.vs .

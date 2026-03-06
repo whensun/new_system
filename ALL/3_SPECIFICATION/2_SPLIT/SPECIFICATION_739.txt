@@ -1,0 +1,100 @@
+## 3.1.15. Machine Cause ( mcause ) Register
+
+The mcause register is an MXLEN-bit read-write register formatted as shown in Figure 22. When a trap is  taken  into  M-mode, mcause is  written  with  a  code  indicating  the  event  that  caused  the  trap. Otherwise, mcause is  never  written  by  the  implementation,  though  it  may  be  explicitly  written  by software.
+
+The Interrupt bit in the mcause register is set if the trap was caused by an interrupt. The Exception Code field contains a code identifying the last exception or interrupt. Table 14 lists the possible machinelevel exception codes. The Exception Code is a WLRL field,  so is only guaranteed to hold supported exception codes.
+
+Figure 22. Machine Cause ( mcause ) register.
+
+<image>
+
+Note  that  load  and  load-reserved  instructions  generate  load  exceptions,  whereas  store,  store-
+
+conditional, and AMO instructions generate store/AMO exceptions.
+
+Interrupts can be separated from other traps with a single branch on the sign of the mcause register value. A shift left can remove the interrupt bit and scale the exception codes to index into a trap vector table.
+
+<image>
+
+We  do  not  distinguish  privileged  instruction  exceptions  from  illegal-instruction exceptions. This simplifies the architecture and also hides details of which higherprivilege  instructions  are  supported  by  an  implementation.  The  privilege  level servicing the trap can implement a policy on whether these need to be distinguished, and if so, whether a given opcode should be treated as illegal or privileged.
+
+If an instruction may raise multiple synchronous exceptions, the decreasing priority order of Table 15 indicates  which  exception  is  taken  and  reported  in mcause .  The  priority  of  any  custom  synchronous exceptions is implementation-defined.
+
+Table 14. Machine cause ( mcause ) register values after trap.
+
+|   Interrupt | Exception Code   | Description                    |
+|-------------|------------------|--------------------------------|
+|           1 | 0                | Reserved                       |
+|           1 | 1                | Supervisor software interrupt  |
+|           1 | 2                | Reserved                       |
+|           1 | 3                | Machine software interrupt     |
+|           1 | 4                | Reserved                       |
+|           1 | 5                | Supervisor timer interrupt     |
+|           1 | 6                | Reserved                       |
+|           1 | 7                | Machine timer interrupt        |
+|           1 | 8                | Reserved                       |
+|           1 | 9                | Supervisor external interrupt  |
+|           1 | 10               | Reserved                       |
+|           1 | 11               | Machine external interrupt     |
+|           1 | 12               | Reserved                       |
+|           1 | 13               | Counter-overflow interrupt     |
+|           1 | 14-15            | Reserved                       |
+|           1 | ≥16              | Designated for platform use    |
+|           0 | 0                | Instruction address misaligned |
+|           0 | 1                | Instruction access fault       |
+|           0 | 2                | Illegal instruction            |
+|           0 | 3                | Breakpoint                     |
+|           0 | 4                | Load address misaligned        |
+|           0 | 5                | Load access fault              |
+|           0 | 6                | Store/AMO address misaligned   |
+|           0 | 7                | Store/AMO access fault         |
+|           0 | 8                | Environment call from U-mode   |
+|           0 | 9                | Environment call from S-mode   |
+|           0 | 10               | Reserved                       |
+|           0 | 11               | Environment call from M-mode   |
+|           0 | 12               | Instruction page fault         |
+|           0 | 13               | Load page fault                |
+|           0 | 14               | Reserved                       |
+|           0 | 15               | Store/AMO page fault           |
+|           0 | 16               | Double trap                    |
+|           0 | 17               | Reserved                       |
+|           0 | 18               | Software check                 |
+|           0 | 19               | Hardware error                 |
+|           0 | 20-23            | Reserved                       |
+|           0 | 24-31            | Designated for custom use      |
+|           0 | 32-47            | Reserved                       |
+|           0 | 48-63            | Designated for custom use      |
+|           0 | ≥64              | Reserved                       |
+
+Table 15. Synchronous exception priority in decreasing priority order.
+
+| Priority   | Exc.Code       | Description                                                                                                             |
+|------------|----------------|-------------------------------------------------------------------------------------------------------------------------|
+| Highest    | 3              | Instruction address breakpoint                                                                                          |
+|            | 12, 1          | During instruction address translation: First encountered page fault or access fault                                    |
+|            | 1              | With physical address for instruction: Instruction access fault                                                         |
+|            | 2 0 8,9,11 3 3 | Illegal instruction Instruction address misaligned Environment call Environment break Load/store/AMO address breakpoint |
+|            | 4,6            | Optionally: Load/store/AMO address misaligned                                                                           |
+|            | 13, 15, 5, 7   | During address translation for an explicit memory access: First encountered page fault or access fault                  |
+|            | 5,7            | Load/store/AMO access fault If not higher priority:                                                                     |
+| Lowest     | 4,6            | Load/store/AMO address misaligned                                                                                       |
+
+When  a  virtual  address  is  translated  into  a  physical  address,  the  address  translation  algorithm determines what specific exception may be raised.
+
+Load/store/AMO  address-misaligned  exceptions  may  have  either  higher  or  lower  priority  than load/store/AMO page-fault and access-fault exceptions.
+
+The relative priority of load/store/AMO address-misaligned and page-fault exceptions is implementation-defined to flexibly cater to two design points. Implementations that never support misaligned accesses can unconditionally raise the misaligned-address exception without performing address translation or protection checks. Implementations that support misaligned accesses only to some physical  addresses  must  translate  and  check  the  address  before  determining whether  the  misaligned  access  may  proceed,  in  which  case  raising  the  page-fault exception or access is more appropriate.
+
+
+
+<image>
+
+Instruction address breakpoints have the same cause value as, but different priority than, data address breakpoints (a.k.a. watchpoints) and environment break exceptions (which are raised by the EBREAK instruction).
+
+Instruction  address-misaligned  exceptions  are  raised  by  control-flow  instructions with misaligned targets, rather than by the act of fetching an instruction. Therefore, these exceptions have lower priority than other instruction address exceptions.
+
+A software-check exception is a synchronous exception that is triggered when there are  violations  of  checks  and  assertions  defined  by  ISA  extensions  that  aim  to
+
+safeguard the integrity  of  software  assets,  including  e.g.  control-flow  and  memoryaccess constraints. When this exception is raised, the x tval register is set either to 0 or to an informative value defined by the extension that stipulated the exception be raised.  The  priority  of  this  exception,  relative  to  other  synchronous  exceptions, depends  on  the  cause  of  this  exception  and  is  defined  by  the  extension  that stipulated the exception be raised.
+
+A hardware-error exception is a synchronous exception triggered when corrupted or uncorrectable  data  is  accessed  explicitly  or  implicitly  by  an  instruction.  In  this context, "data" encompasses all types of information used within a RISC-V hart. Upon a hardware-error exception, the x epc register is set to the address of the instruction that attempted to access corrupted data, while the x tval register is set either to 0 or to the virtual address of an instruction fetch, load, or store that attempted to access corrupted data. The priority of hardware-error exception is implementation-defined, but any given occurrence is generally expected to be recognized at the point in the overall priority order at which the hardware error is discovered.

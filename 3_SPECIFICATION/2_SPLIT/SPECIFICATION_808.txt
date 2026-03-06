@@ -1,0 +1,12 @@
+## 11.3.1. Supervisor CTR Clear Instruction
+
+<image>
+
+The SCTRCLR instruction performs the following operations:
+
+- ⚫ Zeroes all CTR Entry Registers, for all DEPTH values
+- ⚫ Zeroes the CTR cycle counter and CCV (see Section 11.5.3)
+
+Any  read  of ctrsource , ctrtarget ,  or ctrdata that  follows  SCTRCLR,  such  that  it  precedes  the  next qualified control transfer, will return the value 0. Further, the first recorded transfer following SCTRCLR will have ctrdata .CCV=0.
+
+SCTRCLR raises an illegal-instruction exception in U-mode, and a virtual-instruction exception in VUmode, unless CTR state enable access restrictions apply. See Section 11.4.

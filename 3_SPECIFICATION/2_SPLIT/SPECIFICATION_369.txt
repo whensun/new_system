@@ -1,0 +1,13 @@
+## 30.11.3. Vector Integer Extension
+
+The vector integer extension instructions zero- or sign-extend a source vector integer operand with EEW less than SEW to fill SEW-sized elements in the destination. The EEW of the source is 1/2, 1/4, or 1/8 of SEW, while EMUL of the source is (EEW/SEW)*LMUL. The destination has EEW equal to SEW and EMUL equal to LMUL.
+
+```
+vzext.vf2 vd, vs2, vm  # Zero-extend SEW/2 source to SEW destination vsext.vf2 vd, vs2, vm  # Sign-extend SEW/2 source to SEW destination vzext.vf4 vd, vs2, vm  # Zero-extend SEW/4 source to SEW destination vsext.vf4 vd, vs2, vm  # Sign-extend SEW/4 source to SEW destination vzext.vf8 vd, vs2, vm  # Zero-extend SEW/8 source to SEW destination vsext.vf8 vd, vs2, vm  # Sign-extend SEW/8 source to SEW destination
+```
+
+If the source EEW is not a supported width, or source EMUL would be below the minimum legal LMUL, the instruction encoding is reserved.
+
+<image>
+
+Standard vector load instructions access memory values that are the same size as the  destination  register  elements.  Some  application  code  needs  to  operate  on  a range  of  operand  widths  in  a  wider  element,  for  example,  loading  a  byte  from memory and adding to an eight-byte element. To avoid having to provide the crossproduct of the number of vector load instructions by the number of data types (byte, word, halfword, and also signed/unsigned variants), we instead add explicit extension instructions that can be used if an appropriate widening arithmetic instruction is not available.

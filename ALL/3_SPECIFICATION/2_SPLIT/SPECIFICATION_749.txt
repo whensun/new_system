@@ -1,0 +1,11 @@
+## 3.4. Reset
+
+Upon reset, a hart's privilege mode is set to M. The mstatus fields  MIE  and MPRV are reset to 0. If little-endian  memory  accesses  are  supported,  the mstatus / mstatush field  MBE  is  reset  to  0.  The misa register is reset to enable the maximal set of supported extensions, as described in Section 3.1.1. For implementations with the "A" standard extension, there is no valid load reservation. The pc is set to an implementation-defined reset vector. The mcause register is set to a value indicating the cause of the reset.  Writable PMP registers' A and L fields are set to 0, unless the platform mandates a different reset value for some PMP registers' A and L fields. If the hypervisor extension is implemented, the hgatp .MODE  and vsatp .MODE  fields  are  reset  to  0.  If  the  Smrnmi  extension  is  implemented,  the mnstatus .NMIE field is reset to 0. No WARL field  contains an illegal value. If the Zicfilp extension is implemented, the mseccfg .MLPE field is reset to 0. All other hart state is UNSPECIFIED.
+
+The mcause values after reset have implementation-specific interpretation, but the value 0 should be returned on implementations that do not distinguish different reset conditions. Implementations that distinguish different reset conditions should only use 0 to indicate the most complete reset.
+
+<image>
+
+Some designs may have multiple causes of reset (e.g., power-on reset, external hard reset,  brownout  detected,  watchdog  timer  elapse,  sleep-mode  wakeup),  which machine-mode software and debuggers may wish to distinguish.
+
+mcause reset values may alias mcause values following synchronous exceptions. There should  be  no  ambiguity  in  this  overlap,  since  on  reset  the pc is  typically  set  to  a different value than on other traps.

@@ -1,0 +1,7 @@
+## 31.6.3. Specific Instruction Rationale
+
+- ⚫ HINT instruction forms (typically encodings with rd = x0 )  are  excluded  from  the  data-independent time requirement.
+- ⚫ Floating point (F, D, Q, L extensions) are currently excluded from the constant-time requirement as they  have  very  few  applications  in  standardised  cryptography.  We  may  consider  adding  floating point add, sub, multiply as a constant time requirement for some floating point extension in case a specific algorithm (such as the PQC Signature algorithm Falcon) becomes critical.
+- ⚫ Cryptographers typically assume division to be variable-time (while multiplication is constant time) and implement their Montgomery reduction routines with that assumption.
+- ⚫ Zicsr, Zifencei are excluded.
+- ⚫ Some instructions  are  on  the  list  simply  because  we  see  no  harm  in  including  them  in  testing scope.

@@ -1,0 +1,11 @@
+## 17.2. CSR Dependency Tracking Granularity
+
+Table 12. Granularities at which syntactic dependencies are tracked through CSRs
+
+| Name   | Portions Tracked as Independent Units   | Aliases      |
+|--------|-----------------------------------------|--------------|
+| fflags | Bits 4, 3, 2, 1, 0                      | fcsr         |
+| frm    | entire CSR                              | fcsr         |
+| fcsr   | Bits 7-5, 4, 3, 2, 1, 0                 | fflags , frm |
+
+Note:  read-only  CSRs  are  not  listed,  as  they  do  not  participate  in  the  definition  of  syntactic dependencies.

@@ -1,0 +1,20 @@
+## 3.3.4. Custom SYSTEM Instructions
+
+The subspace of the SYSTEM major opcode shown in Figure 29 is designated for custom use. It is recommended  that  these  instructions  use  bits  29:28  to  designate  the  minimum  required  privilege mode, as do other SYSTEM instructions.
+
+Figure 29. SYSTEM instruction encodings designated for custom use.
+
+<image>
+
+| 31     | 26   | 25     | 14 12   | 11     | 6 0    |                            |
+|--------|------|--------|---------|--------|--------|----------------------------|
+| funct6 |      | custom | funct3  | custom | opcode | Recommended Purpose        |
+| 6      |      | 11     | 3       | 5      | 7      |                            |
+| 100011 |      | custom | 0       | custom | SYSTEM | Unprivileged or User-Level |
+| 110011 |      | custom | 0       | custom | SYSTEM | Unprivileged or User-Level |
+| 100111 |      | custom | 0       | custom | SYSTEM | Supervisor-Level           |
+| 110111 |      | custom | 0       | custom | SYSTEM | Supervisor-Level           |
+| 101011 |      | custom | 0       | custom | SYSTEM | Hypervisor-Level           |
+| 111011 |      | custom | 0       | custom | SYSTEM | Hypervisor-Level           |
+| 101111 |      | custom | 0       | custom | SYSTEM | Machine-Level              |
+| 111111 |      | custom | 0       | custom | SYSTEM | Machine-Level              |

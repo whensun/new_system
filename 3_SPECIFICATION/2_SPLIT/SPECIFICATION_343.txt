@@ -1,0 +1,15 @@
+## 30.6.1.1. Unsupported vtype Values
+
+If  the vtype value  is  not  supported  by  the  implementation,  then  the vill bit  is  set  in vtype ,  the remaining bits in vtype are set to zero, and the vl register is also set to zero.
+
+<image>
+
+Earlier  drafts  required  a  trap  when  setting vtype to  an  illegal  value.  However,  this would  have  added  the  first  data-dependent  trap  on  a  CSR  write  to  the  ISA. Implementations could choose to trap when illegal values are written to vtype instead of  setting vill ,  to  allow  emulation  to  support  new  configurations  for  forwardcompatibility. The current scheme supports light-weight runtime interrogation of the supported vector unit configurations by checking if vill is clear for a given setting.
+
+A vtype value with vill set is treated as an unsupported configuration.
+
+Implementations  must  consider  all  bits  of  the vtype value  to  determine  if  the  configuration  is supported. An unsupported value in any location within the vtype value must result in vill being set.
+
+<image>
+
+In  particular,  all  XLEN  bits  of  the  register vtype argument to the vsetvl instruction must be checked. Implementations cannot ignore fields they do not implement. All bits must be checked to ensure that new code assuming unsupported vector features in vtype traps instead of executing incorrectly on an older implementation.

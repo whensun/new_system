@@ -1,0 +1,33 @@
+## 19.4.2.4. Breakpoint Exceptions and Debug Mode Entry
+
+Unless otherwise defined by the debug architecture specification, the behavior of trigger modules with respect to CMO instructions is UNSPECIFIED.
+
+For the Zicbom, Zicboz, and Zicbop extensions, this specification recommends the following common trigger module behaviors:
+
+- ⚫ Type 6 address match triggers, i.e. tdata1.type=6 and mcontrol6.select=0 , should be supported
+- ⚫ Type 2 address/data match triggers, i.e. tdata1.type=2 , should be unsupported
+- ⚫ The size of a memory access equals the size of the cache block accessed, and the  compare  values  follow  from  the  addresses  of  the  NAPOT  memory  region corresponding to the cache block containing the effective address
+- ⚫ Unless  an  encoding  for  a  cache  block  is  added  to  the mcontrol6.size field,  an address trigger  should  only  match  a  memory  access  from  a  CBO  instruction  if mcontrol6.size=0
+
+If the Zicbom  extension  is implemented,  this  specification  recommends  the following additional trigger module behaviors:
+
+- ⚫ Implementing address match triggers should be optional
+- ⚫ Type  6  data  match  triggers,  i.e. tdata1.type=6 and mcontrol6.select=1 ,  should  be unsupported
+- ⚫ Memory accesses are considered to be stores, i.e.  an  address  trigger  matches only if mcontrol6.store=1
+
+If the Zicboz extension is implemented, this specification recommends the following additional trigger module behaviors:
+
+- ⚫ Implementing address match triggers should be mandatory
+- ⚫ Type  6  data  match  triggers,  i.e. tdata1.type=6 and mcontrol6.select=1 ,  should  be supported, and implementing these triggers should be optional
+- ⚫ Memory accesses are considered to be stores, i.e.  an  address  trigger  matches only if mcontrol6.store=1
+
+If the Zicbop extension is implemented, this specification recommends the following additional trigger module behaviors:
+
+- ⚫ Implementing address match triggers should be optional
+- ⚫ Type  6  data  match  triggers,  i.e. tdata1.type=6 and mcontrol6.select=1 ,  should  be
+
+unsupported
+
+- ⚫ Memory  accesses  may  be  considered  to  be  loads  or  stores  depending  on  the implementation,  i.e.  whether  an  address  trigger  matches  on  these  instructions when mcontrol6.load=1 or mcontrol6.store=1 is implementation-specific
+
+This specification also recommends that the behavior of trigger modules with respect to the Zicboz extension should be defined in version 1.0 of the debug architecture specification. The behavior of trigger modules with respect to the Zicbom and Zicbop extensions is expected to be defined in future extensions.

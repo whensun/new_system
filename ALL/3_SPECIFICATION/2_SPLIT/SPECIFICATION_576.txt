@@ -1,0 +1,3 @@
+## 31.8.5.3. Other types of noise
+
+It may be possible to certify more exotic noise sources and designs, although their stochastic model needs to be equally well understood, and their CPU interfaces must be secure. See Section 31.8.5.8 for a discussion of Quantum entropy sources.

@@ -1,0 +1,38 @@
+## 11.5.1.2. External Traps
+
+External traps are traps from a privilege mode enabled for CTR recording to a privilege mode that is not  enabled  for  CTR  recording.  By  default  external  traps  are  not  recorded,  but  privileged  software running in the target mode of the trap can opt-in to allowing CTR to record external traps into that mode. The x ctrctl . x TE bits allow M-mode, S-mode, and VS-mode to opt-in separately.
+
+External trap recording depends not only on the target mode, but on any intervening modes, which are modes that are more privileged than the source mode but less privileged than the target mode. Not only must the external trap enable bit for the target mode be set, but the external trap enable bit(s) for any intervening modes must also be set. See the table below for details.
+
+<image>
+
+Requiring  intervening  modes  to  be  enabled  for  external  traps  simplifies  software management of CTR. Consider a scenario where S-mode software is configuring CTR for U-mode contexts A and B, such that external traps (to any mode) are enabled for A but not for B. When switching between the two contexts, S-mode can simply toggle sctrctl .STE, rather than requiring a trap to M-mode  to additionally toggle mctrctl .MTE.
+
+This  method  does  not  provide  the  flexibility  to  record  external  traps  to  a  more privileged  mode  but  not  to  all  intervening  mode(s).  Because  it  is  expected  that profiling  tools  generally  wish  to  observe  all  external  traps  or  none,  this  is  not considered a meaningful limitation.
+
+Table 27. External Trap Enable Requirements
+
+| Source Mode   | Target Mode   | External Trap Enable(s) Required          |
+|---------------|---------------|-------------------------------------------|
+| U-mode        | S-mode        | sctrctl .STE                              |
+|               | M-mode        | mctrctl .MTE, sctrctl .STE                |
+| S-mode        | M-mode        | mctrctl .MTE                              |
+| VU-mode       | VS-mode       | vsctrctl .STE                             |
+|               | HS-mode       | sctrctl .STE, vsctrctl .STE               |
+|               | M-mode        | mctrctl .MTE, sctrctl .STE, vsctrctl .STE |
+| VS-mode       | HS-mode       | sctrctl .STE                              |
+|               | M-mode        | mctrctl .MTE, sctrctl .STE                |
+
+In records for external traps, the ctrtarget .PC is 0.
+
+<image>
+
+<image>
+
+No mechanism exists for recording external trap returns, because the external trap record includes all relevant information, and gives the trap handler (e.g., an emulator) the opportunity to modify the record.
+
+Note that external trap recording does not depend on EXCINH/INTRINH. Thus, when external  traps  are  enabled,  both  external  interrupts  and  external  exceptions  are recorded.
+
+STE allows recording of traps from U-mode to S-mode as well as from VS/VU-mode to HS-mode. The hypervisor can flip sctrctl .STE before entering a guest if it wants different behavior for U-to-S vs VS/VU-to-HS.
+
+If  external  trap  recording  is  implemented, mctrctl .MTE and sctrctl .STE must be implemented, while vsctrctl .STE must be implemented if the H extension is implemented.

@@ -1,0 +1,23 @@
+## 31.8.3.5. Security Considerations for Direct Hardware Access
+
+## Section 31.5.3.
+
+The ISA implementation and system design must try to ensure that the hardware-software interface minimizes avenues for adversarial information flow even if not explicitly forbidden in the specification.
+
+For security, virtualization requires both conditioning and DRBG processing of physical entropy output. It  is  recommended  if  a  single  physical  entropy  source  is  shared  between  multiple  different  virtual machines or if the guest OS is untrusted. A virtual entropy source is significantly more resistant to depletion attacks and also lessens the risk from covert channels.
+
+The  direct mseccfg.[s,u]seed option  allows  one  to  draw  a  security  boundary  around  a  component  in relation to Sensitive Security Parameter (SSP) flows, even if that component is not in M mode. This is helpful when implementing trusted enclaves. Such modules can enforce the entire key lifecycle from birth (in the entropy source) to death (zeroization) to occur without the key being passed across the boundary to external code.
+
+Depletion. Active polling may deny the entropy source to another simultaneously running consumer. This can (for example) delay the instantiation of that virtual machine if it requires entropy to initialize fully.
+
+Covert Channels. Direct access to a component such as the entropy source can be used to establish communication  channels  across  security  boundaries.  Active  polling  from  one  consumer  makes  the resource unavailable WAIT instead of ES16 to another (which is polling infrequently). Such interactions can be used to establish low-bandwidth channels.
+
+Hardware  Fingerprinting. An  entropy  source  (and  its  noise  source  circuits)  may  have  a  uniquely identifiable hardware "signature." This can be harmless or even useful in some applications (as random
+
+sources  may  exhibit  Physically  Un-clonable  Function  (PUF)  -like  features)  but  highly  undesirable  in others (anonymized virtualized environments and enclaves). A DRBG masks such statistical features.
+
+Side Channels. Some of the most devastating practical attacks against real-life cryptosystems have used inconsequential-looking additional information, such as padding error messages (Bardou et al., 2012) or timing information (Moghimi et al., 2020).
+
+We urge implementers against creating unnecessary information flows via status or custom bits or to allow any other mechanism to disable or affect the entropy source output. All information flows and interaction mechanisms must be considered from an adversarial viewpoint: the fewer the better.
+
+As  an  example  of  side-channel  analysis,  we  note  that  the  entropy  polling  interface  is  typically  not "constant time." One needs to analyze what kind of information is revealed via the timing oracle; one way of doing it is to model seed as  a  rejection sampler. Such a timing oracle can reveal information about the noise source type and entropy source usage, but not about the random output entropy bits themselves. If it does, additional countermeasures are necessary.

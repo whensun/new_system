@@ -1,0 +1,26 @@
+## 24.3.1. BF16 Operand Format
+
+## BF16 bits
+
+<image>
+
+IEEE Compliance: While BF16 (also known as BFloat16) is not an IEEE-754 standard format, it is a valid floating-point format as defined by IEEE-754. There are three parameters that specify a format: radix (b), number of digits in the significand (p), and maximum exponent (emax). For BF16 these values are:
+
+Table 32. BF16 parameters
+
+Table 33. Obligatory Floating Point Format Table
+
+| Parameter       |   Value |
+|-----------------|---------|
+| radix (b)       |       2 |
+| significand (p) |       8 |
+| emax            |     127 |
+
+| Format   |   Sign Bits |   Expo Bits |   fraction bits |   padded 0s |   encoding bits | expo max/bias   | expo min   |
+|----------|-------------|-------------|-----------------|-------------|-----------------|-----------------|------------|
+| FP16     |           1 |           5 |              10 |           0 |              16 | 15              | -14        |
+| BF16     |           1 |           8 |               7 |           0 |              16 | 127             | -126       |
+| TF32     |           1 |           8 |              10 |          13 |              32 | 127             | -126       |
+| FP32     |           1 |           8 |              23 |           0 |              32 | 127             | -126       |
+| FP64     |           1 |          11 |              52 |           0 |              64 | 1023            | -1022      |
+| FP128    |           1 |          15 |             112 |           0 |             128 | 16,383          | -16,382    |

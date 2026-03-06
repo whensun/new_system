@@ -1,0 +1,15 @@
+## 24.2.3. Example
+
+Table  1  shows  an  example  of  the  pointer  masking  transformation  on  a  virtual  address  when  PM  is enabled for RV64 under Sv57 (PMLEN=7).
+
+Table 54. Example of PM address translation for RV64 under Sv57
+
+| Page-based profile                                   | Sv57 on RV64                                                                |
+|------------------------------------------------------|-----------------------------------------------------------------------------|
+| Effective Address                                    | 0xABFFFFFF12345678 NVBITS[1010101] VBITS[11111111111111111111111110001…000] |
+| PMLEN                                                | 7                                                                           |
+| Mask                                                 | 0x01FFFFFFFFFFFFFF NVBITS[0000000] VBITS[11111111111111111111111111111…111] |
+| PMLEN+1st bit from the top (i.e., bit XLEN-PMLEN- 1) | 1                                                                           |
+| Transformed effective address                        | 0xFFFFFFFF12345678 NVBITS[1111111] VBITS[11111111111111111111111110001…000] |
+
+If the address was a physical address rather than a virtual address with Sv57, the transformed address with PMLEN=7 would be 0x1FFFFFF12345678.

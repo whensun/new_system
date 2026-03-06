@@ -1,0 +1,11 @@
+## 32.1.3. Policies
+
+In creating this proposal, we tried to adhere to the following policies:
+
+- ⚫ Where there is a choice between: 1) supporting diverse implementation strategies for an algorithm or  2)  supporting  a  single  implementation  style  which  is  more  performant  /  less  expensive;  the vector crypto extensions will pick the more constrained but performant option. This fits a common pattern  in  other  parts  of  the  RISC-V  specifications,  where  recommended  (but  not  required) instruction  sequences  for  performing  particular  tasks  are  given  as  an  example,  such  that  both hardware and software implementers can optimize for only a single use-case.
+- ⚫ The extensions will be designed to support existing standardized cryptographic constructs well. It will  not  try  to  support  proposed  standards,  or  cryptographic  constructs  which  exist  only  in academia. Cryptographic standards which are settled upon concurrently with or after the RISC-V vector  cryptographic  extensions  standardization  will  be  dealt  with  by  future  RISC-V  vector cryptographic standard extensions.
+- ⚫ Historically, there has been some discussion (Lee et al., 2004) on how newly supported operations in general-purpose computing might enable new bases for cryptographic algorithms. The standard will not try to anticipate new useful low-level operations which may be useful as building blocks for
+
+future cryptographic constructs.
+
+- ⚫ Regarding  side-channel  countermeasures:  Where  relevant,  proposed  instructions  must  aim  to remove the possibility of any timing side-channels. All instructions shall be implemented with dataindependent timing. That is, the latency of the execution of these instructions shall not vary with different input values.

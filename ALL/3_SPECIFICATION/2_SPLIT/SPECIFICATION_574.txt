@@ -1,0 +1,15 @@
+## 31.8.5.1. Ring Oscillators
+
+We will give some examples of common noise sources that can be implemented in the processor itself (using standard cells).
+
+The  most  common  entropy  source  type  in  production  use  today  is  based  on  "free  running"  ring oscillators and their timing jitter. Here, an odd number of inverters is connected into a loop from which noise source bits are sampled in relation to a reference clock (Baudet et al., 2011). The sampled bit
+
+sequence may be expected to be relatively uncorrelated (close to IID) if the sample rate is suitably low (Killmann & Schindler, 2011). However, further processing is usually required.
+
+AMD (AMD, 2017),  ARM  (ARM,  2017),  and  IBM  (Liberty  et  al.,  2013)  are  examples  of  ring  oscillator TRNGs intended for high-security applications.
+
+There  are  related  metastability-based  generator  designs  such  as  Transition  Effect  Ring  Oscillator (TERO) (Varchola & Drutarovsk ý ,  2010).  The  differential/feedback  Intel  construction  (Hamburg  et  al., 2012) is slightly different but also falls into the same general metastable oscillator-based category.
+
+The  main  benefits  of  ring  oscillators  are:  (1)  They  can  be  implemented  with  standard  cell  libraries without external components -and even on FPGAs (Valtchanov et al., 2010), (2) there is an established theory for their behavior (Hajimiri & Lee, 1998; Hajimiri et al., 1999; Baudet et al., 2011), and (3) ample precedent exists for testing and certifying them at the highest security levels.
+
+Ring  oscillators  also  have  well-known  implementation  pitfalls.  Their  output  is  sometimes  highly dependent  on  temperature,  which  must  be  taken  into  account  in  testing  and  modeling.  If  the  ring oscillator construction is parallelized, it is important that the number of stages and/or inverters in each chain is suitable to avoid entropy reduction due to harmonic "Huyghens synchronization" (Bak, 1986). Such  harmonics  can  also  be  inserted  maliciously  in  a  frequency  injection  attack,  which  can  have devastating  results  (Markettos  &  Moore,  2009).  Countermeasures  are  related  to  circuit  design; environmental sensors, electrical filters, and usage of a differential oscillator may help.

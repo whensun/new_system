@@ -1,0 +1,92 @@
+li      t0, -2
+csrw    0x747, t0          # mseccfg = all 1s (likely illegal in reserved bits)
+csrr    t1, 0x747          # read back
+# Mask of bits defined by the proposal (adjust if your spec version differs)
+# PMM[33:32], SSEED[9], USEED[8], RLB[2], MMWP[1], MML[0]
+li      t2, (3 << 32) | (1 << 9) | (1 << 8) | (1 << 2) | (1 << 1)
+not     t3, t2             # ~KNOWN_MASK
+and     t4, t1, t3         # bits that should be reserved
+seqz    a0, t4             # a0=1 pass if reserved bits are 0, else a0=0
+
+# a0 = 1 pass, 0 fail
+# Uses CSR 0x747 (mseccfg)
+    li      a0, 1                  # assume pass
+# ------------------------------------------------------------
+# 0) Baseline read
+# ------------------------------------------------------------
+    csrr    s0, 0x747               # old = mseccfg
+# ------------------------------------------------------------
+# 1) Sticky-bit test for MML/MMWP (bits 0/1):
+#    once set, cannot be cleared (in smepmp path)
+# ------------------------------------------------------------
+    li      t0, 0x3                 # set MML|MMWP
+    csrw    0x747, t0
+    csrr    t1, 0x747
+    andi    t2, t1, 0x3
+    li      t3, 0x3
+    bne     t2, t3, fail            # couldn't set -> fail
+    li      t0, 0x0                 # try to clear sticky bits
+    csrw    0x747, t0
+    csrr    t1, 0x747
+    andi    t2, t1, 0x3
+    li      t3, 0x3
+    bne     t2, t3, fail            # cleared unexpectedly -> fail
+# ------------------------------------------------------------
+# 2) Idempotence check:
+#    WARL CSRs should accept their own readback as legal.
+# ------------------------------------------------------------
+    csrr    t4, 0x747               # rb1
+    csrw    0x747, t4
+    csrr    t5, 0x747               # rb2
+    bne     t4, t5, fail
+# ------------------------------------------------------------
+# 3) PMM legality check (bits 33:32):
+#    01 is reserved in QEMU's enum; writes should legalize.
+#    (Only meaningful if smmpm + RV64 are enabled.)
+# ------------------------------------------------------------
+    li      t0, (1 << 32)           # PMM = 01 (reserved)
+    csrw    0x747, t0
+    csrr    t1, 0x747
+    srli    t2, t1, 32
+    andi    t2, t2, 0x3
+    li      t3, 1
+    beq     t2, t3, fail            # if still reserved value, fail
+# pass
+    j       done
+fail:
+    li      a0, 0
+done:
+
+
+
+
+# a0 = 1 pass, 0 fail
+# menjaga mcause tetap 0 dengan tidak pernah set MML/MMWP (bit0/bit1)
+    li      a0, 1
+    csrr    s0, 0x747                 # save old mseccfg
+# 1) Idempotence (WARL umum): write back nilai legal hasil read
+    csrr    t0, 0x747
+    li      t6, -4                    # ...11111100, clear bit0/1
+    and     t0, t0, t6
+    csrw    0x747, t0
+    csrr    t1, 0x747
+    bne     t0, t1, fail
+# 2) PMM reserved test (bit33:32 = 01), tapi tetap clear bit0/1
+#    di QEMU, PMM=01 dianggap reserved.
+    li      t2, (1 << 32)             # PMM=01
+    and     t2, t2, t6                # pastikan bit0/1 = 0
+    csrw    0x747, t2
+    csrr    t3, 0x747
+    srli    t4, t3, 32
+    andi    t4, t4, 0x3
+    li      t5, 1
+    beq     t4, t5, fail              # kalau masih 01 => gagal WARL legalization
+# restore
+    and     s0, s0, t6                # jangan restore MML/MMWP
+    csrw    0x747, s0
+    j       done
+fail:
+    li      a0, 0
+    and     s0, s0, t6
+    csrw    0x747, s0
+done:

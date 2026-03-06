@@ -1,0 +1,13 @@
+## 28.3. Zce
+
+The Zce extension is intended to be used for microcontrollers, and includes all relevant Zc extensions.
+
+- ⚫ Specifying Zce on RV32 without F includes Zca, Zcb, Zcmp, Zcmt
+- ⚫ Specifying Zce on RV32 with F includes Zca, Zcb, Zcmp, Zcmt and Zcf
+- ⚫ Specifying Zce on RV64 always includes Zca, Zcb, Zcmp, Zcmt
+- ⚫ Zcf doesn't exist for RV64
+
+Therefore common ISA strings can be updated as follows to include the relevant Zc extensions, for example:
+
+- ⚫ RV32IMC becomes RV32IM\_Zce
+- ⚫ RV32IMCF becomes RV32IMF\_Zce

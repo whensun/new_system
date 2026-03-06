@@ -1,0 +1,35 @@
+## 24.5.2. fcvt.s.bf16
+
+## Synopsis
+
+Convert BF16 value to an FP32 value
+
+## Mnemonic
+
+fcvt.s.bf16 rd, rs1
+
+## Encoding
+
+<image>
+
+## Encoding
+
+While the mnemonic of this instruction is consistent with that of the other RISC-V floating-point convert instructions, a new encoding is used in bits 24:20 to indicate that the source is BF16.
+
+<image>
+
+## Description
+
+Converts a BF16 value to an FP32 value. The conversion is exact.
+
+This instruction is similar to other widening floating-point-to-floating-point conversion instructions.
+
+<image>
+
+If the input is normal or infinity, the BF16 encoded value is shifted to the left by 16 places and the least significant 16 bits are written with 0s.
+
+The result is NaN-boxed by writing the most significant FLEN -32 bits with 1s.
+
+Exceptions: Invalid
+
+Included in: Zfbfmin

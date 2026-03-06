@@ -1,0 +1,15 @@
+## 30.16.5.1. Synthesizing vdecompress
+
+There is no inverse vdecompress provided, as this operation can be readily synthesized using iota and a masked vrgather:
+
+```
+Desired functionality of 'vdecompress' 7 6 5 4 3 2 1 0     # vid e d c b a     # packed vector of 5 elements 1 0 0 1 1 1 0 1     # mask vector of 8 elements p q r s t u v w     # destination register before vdecompress e q r d c b v a     # result of vdecompress
+```
+
+```
+# v0 holds mask # v1 holds packed data # v11 holds input expanded vector and result viota.m v10, v0                 # Calc iota from mask in v0 vrgather.vv v11, v1, v10, v0.t  # Expand into destination
+```
+
+```
+p q r s t u v w    # v11 destination register e d c b a    # v1 source vector 1 0 0 1 1 1 0 1    # v0 mask vector 4 4 4 3 2 1 1 0    # v10 result of viota.m e q r d c b v a    # v11 destination after vrgather using viota.m under mask
+```

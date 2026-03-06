@@ -1,0 +1,11 @@
+## 19.4.2.5. Hypervisor Extension
+
+For the purposes  of  writing the mtinst or htinst register on  a trap, the  following  standard transformation is defined for cache-block management instructions and cache-block zero instructions:
+
+<image>
+
+The operation field corresponds to the 12 most significant bits of the trapping instruction.
+
+<image>
+
+As described in the hypervisor extension, a zero may be written into mtinst or htinst instead of the standard transformation defined above.

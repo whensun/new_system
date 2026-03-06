@@ -1,0 +1,13 @@
+## 3.7. Physical Memory Protection
+
+To  support  secure  processing  and  contain  faults,  it  is  desirable  to  limit  the  physical  addresses accessible by software running on a hart. An optional physical memory protection (PMP) unit provides per-hart  machine-mode  control  registers  to  allow  physical  memory  access  privileges  (read,  write, execute) to be specified for each physical memory region. The PMP values are checked in parallel with the PMA checks described in Section 3.6.
+
+The granularity of PMP access control settings are platform-specific, but the standard PMP encoding supports  regions  as  small  as  four  bytes.  Certain  regions'  privileges  can  be  hardwired-for  example, some regions might only ever be visible in machine mode but in no lower-privilege layers.
+
+<image>
+
+Platforms  vary  widely  in  demands  for  physical  memory  protection,  and  some platforms may provide other PMP structures in addition to or instead of the scheme described in this section.
+
+PMP checks are applied to all accesses whose effective privilege mode is S or U, including instruction fetches  and  data  accesses  in  S  and  U  mode,  and  data  accesses  in  M-mode  when  the  MPRV  bit  in mstatus is set and the MPP field in mstatus contains S or U. PMP checks are also applied to page-table accesses for virtual-address translation, for which the effective privilege mode is S. Optionally, PMP checks may additionally apply to M-mode accesses, in which case the PMP registers themselves are locked, so that even M-mode software cannot change them until the hart is reset. In effect, PMP can grant permissions to S and U modes, which by default have none, and can revoke permissions from Mmode, which by default has full permissions.
+
+PMP violations are always trapped precisely at the processor.

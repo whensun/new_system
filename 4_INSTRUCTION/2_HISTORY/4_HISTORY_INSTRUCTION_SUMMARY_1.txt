@@ -1,0 +1,79 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: ADDIW
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+You are summarizing RISC-V instruction semantics strictly from the provided rules.
+
+Instruction: ADDIW
+
+Rules (subset):
+RULE 1: ADDIW sign‑extends its 12‑bit immediate to a 32‑bit value before performing the addition.
+RULE 2: ADDIW adds the sign‑extended immediate to the low 32 bits of register rs1, treating both operands as 32‑bit signed integers.
+RULE 3: ADDIW discards all bits above bit 31 of the addition result, retaining only the low 32 bits of the sum.
+RULE 4: ADDIW sign‑extends the retained 32‑bit result to 64 bits and writes that 64‑bit value to destination register rd.
+RULE 5: ADDIW never raises an overflow exception; any overflow beyond the low 32 bits is ignored.
+RULE 6: When the immediate field of ADDIW is zero, ADDIW writes to rd the sign‑extension of the lower 32 bits of rs1.
+RULE 7: The behavior of ADDIW rd, rs1, 0 is defined as the assembler pseudoinstruction SEXT.W.
+RULE 8: In an RV64C implementation, the opcode that encodes the compressed jump‑and‑link instruction in RV32C is reused to encode a compressed ADDIW instruction.
+RULE 9: The compressed ADDIW instruction is defined only when the base ISA is RV64C.
+
+Task:
+Write a concise technical summary (3-5 sentences, one paragraph) capturing only the semantics explicitly stated in the rules.
+- Do NOT assume, infer, or add information not present in the rules.
+- Do NOT omit important constraints or corner cases mentioned.
+- Merge repeated ideas while preserving meaning.
+- Prefer canonical RISC-V wording and precise terminology.
+Remember, output must be ASCII-only text.
+Return only the paragraph text.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+ADDIW sign‑extends its 12‑bit immediate to a 32‑bit value and adds it to the low 32 bits of rs1, treating both operands as signed 32‑bit integers. The sum is truncated to the low 32 bits, which are then sign‑extended to 64 bits and written to rd, and no overflow exception is ever raised. If the immediate is zero, the instruction writes the sign‑extension of rs1[31:0] to rd, which is the effect of the SEXT.W pseudoinstruction. The compressed ADDIW encoding is defined only when the base ISA is RV64C and reuses the RV32C compressed jump‑and‑link opcode.
+======================================================= END - 1 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 2 =======================================================
+GLOBAL NUMBER: 2
+LOCAL NUMBER: 1
+NAME: SLLIW
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+You are summarizing RISC-V instruction semantics strictly from the provided rules.
+
+Instruction: SLLIW
+
+Rules (subset):
+RULE 1: SLLIW extracts the low‑32 bits of the source register rs1 before any shifting.
+RULE 2: SLLIW uses the five‑bit shamt field (imm[4:0]) as a shift amount with valid values 0 to 31.
+RULE 3: If the imm[5] bit of the encoded immediate for SLLIW is 1, the instruction is treated as a reserved instruction and may raise an illegal‑instruction exception.
+RULE 4: For a legal SLLIW encoding, SLLIW performs a logical left shift of the extracted 32‑bit value by the shamt positions, inserting zeros into the vacated low‑order bits.
+RULE 5: After shifting, SLLIW discards any bits above the low 32 positions, retaining only the low‑32‑bit shift result.
+RULE 6: SLLIW sign‑extends the retained 32‑bit result to a 64‑bit value, copying the most‑significant bit of the 32‑bit result into bits 63:32 of the destination.
+RULE 7: SLLIW writes the resulting 64‑bit sign‑extended value to the destination register rd.
+
+Task:
+Write a concise technical summary (3-5 sentences, one paragraph) capturing only the semantics explicitly stated in the rules.
+- Do NOT assume, infer, or add information not present in the rules.
+- Do NOT omit important constraints or corner cases mentioned.
+- Merge repeated ideas while preserving meaning.
+- Prefer canonical RISC-V wording and precise terminology.
+Remember, output must be ASCII-only text.
+Return only the paragraph text.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+SLLIW first extracts the low‑32 bits of rs1; if the encoded immediate’s bit 5 is 1 the encoding is reserved and may raise an illegal‑instruction exception. For a legal encoding the 5‑bit shamt field (imm[4:0]) supplies a shift amount in the range 0‑31. The extracted 32‑bit value is shifted left logically by shamt positions, zeros are inserted into the vacated low‑order bits, and any bits beyond bit 31 of the shift result are discarded. The remaining 32‑bit result is sign‑extended to 64 bits (the MSB of the 32‑bit result replicated into bits 63:32) and written to rd.
+======================================================= END - 2 ========================================================

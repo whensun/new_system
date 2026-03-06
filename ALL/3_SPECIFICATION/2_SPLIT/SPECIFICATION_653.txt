@@ -1,0 +1,19 @@
+## Chapter 33. Control-flow Integrity (CFI)
+
+Control-flow Integrity (CFI) capabilities help defend against Return-Oriented Programming (ROP) and Call/Jump-Oriented  Programming  (COP/JOP)  style  control-flow  subversion  attacks.  These  attack methodologies  use  code  sequences  in  authorized  modules,  with  at  least  one  instruction  in  the sequence being a control transfer instruction that depends on attacker-controlled data either in the return stack or in memory used to obtain the target address for a call or jump. Attackers stitch these sequences together by diverting the control flow instructions (e.g., JALR , C.JR , C.JALR ), from their original target address to a new target via modification in the return stack or in the memory used to obtain the jump/call target address.
+
+RV32/RV64 provides two types of control transfer instructions - unconditional jumps and conditional branches. Conditional branches encode an offset in the immediate field of the instruction and are thus direct branches that are not susceptible to control-flow subversion. Unconditional direct jumps using JAL transfer control to a target that is in a +/- 1 MiB range from the current pc . Unconditional indirect jumps using the JALR obtain their branch target by adding the sign extended 12-bit immediate encoded in the instruction to the rs1 register.
+
+The RV32I/RV64I does not have a dedicated instruction for calling a procedure or returning from a procedure. A JAL or JALR may be used to perform a procedure call and JALR to return from a procedure. The RISC-V ABI however defines the convention that a JAL / JALR where rd (i.e. the link register) is x1 or x5 is  a  procedure call, and a JALR where rs1 is  the  conventional link register (i.e. x1 or x5 )  is  a  return from  procedure.  The  architecture  allows  for  using  these  hints  and  conventions  to  support  return address prediction (See Table 3).
+
+The RVC standard extension for compressed instructions provides unconditional jump and conditional branch  instructions.  The C.J and C.JAL instructions  encode  an  offset  in  the  immediate  field  of  the instruction  and  thus  are  not  susceptible  to  control-flow  subversion.  The C.JR and C.JALR RVC instructions  perform  an  unconditional  control  transfer  to  the  address  in  register rs1 .  The C.JALR additionally writes the address of the instruction following the jump ( pc+2 ) to the link register x1 and is a procedure call. The C.JR is a return from procedure if rs1 is a conventional link register (i.e. x1 or x5 ); else it is an indirect jump.
+
+The term call is used to refer to a JAL or JALR instruction with a link register as destination, i.e., rd ≠ x0 . Conventionally, the link register is x1 or x5 .  A call using JAL or C.JAL is  termed a direct call. A C.JALR expands to JALR x1, 0(rs1) and is a call . A call using JALR or C.JALR is termed an indirect-call .
+
+The  term return is  used  to  refer  to  a JALR instruction  with rd = x0 and  with rs1 = x1 or rs1 = x5 .  A C.JR instruction expands to JALR x0, 0(rs1) and is a return if rs1 = x1 or rs1 = x5 .
+
+The term indirect-jump is used to refer to a JALR instruction with rd = x0 and where the rs1 is not x1 or x5 (i.e., not a return). A C.JR instruction where rs1 is not x1 or x5 (i.e., not a return) is an indirect-jump .
+
+The Zicfiss and Zicfilp extensions build on these conventions and hints and provide backward-edge and forward-edge control flow integrity respectively.
+
+The Unprivileged ISA for Zicfilp extension is specified in Section 33.1 and for the Unprivileged ISA for Zicfiss extension is specified in Section 33.2. The Privileged ISA for these extensions is specified in the Privileged ISA specification.

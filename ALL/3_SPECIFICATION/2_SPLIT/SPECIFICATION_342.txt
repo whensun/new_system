@@ -1,0 +1,32 @@
+## 30.6.1. vtype encoding
+
+<image>
+
+<image>
+
+This diagram shows the layout for RV32 systems, whereas in general vill should be at bit XLEN-1.
+
+Table 49. vtype register layout
+
+| Bits     | Name       | Description                                     |
+|----------|------------|-------------------------------------------------|
+| XLEN-1   | vill       | Illegal value if set                            |
+| XLEN-2:8 | 0          | Reserved if non-zero                            |
+| 7        | vma        | Vector mask agnostic                            |
+| 6        | vta        | Vector tail agnostic                            |
+| 5:3      | vsew[2:0]  | Selected element width (SEW) setting            |
+| 2:0      | vlmul[2:0] | Vector register group multiplier (LMUL) setting |
+
+The new vtype value is encoded in the immediate fields of vsetvli and vsetivli , and in the rs2 register for vsetvl .
+
+```
+Suggested assembler names used for vset{i}vli vtypei immediate e8    # SEW=8b e16   # SEW=16b e32   # SEW=32b e64   # SEW=64b
+```
+
+vsetvl
+
+```
+mf8  # LMUL=1/8 mf4  # LMUL=1/4 mf2  # LMUL=1/2 m1   # LMUL=1 m2   # LMUL=2 m4   # LMUL=4 m8   # LMUL=8 Examples: vsetvli t0, a0, e8, m1, ta, ma      # SEW= 8, LMUL=1 vsetvli t0, a0, e8, m2, ta, ma      # SEW= 8, LMUL=2 vsetvli t0, a0, e32, mf2, ta, ma    # SEW=32, LMUL=1/2
+```
+
+The vsetvl variant operates similarly to vsetvli except that it takes a vtype value from rs2 and can be used for context restore.

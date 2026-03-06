@@ -1,0 +1,31 @@
+## 19.7.3. cbo.inval
+
+## Synopsis
+
+Perform an invalidate operation on a cache block
+
+## Mnemonic
+
+cbo.inval offset ( base )
+
+## Encoding
+
+flush  operation,  since  the  result  of  that  operation  is  indistinguishable  from  the sequence of performing a clean operation just before deallocating all cached copies in the set of coherent caches.
+
+<image>
+
+## Description
+
+A cbo.inval instruction  performs  an  invalidate  operation  on  the  cache  block  that  contains  the address specified in rs1 . It is not required that rs1 is aligned to the size of a cache block. On faults, the faulting virtual address is considered to be the value in rs1, rather than the base address of the cache  block.  The  instruction  operates  on  the  set  of  coherent  caches  accessed  by  the  agent executing the instruction.
+
+Depending  on  CSR  programming,  the  instruction  may  perform  a  flush  operation  instead  of  an invalidate operation.
+
+The assembly offset operand may be omitted. If it isn't then any expression that computes the offset shall evaluate to zero.
+
+<image>
+
+When executing a cbo.inval instruction,  an  implementation may instead perform a flush  operation,  since  the  result  of  that  operation  is  indistinguishable  from  the sequence  of  performing  a  write  transfer  to  memory  just  before  performing  an invalidate operation.
+
+## Operation
+
+TODO

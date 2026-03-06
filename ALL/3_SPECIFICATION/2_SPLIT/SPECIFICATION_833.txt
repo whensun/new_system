@@ -1,0 +1,47 @@
+## 12.1.8. Supervisor Cause ( scause ) Register
+
+The scause CSR is an SXLEN-bit read-write register formatted as shown in Figure 59. When a trap is taken into S-mode, scause is written with a code indicating the event that caused the trap. Otherwise, scause is never written by the implementation, though it may be explicitly written by software.
+
+The Interrupt bit in the scause register is set if the trap was caused by an interrupt. The Exception Code field contains a code identifying the last exception or interrupt. Table 32 lists the possible exception codes for the current supervisor ISAs. The Exception Code is a WLRL field. It is required to hold the values 0-31 (i.e., bits 4-0 must be implemented), but otherwise it is only guaranteed to hold supported exception codes.
+
+Figure 59. Supervisor Cause ( scause ) register.
+
+<image>
+
+Table 32. Supervisor cause ( scause ) register values after trap. Synchronous exception priorities are given by Table 15.
+
+| Interrupt   | Exception Code Description       |
+|-------------|----------------------------------|
+| 1           | 0 Reserved                       |
+| 1           | 1 Supervisor software interrupt  |
+| 1           | 2-4 Reserved                     |
+| 1           | 5 Supervisor timer interrupt     |
+| 1           | 6-8 Reserved                     |
+| 1           | 9 Supervisor external interrupt  |
+| 1           | 10-12 Reserved                   |
+| 1           | 13 Counter-overflow interrupt    |
+| 1           | 14-15 Reserved                   |
+| 1           | ≥16 Designated for platform use  |
+| 0           | 0 Instruction address misaligned |
+| 0           | 1 Instruction access fault       |
+| 0           | 2 Illegal instruction            |
+| 0           | 3 Breakpoint                     |
+| 0           | 4 Load address misaligned        |
+| 0           | 5 Load access fault              |
+| 0           | 6 Store/AMO address misaligned   |
+| 0           | 7 Store/AMO access fault         |
+| 0           | 8 Environment call from U-mode   |
+| 0           | 9 Environment call from S-mode   |
+| 0           | 10-11 Reserved                   |
+| 0           | 12 Instruction page fault        |
+| 0           | 13 Load page fault               |
+| 0           | 14 Reserved                      |
+| 0           | 15 Store/AMO page fault          |
+| 0           | 16-17 Reserved                   |
+| 0           | 18 Software check                |
+| 0           | 19 Hardware error                |
+| 0           | 20-23 Reserved                   |
+| 0           | 24-31 Designated for custom use  |
+|             | 32-47 Reserved                   |
+|             | 48-63 Designated for custom use  |
+|             | ≥64 Reserved                     |

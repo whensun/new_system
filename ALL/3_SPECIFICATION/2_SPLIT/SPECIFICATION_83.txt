@@ -1,0 +1,30 @@
+## 19.4. Coherent Agents and Caches
+
+For  a  given  memory  location,  a set  of  coherent  agents consists  of  the  agents  for  which  all  of  the following hold:
+
+- ⚫ Store operations from all agents in the set appear to be serialized with respect to each other
+- ⚫ Store operations from all agents in the set eventually appear to all other agents in the set
+- ⚫ A load operation from an agent in the set returns data from a store operation from an agent in the set (or from the initial data in memory)
+
+The coherent agents within such a set shall access a given memory location with the same physical address and the same physical memory attributes; however, if the coherence PMA for a given agent indicates  a  given  memory  location  is  not  coherent,  that  agent  shall  not  be  a  member  of  a  set  of coherent agents with any other agent for that memory location and shall be the sole member of a set of coherent agents consisting of itself.
+
+An agent who is a member of a set of coherent agents is said to be coherent with respect to the other agents in the set. On the other hand, an agent who is not a member is said to be non-coherent with respect to the agents in the set.
+
+Caches  introduce  the  possibility  that  multiple  copies  of  a  given  cache  block  may  be  present  in  a system at the same time. An implementation-specific mechanism keeps these copies coherent with respect to the load and store operations from the agents in the set of coherent agents. Additionally, if a coherent agent in the set executes a CBO instruction that specifies the cache block, the resulting operation shall apply to any and all of the copies in the caches that can be accessed by the load and store operations from the coherent agents.
+
+<image>
+
+An operation from a CBO instruction is defined to operate only on the copies of a cache  block  that  are  cached  in  the  caches  accessible  by  the  explicit  memory accesses performed by the set of coherent agents. This includes copies of a cache block in caches that are accessed only indirectly by load and store operations, e.g. coherent instruction caches.
+
+The set of caches subject to the above mechanism form a set of coherent caches , and each coherent cache has the following behaviors, assuming all operations are performed by the agents in a set of coherent agents:
+
+- ⚫ A coherent cache is permitted to allocate and deallocate copies of a cache block and perform read and write transfers as described in Memory and Caches
+- ⚫ A  coherent  cache  is  permitted  to  perform  a  write  transfer  to  memory  provided  that  a  store operation has modified the data in the cache block since the most recent invalidate, clean, or flush operation on the cache block
+- ⚫ At least one coherent cache is responsible for performing a write transfer to memory once a store operation  has  modified  the  data  in  the  cache  block  until  the  next  invalidate,  clean,  or  flush operation  on  the  cache  block,  after  which  no  coherent  cache  is  responsible  (or  permitted)  to perform  a  write  transfer  to  memory  until  the  next  store  operation  has  modified  the  data  in  the cache block
+- ⚫ A  coherent  cache  is  required  to  perform  a  write  transfer  to  memory  if  a  store  operation  has modified the data in the cache block since the most recent invalidate, clean, or flush operation on the cache block and if the next clean or flush operation requires a write transfer to memory
+
+<image>
+
+The above restrictions ensure that a "clean" copy of a cache block, fetched by a read transfer from memory and unmodified by a store operation, cannot later overwrite the copy of the cache block in memory updated by a write transfer to memory from a non-coherent agent.
+
+A  non-coherent  agent  may  initiate  a  cache-block  operation  that  operates  on  the  set  of  coherent caches  accessed  by  a  set  of  coherent  agents.  The  mechanism  to  perform  such  an  operation  is implementation-specific .

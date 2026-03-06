@@ -1,0 +1,28 @@
+## 29.5.2. andn
+
+## Synopsis
+
+AND with inverted operand
+
+## Mnemonic
+
+andn rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction performs the bitwise logical AND operation between rs1 and the bitwise inversion of rs2 .
+
+## Operation
+
+<formula>
+
+## Included in
+
+| Extension                                | Minimum version   | Lifecycle state   |
+|------------------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation)             | v1.0              | Ratified          |
+| Zbkb (Bit-manipulation for Cryptography) | v1.0              | Ratified          |

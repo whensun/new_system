@@ -1,0 +1,9 @@
+## 27.5.1. Integer Constant-Generation Instructions
+
+The two constant-generation instructions both use the CI instruction format and can target any integer register.
+
+<image>
+
+C.LI loads the sign-extended 6-bit immediate, imm , into register rd . C.LI expands into addi rd, x0, imm . C.LI is valid only when rd ≠ x0 ; the code points with rd = x0 encode HINTs.
+
+C.LUI loads the non-zero 6-bit immediate field into bits 17-12 of the destination register, clears the bottom 12 bits, and sign-extends bit 17 into all higher bits of the destination. C.LUI expands into lui rd, imm .  C.LUI  is  valid  only  when rd ≠{ x0 , x2 },  and  when the immediate is not equal to zero. The code points with imm =0 are reserved; the remaining code points with rd = x0 are HINTs; and the remaining code points with rd = x2 correspond to the C.ADDI16SP instruction.

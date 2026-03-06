@@ -1,0 +1,5 @@
+## Chapter 36. Extending RISC-V
+
+In addition to supporting standard general-purpose software development, another goal of RISC-V is to  provide  a  basis  for  more  specialized  instruction-set  extensions  or  more  customized accelerators. The  instruction  encoding  spaces  and  optional  variable-length  instruction  encoding  are  designed  to make it easier to leverage software development effort for the standard ISA toolchain when building more customized processors. For example, the intent is to continue to provide full software support for implementations  that  only  use  the  standard  I  base,  perhaps  together  with  many  non-standard instruction-set extensions.
+
+This chapter describes various ways in which the base RISC-V ISA can be extended, together with the scheme for managing instruction-set extensions developed by independent groups. This volume only deals with the unprivileged ISA, although the same approach and terminology is used for supervisorlevel extensions described in the second volume.

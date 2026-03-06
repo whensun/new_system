@@ -1,0 +1,49 @@
+## 31.4.20. rev8
+
+## Synopsis
+
+Byte-reverse register
+
+## Mnemonic
+
+rev8 rd , rs
+
+## Encoding (RV32)
+
+<image>
+
+## Encoding (RV64)
+
+<image>
+
+## Description
+
+This instruction reverses the order of the bytes in rs .
+
+## Operation
+
+```
+let input = X(rs); let output : xlenbits = 0; let j = xlen - 1; foreach (i from 0 to (xlen - 8) by 8) { output[i..(i + 7)] = input[(j - 7)..j]; j = j - 8; } X[rd] = output
+```
+
+<image>
+
+<image>
+
+## Included in
+
+| Extension                    | Minimum version   | Lifecycle state   |
+|------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation) | v1.0.0            | Ratified          |
+
+Note
+
+The rev8 mnemonic  corresponds  to  different  instruction  encodings  in  RV32  and RV64.
+
+Software Hint
+
+The  byte-reverse  operation  is  only  available  for  the  full  register  width.  To  emulate word-sized and halfword-sized byte-reversal, perform a rev8 rd,rs followed by a srai rd,rd,K , where K is XLEN-32 and XLEN-16, respectively.
+
+| Extension      | Minimum version   | Lifecycle state   |
+|----------------|-------------------|-------------------|
+| Zbkb (Zbkb-sc) | v1.0.0-rc4        | Ratified          |

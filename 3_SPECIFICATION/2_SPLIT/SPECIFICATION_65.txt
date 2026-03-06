@@ -1,0 +1,12 @@
+## Chapter 16. "Zabha" Extension for Byte and Halfword Atomic Memory Operations, Version 1.0
+
+The  A-extension  offers  atomic  memory  operation  (AMO)  instructions  for words , doublewords ,  and quadwords (only  for AMOCAS ).  The  absence  of  atomic  operations  for  subword  data  types  necessitates emulation strategies. For bitwise operations, this emulation can be performed via word-sized bitwise AMO*  instructions.  For  non-bitwise  operations,  emulation  is  achievable  using  word-sized LR / SC instructions.
+
+Several limitations arise from this emulation approach:
+
+1. In  systems  with  large-scale  or  Non-Uniform  Memory  Access  (NUMA)  configurations,  emulation based on LR / SC introduces issues related to scalability and fairness, particularly under conditions of high contention.
+2. Emulation  of  narrower  AMOs  through  wider  AMO*  instructions  on  non-idempotent  IO  memory regions may result in unintended side effects.
+3. Utilizing  wider  AMO*  instructions  for  emulating  narrower  AMOs  risks  activating  extraneous breakpoints or watchpoints.
+4. In  the  absence  of  native  support  for  subword  atomics,  compilers  often  resort  to  inlining  code sequences to provide the required emulation. This practice contributes to an increase in code size, with consequent impacts on system performance and memory utilization.
+
+The  Zabha  extension  addresses  these  limitations  by  adding  support  for byte and halfword atomic memory operations to the RISC-V Unprivileged ISA. The Zabha extension depends upon the Zaamo standard extension.

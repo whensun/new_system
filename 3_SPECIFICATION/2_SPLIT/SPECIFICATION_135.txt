@@ -1,0 +1,5 @@
+## 23.5. Half-Precision Floating-Point Classify Instruction
+
+The half-precision floating-point  classify  instruction,  FCLASS.H,  is  defined  analogously  to  its  singleprecision counterpart, but operates on half-precision operands.
+
+<image>

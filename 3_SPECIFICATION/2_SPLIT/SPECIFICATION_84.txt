@@ -1,0 +1,17 @@
+## 19.4.1.1. Preserved Program Order
+
+The preserved program order (abbreviated PPO )  rules  are  defined  by  the  RVWMO  memory ordering model. How the operations resulting from CMO instructions fit into these rules is described below.
+
+For cache-block management instructions, the resulting invalidate, clean, and flush operations behave as  stores  in  the  PPO  rules  subject  to  one  additional  overlapping  address  rule.  Specifically,  if a precedes b in program order, then a will precede b in the global memory order if:
+
+- ⚫ a is an invalidate, clean, or flush, b is a load, and a and b access overlapping memory addresses
+
+<image>
+
+The above rule ensures that a subsequent load in program order never appears in the global  memory order before a preceding invalidate, clean, or flush operation to an overlapping address.
+
+Additionally, invalidate, clean, and flush operations are classified as W or O (depending on the physical memory  attributes  for  the  corresponding  physical  addresses)  for  the  purposes  of  predecessor  and successor sets in FENCE instructions. These operations are not ordered by other instructions that order stores, e.g. FENCE.I and SFENCE.VMA .
+
+For cache-block zero instructions, the resulting store operations behave as stores in the PPO rules and are ordered by other instructions that order stores.
+
+Finally, for cache-block prefetch instructions, the resulting operations are not ordered by the PPO rules nor are they ordered by any other ordering instructions.

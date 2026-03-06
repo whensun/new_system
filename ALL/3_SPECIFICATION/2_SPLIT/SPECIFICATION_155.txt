@@ -1,0 +1,38 @@
+## 24.5.4. vfwcvtbf16.f.f.v
+
+## Synopsis
+
+Vector convert BF16 to FP32
+
+## Mnemonic
+
+vfwcvtbf16.f.f.v vd, vs2, vm
+
+## Encoding
+
+<image>
+
+## Reserved Encodings
+
+- ⚫ SEW is any value other than 16
+
+## Arguments
+
+| Register   | Direction   |   EEW | Definition   |
+|------------|-------------|-------|--------------|
+| Vs2        | input       |    16 | BF16 Source  |
+| Vd         | output      |    32 | FP32 Result  |
+
+## Description
+
+Widening convert from BF16 to FP32. The conversion is exact.
+
+This instruction is similar to vfwcvt.f.f.v which converts a floating-point value in an SEW-width format into a 2*SEW-width format. However, here the SEW-width format is limited to BF16.
+
+<image>
+
+If the input is normal or infinity, the BF16 encoded value is shifted to the left by 16 places and the least significant 16 bits are written with 0s.
+
+Exceptions: Invalid
+
+Included in: Zvfbfmin

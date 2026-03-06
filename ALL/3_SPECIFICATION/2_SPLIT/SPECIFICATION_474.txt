@@ -1,0 +1,14 @@
+## 31.3.10. Zkn - NIST Algorithm Suite
+
+This extension is shorthand for the following set of other extensions:
+
+| Included Extension   | Description                                    |
+|----------------------|------------------------------------------------|
+| Zbkb-sc              | Bitmanipulation instructions for cryptography. |
+| Zbkc-sc              | Carry-less multiply instructions.              |
+| Zbkx-sc              | Cross-bar Permutation instructions.            |
+| Zkne                 | AES encryption instructions.                   |
+| Zknd                 | AES decryption instructions.                   |
+| Zknh                 | SHA2 hash function instructions.               |
+
+A core which implements Zkn must implement all of the above extensions.

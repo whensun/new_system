@@ -1,0 +1,17 @@
+## 30.5. Vector Instruction Formats
+
+The instructions in the vector extension fit under two existing major opcodes (LOAD-FP and STOREFP) and one new major opcode (OP-V).
+
+Vector  loads  and  stores  are  encoded  within  the  scalar  floating-point  load  and  store  major  opcodes (LOAD-FP/STORE-FP). The vector load and store encodings repurpose a portion of the standard scalar floating-point load/store 12-bit immediate field to provide further vector instruction encoding, with bit 25 holding the standard vector mask bit (see Section 30.5.3.1).
+
+Format for Vector Load Instructions under LOAD-FP major opcode
+
+<image>
+
+<image>
+
+<image>
+
+Vector instructions can have scalar or vector source operands and produce scalar or vector results, and most vector instructions can be performed either unconditionally or conditionally under a mask.
+
+Vector  loads  and  stores  move  bit  patterns  between  vector  register  elements  and  memory.  Vector arithmetic instructions operate on values held in vector register elements.

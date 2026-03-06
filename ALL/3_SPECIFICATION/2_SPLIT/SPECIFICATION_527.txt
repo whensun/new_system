@@ -1,0 +1,5 @@
+## 31.5. Entropy Source
+
+The seed CSR provides an interface to a NIST SP 800-90B (Turan et al., 2018) or BSI AIS-31 (Killmann & Schindler, 2011) compliant physical Entropy Source (ES).
+
+An entropy source, by itself, is not a cryptographically secure Random Bit Generator (RBG), but can be used to build standard (and nonstandard) RBGs of many types with the help of symmetric cryptography. Expected usage is to condition (typically with SHA-2/3) the output from an entropy source and use it to seed  a  cryptographically  secure  Deterministic  Random  Bit  Generator  (DRBG)  such  as  AES-based CTR\_DRBG (Barker & Kelsey, 2015). The combination of an Entropy Source, Conditioning, and a DRBG can be  used  to  create  random  bits  securely  (Barker  et  al.,  2021).  See  Section  31.8  for  a  non-normative description  of  a  certification  and  self-certification  procedures,  design  rationale,  and  more  detailed suggestions on how the entropy source output can be used.

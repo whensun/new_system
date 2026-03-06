@@ -1,0 +1,3 @@
+## 36.3.4. Other spaces
+
+Smaller spaces are available under certain major opcodes, and not all minor opcodes are entirely filled.

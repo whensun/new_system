@@ -1,0 +1,27 @@
+## 12.4.1. Addressing and Memory Protection
+
+Sv39 implementations support a 39-bit virtual address space, divided into pages. An Sv39 address is partitioned as shown in Figure 68. Instruction fetch addresses and load and store effective addresses, which are 64 bits, must have bits 63-39 all equal to bit 38, or else a page-fault exception will occur. The 27-bit VPN is translated into a 44-bit PPN via a three-level page table, while the 12-bit page offset is untranslated.
+
+<image>
+
+When  mapping  between  narrower  and  wider  addresses,  RISC-V  zero-extends  a narrower  physical  address  to  a  wider  size.  The  mapping  between  64-bit  virtual addresses  and  the  39-bit  usable  address  space  of  Sv39  is  not  based  on  zero extension but instead follows an entrenched convention that allows an OS to use one or a few of the most-significant bits of a full-size (64-bit) virtual address to quickly distinguish user and supervisor address regions.
+
+Figure 68. Sv39 virtual address.
+
+<image>
+
+Figure 70. Sv39 page table entry.
+
+<image>
+
+Sv39 page tables contain 2 9 page table entries (PTEs), eight bytes each. A page table is exactly the size of a page and must always be aligned to a page boundary. The physical page number of the root page table is stored in the satp register's PPN field.
+
+The PTE format for Sv39 is shown in Figure 70. Bits 9-0 have the same meaning as for Sv32. Bit 63 is reserved for use by the Svnapot extension in Chapter 13. If Svnapot is not implemented, bit 63 remains reserved and must be zeroed by software for forward compatibility, or else a page-fault exception is raised.  Bits  62-61  are  reserved  for  use  by  the  Svpbmt  extension  in  Chapter  14.  If  Svpbmt  is  not implemented, bits 62-61 remain reserved and must be zeroed by software for forward compatibility, or else a page-fault exception is raised. Bits 60-54 are reserved for future standard use and, until their use is defined by some standard extension, must be zeroed by software for forward compatibility. If any of these bits are set, a page-fault exception is raised.
+
+<image>
+
+We  reserved  several  PTE  bits  for  a  possible  extension  that  improves  support  for sparse address spaces by allowing page-table levels to be skipped, reducing memory usage  and  TLB  refill  latency.  These  reserved  bits  may  also  be  used  to  facilitate research  experimentation.  The  cost  is  reducing  the  physical  address  space,  but  is presently ample. When  it no longer suffices, the reserved bits that  remain unallocated could be used to expand the physical address space.
+
+Any level of PTE may be a leaf PTE, so in addition to 4 KiB pages, Sv39 supports 2 MiB megapages and 1 GiB gigapages , each of which must be virtually and physically aligned to a boundary equal to its size. A page-fault exception is raised if the physical address is insufficiently aligned.
+
+The  algorithm  for  virtual-to-physical  address  translation  is  the  same  as  in  Section  12.3.2,  except LEVELS equals 3 and PTESIZE equals 8.

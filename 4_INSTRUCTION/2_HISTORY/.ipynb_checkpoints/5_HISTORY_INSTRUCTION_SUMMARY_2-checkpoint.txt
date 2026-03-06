@@ -1,0 +1,67 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: ADDIW
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+You are given partial summaries of the same RISC-V instruction, each derived from different subsets of rules.
+
+Instruction: ADDIW
+
+Partial summaries:
+- ADDIW is an RV64I I‑type instruction that adds a sign‑extended 12‑bit immediate to the 64‑bit value in rs1 using full‑width arithmetic. The 64‑bit sum is truncated to its low 32 bits, which are then sign‑extended back to 64 bits to form the final result written to rd. This operation is defined only for the RV64 base ISA; attempting to execute it on RV32 or on a core lacking the 32‑bit immediate arithmetic extension causes an illegal‑instruction exception. No other side effects occur.
+
+- ADDIW is an RV64I integer instruction that adds a sign‑extended 12‑bit immediate to the low 32 bits of rs1, discards any carry beyond bit 31, and writes the 32‑bit sum sign‑extended to 64 bits into rd. The operation ignores overflow; the architectural result is defined solely by those low‑32 bits after addition. When the immediate is zero, the instruction simply copies the low 32 bits of rs1 into rd with sign‑extension, which the assembler treats as the pseudoinstruction SEXT.W. The instruction is only valid in the 64‑bit ISA and updates rd with the sign‑extended 32‑bit result.
+
+Task:
+Merge these into a single cohesive summary (4–6 sentences, one paragraph).
+Remove repetition, ensure correctness, and keep only the most important semantics.
+Remember, output must be ASCII-only text.
+Return only the final paragraph.
+
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+ADDIW is an RV64I I‑type integer instruction that adds a sign‑extended 12‑bit immediate to the low 32 bits of the source register rs1, producing a 32‑bit sum in which any carry beyond bit 31 is discarded. The 32‑bit result is then sign‑extended to 64 bits and written to the destination register rd. The operation is defined only for the 64‑bit base ISA (or a core that implements the required extension); executing it on an RV32 implementation or on a core lacking the 32‑bit immediate arithmetic extension raises an illegal‑instruction exception. Overflow does not generate an exception; the architectural result is entirely determined by the low‑32‑bit sum. When the immediate is zero, ADDIW behaves as the pseudo‑instruction SEXT.W, copying rs1’s low word into rd with sign‑extension.
+======================================================= END - 1 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 2 =======================================================
+GLOBAL NUMBER: 2
+LOCAL NUMBER: 1
+NAME: CSRRWI
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+You are given partial summaries of the same RISC-V instruction, each derived from different subsets of rules.
+
+Instruction: CSRRWI
+
+Partial summaries:
+- CSRRWI writes a CSR whose address is taken from the 12‑bit csr field (bits 31–20) and whose new value is the zero‑extended 5‑bit unsigned immediate encoded in the rs1 field. The operation is an atomic read‑modify‑write: the immediate replaces the CSR contents, and the prior CSR value is optionally transferred to the destination integer register. If rd = x0, the prior value is not read and no read‑side effects occur; otherwise the old CSR value is zero‑extended and written to rd. This completes the CSR update in a single, indivisible step.
+
+- CSRRWI writes the zero‑extended 5‑bit immediate to the CSR specified by the csr field, causing any defined side‑effects for all writable bits of that CSR. The write is unconditional and does not depend on the previous CSR contents. If rd is x0 the instruction performs only the CSR write; otherwise it also reads the old CSR value and writes it to rd. For dependency analysis the CSR is treated as a source operand unless rd is x0, in which case there is no source register. The assembler pseudoinstruction "CSRWI csr, uimm" expands to the concrete encoding CSRRWI x0, csr, uimm.
+
+- The CSRRWI instruction atomically swaps a CSR with a zero‑extended 5‑bit immediate, writing the CSR’s prior value to rd and updating the CSR with the immediate. If rd is x0, the write‑back to the register is discarded and the CSR is not treated as a source register for dependency tracking, although the CSR is still written. The immediate is zero‑extended before being stored, and the operation is subject to the usual privilege‑level checks for CSR accesses. This instruction generates no additional architectural side effects beyond the CSR write.
+
+Task:
+Merge these into a single cohesive summary (4–6 sentences, one paragraph).
+Remove repetition, ensure correctness, and keep only the most important semantics.
+Remember, output must be ASCII-only text.
+Return only the final paragraph.
+
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+CSRRWI atomically writes a CSR whose address is given by the 12‑bit csr field (bits 31‑20) with the zero‑extended 5‑bit unsigned immediate encoded in the rs1 field, applying any defined side‑effects for writable bits of that CSR. The prior value of the CSR is read and written to the destination register rd; if rd is x0 the read is omitted, no prior value is produced, and the CSR is not treated as a source operand for dependency analysis. The write occurs in a single indivisible step and is subject to the usual privilege‑level checks for CSR accesses. When rd ≠ x0 the old CSR value is zero‑extended and placed in rd, otherwise the instruction performs only the CSR write. This behavior matches the “CSRWI csr, uimm” pseudoinstruction, which expands to CSRRWI x0, csr, uimm.
+======================================================= END - 2 ========================================================

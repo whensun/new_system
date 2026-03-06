@@ -1,0 +1,8 @@
+## 31.3.7. Zksed - ShangMi Suite: SM4 Block Cipher Instructions
+
+Instructions for accelerating the SM4 Block Cipher. Note that unlike AES, this cipher uses the same core operation for encryption and decryption, hence there is only one extension for it.
+
+| RV32   | RV64   | Mnemonic   | Instruction                     |
+|--------|--------|------------|---------------------------------|
+| ✓      | ✓      | sm4ed      | SM4 Encrypt/Decrypt Instruction |
+| ✓      | ✓      | sm4ks      | SM4 Key Schedule Instruction    |

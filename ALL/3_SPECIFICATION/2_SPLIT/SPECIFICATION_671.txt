@@ -1,0 +1,19 @@
+## 34.5.3. c.ldsp
+
+## Synopsis
+
+Stack-pointer based load doubleword to even/odd register pair, 16-bit encoding
+
+## Mnemonic
+
+c.ldsp rd, offset(sp)
+
+## Encoding (RV32)
+
+<image>
+
+## Description
+
+Loads  stack-pointer  relative  64-bit  value  into  registers rd' and rd'+1 .  It  computes  its  effective address by adding the zero-extended offset, scaled by 8, to the stack pointer, x2 .  It expands to ld rd, offset(x2) . C.LDSP is only valid when rd ≠x0; the code points with rd =x0 are reserved.
+
+Included in: Zclsd

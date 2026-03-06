@@ -1,0 +1,19 @@
+## 21.4.4. Machine Second Trap Value ( mtval2 ) Register
+
+The mtval2 register is an MXLEN-bit read/write register formatted as shown in Figure 115. When a trap is taken into M-mode, mtval2 is written with additional exception-specific information, alongside mtval , to assist software in handling the trap.
+
+Figure 115. Machine second trap value register ( mtval2 ).
+
+<image>
+
+When a guest-page-fault  trap  is  taken  into  M-mode, mtval2 is  written  with  either  zero  or  the  guest physical address that faulted, shifted right by 2 bits. For other traps, mtval2 is set to zero, but a future standard or extension may redefine mtval2's setting for other traps.
+
+If  a  guest-page  fault  is  due  to  an  implicit  memory  access  during  first-stage  (VS-stage)  address translation,  a  guest  physical  address  written  to mtval2 is  that  of  the  implicit  memory  access  that faulted. Additional information is provided in CSR mtinst to disambiguate such situations.
+
+Otherwise,  for  misaligned  loads  and  stores  that  cause  guest-page  faults,  a  nonzero  guest  physical address in mtval2 corresponds to the faulting portion of the access as indicated by the virtual address in mtval .  For  instruction  guest-page  faults  on  systems  with  variable-length  instructions,  a  nonzero
+
+mtval2 corresponds to the faulting portion of the instruction as indicated by the virtual address in mtval .
+
+mtval2 is  a WARL register  that  must  be  able  to  hold  zero  and  may  be  capable  of  holding  only  an arbitrary subset of other 2-bit-shifted guest physical addresses, if any.
+
+The Ssdbltrap extension (See Chapter 23) requires the implementation of the mtval2 CSR.

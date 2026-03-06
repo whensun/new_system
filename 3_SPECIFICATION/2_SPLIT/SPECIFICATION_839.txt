@@ -1,0 +1,9 @@
+## 12.3. Sv32: Page-Based 32-bit Virtual-Memory Systems
+
+When  Sv32  is  written  to  the  MODE  field  in  the satp register  (see  Section  12.1.11),  the  supervisor operates in a 32-bit paged virtual-memory system. In this mode, supervisor and user virtual addresses are  translated  into  supervisor  physical  addresses  by  traversing  a  radix-tree  page  table.  Sv32  is supported when SXLEN=32 and is designed to include mechanisms sufficient for supporting modern Unix-based operating systems.
+
+<image>
+
+The  initial  RISC-V  paged  virtual-memory  architectures  have  been  designed  as straightforward  implementations  to  support  existing  operating  systems.  We  have architected page table layouts to support a hardware page-table walker. Software TLB refills are a performance bottleneck on high-performance systems, and are especially troublesome  with  decoupled  specialized  coprocessors.  An  implementation  can choose to implement software TLB refills using a machine-mode trap handler as an extension to M-mode.
+
+Some ISAs architecturally expose virtually indexed, physically tagged caches, in that accesses to the same physical address via different virtual addresses might not be coherent unless the virtual addresses lie within the same cache set. Implicitly, this specification does not permit such behavior to be architecturally exposed.

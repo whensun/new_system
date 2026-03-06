@@ -1,0 +1,39 @@
+## 2.7. Memory Ordering Instructions
+
+<image>
+
+FENCE instructions are used to order device I/O and memory accesses as viewed by other RISC-V
+
+harts  and  external  devices  or  coprocessors.  Any  combination  of  device  input  (I),  device  output  (O), memory reads (R),  and  memory  writes  (W)  may  be  ordered  with  respect  to  any  combination  of  the same. Informally, no other RISC-V hart or external device can observe any operation in the successor set following a FENCE before any operation in the predecessor set preceding the FENCE. Chapter 17 provides a precise description of the RISC-V memory consistency model.
+
+FENCE instructions  also  order  memory  reads  and  writes  made  by  the  hart  as  observed  by  memory reads and writes made by an external device. However, FENCE instructions do not order observations of events made by an external device using any other signaling mechanism.
+
+<image>
+
+A  device  might  observe  an  access  to  a  memory  location  via  some  external communication mechanism, e.g., a memory-mapped control register that drives an interrupt signal to an interrupt controller. This communication is outside the scope of the  FENCE  ordering  mechanism  and  hence  FENCE  instructions  can  provide  no guarantee  on  when  a  change  in  the  interrupt  signal  is  visible  to  the  interrupt controller. Specific devices might provide additional ordering guarantees to reduce software overhead but those are outside the scope of the RISC-V memory model.
+
+The EEI will define what I/O operations are possible, and in particular, which memory addresses when accessed by load and store instructions will be treated and ordered as device input and device output operations  respectively  rather  than  memory  reads  and  writes.  For  example,  memory-mapped  I/O devices will typically be accessed with uncached loads and stores that are ordered using the I and O bits rather than the R and W bits. Instruction-set extensions might also describe new I/O instructions that will also be ordered using the I and O bits in a FENCE instruction.
+
+Table 4. Fence mode encoding
+
+| fm field   | Mnemonic suffix   | Meaning                                                                                |
+|------------|-------------------|----------------------------------------------------------------------------------------|
+| 0000       | none              | Normal Fence                                                                           |
+| 1000       | .TSO              | With FENCE RW,RW : exclude write-to-read ordering; otherwise: Reserved for future use. |
+| other      | other             | Reserved for future use.                                                               |
+
+The  FENCE  mode  field fm defines  the  semantics  of  the  FENCE  instruction.  A FENCE (with fm = 0000 ) orders all memory operations in its predecessor set before all memory operations in its successor set.
+
+A FENCE.TSO instruction  is  encoded  as  a  FENCE  instruction  with fm = 1000 , predecessor = RW ,  and successor = RW . FENCE.TSO orders all load operations in its predecessor set before all memory operations in its successor set, and all store operations in its predecessor set before all store operations in its successor set. This leaves non-AMO store operations in the FENCE.TSO's predecessor set unordered with non-AMO loads in its successor set.
+
+<image>
+
+Because FENCE RW,RW imposes a superset of the orderings that FENCE.TSO imposes, it is correct to ignore the fm field and implement FENCE.TSO as FENCE RW,RW .
+
+The unused fields in the FENCE instructions-rs1 and rd --are reserved for finer-grain fences in future extensions.  For  forward  compatibility,  base  implementations  shall  ignore  these  fields,  and  standard software shall zero these fields. Likewise, many fm and  predecessor/successor set settings are also reserved  for  future  use.  Base  implementations  shall  treat  all  such  reserved  configurations  as FENCE instructions (with fm = 0000 ), and standard software shall use only non-reserved configurations.
+
+<image>
+
+We chose a relaxed memory model to allow high performance from simple machine
+
+implementations  and  from  likely  future  coprocessor  or  accelerator  extensions.  We separate  out  I/O  ordering  from  memory  R/W  ordering  to  avoid  unnecessary serialization within a device-driver hart and also to support alternative non-memory paths  to  control  added  coprocessors  or  I/O  devices.  Simple  implementations  may additionally  ignore  the  predecessor  and  successor  fields  and  always  execute  a conservative FENCE on all operations.

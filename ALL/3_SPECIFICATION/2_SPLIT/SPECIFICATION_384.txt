@@ -1,0 +1,7 @@
+## 30.12.1. Vector Single-Width Saturating Add and Subtract
+
+Saturating forms of integer add and subtract are provided, for both signed and unsigned integers. If the result would overflow the destination, the result is replaced with the closest representable value, and the vxsat bit is set.
+
+```
+# Saturating adds of unsigned integers. vsaddu.vv vd, vs2, vs1, vm   # Vector-vector vsaddu.vx vd, vs2, rs1, vm   # vector-scalar vsaddu.vi vd, vs2, imm, vm   # vector-immediate # Saturating adds of signed integers. vsadd.vv vd, vs2, vs1, vm   # Vector-vector vsadd.vx vd, vs2, rs1, vm   # vector-scalar vsadd.vi vd, vs2, imm, vm   # vector-immediate # Saturating subtract of unsigned integers. vssubu.vv vd, vs2, vs1, vm   # Vector-vector vssubu.vx vd, vs2, rs1, vm   # vector-scalar # Saturating subtract of signed integers. vssub.vv vd, vs2, vs1, vm   # Vector-vector vssub.vx vd, vs2, rs1, vm   # vector-scalar
+```

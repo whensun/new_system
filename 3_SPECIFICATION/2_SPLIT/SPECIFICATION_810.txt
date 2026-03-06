@@ -1,0 +1,16 @@
+## 11.5. Behavior
+
+CTR  records  qualified  control  transfers.  Control  transfers  are  qualified  if  they  meet  the  following criteria:
+
+- ⚫ The current privilege mode is enabled
+- ⚫ The transfer type is not inhibited
+- ⚫ sctrstatus .FROZEN is not set
+- ⚫ The transfer completes/retires
+
+Such qualified  transfers  update  the  Entry  Registers  at  logical  entry  0.  As  a  result,  older  entries  are pushed down the stack; the record previously in logical entry 0 moves to logical entry 1, the record in logical entry 1 moves to logical entry 2, and so on. If the CTR buffer is full, the oldest recorded entry (previously at entry depth-1) is lost.
+
+Recorded transfers will set the ctrsource .V bit to 1, and will update all implemented record fields.
+
+<image>
+
+In order to collect accurate and representative performance profiles while using CTR, it  is  recommended  that  hardware  recording  of  control  transfers  incurs  no  added performance  overhead,  e.g.,  in  the  form  of  retirement  or  instruction  execution restrictions that are not present when CTR is not active.

@@ -1,0 +1,54 @@
+## 32.3.3. vaesef.[vv,vs]
+
+## Synopsis
+
+Vector AES final-round encryption
+
+## Mnemonic
+
+vaesef.vv vd, vs2
+
+vaesef.vs vd, vs2
+
+## Encoding (Vector-Vector)
+
+<image>
+
+## Encoding (Vector-Scalar)
+
+<image>
+
+## Reserved Encodings
+
+- ⚫ SEW is any value other than 32
+- ⚫ Only for the .vs form: the vd register group overlaps the vs2 scalar element group
+
+## Arguments
+
+| Register   | Direction   |   EGW |   EGS |   EEW | Definition      |
+|------------|-------------|-------|-------|-------|-----------------|
+| vd         | input       |   128 |     4 |    32 | round state     |
+| vs2        | input       |   128 |     4 |    32 | round key       |
+| vd         | output      |   128 |     4 |    32 | new round state |
+
+## Description
+
+A final-round encryption function of the AES block cipher is performed.
+
+The SubBytes and ShiftRows steps are applied to each round state element group from vd . This is then XORed with the round key in either the corresponding element group in vs2 (vector-vector form) or the scalar element group in vs2 (vector-scalar form).
+
+This instruction must always be implemented such that its execution latency does not depend on the data being operated upon.
+
+## Operation
+
+```
+function clause execute (VAESEF(vs2, vd, suffix) = { if(LMUL*VLEN < EGW)  then { handle_illegal();  // illegal-instruction exception RETIRE_FAIL } else { eg_len = (vl/EGS) eg_start = (vstart/EGS)
+```
+
+```
+foreach (i from eg_start to eg_len-1) { let keyelem = if suffix == "vv" then i else 0; let state : bits(128) = get_velem(vd, EGW=128, i); let rkey  : bits(128) = get_velem(vs2, EGW=128, keyelem); let sb    : bits(128) = aes_subbytes_fwd(state); let sr    : bits(128) = aes_shift_rows_fwd(sb); let ark   : bits(128) = sr ^ rkey; set_velem(vd, EGW=128, i, ark); } RETIRE_SUCCESS } }
+```
+
+## Included in
+
+Zvkn, Zvknc, Zvkned, Zvkng

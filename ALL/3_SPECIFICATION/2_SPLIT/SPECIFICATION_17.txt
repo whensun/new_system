@@ -1,0 +1,5 @@
+## 2.5. Control Transfer Instructions
+
+RV32I  provides  two  types  of  control  transfer  instructions:  unconditional  jumps  and  conditional branches. Control transfer instructions in RV32I do not have architecturally visible delay slots.
+
+If  an  instruction  access-fault  or  instruction  page-fault  exception  occurs  on  the  target  of  a  jump  or taken branch, the exception is reported on the target instruction, not on the jump or branch instruction.

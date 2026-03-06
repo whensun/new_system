@@ -1,0 +1,48 @@
+## 21.2.2. Hypervisor Trap Delegation ( hedeleg and hideleg ) Registers
+
+Register hedeleg is a 64-bit read/write register, formatted as shown in Figure 81. Register hideleg is an HSXLEN-bit read/write register, formatted as shown in Figure 82. By default, all traps at any privilege level are handled in M-mode, though M-mode usually uses the medeleg and mideleg CSRs to delegate some traps to HS-mode. The hedeleg and hideleg CSRs allow these traps to be further delegated to a VS-mode guest; their layout is the same as medeleg and mideleg .
+
+<image>
+
+HSXLEN
+
+Figure 82. Hypervisor exception delegation register ( hideleg ).
+
+A synchronous trap that has been delegated to HS-mode (using medeleg )  is  further  delegated to VSmode if V=1 before the trap and the corresponding hedeleg bit is set. Each bit of hedeleg shall be either writable  or  read-only  zero.  Many  bits  of hedeleg are  required  specifically  to  be  writable  or  zero,  as enumerated in Table 39. Bit 0, corresponding to instruction address-misaligned exceptions, must be writable if IALIGN=32.
+
+<image>
+
+Requiring that certain bits of hedeleg be  writable reduces some of the burden on a hypervisor to handle variations of implementation.
+
+When  XLEN=32, hedelegh is  a  32-bit  read/write  register  that  aliases  bits  63:32  of hedeleg .  Register hedelegh does not exist when XLEN=64.
+
+An interrupt that has been delegated to HS-mode (using mideleg )  is  further  delegated to VS-mode if the corresponding hideleg bit is set. Among bits 15:0 of hideleg , bits 10, 6, and 2 (corresponding to the standard VS-level interrupts) are writable, and bits 12, 9, 5, and 1 (corresponding to the standard Slevel interrupts) are read-only zeros.
+
+When  a  virtual  supervisor  external  interrupt  (code  10)  is  delegated  to  VS-mode,  it  is  automatically translated  by  the  machine  into  a  supervisor  external  interrupt  (code  9)  for  VS-mode,  including  the value  written  to vscause on  an  interrupt  trap.  Likewise,  a  virtual  supervisor  timer  interrupt  (6)  is translated into a supervisor timer interrupt (5) for VS-mode, and a virtual supervisor software interrupt (2) is translated into a supervisor software interrupt (1) for VS-mode. Similar translations may or may not be done for platform interrupt causes (codes 16 and above).
+
+Table 39. Bits of hedeleg that must be writable or must be read-only zero.
+
+|   Bit | Attribute   | Corresponding Exception                 |
+|-------|-------------|-----------------------------------------|
+|     0 | (See text)  | Instruction address misaligned          |
+|     1 | Writable    | Instruction access fault                |
+|     2 | Writable    | Illegal instruction                     |
+|     3 | Writable    | Breakpoint                              |
+|     4 | Writable    | Load address misaligned                 |
+|     5 | Writable    | Load access fault                       |
+|     6 | Writable    | Store/AMO address misaligned            |
+|     7 | Writable    | Store/AMO access fault                  |
+|     8 | Writable    | Environment call from U-mode or VU-mode |
+|     9 | Read-only 0 | Environment call from HS-mode           |
+|    10 | Read-only 0 | Environment call from VS-mode           |
+|    11 | Read-only 0 | Environment call from M-mode            |
+|    12 | Writable    | Instruction page fault                  |
+|    13 | Writable    | Load page fault                         |
+|    15 | Writable    | Store/AMO page fault                    |
+|    16 | Read-only 0 | Double trap                             |
+|    18 | Writable    | Software check                          |
+|    19 | Writable    | Hardware error                          |
+|    20 | Read-only 0 | Instruction guest-page fault            |
+|    21 | Read-only 0 | Load guest-page fault                   |
+|    22 | Read-only 0 | Virtual instruction                     |
+|    23 | Read-only 0 | Store/AMO guest-page fault              |

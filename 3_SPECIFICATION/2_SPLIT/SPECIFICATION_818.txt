@@ -1,0 +1,3 @@
+## 11.6. Custom Extensions
+
+Any custom CTR extension must be associated with a non-zero value within the designated custom bits  in x ctrctl .  When  the  custom  bits  hold  a  non-zero  value  that  enables  a  custom  extension,  the extension may alter standard CTR behavior, and may define new custom status fields within sctrstatus or  the  CTR  Entry  Registers.  All  custom  status  fields,  and  standard  status  fields  whose  behavior  is altered by the custom extension, must revert to standard behavior when the custom bits hold zero. This includes read-only 0 behavior for any bits undefined by any implemented standard extensions.

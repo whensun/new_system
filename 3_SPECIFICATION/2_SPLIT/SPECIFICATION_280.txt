@@ -1,0 +1,29 @@
+## 29.5.24. orc.b
+
+## Synopsis
+
+Bitwise OR-Combine, byte granule
+
+## Mnemonic
+
+orc.b rd , rs
+
+## Encoding
+
+<image>
+
+## Description
+
+Combines the bits within each byte using bitwise logical OR. This sets the bits of each byte in the result rd to all zeros if no bit within the respective byte of rs is set, or to all ones if any bit within the respective byte of rs is set.
+
+## Operation
+
+```
+let input = X(rs); let output : xlenbits = 0; foreach (i from 0 to (xlen - 8) by 8) { output[(i + 7)..i] = if   input[(i + 7)..i] == 0 then 0b00000000 else 0b11111111; } X[rd] = output;
+```
+
+## Included in
+
+| Extension                    | Minimum version   | Lifecycle state   |
+|------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation) | v1.0              | Ratified          |

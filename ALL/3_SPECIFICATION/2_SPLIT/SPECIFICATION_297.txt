@@ -1,0 +1,29 @@
+## 29.5.41. sh2add
+
+## Synopsis
+
+Shift left by 2 and add
+
+## Mnemonic
+
+sh2add rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction shifts rs1 to the left by 2 places and adds it to rs2 .
+
+## Operation
+
+```
+X(rd) = X(rs2) + (X(rs1) << 2);
+```
+
+## Included in
+
+| Extension                             |   Minimum version | Lifecycle state   |
+|---------------------------------------|-------------------|-------------------|
+| Zba (Address generation instructions) |              0.93 | Ratified          |

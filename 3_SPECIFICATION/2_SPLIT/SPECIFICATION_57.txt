@@ -1,0 +1,72 @@
+## 13.2. "Zalrsc" Extension for Load-Reserved/Store-Conditional Instructions
+
+<image>
+
+Complex atomic memory operations on a single memory word or doubleword are performed with the load-reserved (LR) and store-conditional (SC) instructions. LR.W loads a word from the address in rs1 , places the sign-extended value in rd , and registers a reservation set -a set of bytes that subsumes the bytes in the addressed word. SC.W conditionally writes a word in rs2 to the address in rs1 :  the SC.W succeeds only if the reservation is still valid and the reservation set contains the bytes being written. If
+
+the SC.W succeeds, the instruction writes the word in rs2 to  memory, and it writes zero to rd .  If  the SC.W fails,  the  instruction  does  not  write  to  memory,  and  it  writes  a  nonzero  value  to rd .  No  SC.W instruction shall retire unless it passes memory permission checks, but it is UNSPECIFIED whether any side effects of implicit address translation and protection memory accesses (such as setting a pagetable entry D bit) occur on a failed SC.W. For the purposes of memory protection, a failed SC.W may be treated  like  a  store.  Regardless  of  success  or  failure,  executing  an  SC.W  instruction  invalidates  any reservation held by this hart. LR.D and SC.D act analogously on doublewords and are only available on RV64. For RV64, LR.W and SC.W sign-extend the value placed in rd .
+
+Both  compare-and-swap  (CAS)  and  LR/SC  can  be  used  to  build  lock-free  data structures. After extensive discussion, we opted for LR/SC for several reasons: 1) CAS suffers from the ABA problem, which LR/SC avoids because it monitors all writes to the address rather than only checking for changes in the data value; 2) CAS would also  require  a  new  integer  instruction  format  to  support  three  source  operands (address, compare value, swap value) as well as a different memory system message format, which would complicate microarchitectures; 3) Furthermore, to avoid the ABA problem, other systems provide a double-wide CAS (DW-CAS) to allow a counter to be  tested  and  incremented  along  with  a  data  word.  This  requires  reading  five registers and writing two in one instruction, and also a new larger memory system message  type,  further  complicating  implementations;  4)  LR/SC  provides  a  more efficient implementation of many primitives as it only requires one load as opposed to two with CAS (one load before the CAS instruction to obtain a value for speculative computation, then a second load as part of the CAS instruction to check if value is unchanged before updating).
+
+The main disadvantage of LR/SC over CAS is livelock, which we avoid, under certain circumstances,  with  an  architected  guarantee  of  eventual  forward  progress  as described  below.  Another  concern  is  whether  the  influence  of  the  current  x86 architecture, with its DW-CAS, will complicate porting of synchronization libraries and other  software  that  assumes  DW-CAS  is  the  basic  machine  primitive.  A  possible mitigating factor is the recent addition of transactional memory instructions to x86, which might cause a move away from DW-CAS.
+
+More  generally, a multi-word  atomic  primitive is desirable, but there is still considerable  debate  about  what  form  this  should  take,  and  guaranteeing  forward progress adds complexity to a system.
+
+The failure code with value 1 encodes an unspecified failure. Other failure codes are reserved at this time. Portable software should only assume the failure code will be non-zero.
+
+<image>
+
+We reserve a failure code of 1 to mean ''unspecified'' so that simple implementations may return this value using the existing mux required for the SLT/SLTU instructions. More specific failure codes might be defined in future versions or extensions to the ISA.
+
+For LR and SC, the Zalrsc extension requires that the address held in rs1 be naturally aligned to the size of the operand (i.e., eight-byte aligned for doublewords and  four-byte  aligned for words ).  If  the address is not naturally aligned, an address-misaligned exception or an access-fault exception will be generated. The access-fault exception can be generated for a memory access that would otherwise be able to complete except for the misalignment, if the misaligned access should not be emulated.
+
+<image>
+
+Emulating misaligned LR/SC sequences is impractical in most systems.
+
+<image>
+
+Misaligned LR/SC  sequences  also  raise  the possibility of accessing  multiple reservation sets at once, which present definitions do not provide for.
+
+An  implementation  can  register  an  arbitrarily  large  reservation  set  on  each  LR,  provided  the reservation set includes all bytes of the addressed data word or doubleword. An SC can only pair with the most recent LR in program order. An SC may succeed only if no store from another hart to the reservation set can be observed to have occurred between the LR and the SC, and if there is no other SC between the LR and itself in program order. An SC may succeed only if no write from a device other than a hart to the bytes accessed by the LR instruction can be observed to have occurred between the LR and SC. Note this LR might have had a different effective address and data size, but reserved the SC's address as part of the reservation set.
+
+Following  this  model,  in  systems  with  memory  translation,  an  SC  is  allowed  to succeed if the earlier LR reserved the same location using an alias with a different virtual address, but is also allowed to fail if the virtual address is different.
+
+<image>
+
+To accommodate legacy devices and buses, writes from devices other than RISC-V harts  are  only  required  to  invalidate  reservations  when  they  overlap  the  bytes accessed by the LR. These writes are not required to invalidate the reservation when they access other bytes in the reservation set.
+
+The SC must fail if the address is not within the reservation set of the most recent LR in program order. The SC must fail if a store to the reservation set from another hart can be observed to occur between the LR and SC. The SC must fail if a write from some other device to the bytes accessed by the LR can be observed to occur between the LR and SC. (If such a device writes the reservation set but does not write the bytes accessed by the LR, the SC may or may not fail.) An SC must fail if there is another SC (to any address) between the LR and the SC in program order. The precise statement of the  atomicity  requirements  for  successful  LR/SC  sequences  is  defined  by  the  Atomicity  Axiom  in Section 17.1.
+
+The  platform  should  provide  a  means  to  determine  the  size  and  shape  of  the reservation set.
+
+A platform specification may constrain the size and shape of the reservation set.
+
+A  store-conditional  instruction  to  a  scratch  word  of  memory  should  be  used  to forcibly invalidate any existing load reservation:
+
+- ⚫ during a preemptive context switch, and
+- ⚫ if  necessary when changing virtual to physical address mappings, such as when migrating pages that might contain an active reservation.
+
+The invalidation of a hart's reservation when it executes an LR or SC imply that a hart can only hold one reservation at a time, and that an SC can only pair with the most recent LR, and LR with the next following SC, in program order. This is a restriction to the Atomicity Axiom in Section 17.1 that ensures software runs correctly on expected common implementations that operate in this manner.
+
+An  SC  instruction  can  never  be  observed  by  another  RISC-V  hart  before  the  LR  instruction  that established the reservation.
+
+<image>
+
+The LR/SC sequence can be given acquire semantics by setting the aq bit on the LR instruction. The LR/SC sequence can be given release semantics by by setting the rl
+
+bit on the SC instruction. Assuming suitable mappings for other atomic operations, setting the aq bit on the LR instruction, and setting the rl bit on the SC instruction makes the LR/SC sequence sequentially consistent in the C++ memory\_order\_seq\_cst sense. Such a sequence does not act as a fence for ordering ordinary load and store instructions before and after the sequence. Specific instruction mappings for other C++ atomic operations, or stronger notions of "sequential consistency", may require both bits to be set on either or both of the LR or SC instruction.
+
+If neither bit is set on either LR or SC, the LR/SC sequence can be observed to occur before or after surrounding memory operations from the same RISC-V hart. This can be appropriate when the LR/SC sequence is used to implement a parallel reduction operation.
+
+Software should not set the rl bit on an LR instruction unless the aq bit is also set, nor should software set the aq bit  on  an  SC  instruction unless the rl bit  is  also  set.  LR. rl and SC. aq instructions are not guaranteed to provide any stronger ordering than those with both bits clear, but may result in lower performance.
+
+Listing 2. Sample code for compare-and-swap function using LR/SC.
+
+<image>
+
+```
+# a0 holds address of memory location # a1 holds expected value # a2 holds desired value # a0 holds return value, 0 if successful, !0 otherwise cas: lr.w t0, (a0)        # Load original value. bne t0, a1, fail     # Doesn't match, so fail. sc.w t0, a2, (a0)    # Try to update. bnez t0, cas         # Retry if store-conditional failed. li a0, 0             # Set return to success. jr ra                # Return. fail: li a0, 1             # Set return to failure. jr ra                # Return.
+```
+
+LR/SC can be used to construct lock-free data structures. An example using LR/SC to implement a compare-and-swap function is shown in Listing 2. If inlined, compareand-swap functionality need only take four instructions.

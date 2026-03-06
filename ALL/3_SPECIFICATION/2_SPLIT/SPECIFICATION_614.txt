@@ -1,0 +1,7 @@
+## 32.2.15.5. compare and set
+
+- ⚫ vmseq.v[vxi]
+- ⚫ vmsgt[u].v[xi]
+- ⚫ vmsle[u].v[xi]
+- ⚫ vmslt[u].v[xi]
+- ⚫ vmsne.v[ivx]

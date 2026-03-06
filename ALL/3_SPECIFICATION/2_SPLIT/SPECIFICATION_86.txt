@@ -1,0 +1,3 @@
+## 19.4.2. Traps
+
+Execution of certain CMO instructions may result in traps due to CSR state, described in the Control and Status Register State section, or due to the address translation and protection mechanisms. The trapping behavior of CMO instructions is described in the following sections.

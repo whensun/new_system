@@ -1,0 +1,9 @@
+## 30.17.4. Swappable traps
+
+Another trap mode can support swappable state in the vector unit, where on a trap, special instructions can save and restore the vector unit microarchitectural state, to allow execution to continue correctly around imprecise traps.
+
+This mechanism is not defined in the current standard extensions.
+
+<image>
+
+A  future  extension  might  define  a  standard  way  of  saving  and  restoring  opaque microarchitectural  state  from  a  vector  unit  implementation  to  support  context switching with imprecise traps.

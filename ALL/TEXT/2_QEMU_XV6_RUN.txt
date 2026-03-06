@@ -1,0 +1,1077 @@
+============
+START ITER 1
+
+# 1 # Extension Must Be Active: NONE
+lui t0, 0x80000 # t0 = 0x0000000080000000
+addiw t1, t0, -1 # t1 = t0 + (-1) sign‑extended, result should be 0x000000007fffffff
+# Result: t1 = 0x7fffffff
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001ee	0x800001ee <test_end>
+a0             0x0	0
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0xffffffff80000000	-2147483648
+t1             0x7fffffff	2147483647
+t2             0x0	0
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0xffffffff80000000  -2147483648
+x6             0x7fffffff          2147483647
+x7             0x0                 0
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x0                 0
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 1
+==========
+
+============
+START ITER 2
+
+# 2 # Extension Must Be Active: NONE
+addiw sp, zero, -2048
+# Result: sp = 0xfffffffffffff800
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001ea	0x800001ea <test_end>
+a0             0x0	0
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x0	0
+t1             0x0	0
+t2             0x0	0
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0xfffffffffffff800  0xfffffffffffff800
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0
+x6             0x0                 0
+x7             0x0                 0
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x0                 0
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0xfffffffffffff800	0xfffffffffffff800
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 2
+==========
+
+============
+START ITER 3
+
+# 3 # Extension Must Be Active: NONE
+li t0, 0x7fffffff
+addiw t0, t0, 1
+# Result: t0 = 0xffffffff80000000
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001ee	0x800001ee <test_end>
+a0             0x0	0
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0xffffffff80000000	-2147483648
+t1             0x0	0
+t2             0x0	0
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0xffffffff80000000  -2147483648
+x6             0x0                 0
+x7             0x0                 0
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x0                 0
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 3
+==========
+
+============
+START ITER 4
+
+# 4 # Extension Must Be Active: NONE
+lui t1, 0x7ffff
+addi t1, t1, -1
+addiw t0, t1, 1
+# Result: t0 = 0x7ffff000
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001f0	0x800001f0 <test_end>
+a0             0x0	0
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x7ffff000	2147479552
+t1             0x7fffefff	2147479551
+t2             0x0	0
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x7ffff000          2147479552
+x6             0x7fffefff          2147479551
+x7             0x0                 0
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x0                 0
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 4
+==========
+
+============
+START ITER 5
+
+# 5 # Extension Must Be Active: NONE
+li t0, 0x80000001
+addiw t1, t0, 0
+# Result: t1 = 0xffffffff80000001
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001f2	0x800001f2 <test_end>
+a0             0x0	0
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x80000001	2147483649
+t1             0xffffffff80000001	-2147483647
+t2             0x0	0
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x80000001          2147483649
+x6             0xffffffff80000001  -2147483647
+x7             0x0                 0
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x0                 0
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 5
+==========
+
+============
+START ITER 6
+
+# 6 # Extension Must Be Active: NONE
+li t0, 0x6000000000000000
+csrw tdata1, t0
+csrw tdata2, zero
+csrr t1, tdata1
+li t2, 0xF000000000000000
+and a0, t1, t2
+# Result: a0 = 0x6000000000000000
+
+priv           0x3	prv:3 [Machine]
+pc             0x80000202	0x80000202 <test_end>
+a0             0x6000000000000000	6917529027641081856
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x6000000000000000	6917529027641081856
+t1             0x6000000000000000	6917529027641081856
+t2             0xf000000000000000	-1152921504606846976
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x6000000000000000  6917529027641081856
+x6             0x6000000000000000  6917529027641081856
+x7             0xf000000000000000  -1152921504606846976
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x6000000000000000  6917529027641081856
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 6
+==========
+
+============
+START ITER 7
+
+# 7 # Extension Must Be Active: NONE
+li t1, 0x2000000000000000
+csrw tdata1, t1
+csrr t0, tdata1
+li t2, 0xF000000000000000
+and t0, t0, t2
+# Result: t0 != 0x2000000000000000
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001fe	0x800001fe <test_end>
+a0             0x0	0
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x2000000000000000	2305843009213693952
+t1             0x2000000000000000	2305843009213693952
+t2             0xf000000000000000	-1152921504606846976
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x2000000000000000  2305843009213693952
+x6             0x2000000000000000  2305843009213693952
+x7             0xf000000000000000  -1152921504606846976
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x0                 0
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 7
+==========
+
+============
+START ITER 8
+
+# 8 # Extension Must Be Active: Zicbom
+li t0, 0x6000000000000000
+csrw tdata1, t0
+csrr t1, tdata1
+li t2, 0xF000000000000000
+and t3, t1, t2
+# Result: t3 = 0
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001fe	0x800001fe <test_end>
+a0             0x0	0
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x6000000000000000	6917529027641081856
+t1             0x6000000000000000	6917529027641081856
+t2             0xf000000000000000	-1152921504606846976
+t3             0x6000000000000000	6917529027641081856
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x6000000000000000  6917529027641081856
+x6             0x6000000000000000  6917529027641081856
+x7             0xf000000000000000  -1152921504606846976
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x0                 0
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x6000000000000000  6917529027641081856
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 8
+==========
+
+============
+START ITER 9
+
+# 9 # Extension Must Be Active: Zicbop
+li a0, 0xF000000000000000 # a0 = TYPE field mask shifted (type=6 << 60, other bits zero)
+li a1, 0x6000000000000000 # a1 = (6 << 60) set TYPE=6, other bits zero
+csrw tdata1, a1 # attempt to write tdata1 with TYPE=6
+csrr a2, tdata1 # read back tdata1
+and a2, a2, a0 # isolate TYPE field
+srli a2, a2, 60 # shift TYPE field down to LSB
+# Result: a2 = 0
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001fe	0x800001fe <test_end>
+a0             0xf000000000000000	-1152921504606846976
+a1             0x6000000000000000	6917529027641081856
+a2             0x6	6
+a3             0x0	0
+t0             0x0	0
+t1             0x0	0
+t2             0x0	0
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0
+x6             0x0                 0
+x7             0x0                 0
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0xf000000000000000  -1152921504606846976
+x11            0x6000000000000000  6917529027641081856
+x12            0x6                 6
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 9
+==========
+
+============
+START ITER 10
+
+# 10 # Extension Must Be Active: Zicboz
+li t0, 0x6000000000000001 # set TYPE=6 (bits 63..60) and mcontrol6.select=1 (bit 0)
+csrw tdata1, t0 # write to tdata1 CSR
+csrr t1, tdata1 # read back tdata1
+li t2, 0xF000000000000001 # mask for TYPE field and select bit
+and a0, t1, t2 # isolate and combine fields into a0
+# Result: a0 = 0x6000000000000001
+
+priv           0x3	prv:3 [Machine]
+pc             0x80000202	0x80000202 <test_end>
+a0             0x6000000000000001	6917529027641081857
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x6000000000000001	6917529027641081857
+t1             0x6000000000000001	6917529027641081857
+t2             0xf000000000000001	-1152921504606846975
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x6000000000000001  6917529027641081857
+x6             0x6000000000000001  6917529027641081857
+x7             0xf000000000000001  -1152921504606846975
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x6000000000000001  6917529027641081857
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 10
+==========
+
+============
+START ITER 11
+
+# 11 # Extension Must Be Active: Zicboz
+li t0, 0x6000000000000000 # set TYPE=6 in tdata1 (bits 63..60)
+csrw tdata1, t0 # write to tdata1 CSR
+li t1, 1 # set mcontrol6.select = 1
+csrw 0x7c4, t1 # write to mcontrol6 CSR (implementation‑specific address)
+csrr a0, tdata1 # read back tdata1
+li t2, 0xF000000000000000 # mask for TYPE field
+and a0, a0, t2 # isolate TYPE bits
+# Result: a0 = 0x6000000000000000
+
+priv           0x3	prv:3 [Machine]
+pc             0x80000210	0x80000210 <trap_vector>
+a0             0x0	0
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x6000000000000000	6917529027641081856
+t1             0x1	1
+t2             0x0	0
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x6000000000000000  6917529027641081856
+x6             0x1                 1
+x7             0x0                 0
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x0                 0
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000040a00007e00	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:3 HPP:3 SPP:0 MPIE:0 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x2	2
+
+END ITER 11
+==========
+
+============
+START ITER 12
+
+# 12 # Extension Must Be Active: Zicbom
+li t0, 0x6000000000000000
+csrw tdata1, t0 # write TYPE=6 into tdata1
+csrr t1, tdata1 # read back tdata1
+li t2, 0xF000000000000000
+and t2, t1, t2 # isolate TYPE field (bits 63..60)
+# Result: t2 = 0x6000000000000000
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001fe	0x800001fe <test_end>
+a0             0x0	0
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x6000000000000000	6917529027641081856
+t1             0x6000000000000000	6917529027641081856
+t2             0x6000000000000000	6917529027641081856
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x6000000000000000  6917529027641081856
+x6             0x6000000000000000  6917529027641081856
+x7             0x6000000000000000  6917529027641081856
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x0                 0
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 12
+==========
+
+============
+START ITER 13
+
+# 13 # Extension Must Be Active: Zicboz
+li t1, 0x6000000000000000
+csrw tdata1, t1
+csrr a0, tdata1
+# Result: a0 = 0x6000000000000000
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001f4	0x800001f4 <test_end>
+a0             0x6000000000000000	6917529027641081856
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x0	0
+t1             0x6000000000000000	6917529027641081856
+t2             0x0	0
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0
+x6             0x6000000000000000  6917529027641081856
+x7             0x0                 0
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x6000000000000000  6917529027641081856
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 13
+==========
+
+============
+START ITER 14
+
+# 14 # Extension Must Be Active: Zicbop
+li a0, 0x6000000000000000
+csrw tdata1, a0
+csrr a1, tdata1
+andi a1, a1, 0x7ff
+# Result: a1 = 0x6000000000000000
+
+priv           0x3	prv:3 [Machine]
+pc             0x800001f8	0x800001f8 <test_end>
+a0             0x6000000000000000	6917529027641081856
+a1             0x0	0
+a2             0x0	0
+a3             0x0	0
+t0             0x0	0
+t1             0x0	0
+t2             0x0	0
+t3             0x0	0
+f0             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f1             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f2             {float = 0x0, double = 0x0} {float = 0, double = 0}
+f3             {float = 0x0, double = 0x0} {float = 0, double = 0}
+ft0            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft1            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft2            {float = 0, double = 0}	(raw 0x0000000000000000)
+ft3            {float = 0, double = 0}	(raw 0x0000000000000000)
+v0             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v1             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v2             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+v3             {q = {0x0}, l = {0x0, 0x0}, w = {0x0, 0x0, 0x0, 0x0}, s = {0x0, 
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, b = {0x0 <repeats 16 times>}}
+x1             0x0                 0x0
+x2             0x0                 0x0
+x3             0x0                 0x0
+x4             0x0                 0x0
+x5             0x0                 0
+x6             0x0                 0
+x7             0x0                 0
+x8             0x0                 0x0
+x9             0x0                 0
+x10            0x6000000000000000  6917529027641081856
+x11            0x0                 0
+x12            0x0                 0
+x13            0x0                 0
+x14            0x0                 0
+x15            0x0                 0
+x16            0x0                 0
+x17            0x0                 0
+x18            0x0                 0
+x19            0x0                 0
+x20            0x0                 0
+x21            0x0                 0
+x22            0x0                 0
+x23            0x0                 0
+x24            0x0                 0
+x25            0x0                 0
+x26            0x0                 0
+x27            0x0                 0
+x28            0x0                 0
+x29            0x0                 0
+x30            0x0                 0
+x31            0x0                 0
+ra             0x0	0x0
+sp             0x0	0x0
+gp             0x0	0x0
+tp             0x0	0x0
+mstatus        0x8000000a00006680	SD:1 VM:00 MXR:0 PUM:0 MPRV:0 XS:0 FS:3 MPP:0 HPP:3 SPP:0 MPIE:1 HPIE:0 SPIE:0 UPIE:0 MIE:0 HIE:0 SIE:0 UIE:0
+mcause         0x0	0
+
+END ITER 14
+==========

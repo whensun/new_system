@@ -1,0 +1,27 @@
+## 3.1.11. Machine Counter-Enable ( mcounteren ) Register
+
+The counter-enable mcounteren register is a 32-bit register that controls the availability of the hardware performance-monitoring counters to the next-lower privileged mode.
+
+Figure 18. Counter-enable ( mcounteren ) register.
+
+<image>
+
+The settings in this register only control accessibility. The act of reading or writing this register does not affect the underlying counters, which continue to increment even when not accessible.
+
+When the CY, TM, IR, or HPM n bit in the mcounteren register is clear, attempts to read the cycle , time , instret ,  or hpmcountern register while executing in S-mode or U-mode will cause an illegal-instruction exception. When one of these bits is set, access to the corresponding register is permitted in the next implemented privilege mode (S-mode if implemented, otherwise U-mode).
+
+<image>
+
+The counter-enable bits support two common use cases with minimal hardware. For harts  that  do  not  need  high-performance  timers  and  counters,  machine-mode software  can  trap  accesses  and  implement  all  features  in  software.  For  harts  that need high-performance timers and counters but are not concerned with obfuscating the  underlying  hardware  counters,  the  counters  can  be  directly  exposed  to  lower privilege modes.
+
+The cycle , instret ,  and hpmcountern CSRs are read-only shadows of mcycle , minstret ,  and mhpmcounter n , respectively. The time CSR is a read-only shadow of the memory-mapped mtime register. Analogously, when XLEN=32, the cycleh , instreth and hpmcounternh CSRs are read-only shadows of mcycleh , minstreth and mhpmcounternh ,  respectively. When XLEN=32, the timeh CSR is a read-only shadow of the upper 32 bits of the memory-mapped mtime register, while time shadows only the lower 32 bits of mtime .
+
+<image>
+
+Implementations  can  convert  reads  of  the time and timeh CSRs  into  loads  to  the memory-mapped mtime register,  or  emulate  this  functionality  on  behalf  of  less-
+
+<image>
+
+privileged modes in M-mode software.
+
+In harts with U-mode, the mcounteren must be implemented, but all fields are WARL and may be readonly  zero,  indicating  reads  to  the  corresponding  counter  will  cause  an  illegal-instruction  exception when executing in a less-privileged mode. In harts without U-mode, the mcounteren register should not exist.

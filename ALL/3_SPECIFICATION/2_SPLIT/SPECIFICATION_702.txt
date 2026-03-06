@@ -1,0 +1,33 @@
+## 1.1. RISC-V Privileged Software Stack Terminology
+
+This section describes the terminology we use to describe components of the wide range of possible privileged software stacks for RISC-V.
+
+Figure 1 shows some of the possible software stacks that can be supported by the RISC-V architecture. The  left-hand  side  shows  a  simple  system  that  supports  only  a  single  application  running  on  an application execution environment (AEE). The application is coded to run with a particular application binary interface (ABI). The ABI includes the supported user-level ISA plus a set of ABI calls to interact with  the  AEE.  The  ABI  hides  details  of  the  AEE  from  the  application  to  allow  greater  flexibility  in implementing the AEE. The same ABI could be implemented natively on multiple different host OSs, or could  be  supported  by  a  user-mode  emulation  environment  running  on  a  machine  with  a  different native ISA.
+
+<image>
+
+Our graphical convention represents abstract interfaces using black boxes with white text,  to  separate  them  from  concrete  instances  of  components  implementing  the interfaces.
+
+Figure 1. Different implementation stacks supporting various forms of privileged execution.
+
+<image>
+
+<image>
+
+<image>
+
+The middle configuration shows a conventional operating system (OS) that can support multiprogrammed execution of multiple applications. Each application communicates over an ABI with the  OS,  which  provides  the  AEE.  Just  as  applications  interface  with  an  AEE  via  an  ABI,  RISC-V operating  systems  interface  with  a  supervisor  execution  environment  (SEE)  via  a  supervisor  binary
+
+interface (SBI). An SBI comprises the user-level and supervisor-level ISA together with a set of SBI function calls. Using a single SBI across all SEE implementations allows a single OS binary image to run on any SEE. The SEE can be a simple boot loader and BIOS-style IO system in a low-end hardware platform, or a hypervisor-provided virtual machine in a high-end server, or a thin translation layer over a host operating system in an architecture simulation environment.
+
+<image>
+
+Most  supervisor-level  ISA  definitions  do  not  separate  the  SBI  from  the  execution environment and/or the hardware platform, complicating virtualization and bring-up of new hardware platforms.
+
+The rightmost configuration shows a virtual machine monitor configuration where multiple multiprogrammed OSs are supported by a single hypervisor. Each OS communicates via an SBI with the hypervisor, which provides the SEE. The hypervisor communicates with the hypervisor execution environment (HEE) using a hypervisor binary interface (HBI), to isolate the hypervisor from details of the hardware platform.
+
+<image>
+
+The  ABI,  SBI,  and  HBI  are  still  a  work-in-progress,  but  we  are  now  prioritizing support for Type-2 hypervisors where the SBI is provided recursively by an S-mode OS.
+
+Hardware  implementations  of  the  RISC-V  ISA  will  generally  require  additional  features  beyond  the privileged ISA to support the various execution environments (AEE, SEE, or HEE).

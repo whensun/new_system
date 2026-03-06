@@ -1,0 +1,3 @@
+## 32.1. Introduction
+
+This document describes the RISC-V vector cryptography extensions. All instructions proposed here are based on the Vector registers. The instructions are designed to be highly performant, with large application  and  server-class  cores  being  the  main  target.  A  companion  chapter Volume I: Scalar & Entropy Source Instructions , describes cryptographic instruction proposals for smaller cores which do not implement the vector extension.

@@ -1,0 +1,13 @@
+## 29.4.2.1. Logical with negate
+
+| RV32   | RV64   | Mnemonic            | Instruction               |
+|--------|--------|---------------------|---------------------------|
+| ✓      | ✓      | andn rd , rs1 , rs2 | AND with inverted operand |
+| ✓      | ✓      | orn rd , rs1 , rs2  | OR with inverted operand  |
+| ✓      | ✓      | xnor rd , rs1 , rs2 | Exclusive NOR             |
+
+## Implementation Hint
+
+The Logical with Negate instructions can be implemented by inverting the rs2 inputs to the base-required AND, OR, and XOR logic instructions. In some implementations, the inverter on rs2 used for subtraction can be reused for this purpose.
+
+<image>

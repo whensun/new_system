@@ -1,0 +1,21 @@
+## 30.10.2. Widening Vector Arithmetic Instructions
+
+A  few  vector  arithmetic  instructions  are  defined  to  be widening operations  where  the  destination vector register group has EEW=2*SEW and EMUL=2*LMUL. These are generally given a vw* prefix on the opcode, or vfw* for vector floating-point instructions.
+
+The first vector register group operand can be either single or double-width.
+
+```
+# Assembly syntax pattern for vector widening arithmetic instructions # Double-width result, two single-width sources: 2*SEW = SEW op SEW vwop.vv  vd, vs2, vs1, vm  # integer vector-vector      vd[i] = vs2[i] op vs1[i] vwop.vx  vd, vs2, rs1, vm  # integer vector-scalar      vd[i] = vs2[i] op x[rs1] # Double-width result, first source double-width, second source single-width: 2*SEW = 2*SEW op SEW vwop.wv  vd, vs2, vs1, vm  # integer vector-vector      vd[i] = vs2[i] op vs1[i] vwop.wx  vd, vs2, rs1, vm  # integer vector-scalar      vd[i] = vs2[i] op x[rs1]
+```
+
+<image>
+
+Originally, a w suffix was used on opcode, but this could be confused with the use of a w suffix to mean word-sized operations in doubleword integers, so the w was moved to prefix.
+
+<image>
+
+The floating-point widening operations were changed to vfw* from vwf* to  be  more
+
+consistent with any scalar widening floating-point operations that will be written as fw* .
+
+Widening instruction encodings must follow the constraints in Section 30.5.2.

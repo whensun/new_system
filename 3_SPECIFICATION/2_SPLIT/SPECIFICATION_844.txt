@@ -1,0 +1,9 @@
+## 12.5. Sv48: Page-Based 48-bit Virtual-Memory System
+
+This section describes a simple paged virtual-memory system for SXLEN=64, which supports 48-bit virtual  address  spaces.  Sv48  is  intended  for  systems  for  which  a  39-bit  virtual  address  space  is insufficient. It closely follows the design of Sv39, simply adding an additional level of page table, and so this chapter only details the differences between the two schemes.
+
+Implementations that support Sv48 must also support Sv39.
+
+<image>
+
+Systems  that  support  Sv48  can  also  support  Sv39  at  essentially  no  cost,  and  so should do so to maintain compatibility with supervisor software that assumes Sv39.

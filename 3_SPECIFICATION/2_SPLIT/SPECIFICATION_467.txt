@@ -1,0 +1,7 @@
+## 31.3.3. Zbkx - Crossbar permutation instructions
+
+These  instructions  are  useful  for  implementing  SBoxes  in  constant  time,  and  potentially  with  DPA protections.  These  are  separated  from  the  Bit-manipulation  for  Cryptography  because  they  have  an
+
+implementation overhead which cannot be amortised across other instructions.
+
+Please refer to Crossbar permutations.

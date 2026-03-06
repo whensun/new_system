@@ -1,0 +1,16 @@
+## 19.3.2. Cache-Block Operations
+
+A CBO instruction causes one or more operations to be performed on the cache blocks identified by the instruction. In general, a CBO instruction may identify one or more cache blocks; however, in the initial set of CMO extensions, CBO instructions identify a single cache block only.
+
+A cache-block management instruction performs one of the following operations, relative to the copy of a given cache block allocated in a given cache:
+
+- ⚫ An invalidate operation deallocates the copy of the cache block
+
+- ⚫ A clean operation performs a write transfer to another cache or to memory if the data in the copy of the cache block have been modified by a store operation
+- ⚫ A flush operation atomically performs a clean operation followed by an invalidate operation
+
+Additional  details,  including  the  actual  operation  performed  by  a  given  cache-block  management instruction, are described in Cache-Block Management Instructions.
+
+A cache-block zero instruction performs a set of store operations that write zeros to the set of bytes corresponding  to  a  cache  block.  Unless  specified  otherwise,  the  store  operations  generated  by  a cache-block  zero  instruction  have  the  same  general  properties  and  behaviors  that  other  store instructions in the architecture have. An implementation may or may not update the entire set of bytes atomically  with  a  single  store  operation.  Additional  details  are  described  in  Cache-Block  Zero Instructions.
+
+A  cache-block  prefetch  instruction  is  a  HINT  to  the  hardware  that  software  expects  to  perform  a particular type of memory access in the near future. Additional details are described in Cache-Block Prefetch Instructions.

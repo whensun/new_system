@@ -1,0 +1,9 @@
+## 12.6. Sv57: Page-Based 57-bit Virtual-Memory System
+
+This  section  describes  a  simple  paged  virtual-memory  system  designed  for  RV64  systems,  which supports 57-bit virtual address spaces. Sv57 is intended for systems for which a 48-bit virtual address space is insufficient. It closely follows the design of Sv48, simply adding an additional level of page table, and so this chapter only details the differences between the two schemes.
+
+Implementations that support Sv57 must also support Sv48.
+
+<image>
+
+Systems  that  support  Sv57  can  also  support  Sv48  at  essentially  no  cost,  and  so should do so to maintain compatibility with supervisor software that assumes Sv48.

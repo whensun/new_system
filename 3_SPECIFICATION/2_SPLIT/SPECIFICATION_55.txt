@@ -1,0 +1,9 @@
+## Chapter 13. "A" Extension for Atomic Instructions, Version 2.1
+
+The atomic-instruction extension, named "A", contains instructions that atomically read-modify-write memory to support synchronization between multiple RISC-V harts running in the same memory space. The  two  forms  of  atomic  instruction  provided  are  load-reserved/store-conditional  instructions  and atomic fetch-and-op memory instructions. Both types of atomic instruction support various memory consistency  orderings  including  unordered,  acquire,  release,  and  sequentially  consistent  semantics. These instructions allow RISC-V to support the RCsc memory consistency model. (Gharachorloo et al., 1990)
+
+<image>
+
+After much debate, the language community and architecture community appear to have  finally  settled  on  release  consistency  as  the  standard  memory  consistency model and so the RISC-V atomic support is built around this model.
+
+The A extension comprises instructions provided by the Zaamo and Zalrsc extensions.

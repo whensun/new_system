@@ -1,0 +1,9 @@
+## 32.2.15.10. multiply-add
+
+- ⚫ vmacc.v[vx]
+- ⚫ vmadd.v[vx]
+- ⚫ vnmsac.v[vx]
+- ⚫ vnmsub.v[vx]
+- ⚫ vwmacc.v[vx]
+- ⚫ vwmacc[s]u.v[vx]
+- ⚫ vwmaccus.vx

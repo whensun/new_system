@@ -1,0 +1,29 @@
+## 29.5.5. bext
+
+## Synopsis
+
+Single-Bit Extract (Register)
+
+## Mnemonic
+
+bext rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction returns a single bit extracted from rs1 at  the  index specified in rs2 .  The index is read from the lower log2(XLEN) bits of rs2 .
+
+## Operation
+
+```
+let index = X(rs2) & (XLEN - 1); X(rd) = (X(rs1) >> index) & 1;
+```
+
+## Included in
+
+| Extension                     | Minimum version   | Lifecycle state   |
+|-------------------------------|-------------------|-------------------|
+| Zbs (Single-bit instructions) | v1.0              | Ratified          |

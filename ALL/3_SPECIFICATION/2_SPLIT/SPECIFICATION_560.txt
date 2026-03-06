@@ -1,0 +1,7 @@
+## 31.8.2.2. Conditioning: Cryptographic and Non-Cryptographic
+
+Raw physical randomness (noise) sources are rarely statistically perfect, and some generate very large amounts of bits, which need to be "debiased" and reduced to a smaller number of bits. This process is called  conditioning.  A  secure  hash  function  is  an  example  of  a  cryptographic  conditioner.  It  is important to note that even though hashing may make any data look random, it does not increase its entropy content.
+
+Non-cryptographic conditioners and extractors such as von Neumann's "debiased coin tossing" (von Neumann, 1951) are easier to implement efficiently but may reduce entropy content (in individual bits
+
+removed) more than cryptographic hashes, which mix the input entropy very efficiently. However, they do not require cryptanalytic or computational hardness assumptions and are therefore inherently more future-proof. See Section 31.8.5.5 for a more detailed discussion.

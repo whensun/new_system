@@ -1,0 +1,23 @@
+## 6.1.1. CSR Access Ordering
+
+Each  RISC-V  hart  normally  observes  its  own  CSR  accesses,  including  its  implicit  CSR  accesses,  as performed in program order. In particular, unless specified otherwise, a CSR access is performed after the execution of any prior instructions in program order whose behavior modifies or is modified by the CSR state and before the execution of any subsequent instructions in program order whose behavior modifies  or  is  modified  by  the  CSR  state.  Furthermore,  an  explicit  CSR  read  returns  the  CSR  state before  the  execution  of  the  instruction,  while  an  explicit  CSR  write  suppresses  and  overrides  any implicit writes or modifications to the same CSR by the same instruction.
+
+Likewise, any side effects from an explicit CSR access are normally observed to occur synchronously in program  order.  Unless  specified  otherwise,  the  full  consequences  of  any  such  side  effects  are observable  by  the  very  next  instruction,  and  no  consequences  may  be  observed  out-of-order  by preceding instructions. (Note the distinction made earlier between side effects and indirect effects of CSR writes.)
+
+For the RVWMO memory consistency model (Chapter 17), CSR accesses are weakly ordered by default, so  other  harts  or  devices  may  observe  CSR  accesses  in  an  order  different  from  program  order.  In addition, CSR accesses are not ordered with respect to explicit memory accesses, unless a CSR access modifies the execution behavior of the instruction that performs the explicit memory access or unless a CSR access and an explicit memory access are ordered by either the syntactic dependencies defined by the memory model or the ordering requirements defined by the Memory-Ordering PMAs section in Volume II of this manual. To enforce ordering in all other cases, software should execute a FENCE
+
+instruction  between  the  relevant  accesses.  For  the  purposes  of  the  FENCE  instruction,  CSR  read accesses are classified as device input (I), and CSR write accesses are classified as device output (O).
+
+Informally, the CSR space acts as a weakly ordered memory-mapped I/O region, as defined  by  the  Memory-Ordering  PMAs  section  in  Volume  II  of  this  manual.  As  a result, the order of CSR accesses with respect to all other accesses is constrained by the same mechanisms that constrain the order of memory-mapped I/O accesses to such a region.
+
+<image>
+
+These CSR-ordering constraints are imposed to support ordering main memory and memory-mapped I/O accesses with respect to CSR accesses that are visible to, or affected by, devices or other harts. Examples include the time , cycle , and mcycle CSRs, in addition to CSRs that reflect pending interrupts, like mip and sip . Note that implicit reads of  such  CSRs  (e.g.,  taking  an  interrupt  because  of  a  change  in mip )  are  also ordered as device input.
+
+Most CSRs (including, e.g., the fcsr ) are not visible to other harts; their accesses can be freely reordered in the global memory order with respect to FENCE instructions without violating this specification.
+
+The hardware platform may define that accesses to certain CSRs are strongly ordered, as defined by the Memory-Ordering PMAs section in Volume II of this manual. Accesses to strongly ordered CSRs have  stronger  ordering  constraints  with  respect  to  accesses  to  both  weakly  ordered  CSRs  and accesses to memory-mapped I/O regions.
+
+<image>
+
+The  rules  for  the  reordering  of  CSR  accesses  in  the  global  memory  order  should probably  be  moved  to  Chapter  17  concerning  the  RVWMO  memory  consistency model.

@@ -1,0 +1,31 @@
+## Chapter 1. Introduction
+
+RISC-V (pronounced "risk-five") is a new instruction-set architecture (ISA) that was originally designed to support computer architecture research and education, but which we now hope will also become a standard  free  and  open  architecture  for  industry  implementations.  Our  goals  in  defining  RISC-V include:
+
+- ⚫ A completely open ISA that is freely available to academia and industry.
+- ⚫ A real ISA  suitable  for  direct  native  hardware  implementation,  not  just  simulation  or  binary translation.
+- ⚫ An ISA that avoids "over-architecting" for a particular microarchitecture style (e.g., microcoded, inorder, decoupled, out-of-order) or implementation technology (e.g., full-custom, ASIC, FPGA), but which allows efficient implementation in any of these.
+- ⚫ An  ISA  separated  into  a small base  integer  ISA,  usable  by  itself  as  a  base  for  customized accelerators  or  for  educational  purposes,  and  optional  standard  extensions,  to  support  generalpurpose software development.
+- ⚫ Support for the revised 2008 IEEE-754 floating-point standard. ( ANSI/IEEE Std 754-2008, IEEE Standard for Floating-Point Arithmetic , 2008)
+- ⚫ An ISA supporting extensive ISA extensions and specialized variants.
+- ⚫ Both  32-bit  and  64-bit  address  space  variants  for  applications,  operating  system  kernels,  and hardware implementations.
+- ⚫ An  ISA  with  support  for  highly  parallel  multicore  or  manycore  implementations,  including heterogeneous multiprocessors.
+- ⚫ Optional variable-length instructions to  both expand available instruction encoding space and to support an optional dense instruction encoding for  improved  performance, static code size, and energy efficiency.
+- ⚫ A fully virtualizable ISA to ease hypervisor development.
+- ⚫ An ISA that simplifies experiments with new privileged architecture designs.
+
+<image>
+
+Commentary on our design decisions  is  formatted  as  in  this  paragraph.  This  nonnormative  text  can  be  skipped  if  the  reader  is  only  interested  in  the  specification itself.
+
+<image>
+
+The name RISC-V was chosen to represent the fifth major RISC ISA design from UC Berkeley (RISC-I (Patterson & Séquin, 1981), RISC-II (Katevenis et al., 1983), SOAR (Ungar et al., 1984), and SPUR (Lee et al., 1989) were the first four). We also pun on the use of the Roman numeral "V" to signify "variations" and "vectors", as support for a  range  of  architecture  research,  including  various  data-parallel  accelerators,  is  an explicit goal of the ISA design.
+
+The  RISC-V  ISA  is  defined  avoiding  implementation  details  as  much  as  possible  (although commentary  is  included  on  implementation-driven  decisions)  and  should  be  read  as  the  softwarevisible interface to a wide variety of implementations rather than as the design of a particular hardware artifact. The RISC-V manual is structured in two volumes. This volume covers the design of the base unprivileged instructions, including optional unprivileged ISA extensions. Unprivileged instructions are those that are generally usable in all privilege modes in all privileged architectures, though behavior might vary depending on privilege mode and privilege architecture. The second volume provides the
+
+design of the first ("classic") privileged architecture.  The  manuals  use  IEC  80000-13:2008 conventions, with a byte of 8 bits.
+
+<image>
+
+In  the  unprivileged  ISA  design,  we  tried  to  remove  any  dependence  on  particular microarchitectural  features,  such  as  cache  line  size,  or  on  privileged  architecture details,  such  as  page  translation.  This  is  both  for  simplicity  and  to  allow  maximum flexibility for alternative microarchitectures or alternative privileged architectures.

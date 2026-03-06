@@ -1,0 +1,29 @@
+## 29.5.44. sh3add.uw
+
+## Synopsis
+
+Shift unsigned word left by 3 and add
+
+## Mnemonic
+
+sh3add.uw rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This  instruction  performs  an  XLEN-wide  addition  of  two  addends.  The  first  addend  is rs2 .  The second addend is the unsigned value formed by extracting  the  least-significant  word  of rs1 and shifting it left by 3 places.
+
+## Operation
+
+```
+let base = X(rs2); let index = EXTZ(X(rs1)[31..0]); X(rd) = base + (index << 3);
+```
+
+## Included in
+
+| Extension                             |   Minimum version | Lifecycle state   |
+|---------------------------------------|-------------------|-------------------|
+| Zba (Address generation instructions) |              0.93 | Ratified          |

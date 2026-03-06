@@ -1,0 +1,12 @@
+## 32.2.14. Zvksg - ShangMi Algorithm Suite with GCM
+
+This extension is shorthand for the following set of other extensions:
+
+| Included Extension   | Description   |
+|----------------------|---------------|
+| Zvks                 | Zvks          |
+| Zvkg                 | Zvkg          |
+
+<image>
+
+This  extension  combines  the  ShangMi  Algorithm  Suite  with  the  GCM/GMAC extension to enable high-performance SM4-GCM.

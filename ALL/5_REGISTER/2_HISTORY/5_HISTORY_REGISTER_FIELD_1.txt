@@ -1,0 +1,50 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: scountinhibit
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, based on the text below, output all fields for scountinhibit register. Do not give any introduction.
+
+The text below:
+
+REGISTER: scountinhibit
+WIDTH: SXLEN
+TEXT:
+## Chapter 9. "Smcdeleg" Counter Delegation Extension, Version 1.0
+
+In modern 'Rich OS' environments, hardware performance monitoring resources are managed by the kernel,  kernel  driver,  and/or  hypervisor.  Counters  may  be  configured  with  differing  scopes,  in  some cases  counting  events  system-wide,  while  in  others  counting  events  on  behalf  of  a  single  virtual machine or application. In such environments, the latency of counter writes has a direct impact on overall profiling overhead as a result of frequent counter writes during:
+
+1. Sample collection, to clear overflow indication, and reload overflowed counter(s)
+2. Context switch, between processes, threads, containers, or virtual machines
+
+This extension provides a means for M-mode to allow writing select counters and event selectors from S/HS-mode.  The  purpose  is  to  avert  transitions  to  and  from  M-mode  that  add  latency  to  these performance critical  supervisor/hypervisor  code  sections.  This  extension  also  defines  one  new  CSR, scountinhibit.
+
+For a Machine-level environment, extension Smcdeleg ('Sm' for Privileged architecture and Machinelevel  extension,  'cdeleg'  for  Counter  Delegation)  encompasses  all  added  CSRs  and  all  behavior modifications for a hart, over all privilege levels. For a Supervisor-level environment, extension Ssccfg ('Ss'  for  Privileged  architecture  and  Supervisor-level  extension,  'ccfg'  for  Counter  Configuration) provides access to delegated counters, and to new supervisor-level state.
+
+###
+
+## 9.2. Supervisor Counter Inhibit ( scountinhibit ) Register
+
+Smcdeleg/Ssccfg defines a new scountinhibit register,  a  masked alias of mcountinhibit .  For  counters delegated to S-mode, the associated mcountinhibit bits can be accessed via scountinhibit . For counters not delegated to S-mode, the associated bits in scountinhibit are read-only zero.
+
+When menvcfg .CDE=0, attempts to access scountinhibit raise an illegal instruction exception. When the Supervisor Counter Delegation extension is enabled, attempts to access scountinhibit from VS-mode or VU-mode raise a virtual-instruction exception.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+**Register:** scountinhibit  
+**Width:** SXLEN  
+
+| Bits | Name | Description |
+|------|------|-------------|
+| 0    | CY   | Inhibit the **cycle** counter when set. |
+| 1    | TM   | Inhibit the **timer** counter when set (if the implementation provides a timer counter). |
+| 2    | IR   | Inhibit the **instret** (instructions‑retired) counter when set. |
+| 3‑(SXLEN‑1) | HPM[n] (n = 0 … SXLEN‑4) | Inhibit the corresponding **hardware performance monitoring (HPM) counter** hpmcounter3 + n when set. Each bit masks one HPM counter; e.g., bit 3 masks hpmcounter3, bit 4 masks hpmcounter4, … up to the highest implemented HPM counter. |
+| (Unused/Reserved) | — | Reads as zero; writes are ignored. |
+======================================================= END - 1 ========================================================

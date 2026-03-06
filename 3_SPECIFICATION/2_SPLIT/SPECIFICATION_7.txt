@@ -1,0 +1,43 @@
+## 1.6. Exceptions, Traps, and Interrupts
+
+We use the term exception to refer to an unusual condition occurring at run time associated with an instruction in the current RISC-V hart. We use the term interrupt to refer to an external asynchronous event that may cause a RISC-V hart to experience an unexpected transfer of control. We use the term trap to refer to the transfer of control to a trap handler caused by either an exception or an interrupt.
+
+The  instruction  descriptions  in  following  chapters  describe  conditions  that  can  raise  an  exception during execution. The general behavior of most RISC-V EEIs is that a trap to some handler occurs when an exception is signaled on an instruction (except for floating-point exceptions, which, in the standard floating-point extensions, do not cause traps). The manner in which interrupts are generated, routed to, and enabled by a hart depends on the EEI.
+
+<image>
+
+Our use of "exception" and "trap" is compatible with that in the IEEE-754 floatingpoint standard.
+
+How traps are handled and made visible to software running on the hart depends on the enclosing execution  environment.  From  the  perspective  of  software  running  inside  an  execution  environment, traps encountered by a hart at runtime can have four different effects:
+
+## Contained Trap
+
+The  trap  is  visible  to,  and  handled  by,  software  running  inside  the  execution  environment.  For
+
+example, in an EEI providing both supervisor and user mode on harts, an ECALL by a user-mode hart will generally result in a transfer of control to a supervisor-mode handler running on the same hart. Similarly, in the same environment, when a hart is interrupted, an interrupt handler will be run in supervisor mode on the hart.
+
+## Requested Trap
+
+The trap is a synchronous exception that is an explicit call to the execution environment requesting an action on behalf of software inside the execution environment. An example is a system call. In this case, execution may or may not resume on the hart after the requested action is taken by the execution  environment.  For  example,  a  system  call  could  remove  the  hart  or  cause  an  orderly termination of the entire execution environment.
+
+## Invisible Trap
+
+The trap is handled transparently by the execution environment and execution resumes normally after the trap is handled. Examples include emulating missing instructions, handling non-resident page faults in a demand-paged virtual-memory system, or handling device interrupts for a different job  in  a  multiprogrammed  machine.  In  these  cases,  the  software  running  inside  the  execution environment is not aware of the trap (we ignore timing effects in these definitions).
+
+## Fatal Trap
+
+The trap represents a fatal failure and causes the execution environment to terminate execution. Examples include failing a virtual-memory page-protection check or allowing a watchdog timer to expire.  Each  EEI  should  define  how  execution  is  terminated  and  reported  to  an  external environment.
+
+Table 1 shows the characteristics of each kind of trap.
+
+Table 1. Characteristics of traps
+
+|                        | Contained   | Requested   | Invisible   | Fatal   |
+|------------------------|-------------|-------------|-------------|---------|
+| Execution terminates   | No          | No 1        | No          | Yes     |
+| Software is oblivious  | No          | No          | Yes         | Yes 2   |
+| Handled by environment | No          | Yes         | Yes         | Yes     |
+
+The  EEI  defines  for  each  trap  whether  it  is  handled  precisely,  though  the  recommendation  is  to maintain preciseness where possible. Contained and requested traps can be observed to be imprecise by software inside the execution environment. Invisible traps, by definition, cannot be observed to be precise  or  imprecise  by  software  running  inside  the  execution  environment.  Fatal  traps  can  be observed  to  be  imprecise  by  software  running  inside  the  execution  environment,  if  known-errorful instructions do not cause immediate termination.
+
+Because this document describes unprivileged instructions, traps are rarely mentioned. Architectural means to handle contained traps are defined in the privileged architecture manual, along with other features to support richer EEIs. Unprivileged instructions that are defined solely to cause requested traps  are  documented  here.  Invisible  traps  are,  by  their  nature,  out  of  scope  for  this  document. Instruction encodings that are not defined here and not defined by some other means may cause a fatal trap.

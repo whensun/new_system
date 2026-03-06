@@ -1,0 +1,63 @@
+## 20.6. Single-Precision Floating-Point Computational Instructions
+
+Floating-point arithmetic instructions with one or two source operands use the R-type format with the OP-FP  major  opcode.  FADD.S  and  FMUL.S  perform  single-precision  floating-point  addition  and multiplication respectively, between rs1 and rs2 .  FSUB.S performs the single-precision floating-point subtraction of rs2 from rs1 .  FDIV.S performs the single-precision floating-point division of rs1 by rs2 . FSQRT.S computes the square root of rs1 . In each case, the result is written to rd .
+
+The 2-bit floating-point format field fmt is  encoded as shown in Table 27. It is set to S (00)  for  all instructions in the F extension.
+
+Table 27. Format field encoding
+
+|   fmt field | Mnemonic   | Meaning                 |
+|-------------|------------|-------------------------|
+|          00 | S          | 32-bit single-precision |
+|          01 | D          | 64-bit double-precision |
+|          10 | H          | 16-bit half-precision   |
+|          11 | Q          | 128-bit quad-precision  |
+
+All floating-point operations that perform rounding can select the rounding mode using the rm field with the encoding shown in Table 25.
+
+Floating-point  minimum-number  and  maximum-number  instructions  FMIN.S  and  FMAX.S  write, respectively, the smaller or larger of rs1 and rs2 to rd . For the purposes of these instructions only, the value is  considered  to  be  less  than  the  value .  If  both  inputs  are  NaNs,  the  result  is  the canonical NaN. If only one operand is a NaN, the result is the non-NaN operand. Signaling NaN inputs set the invalid operation exception flag, even when the result is not NaN.
+
+<image>
+
+Note that in version 2.2 of the F extension, the FMIN.S and FMAX.S instructions were amended to implement the proposed IEEE 754-201x minimumNumber and maximumNumber operations, rather than the IEEE 754-2008 minNum and maxNum
+
+operations. These operations differ in their handling of signaling NaNs.
+
+<image>
+
+| 31        | 24 25 26 27   | 20   | 19   | 14 15   | 11 12   | 7    | 0      |
+|-----------|---------------|------|------|---------|---------|------|--------|
+| funct5    | funct5        | fmt  | rs2  | rm rs1  |         | rd   | opcode |
+| 5         | 2             | 5    | 5    | 3       |         | 5    | 7      |
+| FADD/FSUB | S             | src2 | src1 | RM      |         | dest | OP-FP  |
+| FMUL/FDIV | S             | src2 | src1 | RM      |         | dest | OP-FP  |
+| FSQRT     | S             | 0    | src  | RM      |         | dest | OP-FP  |
+| FMIN-MAX  | S             | src2 | src1 | MIN/MAX |         | dest | OP-FP  |
+
+Floating-point  fused  multiply-add  instructions  require  a  new  standard  instruction  format.  R4-type instructions specify three source registers ( rs1 , rs2 , and rs3 ) and a destination register ( rd ). This format is only used by the floating-point fused multiply-add instructions.
+
+FMADD.S multiplies the values in rs1 and rs2 ,  adds the value in rs3 ,  and writes the final result to rd . FMADD.S computes (rs1 rs2) rs3 .
+
+FMSUB.S multiplies the values in rs1 and rs2 , subtracts the value in rs3 , and writes the final result to rd . FMSUB.S computes (rs1 rs2) rs3 .
+
+FNMSUB.S multiplies the values in rs1 and rs2 , negates the product, adds the value in rs3 , and writes the final result to rd . FNMSUB.S computes -(rs1 rs2) rs3 .
+
+FNMADD.S multiplies the values in rs1 and rs2 ,  negates the product, subtracts the value in rs3 ,  and writes the final result to rd . FNMADD.S computes -(rs1 rs2) rs3 .
+
+<image>
+
+The FNMSUB and FNMADD instructions are counterintuitively named, owing to the naming of the  corresponding  instructions  in  MIPS-IV.  The  MIPS  instructions  were defined  to  negate  the  sum,  rather  than  negating  the  product  as  the  RISC-V instructions  do,  so  the  naming  scheme  was  more  rational  at  the  time.  The  two definitions differ with respect to signed-zero results. The RISC-V definition matches the behavior of the x86 and ARM fused multiply-add instructions, but unfortunately the RISC-V FNMSUB and FNMADD instruction names are swapped as compared to x86, whereas the RISC-V FMSUB and FNMSUB instruction names are swapped as compared to ARM.
+
+<image>
+
+<image>
+
+The  fused  multiply-add  (FMA)  instructions  consume  a  large  part  of  the  32-bit instruction  encoding  space.  Some  alternatives  considered  were  to  restrict  FMA  to only use dynamic rounding modes, but static rounding modes are useful in code that exploits the lack of product rounding. Another alternative would have been to use rd to provide rs3, but this would require additional move instructions in some common sequences.  The  current  design  still  leaves  a  large  portion  of  the  32-bit  encoding space open while avoiding having FMA be non-orthogonal.
+
+The  fused multiply-add instructions must  set the invalid operation exception flag  when  the multiplicands are and zero, even when the addend is a quiet NaN.
+
+<image>
+
+The  IEEE  754-2008  standard  permits,  but  does  not  require,  raising  the  invalid
+
+exception for the operation qNaN.

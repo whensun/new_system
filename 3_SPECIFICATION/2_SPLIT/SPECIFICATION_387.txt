@@ -1,0 +1,11 @@
+## 30.12.4. Vector Single-Width Scaling Shift Instructions
+
+These instructions shift the input value right, and round off the shifted out bits according to vxrm . The scaling right shifts have both zero-extending ( vssrl ) and sign-extending ( vssra ) forms. The data to be shifted is in the vector register group specified by vs2 and the shift amount value can come from a vector register group vs1 ,  a  scalar  integer register rs1 ,  or  a  zero-extended 5-bit immediate. Only the low lg2(SEW) bits of the shift-amount value are used to control the shift amount.
+
+```
+# Scaling shift right logical vssrl.vv vd, vs2, vs1, vm   # vd[i] = roundoff_unsigned(vs2[i], vs1[i]) vssrl.vx vd, vs2, rs1, vm   # vd[i] = roundoff_unsigned(vs2[i], x[rs1]) vssrl.vi vd, vs2, uimm, vm  # vd[i] = roundoff_unsigned(vs2[i], uimm) # Scaling shift right arithmetic vssra.vv vd, vs2, vs1, vm   # vd[i] = roundoff_signed(vs2[i],vs1[i])
+```
+
+```
+vssra.vx vd, vs2, rs1, vm   # vd[i] = roundoff_signed(vs2[i], x[rs1]) vssra.vi vd, vs2, uimm, vm  # vd[i] = roundoff_signed(vs2[i], uimm)
+```

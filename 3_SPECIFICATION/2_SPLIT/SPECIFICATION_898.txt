@@ -1,0 +1,3 @@
+## 21.5.2. Guest-Page Faults
+
+Guest-page-fault traps may be delegated from M-mode to HS-mode under the control of CSR medeleg , but cannot be delegated to other privilege modes. On a guest-page fault, CSR mtval or stval is written with the faulting guest virtual address as usual, and mtval2 or htval is written either with zero or with the faulting guest physical address, shifted right by 2 bits. CSR mtinst or htinst may also be written with information about the faulting instruction or other reason for the access, as explained in Section

@@ -1,0 +1,19 @@
+## 30.3. Vector Extension Programmer's Model
+
+The vector extension adds 32 vector registers, and seven unprivileged CSRs ( vstart , vxsat , vxrm , vcsr , vtype , vl , vlenb ) to a base scalar RISC-V ISA.
+
+Table 43. New vector CSRs
+
+| Address   | Privilege   | Name   | Description                              |
+|-----------|-------------|--------|------------------------------------------|
+| 0x008     | URW         | vstart | Vector start element index               |
+| 0x009     | URW         | vxsat  | Fixed-Point Saturate Flag                |
+| 0x00A     | URW         | vxrm   | Fixed-Point Rounding Mode                |
+| 0x00F     | URW         | vcsr   | Vector control and status register       |
+| 0xC20     | URO         | vl     | Vector length                            |
+| 0xC21     | URO         | vtype  | Vector data type register                |
+| 0xC22     | URO         | vlenb  | VLEN/8 (vector register length in bytes) |
+
+<image>
+
+The  four  CSR  numbers 0x00B -0x00E are  tentatively  reserved  for  future  vector  CSRs, some of which may be mirrored into vcsr .

@@ -1,0 +1,5 @@
+## 30.13.4. Vector Single-Width Floating-Point Multiply/Divide Instructions
+
+```
+# Floating-point multiply vfmul.vv vd, vs2, vs1, vm   # Vector-vector vfmul.vf vd, vs2, rs1, vm   # vector-scalar # Floating-point divide vfdiv.vv vd, vs2, vs1, vm   # Vector-vector vfdiv.vf vd, vs2, rs1, vm   # vector-scalar # Reverse floating-point divide vector = scalar / vector vfrdiv.vf vd, vs2, rs1, vm  # scalar-vector, vd[i] = f[rs1]/vs2[i]
+```

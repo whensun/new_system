@@ -1,0 +1,14 @@
+## 31.8.5. Implementation Strategies
+
+As  a  general  rule,  RISC-V  specifies  the  ISA  only.  We  provide  some  additional  suggestions  so  that portable, vendor-independent middleware and kernel components can be created. The actual hardware implementation  and  certification  are  left  to  vendors  and  circuit  designers;  the  discussion  in  this Section is purely informational.
+
+When considering implementation options and trade-offs, one must look at the entire information flow.
+
+1. A Noise Source generates private, unpredictable signals from stable and well-understood physical random events.
+2. Sampling digitizes  the  noise  signal  into  a  raw  stream  of  bits.  This  raw  data  also  needs  to  be protected by the design.
+3. Continuous health tests ensure that the noise source and its environment meet their operational parameters.
+4. Non-cryptographic conditioners remove much of the bias and correlation in input noise.
+5. Cryptographic conditioners produce full entropy output, completely indistinguishable from ideal random.
+6. DRBG takes in >=256 bits  of  seed entropy as keying material and uses a "one way" cryptographic process to rapidly generate bits on demand (without revealing the seed/state).
+
+Steps 1-4 (possibly 5) are considered to be part of the Entropy Source (ES) and provided by the seed CSR. Adding the software-side cryptographic steps 5-6 and control logic complements it into a True Random Number Generator (TRNG).

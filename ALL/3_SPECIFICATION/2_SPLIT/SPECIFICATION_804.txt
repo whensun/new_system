@@ -1,0 +1,7 @@
+## 11.2. Entry Registers
+
+Control  transfer  records  are  stored  in  a  CTR  buffer,  such  that  each  buffer  entry  stores  information about a single transfer. The CTR buffer entries are logically accessed via the indirect register access mechanism  defined  by  the  Sscsrind  extension.  The siselect index  range  0x200  through  0x2FF  is reserved  for  CTR  logical  entries  0  through  255.  When siselect holds  a  value  in  this  range, sireg provides access to ctrsource , sireg2 provides access to ctrtarget , and sireg3 provides access to ctrdata . sireg4 , sireg5 , and sireg6 are read-only 0.
+
+When vsiselect holds a value in 0x200..0x2FF, the vsireg* registers provide access to the same CTR entry register state as the analogous sireg* registers. There is not a separate set of entry registers for V=1.
+
+See Section 11.4 for cases where CTR accesses from S-mode and VS-mode may be restricted.

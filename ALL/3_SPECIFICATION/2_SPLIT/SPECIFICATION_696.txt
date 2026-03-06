@@ -1,0 +1,7 @@
+## 37.7. Hypervisor-level Instruction-Set Extension Names
+
+Standard extensions that extend the hypervisor-level architecture are prefixed with the letters "Sh". If multiple hypervisor-level extensions are listed, they should be ordered alphabetically.
+
+<image>
+
+Many augmentations to the hypervisor-level architecture are more naturally defined as  supervisor-level  extensions,  following  the  scheme  described  in  the  previous section. The "Sh" prefix is used by the few hypervisor-level extensions that have no supervisor-visible effects.

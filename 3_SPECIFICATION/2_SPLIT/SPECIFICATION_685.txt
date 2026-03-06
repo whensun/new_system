@@ -1,0 +1,13 @@
+## 36.3.2. Available 25-bit instruction encoding spaces
+
+A  25-bit  instruction  encoding  space  corresponds  to  a  major  opcode  in  the  base  and  standard extension encodings.
+
+There are four  major  opcodes  expressly  designated  for  custom  extensions  Table  74,  each  of  which represents a 25-bit encoding space.
+
+The two major opcodes reserved for RV64 (OP-IMM-32 and OP-32) can also be used for non-standard extensions to RV32 only.
+
+If  an  implementation  does  not  require  floating-point,  then  the  seven  major  opcodes  reserved  for standard floating-point extensions (LOAD-FP, STORE-FP, MADD, MSUB, NMSUB, NMADD, OP-FP) can be reused for non-standard extensions. Similarly, the AMO major opcode can be reused if the standard atomic extensions are not required.
+
+If an implementation does not require instructions longer than 32-bits, then an additional four major opcodes are available (those marked in gray in Table 74).
+
+The  base  RV32I  encoding  uses  only  11  major  opcodes  plus  3  reserved  opcodes,  leaving  up  to  18 available  for  extensions.  The  base  RV64I  encoding  uses  only  13  major  opcodes  plus  3  reserved opcodes, leaving up to 16 available for extensions.

@@ -1,0 +1,13 @@
+## 3.3.2. Trap-Return Instructions
+
+Instructions to return from trap are encoded under the PRIV minor opcode.
+
+<image>
+
+To return after handling a trap, there are separate trap return instructions per privilege level, MRET and SRET. MRET is always provided. SRET must be provided if supervisor mode is supported, and should raise an illegal-instruction exception otherwise. SRET should also raise an illegal-instruction exception when  TSR=1  in mstatus ,  as  described  in  Section  3.1.6.6.  An x RET  instruction  can  be  executed  in privilege  mode x or  higher,  where  executing  a  lower-privilege x RET instruction will  pop  the  relevant lower-privilege interrupt enable and privilege mode stack. Attempting to execute an x RET instruction in a mode less privileged than x will raise an illegal-instruction exception. In addition to manipulating the privilege stack as described in Section 3.1.6.1, x RET sets the pc to the value stored in the x epc register.
+
+If the A extension is supported, the x RET instruction is allowed to clear any outstanding LR address reservation but is not required to. Trap handlers should explicitly clear the reservation if required (e.g., by using a dummy SC) before executing the x RET.
+
+<image>
+
+If xRET instructions always cleared LR reservations, it would be impossible to singlestep through LR/SC sequences using a debugger.

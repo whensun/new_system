@@ -1,0 +1,9 @@
+## 31.8.5.9. Post-Quantum Cryptography
+
+PQC public-key cryptography standards (NIST, 2016) do not require quantum-origin randomness, just sufficiently  secure  keying  material.  Recall  that  cryptography  aims  to  protect  the  confidentiality  and integrity of data itself and does not place any requirements on the physical communication channel (like QKD).
+
+Classical good-quality TRNGs are perfectly suitable for generating the secret keys for PQC protocols that  are  hard  for  quantum  computers  to  break  but  implementable  on  classical  computers.  What matters in cryptography is that the secret keys have enough true randomness (entropy) and that they are generated and stored securely.
+
+Of course, one must avoid DRBGs that are based on problems that are easily solvable with quantum computers, such as factoring (Shor, 1994) in the case of the Blum-Blum-Shub generator (Blum et al., 1986). Most symmetric algorithms are not affected as the best quantum attacks are still exponential to key size (Grover, 1996).
+
+As an example, the original Intel RNG (Mechalas, 2018), whose output generation is based on AES-128, can be attacked using Grover's algorithm with approximately square-root effort (Jaques et al., 2020). While even "64-bit" quantum security is extremely difficult to break, many applications specify a higher security requirement. NIST (NIST, 2016) defines AES-128 to be "Category 1" equivalent post-quantum security, while AES-256 is "Category 5" (highest). We avoid this possible future issue by exposing direct access  to  the  entropy  source  which  can  derive  its  security  from  information-theoretic  assumptions only.

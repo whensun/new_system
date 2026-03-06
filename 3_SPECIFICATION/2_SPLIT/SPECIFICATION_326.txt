@@ -1,0 +1,5 @@
+## 30.3.9. Vector Fixed-Point Saturation Flag ( vxsat )
+
+The vxsat CSR  has  a  single  read-write  least-significant  bit  ( vxsat[0] )  that  indicates  if  a  fixed-point instruction  has  had  to  saturate  an  output  value  to  fit  into  a  destination  format.  Bits vxsat[XLEN-1:1] should be written as zeros.
+
+The vxsat bit is mirrored in vcsr .

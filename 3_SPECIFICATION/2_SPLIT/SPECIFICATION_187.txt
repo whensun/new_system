@@ -1,0 +1,80 @@
+## 27.8. RVC Instruction Set Listings
+
+Table  40  shows  a  map  of  the  major  opcodes  for  RVC.  Each  row  of  the  table  corresponds  to  one quadrant  of  the  encoding  space.  The  last  quadrant,  which  has  the  two  least-significant  bits  set, corresponds to instructions wider than 16 bits, including those in the base ISAs. Several instructions are  only  valid  for  certain  operands;  when  invalid,  they  are  marked  either RES to  indicate  that  the opcode is reserved for future standard extensions; Custom to indicate that the opcode is designated for  custom  extensions;  or HINT to  indicate  that  the  opcode  is  reserved  for  microarchitectural  hints (see Section 27.7).
+
+Table 40. RVC opcode map instructions.
+
+|   inst[15:13] inst[1:0] | 000      | 001         | 010   | 011          | 100           | 101         | 110   | 111        |           |
+|-------------------------|----------|-------------|-------|--------------|---------------|-------------|-------|------------|-----------|
+|                      00 | ADDI4SPN | FLD FLD     | LW    | FLW LD       | Reserved      | FSD FSD     | SW    | FSW SD     | RV32 RV64 |
+|                      01 | ADDI     | JAL ADDIW   | LI    | LUI/ADDI16SP | MISC-ALU      | J           | BEQZ  | BNEZ       | RV32 RV64 |
+|                      10 | SLLI     | FLDSP FLDSP | LWSP  | FLWSP LDSP   | J[AL]R/MV/ADD | FSDSP FSDSP | SWSP  | FSWSP SDSP | RV32 RV64 |
+|                      11 | >16b     | >16b        | >16b  | >16b         | >16b          | >16b        | >16b  | >16b       | >16b      |
+
+Figure 3, Figure 4, and Figure 5 list the RVC instructions.
+
+Figure 3. Instruction listing for RVC, Quadrant 0
+
+<image>
+
+|   000 | 0                                | 0                                | 0                                | 0     |   00 | Illegal instruction      |
+|-------|----------------------------------|----------------------------------|----------------------------------|-------|------|--------------------------|
+|   000 | uimm[5:4|9:6|2|3] | uimm[5:4|9:6|2|3] | uimm[5:4|9:6|2|3] | rd ′  |   00 | C.ADDI4SPN (RES, uimm=0) |
+|   001 | uimm[5:3]                        | rs1 ′                            | uimm[7:6]                        | rd ′  |   00 | C.FLD                    |
+|   010 | uimm[5:3]                        | rs1 ′                            | uimm[2|6]                   | rd ′  |   00 | C.LW                     |
+|   011 | uimm[5:3]                        | rs1 ′                            | uimm[2|6]                   | rd ′  |   00 | C.FLW (RV32)             |
+|   011 | uimm[5:3]                        | rs1 ′                            | uimm[7:6]                        | rd ′  |   00 | C.LD (RV64)              |
+|   100 | ---                              | ---                              | ---                              | ---   |   00 | Reserved                 |
+|   101 | uimm[5:3]                        | rs1 ′                            | uimm[7:6]                        | rs2 ′ |   00 | C.FSD                    |
+|   110 | uimm[5:3]                        | rs1 ′                            | uimm[2|6]                   | rs2 ′ |   00 | C.SW                     |
+|   111 | uimm[5:3]                        | rs1 ′                            | uimm[2|6]                   | rs2 ′ |   00 | C.FSW (RV32)             |
+|   111 | uimm[5:3]                        | rs1 ′                            | uimm[7:6]                        | rs2 ′ |   00 | C.SD (RV64)              |
+
+̸
+
+Figure 4. Instruction listing for RVC, Quadrant 1
+
+<image>
+
+|   000 | imm[5]                                                        | 0                                                             | 0                                                             | imm[4:0]                                                      | imm[4:0]                                                      |   01 | C.NOP (HINT, imm¬0)            |
+|-------|---------------------------------------------------------------|---------------------------------------------------------------|---------------------------------------------------------------|---------------------------------------------------------------|---------------------------------------------------------------|------|--------------------------------|
+|   000 | imm[5]                                                        | rs1/rd≠0                                                      | rs1/rd≠0                                                      | imm[4:0]                                                      | imm[4:0]                                                      |   01 | C.ADDI (HINT, imm=0)           |
+|   001 | imm[11|4|9:8|10|6|7|3:1|5] | imm[11|4|9:8|10|6|7|3:1|5] | imm[11|4|9:8|10|6|7|3:1|5] | imm[11|4|9:8|10|6|7|3:1|5] | imm[11|4|9:8|10|6|7|3:1|5] |   01 | C.JAL (RV32)                   |
+|   001 | imm[5]                                                        | rs1/rd≠0                                                      | rs1/rd≠0                                                      | imm[4:0]                                                      | imm[4:0]                                                      |   01 | C.ADDIW (RV64; RES, rd=0)      |
+|   010 | imm[5]                                                        | rd =0                                                         | rd =0                                                         | imm[4:0]                                                      | imm[4:0]                                                      |   01 | C.LI (HINT, rd=0)              |
+|   011 | imm[9]                                                        | 2                                                             | 2                                                             | imm[4|6|8:7|5]                                 | imm[4|6|8:7|5]                                 |   01 | C.ADDI16SP (RES, imm=0)        |
+|   011 | imm[17]                                                       | rd≠{0, 2}                                                     | rd≠{0, 2}                                                     | imm[16:12]                                                    | imm[16:12]                                                    |   01 | C.LUI (RES, imm=0; HINT, rd=0) |
+|   100 | uimm[5]                                                       | 00                                                            | rs1 ʹ /rd ʹ                                                   | uimm[4:0]                                                     | uimm[4:0]                                                     |   01 | C.SRLI (HINT, uimm=0)          |
+|   100 | uimm[5]                                                       | 01                                                            | rs1 ʹ /rd ʹ                                                   | uimm[4:0]                                                     | uimm[4:0]                                                     |   01 | C.SRAI (HINT, uimm=0)          |
+|   100 | imm[5]                                                        | 10                                                            | rs1 ʹ /rd ʹ                                                   | imm[4:0]                                                      | imm[4:0]                                                      |   01 | C.ANDI                         |
+|   100 | 0                                                             | 11                                                            | rs1 ʹ /rd ʹ                                                   | 00                                                            | rs2 ′                                                         |   01 | C.SUB                          |
+|   100 | 0                                                             | 11                                                            | rs1 ʹ /rd ʹ                                                   | 01                                                            | rs2 ′                                                         |   01 | C.XOR                          |
+|   100 | 0                                                             | 11                                                            | rs1 ʹ /rd ʹ                                                   | 10                                                            | rs2 ′                                                         |   01 | C.OR                           |
+|   100 | 0                                                             | 11                                                            | rs1 ʹ /rd ʹ                                                   | 11                                                            | rs2 ′                                                         |   01 | C.AND                          |
+|   100 | 1                                                             | 11                                                            | rs1 ʹ /rd ʹ                                                   | 00                                                            | rs2 ′                                                         |   01 | C.SUBW (RV64; RV32 RES)        |
+|   100 | 1                                                             | 11                                                            | rs1 ʹ /rd ʹ                                                   | 01                                                            | rs2 ′                                                         |   01 | C.ADDW (RV64; RV32 RES)        |
+|   100 | 1                                                             | 11                                                            | ---                                                           | 10                                                            | ---                                                           |   01 | Reserved                       |
+|   100 | 1                                                             | 11                                                            | ---                                                           | 11                                                            | ---                                                           |   01 | Reserved                       |
+|   101 | imm[11|4|9:8|10|6|7|3:1|5] | imm[11|4|9:8|10|6|7|3:1|5] | imm[11|4|9:8|10|6|7|3:1|5] | imm[11|4|9:8|10|6|7|3:1|5] | imm[11|4|9:8|10|6|7|3:1|5] |   01 | C.J                            |
+|   110 | imm[8|4:3]                                               | imm[8|4:3]                                               | rs1 ′                                                         | imm[7:6|2:1|5]                                      | imm[7:6|2:1|5]                                      |   01 | C.BEQZ                         |
+|   111 | imm[8|4:3]                                               | imm[8|4:3]                                               | rs1 ′                                                         | imm[7:6|2:1|5]                                      | imm[7:6|2:1|5]                                      |   01 | C.BNEZ                         |
+
+Figure 5. Instruction listing for RVC, Quadrant 2
+
+<image>
+
+|   000 | nzuimm[5]          | rs1/rd≠0           | nzuimm[4:0]        |   10 | C.SLLI (HINT, rd=0 or imm=0)   |
+|-------|--------------------|--------------------|--------------------|------|--------------------------------|
+|   001 | uimm[5]            | rd                 | uimm[4:3|8:6] |   10 | C.FLDSP                        |
+|   010 | uimm[5]            | rd≠0               | uimm[4:2|7:6] |   10 | C.LWSP (RES, rd=0)             |
+|   011 | uimm[5]            | rd                 | uimm[4:2|7:6] |   10 | C.FLWSP (RV32)                 |
+|   011 | uimm[5]            | rd≠0               | uimm[4:3|8:6] |   10 | C.LDSP (RV64; RES, rd=0)       |
+|   100 | 0                  | rs1≠0              | 0                  |   10 | C.JR (RES, rs1=0)              |
+|   100 | 0                  | rd≠0               | rs2≠0              |   10 | C.MV (HINT, rd=0)              |
+|   100 | 1                  | 0                  | 0                  |   10 | C.EBREAK                       |
+|   100 | 1                  | rs1≠0              | 0                  |   10 | C.JALR                         |
+|   100 | 1                  | rs1/rd≠0           | rs2≠0              |   10 | C.ADD (HINT, rd=0)             |
+|   101 | uimm[5:3|8:6] | uimm[5:3|8:6] | rs2                |   10 | C.FSDSP                        |
+|   110 | uimm[5:2|7:6] | uimm[5:2|7:6] | rs2                |   10 | C.SWSP                         |
+|   111 | uimm[5:2|7:6] | uimm[5:2|7:6] | rs2                |   10 | C.FSWSP (RV32)                 |
+|   111 | uimm[5:3|8:6] | uimm[5:3|8:6] | rs2                |   10 | C.SDSP (RV64)                  |

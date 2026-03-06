@@ -1,0 +1,13 @@
+## 8.5. RNMI Operation
+
+When an RNMI interrupt is detected, the interrupted PC is written to the mnepc CSR, the type of RNMI to  the mncause CSR,  and  the  privilege  mode  of  the  interrupted  context  to  the mnstatus CSR.  The mnstatus .NMIE bit is cleared, masking all interrupts.
+
+The hart then enters machine-mode and jumps to the RNMI trap handler address.
+
+The RNMI handler can resume original execution using the new MNRET instruction, which restores the PC  from mnepc ,  the  privilege  mode  from mnstatus ,  and  also  sets mnstatus .NMIE,  which  re-enables interrupts.
+
+If the hart encounters an exception while executing in M-mode with the mnstatus .NMIE bit clear, the actions taken are the same as if the exception had occurred while mnstatus .NMIE were set, except that the program counter is set to the RNMI exception trap handler address.
+
+<image>
+
+The  Smrnmi  extension  does  not  change  the  behavior  of  the  MRET  and  SRET instructions. In particular, MRET and SRET are unaffected by the mnstatus .NMIE bit, and their execution does not alter the mnstatus .NMIE bit.

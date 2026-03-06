@@ -1,0 +1,15 @@
+## 30.13.6. Vector Single-Width Floating-Point Fused Multiply-Add Instructions
+
+All four varieties of fused multiply-add are provided, and in two destructive forms that overwrite one of the operands, either the addend or the first multiplicand.
+
+```
+# FP multiply-accumulate, overwrites addend vfmacc.vv vd, vs1, vs2, vm    # vd[i] = +(vs1[i] * vs2[i]) + vd[i] vfmacc.vf vd, rs1, vs2, vm    # vd[i] = +(f[rs1] * vs2[i]) + vd[i] # FP negate-(multiply-accumulate), overwrites subtrahend vfnmacc.vv vd, vs1, vs2, vm   # vd[i] = -(vs1[i] * vs2[i]) - vd[i] vfnmacc.vf vd, rs1, vs2, vm   # vd[i] = -(f[rs1] * vs2[i]) - vd[i] # FP multiply-subtract-accumulator, overwrites subtrahend vfmsac.vv vd, vs1, vs2, vm    # vd[i] = +(vs1[i] * vs2[i]) - vd[i] vfmsac.vf vd, rs1, vs2, vm    # vd[i] = +(f[rs1] * vs2[i]) - vd[i]
+```
+
+```
+# FP negate-(multiply-subtract-accumulator), overwrites minuend vfnmsac.vv vd, vs1, vs2, vm   # vd[i] = -(vs1[i] * vs2[i]) + vd[i] vfnmsac.vf vd, rs1, vs2, vm   # vd[i] = -(f[rs1] * vs2[i]) + vd[i] # FP multiply-add, overwrites multiplicand vfmadd.vv vd, vs1, vs2, vm    # vd[i] = +(vs1[i] * vd[i]) + vs2[i] vfmadd.vf vd, rs1, vs2, vm    # vd[i] = +(f[rs1] * vd[i]) + vs2[i] # FP negate-(multiply-add), overwrites multiplicand vfnmadd.vv vd, vs1, vs2, vm   # vd[i] = -(vs1[i] * vd[i]) - vs2[i] vfnmadd.vf vd, rs1, vs2, vm   # vd[i] = -(f[rs1] * vd[i]) - vs2[i] # FP multiply-sub, overwrites multiplicand vfmsub.vv vd, vs1, vs2, vm    # vd[i] = +(vs1[i] * vd[i]) - vs2[i] vfmsub.vf vd, rs1, vs2, vm    # vd[i] = +(f[rs1] * vd[i]) - vs2[i] # FP negate-(multiply-sub), overwrites multiplicand vfnmsub.vv vd, vs1, vs2, vm   # vd[i] = -(vs1[i] * vd[i]) + vs2[i] vfnmsub.vf vd, rs1, vs2, vm   # vd[i] = -(f[rs1] * vd[i]) + vs2[i]
+```
+
+<image>
+
+While  we  considered  using  the  two  unused  rounding  modes  in  the  scalar  FP  FMA encoding to provide a few non-destructive FMAs, these would complicate microarchitectures  by  being  the  only  maskable  operation  with  three  inputs  and separate output.

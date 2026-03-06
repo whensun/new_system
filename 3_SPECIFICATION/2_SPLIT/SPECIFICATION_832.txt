@@ -1,0 +1,13 @@
+## 12.1.7. Supervisor Exception Program Counter ( sepc ) Register
+
+sepc is an SXLEN-bit read/write CSR formatted as shown in Figure 58. The low bit of sepc ( sepc[0] ) is always zero. On implementations that support only IALIGN=32, the two low bits ( sepc[1:0] ) are always zero.
+
+If an implementation allows IALIGN to be either 16 or 32 (by changing CSR misa ,  for example), then, whenever IALIGN=32, bit sepc[1] is masked on reads so that it appears to be 0. This masking occurs also  for  the  implicit  read  by  the  SRET  instruction.  Though  masked, sepc[1] remains  writable  when IALIGN=32.
+
+sepc is a WARL register that must be able to hold all valid virtual addresses. It need not be capable of holding all  possible  invalid  addresses.  Prior  to  writing sepc ,  implementations may convert an invalid address into some other invalid address that sepc is capable of holding.
+
+When a trap is taken into S-mode, sepc is  written with the virtual address of the instruction that was interrupted or that encountered the exception. Otherwise, sepc is never written by the implementation, though it may be explicitly written by software.
+
+Figure 58. Supervisor exception program counter register.
+
+<image>

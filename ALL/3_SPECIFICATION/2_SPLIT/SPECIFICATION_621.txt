@@ -1,0 +1,6 @@
+## 32.2.15.12. permute
+
+In the .vv and .xv forms of the vrgather[ei16] instructions, the values in vs1 and rs1 are used for control and therefore are exempt from DIEL.
+
+- ⚫ vrgather.v[ivx]
+- ⚫ vrgatherei16.vv

@@ -1,0 +1,9 @@
+## 24.4.3. Zvfbfwma - Vector BF16 widening mul-add
+
+This extension provides a vector widening BF16 mul-add instruction that accumulates into FP32.
+
+This extension depends upon the Zvfbfmin extension and the Zfbfmin extension.
+
+| Mnemonic    | Instruction                              |
+|-------------|------------------------------------------|
+| VFWMACCBF16 | Vector BF16 widening multiply-accumulate |

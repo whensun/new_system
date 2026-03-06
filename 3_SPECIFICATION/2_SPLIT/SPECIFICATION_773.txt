@@ -1,0 +1,42 @@
+## 5.3. Supervisor-level CSRs
+
+| Number   | Privilege   | Width   | Name     | Description                         |
+|----------|-------------|---------|----------|-------------------------------------|
+| 0x150    | SRW         | XLEN    | siselect | Supervisor indirect register select |
+| 0x151    | SRW         | XLEN    | sireg    | Supervisor indirect register alias  |
+
+| Number   | Privilege   | Width   | Name   | Description                          |
+|----------|-------------|---------|--------|--------------------------------------|
+| 0x152    | SRW         | XLEN    | sireg2 | Supervisor indirect register alias 2 |
+| 0x153    | SRW         | XLEN    | sireg3 | Supervisor indirect register alias 3 |
+| 0x155    | SRW         | XLEN    | sireg4 | Supervisor indirect register alias 4 |
+| 0x156    | SRW         | XLEN    | sireg5 | Supervisor indirect register alias 5 |
+| 0x157    | SRW         | XLEN    | sireg6 | Supervisor indirect register alias 6 |
+
+The CSRs in the table above are required if S-mode is implemented.
+
+The siselect register  will  support  the  value  range  0..0xFFF  at  a  minimum.  A  future  extension  may define a value range outside of this minimum range. Only if such an extension is implemented will siselect be required to support larger values.
+
+<image>
+
+Requiring a range of 0-0xFFF for siselect , even though most or all of the space may be  reserved  or  inaccessible,  permits  M-mode  to  emulate  indirectly  accessed registers in this implemented range, including registers that may be standardized in the future.
+
+Values of siselect with the most-significant bit set (bit XLEN - 1 = 1) are designated only for custom use,  presumably  for  accessing  custom  registers  through  the  alias  CSRs.  Values  of siselect with  the most-significant bit clear are designated only for standard use and are reserved until allocated to a standard architecture extension. If XLEN is changed, the most-significant bit of siselect moves to the new position, retaining its value from before.
+
+The behavior upon accessing sireg* from M-mode or S-mode, while siselect holds a value that is not implemented at supervisor level, is UNSPECIFIED.
+
+<image>
+
+It  is  recommended  that  implementations  raise  an  illegal-instruction  exception  for such accesses, to facilitate possible emulation (by M-mode) of these accesses.
+
+<image>
+
+An  extension  is  considered  not  to  be  implemented  at  supervisor  level  if  machine level has disabled the extension for S-mode, such as by the settings of certain fields in CSR menvcfg , for example.
+
+Otherwise,  attempts  to  access sireg* from  M-mode  or  S-mode  while siselect holds  a  number  in  a standard-defined  and  implemented  range  result  in  specific  behavior  that,  for  each  combination  of siselect and sireg i , is defined by the extension to which the siselect value is allocated.
+
+<image>
+
+Ordinarily, each sireg i will access register state, access read-only 0 state, or, unless executing  in  a  virtual  machine  (covered  in  the  next  section),  raise  an  illegalinstruction exception.
+
+Note that the widths of siselect and sireg* are always the current XLEN rather than SXLEN. Hence, for example, if MXLEN = 64 and SXLEN = 32, then these registers are 64 bits when the current privilege mode is M (running RV64 code) but 32 bits when the privilege mode is S (RV32 code).

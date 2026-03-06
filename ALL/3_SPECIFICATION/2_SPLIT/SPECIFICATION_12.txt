@@ -1,0 +1,25 @@
+## 2.3. Immediate Encoding Variants
+
+There are a further two variants of the instruction formats (B/J) based on the handling of immediates, as shown in Base instruction formats immediate variants..
+
+<image>
+
+The only difference between the S and B formats is that the 12-bit immediate field is used to encode branch offsets in multiples of 2 in the B format. Instead of shifting all bits in the instruction-encoded immediate left by one in hardware as is conventionally done, the middle bits (imm[10:1]) and sign bit
+
+stay in fixed positions, while the lowest bit in S format (inst[7]) encodes a high-order bit in B format.
+
+Similarly, the only difference between the U and J formats is that the 20-bit immediate is shifted left by 12 bits to form U immediates and by 1 bit to form J immediates. The location of instruction bits in the U and J format immediates is chosen to maximize overlap with the other formats and with each other.
+
+Immediate  types  shows  the  immediates  produced  by  each  of  the  base  instruction  formats,  and  is labeled to show which instruction bit (inst[ y ]) produces each bit of the immediate value.
+
+Figure 1. Types of immediate produced by RISC-V instructions.
+
+<image>
+
+The fields are labeled with the instruction bits used to construct their value. Sign extensions always uses inst[31].
+
+Sign extension is one of the most critical operations on immediates (particularly for XLEN>32), and in RISC-V the sign bit for all immediates is always held in bit 31 of the  instruction  to  allow  sign  extension  to  proceed  in  parallel  with  instruction decoding.
+
+<image>
+
+Although more complex implementations might have separate adders for branch and jump calculations and so would not benefit from keeping the location of immediate bits constant across types of instruction, we wanted to reduce the hardware cost of the simplest implementations. By rotating bits in the instruction encoding of B and J immediates instead of using dynamic hardware muxes to multiply the immediate by 2, we reduce instruction signal fanout and immediate mux costs by around a factor of 2. The scrambled immediate encoding will add negligible time to static or ahead-oftime  compilation.  For  dynamic  generation  of  instructions,  there  is  some  small additional overhead, but the most common short forward branches have straightforward immediate encodings.

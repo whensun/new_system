@@ -1,0 +1,3 @@
+## 37.4. Underscores
+
+Underscores  "\_"  may  be  used  to  separate  ISA  extensions  to  improve  readability  and  to  provide disambiguation, e.g., "RV32I2\_M2\_A2".

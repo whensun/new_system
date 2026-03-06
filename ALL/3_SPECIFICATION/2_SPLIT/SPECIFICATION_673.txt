@@ -1,0 +1,19 @@
+## 34.5.5. c.ld
+
+## Synopsis
+
+Load doubleword to even/odd register pair, 16-bit encoding
+
+## Mnemonic
+
+c.ld rd', offset(rs1')
+
+## Encoding (RV32)
+
+<image>
+
+## Description
+
+Loads a 64-bit value into registers rd' and rd'+1 .  It  computes an effective address by adding the zero-extended offset, scaled by 8, to the base address in register rs1'.
+
+Included in: Zclsd

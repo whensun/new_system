@@ -1,0 +1,39 @@
+## 11.1.3. Virtual Supervisor Control Transfer Records Control Register ( vsctrctl )
+
+If  the  H  extension  is  implemented,  the vsctrctl register  is  a  64-bit  read/write  register  that  is  VSmode's version of supervisor register sctrctl .  When V=1, vsctrctl substitutes for the usual sctrctl ,  so instructions that normally read or modify sctrctl actually access vsctrctl instead.
+
+Figure 43. Virtual Supervisor Control Transfer Records Control Register Format
+
+| 63          | 56 59       | 56 59       | 60          | 56 59       | 56 59       | 56 59       | 56 59       |
+|-------------|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
+| WPRI Custom | WPRI Custom | WPRI Custom | WPRI Custom | WPRI Custom | WPRI Custom | WPRI Custom | WPRI Custom |
+| 55          | 55          | 55          | 55          | 55          | 55          | 55          | 48          |
+| WPRI        | WPRI        | WPRI        | WPRI        | WPRI        | WPRI        | WPRI        | WPRI        |
+| 47          | 46          | 45          | 44          | 43          | 42          | 41          | 40          |
+| DIRLJMPINH  | INDLJMPINH  | RETINH      | CORSWAPINH  | DIRJMPINH   | INDJMPINH   | DIRCALLINH  | INDCALLINH  |
+| 39          | 38          | 37          | 36          | 35          | 34          | 33          | 32          |
+| WPRI        | WPRI        | TKBRINH     | NTBREN      | TRETINH     | INTRINH     | EXCINH      | WPRI        |
+| 31          | 31          | 31          | 31          | 31          | 31          | 31          | 24          |
+| WPRI        | WPRI        | WPRI        | WPRI        | WPRI        | WPRI        | WPRI        | WPRI        |
+| 23          | 23          | 23          | 23          | 23          | 23          | 23          | 16          |
+| WPRI        | WPRI        | WPRI        | WPRI        | WPRI        | WPRI        | WPRI        | WPRI        |
+| 15          | 15          | 13          | 12          | 11          | 10          | 9           | 8           |
+|             | WPRI        |             | LCOFIFRZ    | BPFRZ       | WPRI        | WPRI        | STE         |
+| 7           | 6           |             |             |             | 2           | 1           | 0           |
+| RASEMU      |             |             | WPRI        |             |             | S           | U           |
+
+Table 22. Virtual Supervisor Control Transfer Records Control Register Field Definitions
+
+| Field    | Description                                                                                                    |
+|----------|----------------------------------------------------------------------------------------------------------------|
+| S        | Enable transfer recording in VS-mode.                                                                          |
+| U        | Enable transfer recording in VU-mode.                                                                          |
+| STE      | Enables recording of traps to VS-mode when S=0. See Section 11.5.1.2.                                          |
+| BPFRZ    | Set sctrstatus .FROZEN on a breakpoint exception that traps to VS-mode. See Section 11.5.5.                    |
+| LCOFIFRZ | Set sctrstatus .FROZEN on local-counter-overflow interrupt (LCOFI) that traps to VS- mode. See Section 11.5.5. |
+
+Other field definitions match those of sctrctl . The optional fields implemented in vsctrctl should match those implemented in sctrctl .
+
+<image>
+
+Unlike the CTR status register or the CTR entry registers, the CTR control register has a VS-mode version. This allows a guest to manage the CTR configuration directly, without  requiring  traps  to  HS-mode,  while  ensuring  that  the  guest  configuration (most notably the privilege mode enable bits) do not impact CTR behavior when V=0.

@@ -1,0 +1,5 @@
+## 31.5.2.2. BSI AIS-31 PTG.2 / Common Criteria Requirements
+
+For  alternative  Common  Criteria  certification  (or  self-certification),  AIS  31  PTG.2  class  (Killmann  & Schindler, 2011) (Sect. 4.3.) required hardware components and mechanisms must be implemented. In addition to AIS-31 PTG.2 randomness requirements (Shannon entropy rate of 0.997 as evaluated in that standard), the overall min-entropy requirement of remains, as discussed in Section 31.5.2.1. Note that 800-90B min-entropy can be significantly lower than AIS-31 Shannon entropy. These two metrics
+
+should not be equated or confused with each other.

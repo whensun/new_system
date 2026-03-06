@@ -1,0 +1,5 @@
+## 37.8. Machine-level Instruction-Set Extension Names
+
+Standard machine-level instruction-set extensions are prefixed with the letters "Sm".
+
+Standard machine-level extensions should be listed after standard lesser-privileged extensions, and like  other  multi-letter  extensions,  must  be  separated  from  other  multi-letter  extensions  by  an underscore. If multiple machine-level extensions are listed, they should be ordered alphabetically.

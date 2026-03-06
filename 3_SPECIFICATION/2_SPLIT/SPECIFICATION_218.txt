@@ -1,0 +1,29 @@
+## 28.13.4.2. Software view of the POP/POPRET sequence
+
+From a software perspective the POP/POPRET sequence appears as:
+
+- ⚫ A sequence of loads reading the bytes required by the pseudocode.
+- ⚫ The bytes may be loaded in any order.
+- ⚫ The bytes may be grouped into larger accesses.
+- ⚫ Any of the bytes may be loaded multiple times.
+- ⚫ A stack pointer adjustment
+- ⚫ An optional li a0, 0
+- ⚫ An optional ret
+
+If a trap occurs during the sequence, then any loads which were executed before the trap may update architectural state. The loads will be re-executed once the trap handler completes, so the values will be overwritten.  Therefore  it  is  permitted  for  an  implementation  to  update  some  of  the  destination registers before taking a fault.
+
+The optional li a0, 0 , stack pointer adjustment and optional ret must only be committed only when it is certain that the entire POP/POPRET instruction will commit.
+
+For POPRET once the stack pointer adjustment has been committed the ret must execute.
+
+For example:
+
+```
+cm.popretz {ra, s0-s3}, 32;
+```
+
+Appears to software as:
+
+```
+# any or all of these load instructions may execute multiple times # therefore these updates may be visible in the interrupt/exception handler lw   s3, 28(sp) lw   s2, 24(sp) lw   s1, 20(sp) lw   s0, 16(sp) lw   ra, 12(sp) # these must only execute once, will only execute after all loads # complete successfully all instructions must execute atomically # therefore these updates are not visible in the interrupt/exception handler li a0, 0 addi sp, sp, 32 ret
+```

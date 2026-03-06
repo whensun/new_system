@@ -1,0 +1,5 @@
+## 32.2.15.13. shift
+
+- ⚫ vnsr[al].w[ivx]
+- ⚫ vsll.v[ivx]
+- ⚫ vsr[al].v[ivx]

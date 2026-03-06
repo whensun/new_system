@@ -1,0 +1,13 @@
+## 30.7.8.2. Vector Strided Segment Loads and Stores
+
+Vector strided segment loads and stores move contiguous segments where each segment is separated by the byte-stride offset given in the rs2 GPR argument.
+
+<image>
+
+Negative and zero strides are supported.
+
+```
+# Format vlsseg<nf>e<eew>.v vd, (rs1), rs2, vm          # Strided segment loads vssseg<nf>e<eew>.v vs3, (rs1), rs2, vm         # Strided segment stores # Examples vsetvli a1, t0, e8, m1, ta, ma vlsseg3e8.v v4, (x5), x6   # Load bytes at addresses x5+i*x6   into v4[i], #  and bytes at addresses x5+i*x6+1 into v5[i], #  and bytes at addresses x5+i*x6+2 into v6[i]. # Examples vsetvli a1, t0, e32, m1, ta, ma vssseg2e32.v v2, (x5), x6   # Store words from v2[i] to address x5+i*x6 #   and words from v3[i] to address x5+i*x6+4
+```
+
+Accesses to the fields within each segment can occur in any order, including the case where the byte stride is such that segments overlap in memory.

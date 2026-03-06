@@ -1,0 +1,51 @@
+## 32.2.15.14. slide
+
+- ⚫ vslide1[up|down].vx
+- ⚫ vfslide1[up|down].vf
+
+In  the  vslide[up|down].vx  instructions,  the  value  in rs1 is  used  for  control  (i.e.,  slide  amount)  and therefore is exempt from DIEL.
+
+- ⚫ vslide[up|down].v[ix]
+
+The following instructions are not affected by Zvkt:
+
+- ⚫ All storage operations
+- ⚫ All floating-point operations
+- ⚫ add/sub saturate
+- ⚫ vsadd[u].v[ivx]
+- ⚫ vssub[u].v[vx]
+- ⚫ clip
+- ⚫ vnclip[u].w[ivx]
+- ⚫ compress
+- ⚫ vcompress.vm
+- ⚫ divide
+- ⚫ vdiv[u].v[vx]
+- ⚫ vrem[u].v[vx]
+- ⚫ average
+- ⚫ vaadd[u].v[vx]
+- ⚫ vasub[u].v[vx]
+- ⚫ mask Op
+- ⚫ vcpop.m
+- ⚫ vfirst.m
+- ⚫ vid.v
+- ⚫ viota.m
+- ⚫ vms[bio]f.m
+- ⚫ min/max
+- ⚫ vmax[u].v[vx]
+- ⚫ vmin[u].v[vx]
+- ⚫ Multiply-saturate
+- ⚫ vsmul.v[vx]
+- ⚫ reduce
+- ⚫ vredsum.vs
+- ⚫ vwredsum[u].vs
+- ⚫ vred[and|or|xor].vs
+- ⚫ vred[min|max][u].vs
+- ⚫ shift round
+- ⚫ vssra.v[ivx]
+- ⚫ vssrl.v[ivx]
+
+
+
+- ⚫ vset
+- ⚫ vsetivli
+- ⚫ vsetvl[i]

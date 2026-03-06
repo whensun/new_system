@@ -1,0 +1,752 @@
+INSTRUCTION: FCLASS.D
+FORMAT: fclass.d rd, fs1
+RULE 1: FCLASS.D classifies a double‑precision floating‑point value using the same classification categories as the single‑precision floating‑point classify instruction.
+RULE 2: FCLASS.D operates on double‑precision floating‑point operands.
+
+INSTRUCTION: FCVT.D.H
+FORMAT: fcvt.d.h fd, fs1, rm
+RULE 1: If the D extension is implemented, the FCVT.D.H instruction converts a half‑precision floating‑point value to a double‑precision floating‑point value.
+RULE 2: The Zfhmin extension includes the FCVT.D.H instruction when the D extension is present.
+RULE 3: The Zhinxmin extension includes the FCVT.D.H instruction when the Zdinx extension is present.
+
+INSTRUCTION: VAADD.VV
+FORMAT: vaadd.vv vd, vs2, vs1, vm
+RULE 1: VAADD.VV computes for each active element i the sum of the signed integers in vs2[i] and vs1[i].
+RULE 2: VAADD.VV performs an arithmetic right‑shift of the infinite‑precision sum by one bit for each active element i.
+RULE 3: VAADD.VV rounds the shifted result for each active element i according to the current setting of vxrm.
+RULE 4: The architectural effect of VAADD.VV for element i is roundoff_signed(vs2[i] + vs1[i], 1).
+RULE 5: VAADD.VV performs the right‑shift and rounding on the infinite‑precision result before any truncation.
+RULE 6: VAADD.VV never raises an overflow condition because the result is always representable after the rounding step.
+
+INSTRUCTION: VADC.VIM
+FORMAT: vadc.vim vd, vs2, simm5, v0
+RULE 1: VADC.VIM computes for each element i of the active vector length the result vd[i] = vs2[i] + imm + v0.mask[i].
+RULE 2: VADC.VIM must be encoded with the mask bit vm set to 0.
+RULE 3: An encoding of VADC.VIM with vm set to 1 is reserved.
+RULE 4: VADC.VIM must take its carry‑in from the mask field of the implicit vector register v0.
+RULE 5: VADC.VIM does not produce a separate carry‑out; carry‑out is generated only by the companion instruction vmadc.vim.
+RULE 6: VADC.VIM must not use v0 as the destination register; encodings with vd = v0 are reserved.
+RULE 7: VADC.VIM must respect the source/destination overlap restrictions defined for vector instructions.
+RULE 8: Although VADC.VIM is a masked instruction (vm = 0), it operates on and writes back all body elements of the destination vector register group.
+RULE 9: The specification does not define a tail‑agnostic or tail‑undisturbed policy for VADC.VIM, so only body elements are written.
+RULE 10: VADC.VIM uses an immediate operand that is encoded according to the vector‑immediate integer instruction format.
+
+INSTRUCTION: VADD.VI
+FORMAT: vadd.vi vd, vs2, simm5, vm
+RULE 1: VADD.VI is an integer addition operation in the RISC‑V vector ISA.
+RULE 2: VADD.VI uses the vector‑immediate format with operands vd, vs2, imm, and an optional mask vm.
+
+INSTRUCTION: VAND.VI
+FORMAT: vand.vi vd, vs2, simm5, vm
+RULE 1: VAND.VI is the vector‑immediate form of the bitwise logical AND operation.
+RULE 2: VAND.VI is listed under the Bitwise logical operations category.
+RULE 3: VAND.VI can be used to invert an immediate value and then perform a bitwise AND with the source vector register vs2.
+RULE 4: Because VAND.VI can invert an immediate value and AND it with vs2, a separate .vi version of the vandn instruction is not provided.
+RULE 5: The functionality of a hypothetical vandn.vi instruction can be achieved by using an inversion of the immediate value with VAND.VI.
+
+INSTRUCTION: VSUB.VV
+FORMAT: vsub.vv vd, vs2, vs1, vm
+RULE 1: VSUB.VV performs element‑wise integer subtraction of the corresponding elements of source vector register groups vs2 and vs1, producing a result element for each position.
+RULE 2: VSUB.VV stores each result element into the corresponding element of the destination vector register group vd.
+RULE 3: VSUB.VV may use an optional vector mask vm to control which result elements are written to vd; elements with a disabled mask bit are not written.
+RULE 4: VSUB.VV is classified as a vector‑vector integer arithmetic operation.
+RULE 5: VSUB.VV uses the assembly syntax "vsub.vv vd, vs2, vs1, vm".
+
+REGISTER: fcsr
+NUMBER: 0x003
+MODE: U-mode
+WIDTH: 32
+FIELDS: 7..5=FRM, 4..4=NV, 3..3=DZ, 2..2=OF, 1..1=UF, 0..0=NX
+EXTENSIONS: D, F, Q, Zdinx, Zfinx, Zhinx
+RULE 1: If the FRRM instruction is executed with destination rd, bits 7‑5 of fcsr are placed in the least‑significant three bits of rd and all other bits of rd are set to zero.
+RULE 2: If the FSRM instruction is executed with source rs1 and destination rd, the original bits 7‑5 of fcsr are copied into rd and the three least‑significant bits of rs1 are written into bits 7‑5 of fcsr.
+RULE 3: If the FRFLAGS instruction is executed with destination rd, bits 4‑0 of fcsr are placed in the least‑significant five bits of rd and all other bits of rd are set to zero.
+RULE 4: If the FSFLAGS instruction is executed with source rs1 and destination rd, the original bits 4‑0 of fcsr are copied into rd and the five least‑significant bits of rs1 are written into bits 4‑0 of fcsr.
+RULE 5: If a floating‑point instruction raises an exception condition, the corresponding flag bit in the fcsr field fflags (bits 4‑0) becomes set and remains set until software clears it.
+RULE 6: The base RISC‑V ISA does not generate a trap when a floating‑point exception flag is set in fcsr.
+RULE 7: If an implementation does not provide standard extensions occupying bits 31‑8 of fcsr, then writes to bits 31‑8 of fcsr shall be ignored.
+RULE 8: If an implementation does not provide standard extensions occupying bits 31‑8 of fcsr, then reads of bits 31‑8 of fcsr shall return zero.
+RULE 9: Standard software should preserve the contents of bits 31‑8 of fcsr when those bits are implemented.
+RULE 10: If a floating‑point operation uses a static rounding mode encoded as 101, 110, or any other value reserved for static rounding, the behavior of that operation is reserved.
+RULE 11: If the dynamic rounding‑mode field frm in fcsr contains the reserved pattern 101111, then the behavior of any floating‑point operation that depends on rounding mode is reserved.
+RULE 12: If a floating‑point operation uses the dynamic rounding mode held in the frm field of fcsr, the operation uses the value of bits 7‑5 of fcsr as its rounding mode.
+RULE 13: Accesses to fcsr are not visible to other harts; therefore changes made to fcsr by one hart cannot be observed by another hart.
+RULE 14: Accesses to fcsr may be freely reordered with respect to FENCE instructions without violating the specification.
+RULE 15: The dependency‑tracking hardware treats bits 7‑5, 4, 3, 2, 1, and 0 of fcsr as independent units.
+RULE 16: The alias fflags refers to bits 4‑0 of fcsr, and the alias frm refers to bits 7‑5 of fcsr.
+RULE 17: If misa.F = 1, then the FCSR bit in mstateen0 is read‑only zero, and the same bit is read‑only zero in hstateen0 and sstateen0.
+RULE 18: If misa.F = 0 and a stateen0 CSR with the FCSR bit set to zero is implemented, then any floating‑point instruction causes an illegal‑instruction (or virtual‑instruction) exception as though it accessed fcsr.
+RULE 19: The FCSR bit controls whether floating‑point instructions that operate on integer registers (as defined by the Zfinx and related extensions) are permitted to access fcsr.
+RULE 20: If a floating‑point instruction accesses fcsr while the controlling FCSR bit is zero, the instruction causes an illegal‑instruction (or virtual‑instruction) exception.
+RULE 21: The fcsr register selects the dynamic rounding mode for floating‑point arithmetic operations.
+RULE 22: The fcsr register holds the accrued exception flags for floating‑point arithmetic instructions.
+RULE 23: The fcsr register contains the operating mode and exception status of the floating‑point unit.
+
+REGISTER: fflags
+NUMBER: 0x001
+MODE: U-mode
+WIDTH: 32
+FIELDS: 4..4=NV, 3..3=DZ, 2..2=OF, 1..1=UF, 0..0=NX
+EXTENSIONS: D, F, Q, V
+RULE 1: If a floating‑point arithmetic instruction raises an exception, the associated exception flag bit is set in fflags and remains set until cleared by software.
+RULE 2: Setting a floating‑point exception flag in fflags never causes a trap to be taken.
+RULE 3: If a vector floating‑point operation encounters an exception at an active element, the corresponding exception flag bit is set in fflags.
+RULE 4: If a vector floating‑point operation encounters an exception only at inactive elements, fflags is not modified.
+RULE 5: When the pseudo‑instruction FRFLAGS is executed, fflags is copied into the destination integer register with its five bits placed in the least‑significant bits of the destination and all other bits of the destination cleared to zero.
+RULE 6: When the pseudo‑instruction FSFLAGS is executed, the original value of fflags is written to the destination integer register and the five least‑significant bits of the source integer register are written into fflags, leaving all other bits of fcsr unchanged.
+RULE 7: Writes to bits of the fcsr CSR that are not part of the fflags field (bits 31‑8) MUST NOT change the value of fflags.
+RULE 8: Reads of the fcsr CSR return zero in bits 31‑8, but this does not affect the stored value of fflags.
+RULE 9: The FS field of mstatus encodes the status of the floating‑point unit state, which includes the current value of fflags.
+RULE 10: Architectural dependency tracking treats each bit of fflags as an independent unit, so a later instruction dependent on a specific flag is considered dependent only on the setting of that particular bit.
+
+REGISTER: frm
+NUMBER: 0x002
+MODE: U-mode
+WIDTH: 32
+FIELDS: 2..0=ROUNDINGMODE
+EXTENSIONS: D, F, Q, V, Zvfbfmin, Zvfbfwma
+RULE 1: If software reads the frm CSR address, the hardware returns the current value of bits 7‑5 of the fcsr register, zero‑extended to the width of the destination register.
+RULE 2: If software writes a value to the frm CSR address, the hardware updates bits 7‑5 of the fcsr register with the written three‑bit value while leaving all other bits of fcsr unchanged.
+RULE 3: When the FRRM pseudo‑instruction executes, the processor extracts bits 7‑5 of the fcsr register (the frm field) and writes that three‑bit value into the least‑significant bits of the integer destination register, zero‑extending the remaining bits.
+RULE 4: When the FSRM pseudo‑instruction executes, the processor first copies the current frm field (bits 7‑5 of fcsr) into the integer destination register, then writes the three‑least‑significant bits of the integer source register into bits 7‑5 of fcsr (the frm field).
+RULE 5: If a floating‑point arithmetic instruction has its rm field set to 111, the processor uses the current value of frm as the dynamic rounding mode for that operation.
+RULE 6: If the value held in frm is one of the reserved encodings 101 or 110, the architectural effect of any floating‑point instruction that depends on rounding mode is defined as reserved behavior.
+RULE 7: If the rm field of an instruction selects the dynamic rounding mode (value 111) and the frm field contains the dynamic reserved pattern 101111, the architectural effect of the instruction is defined as reserved behavior.
+RULE 8: Implementations may treat execution of a floating‑point instruction with a dynamic reserved rounding mode (frm containing 101111) as reserved behavior rather than raising an illegal‑instruction exception.
+RULE 9: All standard vector floating‑point arithmetic instructions obtain their rounding mode from the current value of frm.
+RULE 10: If a vector floating‑point instruction accesses frm while it holds an invalid rounding‑mode encoding, the architectural effect is defined as reserved behavior.
+RULE 11: Scalar floating‑point conversion instructions that are not rtz variants obtain their rounding mode from the current value of frm.
+RULE 12: Vector floating‑point conversion instructions round their results according to the current value of frm.
+RULE 13: The FS field of the floating‑point state reflects the current value of frm as part of the encoded floating‑point unit state.
+
+REGISTER: hpmcounter18
+NUMBER: 0xc12
+MODE: U-mode
+WIDTH: 64
+FIELDS: 63..0=COUNT
+EXTENSIONS: H, Sscofpmf, Zicsr, Zihpm
+RULE 1: If hpmcounter18 is unimplemented or ill‑configured, an access to hpmcounter18 MAY cause an illegal‑instruction exception or MAY return a constant value.
+RULE 2: If the HPM18 bit in mcounteren is clear and the current privilege mode is S-mode or U-mode, a read of hpmcounter18 MUST cause an illegal‑instruction exception.
+RULE 3: When hpmcounter18 is read, it returns the current value of mhpmcounter18 as a read‑only shadow.
+
+REGISTER: mcause
+NUMBER: 0x342
+MODE: M-mode
+WIDTH: MXLEN
+FIELDS: 63..63=INT, 62..0=CODE
+EXTENSIONS: H, Smdbltrp, Smrnmi, Sscofpmf, Ssdbltrp
+RULE 1: If a trap is taken into M‑mode, the implementation MUST write mcause with a code indicating the event that caused the trap.
+RULE 2: If a trap is not taken into M‑mode, the implementation MUST NOT write mcause (software may still write it explicitly).
+RULE 3: If a trap is caused by an interrupt, the Interrupt bit of mcause MUST be set.
+RULE 4: If a trap is caused by an exception, the Interrupt bit of mcause MUST be cleared.
+RULE 5: When mcause is written, the implementation MUST ensure that the Exception Code field contains a supported exception code.
+RULE 6: If a double‑trap occurs while executing in S‑mode, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 16.
+RULE 7: If an unexpected trap is delivered to the RNMI handler while in M‑mode, the implementation MUST NOT write mcause; instead it MUST write mtval2 with the value that would otherwise have been written to mcause.
+RULE 8: When a non‑maskable interrupt occurs, the implementation MUST write mcause with a value that indicates the source of the NMI.
+RULE 9: When a non‑maskable interrupt occurs, the implementation SHOULD set the Interrupt bit of mcause.
+RULE 10: If an implementation does not distinguish NMI sources, it SHOULD write Exception Code = 0 in mcause for that NMI.
+RULE 11: If a supervisor software interrupt is taken, the implementation MUST write mcause with Interrupt = 1 and Exception Code = 1.
+RULE 12: If a machine software interrupt is taken, the implementation MUST write mcause with Interrupt = 1 and Exception Code = 3.
+RULE 13: If a supervisor timer interrupt is taken, the implementation MUST write mcause with Interrupt = 1 and Exception Code = 5.
+RULE 14: If a machine timer interrupt is taken, the implementation MUST write mcause with Interrupt = 1 and Exception Code = 7.
+RULE 15: If a supervisor external interrupt is taken, the implementation MUST write mcause with Interrupt = 1 and Exception Code = 9.
+RULE 16: If a machine external interrupt is taken, the implementation MUST write mcause with Interrupt = 1 and Exception Code = 11.
+RULE 17: If a counter‑overflow interrupt is taken, the implementation MUST write mcause with Interrupt = 1 and Exception Code = 13.
+RULE 18: If a platform‑specific interrupt with code ≥ 16 is taken, the implementation MUST write mcause with Interrupt = 1 and Exception Code equal to that platform‑specific value.
+RULE 19: If an instruction address misaligned exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 0.
+RULE 20: If an instruction access fault exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 1.
+RULE 21: If an illegal instruction exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 2.
+RULE 22: If a breakpoint exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 3.
+RULE 23: If a load address misaligned exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 4.
+RULE 24: If a load access fault exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 5.
+RULE 25: If a store/AMO address misaligned exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 6.
+RULE 26: If a store/AMO access fault exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 7.
+RULE 27: If an environment call from U‑mode is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 8.
+RULE 28: If an environment call from S‑mode is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 9.
+RULE 29: If an environment call from M‑mode is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 11.
+RULE 30: If an instruction page fault exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 12.
+RULE 31: If a load page fault exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 13.
+RULE 32: If a store/AMO page fault exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 15.
+RULE 33: If a double‑trap exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 16.
+RULE 34: If a software check exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 18.
+RULE 35: If a hardware error exception is taken, the implementation MUST write mcause with Interrupt = 0 and Exception Code = 19.
+RULE 36: When an instruction may raise multiple synchronous exceptions, the implementation MUST select the exception with the highest priority as defined in Table 15 and write its corresponding code into mcause.
+
+REGISTER: mcounteren
+NUMBER: 0x306
+MODE: M-mode
+WIDTH: 32
+FIELDS: 31..31=HPM31, 30..30=HPM30, 29..29=HPM29, 28..28=HPM28, 27..27=HPM27, 26..26=HPM26, 25..25=HPM25, 24..24=HPM24, 23..23=HPM23, 22..22=HPM22, 21..21=HPM21, 20..20=HPM20, 19..19=HPM19, 18..18=HPM18, 17..17=HPM17, 16..16=HPM16, 15..15=HPM15, 14..14=HPM14, 13..13=HPM13, 12..12=HPM12, 11..11=HPM11, 10..10=HPM10, 9..9=HPM9, 8..8=HPM8, 7..7=HPM7, 6..6=HPM6, 5..5=HPM5, 4..4=HPM4, 3..3=HPM3, 2..2=IR, 1..1=TM, 0..0=CY
+EXTENSIONS: H, Smcdeleg, Smcntrpmf, Smcsrind, Smstateen, Ssccfg, Sscofpmf, Sscsrind
+RULE 1: If a bit in mcounteren is clear, attempts to read the corresponding cycle, time, instret, or hpmcounter register while executing in S-mode or U-mode cause an illegal-instruction exception.
+RULE 2: If a bit in mcounteren is set, access to the corresponding cycle, time, instret, or hpmcounter register is permitted in the next implemented lower‑privilege mode (S-mode if implemented, otherwise U-mode).
+RULE 3: Reads or writes of the mcounteren CSR do not affect the underlying performance counters, which continue to increment regardless of mcounteren settings.
+RULE 4: A hart that implements U-mode MUST implement the mcounteren register.
+RULE 5: In a hart that implements U-mode, each field of mcounteren may be WARL and may be read‑only zero, and a zero value causes illegal-instruction exceptions for reads of the corresponding counter when accessed from a less‑privileged mode.
+RULE 6: In a hart that does not implement U-mode, the mcounteren register SHOULD NOT exist.
+RULE 7: If menvcfg.CDE = 1 and mcounteren[i] = 1, then accesses to the sireg CSR are permitted when siselect = 0x40+i.
+RULE 8: If siselect ≠ 0x40+i, or if mcounteren[i] = 0, then any access to the sireg CSR raises an illegal-instruction exception.
+RULE 9: If the TM bit in mcounteren is clear, then attempts to access the stimecmp or vstimecmp registers while executing in any privilege mode less privileged than M cause an illegal-instruction exception.
+RULE 10: If the TM bit in mcounteren is set and S-mode is implemented, then accesses to stimecmp (and to vstimecmp via stimecmp if implemented) are permitted in S-mode.
+RULE 11: If the TM bit in mcounteren is set, then accesses to vstimecmp via stimecmp are permitted in VS-mode provided the TM bit in hcounteren does not prevent it.
+RULE 12: The writability of a bit in scounteren is independent of the setting of the corresponding bit in mcounteren.
+RULE 13: In U-mode, a counter may be accessed only if both the corresponding bits in scounteren and mcounteren are set; otherwise an illegal-instruction exception occurs.
+RULE 14: When S-mode reads a bit X of the scountovf CSR, permission is granted only if the corresponding bit in mcounteren is set.
+RULE 15: When VS-mode reads a bit X of the scountovf CSR, permission is granted only if both the corresponding bits in mcounteren and hcounteren are set.
+RULE 16: If a CY, TM, IR, or HPM n bit in hcounteren is clear, V = 1, and the same bit in mcounteren is 1, then a read of the corresponding cycle, time, instret, or hpmcounter n register causes a virtual-instruction exception.
+RULE 17: If a CY, TM, IR, or HPM n bit in hcounteren is set and V = 1, then access to the corresponding cycle, time, instret, or hpmcounter n register is permitted unless prevented by another rule.
+
+REGISTER: mcountinhibit
+NUMBER: 0x320
+MODE: M-mode
+WIDTH: 32
+FIELDS: 31..31=HPM31, 30..30=HPM30, 29..29=HPM29, 28..28=HPM28, 27..27=HPM27, 26..26=HPM26, 25..25=HPM25, 24..24=HPM24, 23..23=HPM23, 22..22=HPM22, 21..21=HPM21, 20..20=HPM20, 19..19=HPM19, 18..18=HPM18, 17..17=HPM17, 16..16=HPM16, 15..15=HPM15, 14..14=HPM14, 13..13=HPM13, 12..12=HPM12, 11..11=HPM11, 10..10=HPM10, 9..9=HPM9, 8..8=HPM8, 7..7=HPM7, 6..6=HPM6, 5..5=HPM5, 4..4=HPM4, 3..3=HPM3, 2..2=IR, 0..0=CY
+EXTENSIONS: Smcdeleg, Ssccfg, Sscofpmf
+RULE 1: If mcountinhibit.CY is clear, the mcycle counter increments as usual.
+RULE 2: If mcountinhibit.CY is set, the mcycle counter does not increment.
+RULE 3: If mcountinhibit.IR is clear, the minstret counter increments as usual.
+RULE 4: If mcountinhibit.IR is set, the minstret counter does not increment.
+RULE 5: If an mcountinhibit.HPM n bit is clear, the mhpmcounter_n increments as usual.
+RULE 6: If an mcountinhibit.HPM n bit is set, the mhpmcounter_n does not increment.
+RULE 7: Changes to any bits of mcountinhibit never affect the accessibility (read/write permission) of the associated counters.
+RULE 8: If the mcycle CSR is shared among harts on the same core, a write to mcountinhibit.CY by one hart is visible to all harts that share that mcycle CSR.
+RULE 9: If the implementation does not provide the mcountinhibit CSR, the hardware behaves as if all bits of mcountinhibit were zero, causing all counters to increment normally.
+RULE 10: Settings of any bits in mcountinhibit never inhibit the incrementing of the mtime counter.
+
+REGISTER: mcycle
+NUMBER: 0xb00
+MODE: M-mode
+WIDTH: 64
+FIELDS: 63..0=COUNT
+EXTENSIONS: H, Smcdeleg, Smcntrpmf, Smcsrind, Smstateen, Ssccfg, Sscsrind
+RULE 1: If an instruction performs an explicit CSR write to mcycle, the new value takes effect after that instruction has otherwise completed and suppresses any implicit increment that would have occurred in the same cycle.
+RULE 2: If the mcycle CSR is shared between harts on the same core, a write to mcycle by one hart becomes visible to all harts that share it.
+RULE 3: The platform SHOULD provide a mechanism to indicate which harts share a given mcycle CSR.
+RULE 4: Implicit reads of mcycle are ordered as device‑input reads.
+RULE 5: Reads of the cycle CSR return the same value as the current value of mcycle.
+RULE 6: If the CY bit in the mcountinhibit CSR is clear, mcycle increments by one each processor clock cycle.
+RULE 7: If the CY bit in the mcountinhibit CSR is set, mcycle does not increment on processor clock cycles.
+RULE 8: If the mcountinhibit CSR is not implemented, the implementation behaves as if CY is clear, so mcycle increments each clock cycle.
+RULE 9: When the CY field of mcountinhibit is shared among harts, a write to mcountinhibit.CY is visible to all harts that share the mcycle CSR.
+RULE 10: CSR read accesses of mcycle are classified as device‑input (I) for the purposes of the FENCE instruction.
+RULE 11: A FENCE instruction placed after a read of mcycle orders that read with respect to subsequent memory accesses.
+RULE 12: Each hart observes its own explicit and implicit accesses to mcycle in program order.
+RULE 13: An explicit CSR read of mcycle returns the value of mcycle before the execution of that instruction.
+RULE 14: An explicit CSR access to mcycle is performed after any preceding instructions that modify mcycle and before any subsequent instructions that modify mcycle.
+RULE 15: The side effects of an explicit write to mcycle are observable by the very next instruction and cannot be observed by any preceding instruction.
+
+REGISTER: medeleg
+NUMBER: 0x302
+MODE: M-mode
+WIDTH: 64
+FIELDS: 23..23=SGPF, 22..22=VI, 21..21=LGPF, 20..20=IGPF, 15..15=SPF, 13..13=LPF, 12..12=IPF, 11..11=EM, 10..10=EVS, 9..9=ES, 8..8=EU, 7..7=SAF, 6..6=SAM, 5..5=LAF, 4..4=LAM, 3..3=B, 2..2=II, 1..1=IAF, 0..0=IAM
+EXTENSIONS: H, N, S
+RULE 1: If a hart implements S‑mode, it must provide a readable and writable medeleg register.
+RULE 2: If a hart does not implement S‑mode, it should not provide a medeleg register.
+RULE 3: If a bit in medeleg is set and the corresponding trap occurs in S‑mode or U‑mode, the trap is delegated to the S‑mode trap handler.
+RULE 4: If software writes 1 to a bit position in medeleg and then reads that bit, the read returns 1 only if the implementation supports delegating the corresponding trap.
+RULE 5: The implementation shall not have any medeleg bits permanently fixed to one; any delegatable synchronous trap must allow its medeleg bit to be cleared to zero.
+RULE 6: For each synchronous exception whose mcause code is N, the delegatable bit for that exception resides at bit position N in medeleg.
+RULE 7: If XLEN=64, the medelegh register does not exist, so accesses to medelegh have no effect on medeleg.
+RULE 8: If an exception cannot occur in a less‑privileged mode, its corresponding medeleg bit should be read‑only zero.
+RULE 9: Bit 11 of medeleg is read‑only zero.
+RULE 10: Bit 16 of medeleg is read‑only zero.
+
+REGISTER: menvcfg
+NUMBER: 0x30a
+MODE: M-mode
+WIDTH: 64
+FIELDS: 63..63=STCE, 62..62=PBMTE, 61..61=ADUE, 7..7=CBZE, 6..6=CBCFE, 5..4=CBIE, 0..0=FIOM
+EXTENSIONS: Smcdeleg, Smnpm, Ssdbltrp, Sstc, Svade, Svadu, Svpbmt, Zicbom, Zicboz, Zicfilp, Zicfiss
+RULE 1: If the Sstc extension is implemented and menvcfg.STCE is zero, then any access to the stimecmp CSR in a privilege mode less privileged than M raises an illegal‑instruction exception.
+RULE 2: If the Sstc extension is implemented, menvcfg.STCE is one, the hypervisor extension is implemented, henvcfg.STCE is zero, and the virtualisation mode bit V is one, then an access to stimecmp (i.e., vstimecmp) raises a virtual‑instruction exception.
+RULE 3: If the Sstc extension is implemented and menvcfg.STCE is one, then the stimecmp CSR is enabled for S‑mode.
+RULE 4: If the Sstc extension is not implemented, then menvcfg.STCE is hard‑wired to zero.
+RULE 5: If the Svpbmt extension is implemented and menvcfg.PBMTE is one, then Svpbmt is available for S‑mode and G‑stage address translation.
+RULE 6: If the Svpbmt extension is not implemented, then menvcfg.PBMTE is read‑only zero.
+RULE 7: If the hypervisor extension is implemented and menvcfg.PBMTE is zero, then henvcfg.PBMTE reads as zero.
+RULE 8: If the Svadu extension is implemented and menvcfg.ADUE is one, then hardware updating of PTE A/D bits is enabled for S‑mode address translation and the implementation behaves as though Svade is not implemented for S‑mode.
+RULE 9: If the hypervisor extension is implemented and menvcfg.ADUE is one, then hardware updating of PTE A/D bits is enabled for G‑stage address translation and the implementation behaves as though Svade is not implemented for G‑stage.
+RULE 10: If the Svadu extension is not implemented, then menvcfg.ADUE is read‑only zero.
+RULE 11: If the hypervisor extension is implemented and menvcfg.ADUE is zero, then henvcfg.ADUE reads as zero.
+RULE 12: If the Smcdeleg extension is implemented and menvcfg.CDE is one, then Zicntr and Zihpm counters may be delegated to S‑mode.
+RULE 13: If the Smcdeleg extension is implemented and menvcfg.CDE is zero, then the Smcdeleg and Ssccfg extensions appear not to be implemented.
+RULE 14: If the Smcdeleg extension is not implemented, then menvcfg.CDE is read‑only zero.
+RULE 15: If the Ssdbltrp extension is implemented and menvcfg.DTE is zero, then the implementation behaves as though the Ssdbltrp extension is not implemented.
+RULE 16: If the Smnpm extension is implemented and menvcfg.PMM is set to a value that enables pointer masking, then pointer masking is enabled for the next lower privilege mode (S/HS‑mode if S‑mode exists, otherwise U‑mode).
+RULE 17: If the Smnpm extension is implemented and menvcfg.PMM is set to a value that disables pointer masking, then pointer masking is disabled for the next lower privilege mode.
+RULE 18: If menvcfg.CBZE is zero and the current privilege mode is less privileged than M, then execution of the CBO.ZERO instruction raises an illegal‑instruction exception.
+RULE 19: If the hypervisor extension is implemented and the current virtual privilege mode has henvcfg.CBZE zero, then execution of CBO.ZERO raises a virtual‑instruction exception.
+RULE 20: If menvcfg.CBCFE is zero and the current privilege mode is less privileged than M, then execution of the CBO.CLEAN or CBO.FLUSH instructions raises an illegal‑instruction exception.
+RULE 21: If the hypervisor extension is implemented and the current virtual privilege mode has henvcfg.CBCFE zero, then execution of CBO.CLEAN or CBO.FLUSH raises a virtual‑instruction exception.
+RULE 22: If menvcfg.CBIE is binary 00 and the current privilege mode is less privileged than M, then execution of the CBO.INVAL instruction raises an illegal‑instruction exception.
+RULE 23: If menvcfg.CBIE is binary 01 and the current privilege mode is less privileged than M, then execution of the CBO.INVAL instruction executes and performs a flush operation.
+RULE 24: If the hypervisor extension is implemented and the current virtual privilege mode has henvcfg.CBIE binary 00, then execution of CBO.INVAL raises a virtual‑instruction exception.
+RULE 25: If menvcfg.LPE is one and S‑mode is implemented, then the Zicfilp extension is enabled in S‑mode.
+RULE 26: If menvcfg.LPE is one and S‑mode is not implemented, then the Zicfilp extension is enabled in U‑mode.
+RULE 27: If menvcfg.LPE is zero, then the Zicfilp extension is not enabled in S‑mode and the hart does not update the ELP state (it remains NO_LP_EXPECTED).
+RULE 28: If menvcfg.LPE is zero, then the LPAD instruction operates as a no‑op.
+RULE 29: If menvcfg.FIOM is one, then FENCE instructions executed in any privilege mode less privileged than M are interpreted such that ordering requirements for device I/O also apply to main memory accesses.
+RULE 30: If menvcfg.FIOM is one, then an atomic instruction with aq and/or rl set that accesses a region ordered as device I/O is ordered as though it accesses both device I/O and memory when executed in a mode less privileged than M.
+RULE 31: If the Zicfiss extension is implemented and menvcfg.SSE is one, then the Zicfiss extension is activated in S‑mode.
+RULE 32: If menvcfg.SSE is zero, then in any privilege mode less than M, 16‑bit Zicfiss instructions behave as defined by Zcmop.
+RULE 33: If menvcfg.SSE is zero, then in any privilege mode less than M the PTE encoding xwr=010b is reserved.
+RULE 34: If menvcfg.SSE is zero, then in any privilege mode less than M execution of the SSAMOSWAP.W/D instruction raises an illegal‑instruction exception.
+RULE 35: If the hypervisor extension is implemented and menvcfg.SSE is zero, then henvcfg.SSE reads as zero.
+RULE 36: If the hypervisor extension is implemented and menvcfg.SSE is zero, then senvcfg.SSE reads as zero.
+
+REGISTER: mepc
+NUMBER: 0x341
+MODE: M-mode
+WIDTH: MXLEN
+FIELDS: 63..0=PC
+EXTENSIONS: Smrnmi
+RULE 1: The low bit of mepc (mepc[0]) always reads as zero.
+RULE 2: On implementations that support only IALIGN=32, the two low bits of mepc (mepc[1:0]) always read as zero.
+RULE 3: If an implementation permits IALIGN to be either 16 or 32 and IALIGN=32, reads of mepc mask bit 1 to zero so that mepc[1] appears as zero.
+RULE 4: The masking of mepc[1] on reads also applies to the implicit read performed by the MRET instruction.
+RULE 5: Even when IALIGN=32 and mepc[1] is masked on reads, software may write any value to mepc[1] (the bit remains writable).
+RULE 6: mepc is a WARL register that MUST be capable of representing any valid virtual address.
+RULE 7: mepc is not required to be capable of representing every possible invalid address.
+RULE 8: If software attempts to write an invalid virtual address to mepc, the implementation MAY convert it into another invalid address that mepc can represent.
+RULE 9: When address translation is disabled, mepc MUST be capable of representing any physical address that could be used as a valid program counter or effective address.
+RULE 10: When a trap is taken into M‑mode, the implementation writes mepc with the virtual address of the instruction that was interrupted or that caused the exception.
+RULE 11: Except for trap entry into M‑mode, the implementation never writes mepc autonomously.
+RULE 12: When a trap is taken into M‑mode, the implementation writes the CSR mepc (along with mcause, mtval, mtval2, and mtinst).
+RULE 13: The MRET instruction, after updating status fields, sets the program counter to the value stored in mepc.
+
+REGISTER: mhartid
+NUMBER: 0xf14
+MODE: M-mode
+WIDTH: MXLEN
+FIELDS: 63..0=ID
+EXTENSIONS: -
+RULE 1: If software reads the mhartid CSR, the value returned shall be the integer ID of the hardware thread executing the code.
+RULE 2: The mhartid CSR MUST be readable in any implementation.
+RULE 3: At least one hart in the execution environment MUST have an mhartid value of zero.
+RULE 4: Hart IDs read from mhartid MUST be unique within the execution environment.
+RULE 5: If a system requires that exactly one hart runs certain code (e.g., at reset), then that hart MUST have an mhartid value of zero.
+RULE 6: Hart IDs assigned to harts need not be contiguous.
+RULE 7: System implementers SHOULD aim to reduce the magnitude of the largest mhartid value used in a system.
+
+REGISTER: mhpmcounter18
+NUMBER: 0xb12
+MODE: M-mode
+WIDTH: 64
+FIELDS: 63..0=COUNT
+EXTENSIONS: Sscofpmf
+RULE 1: An implementation SHOULD implement mhpmcounter18.
+RULE 2: If a hardware event selected by mhpmevent18 occurs, mhpmcounter18 increments by one.
+RULE 3: If mhpmevent18 is zero, mhpmcounter18 does not increment for any event.
+RULE 4: An implementation MAY make mhpmcounter18 read‑only zero and may make the corresponding mhpmevent18 read‑only zero.
+RULE 5: If the HPM18 bit in mcountinhibit is clear, mhpmcounter18 increments normally on selected events.
+RULE 6: If the HPM18 bit in mcountinhibit is set, mhpmcounter18 does not increment on selected events.
+RULE 7: If the mcountinhibit CSR is not implemented, mhpmcounter18 increments normally as though the HPM18 bit were clear.
+RULE 8: If the implemented bits of mhpmcounter18 overflow unsigned, the OF bit in mhpmevent18 is set.
+RULE 9: The OF bit in mhpmevent18 remains set until software writes to it.
+RULE 10: Count overflow of mhpmcounter18 never results from writes to mhpmcounter18 or mhpmevent18, only from hardware increments.
+RULE 11: If mhpmcounter18 overflows while the OF bit in mhpmevent18 is zero, a count‑overflow interrupt request is generated.
+RULE 12: If mhpmcounter18 overflows while the OF bit in mhpmevent18 is one, no count‑overflow interrupt request is generated.
+RULE 13: The OF bit in mhpmevent18 also disables count‑overflow interrupt generation for mhpmcounter18.
+RULE 14: If supervisor mode is implemented, the scountovf register bit corresponding to mhpmcounter18 mirrors the OF bit in mhpmevent18.
+
+REGISTER: mhpmevent18
+NUMBER: 0x332
+MODE: M-mode
+WIDTH: 64
+FIELDS: 63..63=OF, 62..62=MINH, 61..61=SINH, 60..60=UINH, 59..59=VSINH, 58..58=VUINH, 57..0=EVENT
+EXTENSIONS: Smcdeleg, Smcsrind, Smstateen, Ssccfg, Sscofpmf, Sscsrind
+RULE 1: If an implementation chooses to make mhpmevent18 read‑only zero, then any read of mhpmevent18 returns zero and any write to mhpmevent18 has no effect.
+RULE 2: If the Sscofpmf extension is not implemented, any attempt to access the mhpmevent18h CSR raises an illegal‑instruction exception.
+RULE 3: If a privilege mode is not implemented, then the corresponding xINH bit (MINH, SINH, UINH, VSINH, or VUINH) in mhpmevent18 reads as zero and cannot be written.
+RULE 4: If a particular xINH bit in mhpmevent18 is set, then counting of events while the processor executes in the associated privilege mode x is inhibited for the corresponding counter.
+RULE 5: If all xINH bits in mhpmevent18 are zero, then events occurring in any privilege mode increment the corresponding counter.
+RULE 6: When mhpmcounter18 overflows, the OF bit in mhpmevent18 becomes set and remains set until software writes a value with that bit cleared.
+RULE 7: If mhpmcounter18 overflows while the OF bit in mhpmevent18 is zero, then a count‑overflow interrupt request is generated.
+RULE 8: If mhpmcounter18 overflows while the OF bit in mhpmevent18 is one, then no count‑overflow interrupt request is generated.
+RULE 9: Writing to mhpmevent18 never causes an overflow condition; overflows of the associated counter can only be caused by hardware‑driven increments of mhpmcounter18.
+RULE 10: When a count‑overflow‑interrupt request is generated by mhpmcounter18, the OF bit in mhpmevent18 is set, and subsequently the LCOFIP bit in the mip (and sip) registers becomes set.
+RULE 11: If the Sscofpmf extension is implemented and the OF bit in mhpmevent18 is set, then the LCOFIP bit in mip reflects a pending local‑counter‑overflow interrupt caused by mhpmevent18.
+RULE 12: If the Sscofpmf extension is implemented, the LCOFIE bit in mie controls whether the pending interrupt indicated by the LCOFIP bit (set because the OF bit in mhpmevent18 is set) is enabled.
+
+REGISTER: mideleg
+NUMBER: 0x303
+MODE: M-mode
+WIDTH: MXLEN
+FIELDS: 1..1=SSI, 2..2=VSSI, 3..3=MSI, 5..5=STI, 6..6=VSTI, 7..7=MTI, 9..9=SEI, 10..10=VSEI, 11..11=MEI, 12..12=SGEI, 13..13=LCOFI
+EXTENSIONS: H, N, S, Smaia, Smcdeleg, Ssaia, Ssccfg, Sscofpmf
+RULE 1: If a bit in mideleg is set for a given interrupt, then that interrupt occurring in S‑mode or U‑mode is delegated to the S‑mode trap handler.
+RULE 2: If software writes a one to a bit position in mideleg and a subsequent read of the same bit returns zero, then the implementation does not support delegating the corresponding interrupt.
+RULE 3: An implementation MUST NOT make any machine‑level interrupt bits of mideleg read‑only one.
+RULE 4: If a bit in mideleg is set for an interrupt, then that interrupt is masked at the delegator privilege level and will not be taken in M‑mode.
+RULE 5: If the hypervisor extension is implemented, then bits 10, 6, and 2 of mideleg MUST be read‑only one.
+RULE 6: If GEILEN is nonzero, then mideleg bit 12 MUST be read‑only one.
+RULE 7: If a bit in mideleg is zero, then the corresponding bits in hideleg, hip, and hie MUST be read‑only zero.
+
+REGISTER: minstret
+NUMBER: 0xb02
+MODE: M-mode
+WIDTH: 64
+FIELDS: 63..0=COUNT
+EXTENSIONS: -
+RULE 1: If a CSR write targets minstret, the new value must take effect after the writing instruction has otherwise completed.
+RULE 2: If the IR bit in the mcountinhibit register is clear, the minstret counter must increment as usual for each retiring instruction.
+RULE 3: If the IR bit in the mcountinhibit register is set, the minstret counter must not increment for retiring instructions.
+RULE 4: If an instruction retires while executing in a mode that is not inhibited by the mcountinhibit IR bit, the minstret counter must increment by one.
+RULE 5: Synchronous exceptions, including ECALL and EBREAK, are not considered to retire and therefore must not increment minstret.
+RULE 6: ECALL and EBREAK should not cause minstret to increment.
+RULE 7: xRET instructions retire and should increment minstret only if the originating privilege mode is not inhibited by the mcountinhibit IR bit.
+RULE 8: If a user‑mode load incurs a page‑fault, the faulting execution must not increment minstret.
+RULE 9: If a trap handler executes in an inhibited mode, its execution must not increment minstret.
+RULE 10: When a previously faulted user‑mode load finally retires after re‑execution, minstret must increment by one.
+RULE 11: If an instruction is emulated by software running in a privilege mode that is inhibited according to minstretcfg, the emulation routine must increment minstret as if the instruction had retired.
+RULE 12: A read of the instret CSR must return the current value of minstret.
+
+REGISTER: mscratch
+NUMBER: 0x340
+MODE: M-mode
+WIDTH: MXLEN
+FIELDS: 63..0=SCRATCH
+EXTENSIONS: -
+RULE 1: If the current privilege level is machine mode, a read or write of the mscratch CSR accesses an MXLEN‑bit architectural register.
+RULE 2: If software writes a pointer to a machine‑mode hart‑local context space, the mscratch register contains that pointer.
+RULE 3: If entry to an M‑mode trap handler swaps a user register with the mscratch CSR, the user register receives the previous value of mscratch and mscratch receives the previous value of the user register.
+RULE 4: If a CSR swap instruction targets the mscratch CSR, the instruction writes the source operand into mscratch and returns the prior mscratch value.
+
+REGISTER: mtvec
+NUMBER: 0x305
+MODE: M-mode
+WIDTH: MXLEN
+FIELDS: 63..2=BASE, 1..0=MODE
+EXTENSIONS: -
+RULE 1: The mtvec register MUST be present in every RISC‑V implementation.
+RULE 2: If an implementation makes mtvec read‑only, any attempt to write mtvec does not change its value.
+RULE 3: If mtvec is writable, a write to mtvec results in a stored value that is a WARL‑constrained version of the written value, respecting the implementation’s alignment constraints.
+RULE 4: The BASE field of mtvec MUST be aligned on a 4‑byte boundary, so the two least‑significant bits of mtvec.BASE are always zero when read.
+RULE 5: When an address is formed from mtvec.BASE, the lower two bits are automatically filled with zeros, yielding an XLEN‑bit address that is 4‑byte aligned.
+RULE 6: If a trap into machine mode occurs while mtvec.MODE = Direct, the architectural PC is set to the address contained in mtvec.BASE.
+RULE 7: If a synchronous exception into machine mode occurs while mtvec.MODE = Vectored, the architectural PC is set to the address contained in mtvec.BASE.
+RULE 8: If an asynchronous interrupt with cause number C into machine mode occurs while mtvec.MODE = Vectored, the architectural PC is set to mtvec.BASE plus 4 × C.
+RULE 9: If an implementation imposes stricter alignment constraints for mtvec.MODE = Vectored than for mtvec.MODE = Direct, a write to mtvec whose BASE does not satisfy those stricter constraints MUST be masked or rounded to a legal value, and that legal value is what can be read back.
+RULE 10: Software must not rely on any defined PC value when mtvec.MODE is set to a reserved value (≥2).
+
+REGISTER: pmpaddr0
+NUMBER: 0x3b0
+MODE: M-mode
+WIDTH: MXLEN
+FIELDS: 63..0=ADDR
+EXTENSIONS: -
+RULE 1: If the current privilege mode is not M‑mode, any attempt to read or write pmpaddr0 must cause an illegal‑instruction exception.
+RULE 2: pmpaddr0 is a WARL register, therefore a write to pmpaddr0 may be accepted but any bits that are not implemented by the hardware become zero and reads of those bits return zero.
+RULE 3: If entry 0’s A field is set to TOR, then the lower bound of the range is zero and any address y that is less than the value stored in pmpaddr0 matches entry 0.
+RULE 4: If entry 0 is locked (its L bit is set), then writes to pmpaddr0 must be ignored and the stored value remains unchanged.
+RULE 5: When a PMP entry is locked, writes to the associated address register pmpaddr0 are ignored.
+RULE 6: If XLEN is greater than MXLEN, then for address‑matching purposes the value of pmpaddr0 is zero‑extended from MXLEN to XLEN bits.
+RULE 7: If software writes all ones to pmpaddr0 after writing zero to pmp0cfg and then reads pmpaddr0, the read value returns zero in any bits that are not implemented by the hardware.
+RULE 8: If the least‑significant set bit in the value read from pmpaddr0 after the granularity‑discovery sequence is at position G, then the PMP granularity is 2^G + 2 bytes.
+RULE 9: If entry i’s A field is TOR and pmpaddr(i‑1) ≥ pmpaddr0, then entry i matches no addresses.
+
+REGISTER: pmpcfg0
+NUMBER: 0x3a0
+MODE: M-mode
+WIDTH: MXLEN
+FIELDS: 7..0=pmp0cfg, 15..8=pmp1cfg, 23..16=pmp2cfg, 31..24=pmp3cfg, 39..32=pmp4cfg, 47..40=pmp5cfg, 55..48=pmp6cfg, 63..56=pmp7cfg
+EXTENSIONS: -
+RULE 1: If the implementation is RV64, pmpcfg0 holds the same four 8‑bit configuration fields pmp0cfg, pmp1cfg, pmp2cfg, and pmp3cfg that correspond to PMP entries 0–3.
+RULE 2: If software reads pmpcfg0, the value returned is a legal configuration value that may be equal to the most recent write or may be forced to zero.
+RULE 3: If the hart is executing in a privilege mode other than Machine mode and attempts to read pmpcfg0, an illegal‑instruction trap is generated.
+RULE 4: If the hart is executing in a privilege mode other than Machine mode and attempts to write pmpcfg0, an illegal‑instruction trap is generated.
+RULE 5: If an odd‑numbered PMP configuration CSR (e.g., pmpcfg1) is accessed on an RV64 implementation, the access traps, but this restriction does not apply to pmpcfg0.
+
+REGISTER: satp
+NUMBER: 0x180
+MODE: S-mode
+WIDTH: SXLEN
+FIELDS: 63..60=MODE, 59..44=ASID, 43..0=PPN
+EXTENSIONS: Svade, Svadu, Svnapot, Svpbmt
+RULE 1: When an S‑mode instruction fetch occurs, the implementation implicitly reads satp.
+RULE 2: The value returned by the implicit S‑mode fetch read of satp equals the value that would be returned by an explicit CSR read in a sufficient privilege mode.
+RULE 3: If the TVM bit in mstatus is 1 and an S‑mode read of satp is attempted, the implementation MUST raise an illegal‑instruction exception.
+RULE 4: If the TVM bit in mstatus is 1 and an S‑mode write of satp is attempted, the implementation MUST raise an illegal‑instruction exception.
+RULE 5: If the TVM bit in mstatus is 1 and an S‑mode execution of SFENCE.VMA or SINVAL.VMA is attempted, the implementation MUST raise an illegal‑instruction exception.
+RULE 6: If the TVM bit in mstatus is 0, attempts in S‑mode to read or write satp or to execute SFENCE.VMA or SINVAL.VMA must not raise an illegal‑instruction exception.
+RULE 7: If a write to satp specifies a MODE value that the implementation does not support, the implementation MUST make the write have no effect and MUST leave all satp fields unchanged.
+RULE 8: Writing all ones to every bit of the ASID field and then reading satp reveals the implemented ASID length because only the least‑significant ASIDLEN bits retain the ones.
+RULE 9: If ASIDLEN > 0, bits ASID[ASIDLEN‑1:0] of satp are writable and any higher ASID bits read back as zero.
+RULE 10: Satp is considered active whenever the effective privilege mode is S‑mode or U‑mode.
+RULE 11: The address‑translation algorithm may begin using a particular satp value only after satp has become active.
+RULE 12: Changing satp.MODE between Bare and any non‑Bare mode takes effect immediately without requiring an SFENCE.VMA.
+RULE 13: Changing satp.ASID takes effect immediately.
+RULE 14: A write to satp does not impose ordering constraints on page‑table updates relative to subsequent address translations and does not invalidate address‑translation caches.
+RULE 15: When page tables have been modified or an ASID has been reused, software may need to execute an SFENCE.VMA before or after a satp write.
+RULE 16: If satp becomes inactive, translations that began while it was active are not required to complete or terminate unless an SFENCE.VMA matching the address and ASID is executed.
+RULE 17: To ensure that updates to address‑management data structures are observed by subsequent implicit reads that involve satp, software MUST execute an SFENCE.VMA.
+RULE 18: If an implementation makes satp.MODE read‑only zero, the SUM field in sstatus is read‑only zero.
+RULE 19: If satp.MODE is read‑only zero, an attempt to execute an SFENCE.VMA instruction might raise an illegal‑instruction exception.
+
+REGISTER: scause
+NUMBER: 0x142
+MODE: S-mode
+WIDTH: SXLEN
+FIELDS: 63..63=INT, 62..0=CODE
+EXTENSIONS: H, Sscofpmf, Ssdbltrp
+RULE 1: If a trap is delegated to S-mode, scause is written with the trap cause.
+RULE 2: If a trap is taken into S-mode, scause is written with a code indicating the event that caused the trap.
+RULE 3: If a trap is not taken into S-mode, the implementation MUST NOT write scause.
+RULE 4: If a trap is taken into HS-mode (including when delegated to S-mode), the implementation writes scause with a code indicating the event that caused the trap.
+RULE 5: If the trap was caused by an interrupt, the Interrupt bit in scause is set.
+RULE 6: If the trap was caused by an exception, the Interrupt bit in scause is cleared.
+RULE 7: After a trap, the Exception Code field of scause contains a code identifying the last exception or interrupt.
+RULE 8: The Exception Code field of scause MUST be implemented to hold values 0‑31 (bits 4‑0).
+RULE 9: Software may explicitly write scause.
+RULE 10: scause is a read‑write CSR of width SXLEN.
+
+REGISTER: scounteren
+NUMBER: 0x106
+MODE: S-mode
+WIDTH: 32
+FIELDS: 31..31=HPM31, 30..30=HPM30, 29..29=HPM29, 28..28=HPM28, 27..27=HPM27, 26..26=HPM26, 25..25=HPM25, 24..24=HPM24, 23..23=HPM23, 22..22=HPM22, 21..21=HPM21, 20..20=HPM20, 19..19=HPM19, 18..18=HPM18, 17..17=HPM17, 16..16=HPM16, 15..15=HPM15, 14..14=HPM14, 13..13=HPM13, 12..12=HPM12, 11..11=HPM11, 10..10=HPM10, 9..9=HPM9, 8..8=HPM8, 7..7=HPM7, 6..6=HPM6, 5..5=HPM5, 4..4=HPM4, 3..3=HPM3, 2..2=IR, 1..1=TM, 0..0=CY
+EXTENSIONS: H, S
+RULE 1: If a CY, TM, IR, or HPMn bit in scounteren is clear, then an attempt to read the corresponding counter (cycle, time, instret, or hpmcountern) while executing in U-mode causes an illegal‑instruction exception.
+RULE 2: If a CY, TM, IR, or HPMn bit in scounteren is set, then access to the corresponding counter register is permitted.
+RULE 3: Implementations MUST implement the scounteren CSR.
+RULE 4: If a bit in scounteren is read‑only zero, then attempts to read the corresponding counter while executing in U-mode cause an illegal‑instruction exception.
+RULE 5: The setting of a bit in mcounteren does NOT affect whether the corresponding bit in scounteren is writable.
+RULE 6: If both the corresponding bits in scounteren and mcounteren are set, then U-mode may access the associated counter.
+RULE 7: If either the corresponding bit in scounteren or the corresponding bit in mcounteren is clear, then U-mode access to the associated counter causes an illegal‑instruction exception.
+RULE 8: If V=1, scounteren continues to have its usual function and accessibility, with VS-mode and VU-mode substituting for HS-mode and U-mode respectively.
+RULE 9: In VU-mode, if a non‑high‑half counter CSR is accessed and the corresponding bit in either hcounteren or scounteren is 0 while the same bit in mcounteren is 1, then a virtual‑instruction exception is raised.
+
+REGISTER: scountinhibit
+NUMBER: 0x120
+MODE: S-mode
+WIDTH: SXLEN
+FIELDS: 63..3=HPM, 2..2=IR, 1..1=TM, 0..0=CY
+EXTENSIONS: Smcdeleg, Ssccfg
+RULE 1: If a counter is delegated to S‑mode, then a read of the corresponding bit in scountinhibit returns the current value of the matching mcountinhibit bit.
+RULE 2: If a counter is delegated to S‑mode, then a write to the corresponding bit in scountinhibit updates the matching mcountinhibit bit to the written value.
+RULE 3: If a counter is not delegated to S‑mode, then a read of the corresponding bit in scountinhibit returns zero.
+RULE 4: If a counter is not delegated to S‑mode, then a write to the corresponding bit in scountinhibit leaves the bit at zero (the write has no effect).
+RULE 5: If menvcfg.CDE = 0 and any instruction attempts to access scountinhibit, then an illegal‑instruction exception is raised.
+RULE 6: If the Supervisor Counter Delegation extension is implemented and the current privilege mode is VS‑mode or VU‑mode and any instruction attempts to access scountinhibit, then a virtual‑instruction exception is raised.
+
+REGISTER: sepc
+NUMBER: 0x141
+MODE: S-mode
+WIDTH: 64
+FIELDS: 63..0=PC
+EXTENSIONS: Ssdbltrp
+RULE 1: The least‑significant bit of sepc (sepc[0]) is always zero.
+RULE 2: On implementations that support only IALIGN=32, both sepc[1] and sepc[0] are always zero.
+RULE 3: If an implementation permits IALIGN to be either 16 or 32, then whenever IALIGN=32, reads of sepc mask bit sepc[1] to appear as zero.
+RULE 4: The masking of sepc[1] when IALIGN=32 also applies to the implicit read of sepc performed by the SRET instruction.
+RULE 5: Even when IALIGN=32 and sepc[1] is masked on reads, writes to sepc may set bit sepc[1].
+RULE 6: sepc is a WARL register that MUST be capable of holding any valid virtual address.
+RULE 7: sepc is not required to be capable of holding every possible invalid virtual address.
+RULE 8: When software writes an invalid virtual address to sepc, the implementation MAY convert it to a different invalid address that sepc can represent.
+RULE 9: When a trap is delegated to S‑mode, the implementation writes sepc with the virtual address of the instruction that caused the trap.
+RULE 10: When a trap is taken into S‑mode, the implementation writes sepc with the virtual address of the instruction that was interrupted or that raised the exception.
+RULE 11: In all other circumstances, the implementation MUST NOT write sepc automatically; only software may modify sepc.
+RULE 12: Executing the SRET instruction in M‑mode or HS‑mode (V=0) causes the architectural pc to be set to the value read from sepc.
+RULE 13: Executing the SRET instruction in VS‑mode (V=1) causes the architectural pc to be set to vsepc and does not modify sepc.
+
+REGISTER: sstatus
+NUMBER: 0x100
+MODE: S-mode
+WIDTH: SXLEN
+FIELDS: 63..63=SD, 33..32=UXL, 19..19=MXR, 18..18=SUM, 16..15=XS, 14..13=FS, 10..9=VS, 8..8=SPP, 6..6=UBE, 5..5=SPIE, 1..1=SIE
+EXTENSIONS: F, Ssdbltrp, V, Zicfilp
+RULE 1: If a CSR read of a field in sstatus occurs, the value returned is the same as the value of the homonymous field in mstatus.
+RULE 2: If a CSR write of a field in sstatus occurs, the same field in mstatus is written with the same value.
+RULE 3: When a trap is taken, sstatus.SPP is set to 0 if the trap originated from user mode, otherwise sstatus.SPP is set to 1.
+RULE 4: When an SRET instruction is executed, the privilege level is set to user mode if sstatus.SPP is 0, otherwise to supervisor mode, and then sstatus.SPP is set to 0.
+RULE 5: When a trap is taken into supervisor mode, sstatus.SPIE is set to the previous value of sstatus.SIE and then sstatus.SIE is set to 0.
+RULE 6: When an SRET instruction is executed, sstatus.SIE is set to the current value of sstatus.SPIE and then sstatus.SPIE is set to 1.
+RULE 7: If sstatus.SUM is 0, S‑mode loads and stores to pages that are accessible by U‑mode fault.
+RULE 8: If sstatus.SUM is 1, S‑mode loads and stores to pages that are accessible by U‑mode are permitted.
+RULE 9: If satp.MODE is read‑only 0, sstatus.SUM must be read‑only 0.
+RULE 10: If sstatus.MXR is 0, a load succeeds only from pages marked readable.
+RULE 11: If sstatus.MXR is 1, a load succeeds from pages marked readable or executable.
+RULE 12: If page‑based virtual memory is not in effect, the value of sstatus.MXR has no effect on load behavior.
+RULE 13: If sstatus.UBE is 0, explicit load and store memory accesses made from U‑mode are little‑endian.
+RULE 14: If sstatus.UBE is 1, explicit load and store memory accesses made from U‑mode are big‑endian.
+RULE 15: The value of sstatus.UBE has no effect on instruction fetches, which are always little‑endian.
+RULE 16: For implicit accesses to supervisor‑level memory‑management data structures, the endianness of S‑mode applies and sstatus.UBE is ignored.
+RULE 17: If an explicit CSR write sets sstatus.SDT to 1, sstatus.SIE is cleared to 0 regardless of any value written to sstatus.SIE by the same write.
+RULE 18: sstatus.SIE can be set to 1 by an explicit CSR write only if sstatus.SDT is being set to 0 by the same write or is already 0.
+RULE 19: When a trap is taken into supervisor mode and sstatus.SDT is currently 0, sstatus.SDT is set to 1.
+RULE 20: If a trap is taken into supervisor mode while sstatus.SDT is already 1, a double‑trap exception is delivered into M‑mode.
+RULE 21: When an SRET instruction is executed, sstatus.SDT is set to 0.
+RULE 22: When a trap to S‑mode occurs, the sstatus.SPELP bit preserves the previous Expected Landing Pad state.
+RULE 23: When a CMO instruction is executed, its permission is determined in part by the values of sstatus.SUM and sstatus.MXR (together with other relevant bits).
+RULE 24: An implementation may make sstatus.UBE a read‑only field that always equals the S‑mode endianness.
+
+REGISTER: stvec
+NUMBER: 0x105
+MODE: S-mode
+WIDTH: 64
+FIELDS: 63..2=BASE, 1..0=MODE
+EXTENSIONS: H, Ssdbltrp
+RULE 1: If software writes a value to stvec, the BASE field stores bits XLEN‑1 down to 2 of the supplied address and discards bits 1:0.
+RULE 2: If the address stored in the BASE field of stvec is used as a trap target address, the hardware fills the lower two bits with zero to produce an XLEN‑bit address aligned on a four‑byte boundary.
+RULE 3: Software MUST ensure that the address written to the BASE field of stvec is at least four‑byte aligned.
+RULE 4: When the MODE field of stvec is set to Direct (value 0), all traps into supervisor mode set the program counter to the address formed from the BASE field.
+RULE 5: When the MODE field of stvec is set to Vectored (value 1), all synchronous exceptions into supervisor mode set the program counter to the address formed from the BASE field.
+RULE 6: When the MODE field of stvec is set to Vectored (value 1) and an asynchronous interrupt with cause number C occurs, the program counter is set to BASE plus four times C.
+RULE 7: Implementations MAY require the BASE field of stvec to satisfy alignment constraints stricter than four‑byte when MODE is Vectored.
+RULE 8: When M‑mode executes an MRET to return to supervisor mode, execution resumes at the address contained in stvec.
+RULE 9: On delivery of a trap, the hardware does NOT apply pointer masking to the address taken from stvec.
+RULE 10: If the MODE field of stvec holds a value greater than or equal to 2, the effect of traps on the program counter is architecturally reserved.
+
+REGISTER: vcsr
+NUMBER: 0x00f
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 2..1=VXRM, 0..0=VXSAT
+EXTENSIONS: V
+RULE 1: If an instruction attempts to read the CSR at address 0x00F, the read succeeds only in privilege levels that permit User‑mode CSR access; otherwise the read causes an illegal‑instruction exception.
+RULE 2: If an instruction attempts to write the CSR at address 0x00F, the write succeeds only in privilege levels that permit User‑mode CSR access; otherwise the write causes an illegal‑instruction exception.
+RULE 3: If the vector fixed‑point rounding‑mode field (vxrm) is changed, bits 2:1 of vcsr are automatically updated to contain the same two‑bit value.
+RULE 4: If software writes a value to bits 2:1 of vcsr, the vector fixed‑point rounding‑mode field (vxrm) is set to that two‑bit value.
+RULE 5: If the vector fixed‑point saturation flag (vxsat) changes state, bit 0 of vcsr is automatically updated to reflect the same state.
+RULE 6: If software writes to bit 0 of vcsr, the vector fixed‑point saturation flag (vxsat) is set or cleared to match the written bit.
+
+REGISTER: vl
+NUMBER: 0xc20
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..0=VALUE
+EXTENSIONS: V
+RULE 1: vl may be updated only by vset{i}vl{i} configuration‑setting instructions and by fault‑only‑first vector‑load instruction variants; no other instruction may change vl.
+RULE 2: After being set, vl contains an unsigned integer that specifies the number of elements to be updated by subsequent vector instructions.
+RULE 3: The implementation‑dependent width of vl must be sufficient to represent all values from 0 up to the implementation’s VLMAX for the smallest supported element type.
+RULE 4: An element whose index x satisfies vstart ≤ x < vl is a body element that may be processed by a vector instruction.
+RULE 5: An element whose index x satisfies x ≥ vl is a tail element.
+RULE 6: If vstart ≥ vl, then no body elements exist for the instruction.
+RULE 7: If vstart ≥ vl, then no elements are updated in any destination vector register group, including tail elements.
+RULE 8: If vl = 0, then no elements, including agnostic elements, are updated in the destination vector register group regardless of the value of vstart.
+RULE 9: Tail elements (indices x ≥ vl) never raise exceptions.
+RULE 10: Tail elements never update any destination vector register group unless vtype.vta = 1.
+RULE 11: When vtype.vta = 1, tail elements may be overwritten with 1s or with the instruction result for mask‑producing instructions.
+RULE 12: When a vsetvli, vsetivli, or vsetvl instruction executes, it writes the newly computed vl value to the destination integer register rd.
+RULE 13: A vset{i}vl{i} instruction first computes VLMAX from its vtype argument before determining the new vl value.
+RULE 14: For a vset{i}vl{i} instruction with rs1 ≠ x0, the AVL is taken from the source register rs1 and the resulting vl is written to rd.
+RULE 15: For a vset{i}vl{i} instruction with rs1 = x0 and rd ≠ x0, the AVL is taken as the maximal unsigned integer (~0) and VLMAX is written to both vl and rd.
+RULE 16: For a vset{i}vl{i} instruction with rs1 = x0 and rd = x0, the current vl is used as the AVL and the resulting vl may remain unchanged provided the new vtype does not change VLMAX.
+RULE 17: If AVL ≤ VLMAX, then the resulting vl is set equal to AVL.
+RULE 18: If AVL < 2 × VLMAX, then the resulting vl is chosen such that ceil(AVL/2) ≤ vl ≤ VLMAX.
+RULE 19: If AVL ≥ 2 × VLMAX, then the resulting vl is set equal to VLMAX.
+RULE 20: For a given implementation, the resulting vl is deterministic for identical input AVL and VLMAX values.
+RULE 21: If AVL = 0, then vl is set to 0.
+RULE 22: If AVL > 0, then vl is set to a value greater than 0.
+RULE 23: vl is never set to a value greater than VLMAX.
+RULE 24: vl is never set to a value greater than AVL.
+RULE 25: If a value read from vl is later used as the AVL argument to a vset{i}vl{i} instruction and the resultant VLMAX equals the VLMAX at the time of the original read, then the new vl will be identical to the original value.
+RULE 26: When an unsupported vtype value is written, the implementation sets vl to zero.
+RULE 27: If a fault‑only‑first vector‑load instruction raises an exception on an element with index > 0, then vl is reduced to that element’s index.
+RULE 28: If a fault‑only‑first vector‑load instruction raises an exception on element 0, then vl is not modified and a trap is taken.
+RULE 29: When a fault‑only‑first instruction traps due to an interrupt, the implementation should leave vl unchanged and should set vstart instead.
+RULE 30: When a debug data‑watchpoint would trigger on a tail element after the first, the implementation should leave vl unchanged and raise the debug trap.
+RULE 31: For unit‑stride segment load/store instructions, vl specifies the number of segments to transfer, which equals the number of elements moved to each vector register group.
+RULE 32: For whole‑register vector load/store instructions, element writes are suppressed when vstart ≥ evl (the effective vector length), regardless of the current vl value.
+RULE 33: All vector instructions that reference vl treat its value as a control dependency rather than a data dependency.
+RULE 34: Software may read vl with a CSR read instruction and supply that value as the AVL operand to a subsequent vset{i}vl{i} instruction, and the resulting vl will obey the same setting constraints.
+
+REGISTER: vlenb
+NUMBER: 0xc22
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..0=VALUE
+EXTENSIONS: V
+RULE 1: If software executes a read of CSR address 0xC22 at any privilege level, the read returns the current value of vlenb.
+RULE 2: If software attempts to write CSR address 0xC22, the implementation MUST raise an illegal‑instruction exception because vlenb is read‑only.
+RULE 3: The architectural value of vlenb is always equal to the implementation‑defined constant VLEN divided by 8, expressed in bytes.
+RULE 4: The value of vlenb never changes during program execution; it remains constant for the lifetime of the hart configuration.
+RULE 5: When software reads vlenb, the returned value can be used to compute the number of bytes transferred by whole‑register vector load or store instructions.
+RULE 6: The vector‑extension status field VS includes the current value of vlenb when the VS field is saved or examined.
+
+REGISTER: vstart
+NUMBER: 0x008
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..0=VALUE
+EXTENSIONS: V
+RULE 1: Unprivileged software may write the vstart CSR.
+RULE 2: When a trap occurs on a vector instruction, the hardware writes the element index at which the trap was taken into vstart.
+RULE 3: After any vector instruction completes normally, the vstart CSR is reset to zero.
+RULE 4: When a vector instruction begins execution, it starts processing elements at the index specified in vstart.
+RULE 5: Vector instructions do not modify elements whose indices are less than the initial vstart value.
+RULE 6: If a vector instruction raises an illegal‑instruction exception, vstart is not modified.
+RULE 7: The vstart CSR provides only enough writable bits to represent indices from 0 up to VLMAX‑1.
+RULE 8: Implementations SHOULD trap when software writes vstart with a value greater than the largest element index permitted by the current vtype setting.
+RULE 9: Implementations are not required to trap for out‑of‑bounds vstart values.
+RULE 10: Executing a vector instruction with a non‑zero vstart may cause the instruction to run slower on some implementations.
+RULE 11: Certain vector instructions raise an illegal‑instruction exception if they are executed with a non‑zero vstart.
+RULE 12: Implementations may raise an illegal‑instruction exception when a vector instruction is executed with a vstart value that the implementation can never produce for the same vtype setting.
+RULE 13: Elements whose index is less than the initial vstart are defined as pre‑start elements.
+RULE 14: Elements whose index is greater than or equal to the initial vstart and less than the current vl are defined as body elements.
+RULE 15: If vstart is greater than or equal to vl, no destination vector register elements are updated by the instruction, including tail elements.
+RULE 16: If vl is zero, no destination vector register elements are updated by the instruction, regardless of the value of vstart.
+RULE 17: Integer and floating‑point scalar registers are written by vector instructions even when vstart ≥ vl or vl = 0.
+RULE 18: On a trap caused by a vector instruction, the epc CSR is written with the address of the trapping instruction and vstart contains the element index of the trap.
+RULE 19: Implementations must ensure that forward progress can eventually be guaranteed for the element index reported in vstart after a trap.
+RULE 20: When a thread is migrated to a hart whose microarchitecture does not support the current vstart value, software may need to emulate execution up to a supported element position.
+
+REGISTER: vtype
+NUMBER: 0xc21
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..63=VILL, 7..7=VMA, 6..6=VTA, 5..3=VSEW, 2..0=VLMUL
+EXTENSIONS: V, Zvkt
+RULE 1: Only vset{i}vl{i} instructions may update vtype.
+RULE 2: vtype is a read‑only XLEN‑wide CSR that can be written only by vset{i}vl{i} instructions.
+RULE 3: Software SHOULD write zero to bits vtype[XLEN‑2:8]; any non‑zero value in that field is reserved.
+RULE 4: Implementations MUST support the four combinations of vta and vma values (0/0, 0/1, 1/0, 1/1) as defined for handling tail and inactive elements.
+RULE 5: If the vta field in vtype is 0 then tail elements are treated as undisturbed by vector instructions.
+RULE 6: If the vta field in vtype is 1 then tail elements are treated as agnostic by vector instructions.
+RULE 7: If the vma field in vtype is 0 then inactive (masked‑off) elements are treated as undisturbed.
+RULE 8: If the vma field in vtype is 1 then inactive (masked‑off) elements are treated as agnostic.
+RULE 9: If a vset{i}vl{i} instruction attempts to write an unsupported value to vtype then the vill bit in vtype is set.
+RULE 10: If the vill bit in vtype is set then any vector instruction that depends upon vtype raises an illegal‑instruction exception.
+RULE 11: Execution of vset{i}vl{i} and whole‑register load or store instructions does not depend upon vtype and therefore does not raise an illegal‑instruction exception when vill is set.
+RULE 12: If the vill bit in vtype is set then all other bits of vtype SHALL be zero.
+RULE 13: If the vtype value is not supported by the implementation then the vill bit is set, the remaining bits of vtype are zero, and the vl register is set to zero.
+RULE 14: Implementations MUST consider all bits of vtype when determining whether a configuration is supported.
+RULE 15: An unsupported value in any location of vtype MUST result in the vill bit being set.
+RULE 16: Implementations MUST support LMUL integer values of 1, 2, 4, and 8.
+RULE 17: The LMUL setting is derived from the vlmul field in vtype as LMUL = 2^{vlmul[2:0]}.
+RULE 18: The element width (SEW) used for vector operations is selected by the vsew field in vtype.
+
+REGISTER: vxrm
+NUMBER: 0x00a
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..0=VALUE
+EXTENSIONS: V
+RULE 1: If software writes a value to the vxrm CSR, the two least‑significant bits vxrm[1:0] become the written rounding‑mode field.
+RULE 2: If software writes to the vxrm CSR, the upper bits vxrm[XLEN‑1:2] should be written as zeros.
+RULE 3: If vxrm[1:0] is written, the bits 2:1 of the vcsr CSR become equal to the new vxrm[1:0] value.
+RULE 4: If bits 2:1 of the vcsr CSR are written, the vxrm[1:0] field becomes equal to the written vcsr bits.
+RULE 5: If a rounding operation uses the rounding algorithm and the current vxrm[1:0] equals 0b00 (rnu), then the rounding increment r is the value of bit v[d‑1].
+RULE 6: If a rounding operation uses the rounding algorithm and the current vxrm[1:0] equals 0b01 (rne), then the rounding increment r is v[d‑1] AND (v[d‑2:0] ≠ 0 OR v[d]).
+RULE 7: If a rounding operation uses the rounding algorithm and the current vxrm[1:0] equals 0b10 (rdn), then the rounding increment r is 0.
+RULE 8: If a rounding operation uses the rounding algorithm and the current vxrm[1:0] equals 0b11 (rod), then the rounding increment r is (!v[d] AND v[d‑1:0] ≠ 0).
+RULE 9: If a roundoff_unsigned(v,d) function is executed, the rounding increment r used is selected according to the current vxrm[1:0] as defined in the rounding‑mode table.
+RULE 10: If a roundoff_signed(v,d) function is executed, the rounding increment r used is selected according to the current vxrm[1:0] as defined in the rounding‑mode table.
+RULE 11: If a vector averaging add (vaadd*) or averaging subtract (vasub*) instruction executes, the result after the one‑bit right shift is rounded by adding the rounding increment r determined from the current vxrm setting.
+RULE 12: If a vector scaling right logical shift (vssrl*) or scaling right arithmetic shift (vssra*) instruction executes, the bits shifted out are rounded by adding the rounding increment r determined from the current vxrm setting.
+RULE 13: If a vector narrowing fixed‑point clip (vnclip*) instruction executes, rounding around the destination least‑significant bit is performed before saturation using the rounding increment r determined from the current vxrm setting.
+
+REGISTER: vxsat
+NUMBER: 0x009
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..0=VALUE
+EXTENSIONS: V
+RULE 1: If a fixed‑point instruction saturates, the vxsat bit (vxsat[0]) in the vxsat CSR is set to 1.
+RULE 2: If a saturating add or subtract instruction would overflow the destination, the result is replaced with the closest representable value and the vxsat bit in the vxsat CSR is set to 1.
+RULE 3: If a fractional multiply with rounding and saturation instruction causes saturation, the vxsat bit in the vxsat CSR is set to 1.
+RULE 4: If any destination element of a narrowing fixed‑point clip instruction is saturated, the vxsat bit in the vxsat CSR is set to 1.
+RULE 5: When software writes a value to the vxsat CSR, the written least‑significant bit becomes the vxsat bit and software SHOULD write zeros to bits vxsat[XLEN‑1:1].
+RULE 6: The vxsat bit in the vxsat CSR is mirrored in bit 0 of the vcsr CSR, so any change to the vxsat bit updates the vcsr vxsat bit to the same value.
+RULE 7: Reads of bit 0 of the vcsr CSR return the same value as the vxsat bit in the vxsat CSR.

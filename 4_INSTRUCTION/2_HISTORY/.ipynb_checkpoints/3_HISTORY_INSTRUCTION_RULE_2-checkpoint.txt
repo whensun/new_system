@@ -1,0 +1,185 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: ADDIW
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for ADDIW instruction, rewrite the following description as a list of rules. Each rule must explain about ADDIW instruction. Essentially, for each rule, it is about ADDIW instruction, not other things.
+
+Do not lose any information about ADDIW instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is ADDIW."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word ADDIW.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+- **Instruction class**: **ADDIW** is an **RV64I** instruction (the 64‑bit base integer ISA).  
+
+- **Operation**:  
+  1. The 12‑bit immediate field is sign‑extended to 64 bits.  
+  2. The sign‑extended immediate is added to the value in source register **rs1**.  
+  3. The 64‑bit sum is truncated to the low 32 bits.  
+  4. The 32‑bit result is then sign‑extended back to 64 bits and written to destination register **rd**.  
+
+- **Overflow behavior**: Overflows are **ignored**; only the low 32 bits of the addition are kept before sign‑extension.  
+
+- **Special case**: The encoding `ADDIW rd, rs1, 0` copies the lower 32 bits of **rs1**, sign‑extends them to 64 bits, and writes the result to **rd**. This operation is defined as the assembler pseudoinstruction **SEXT.W**.  
+
+- **Encoding format**: The instruction uses the **I‑type** encoding (same format as other immediate instructions). The immediate occupies the 12‑bit I‑immediate field; the opcode and funct3 fields identify the instruction as ADDIW (the exact opcode value is not given in the excerpt).  
+
+- **Applicability**: ADDIW is defined **only for RV64I**; it is not present in RV32I.  
+
+- **Result width**: The final result placed in **rd** is a **64‑bit** value that is the sign‑extension of the 32‑bit addition result.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: ADDIW is defined only for the RV64I base integer ISA and does not exist in the RV32I ISA.  
+RULE 2: For ADDIW, the 12‑bit immediate field is sign‑extended to a 64‑bit value before any arithmetic is performed.  
+RULE 3: ADDIW adds the sign‑extended 64‑bit immediate to the 64‑bit value contained in source register rs1.  
+RULE 4: After the addition, ADDIW truncates the 64‑bit sum to its low 32 bits.  
+RULE 5: ADDIW then sign‑extends the 32‑bit truncated sum back to 64 bits and writes that value to destination register rd.  
+RULE 6: ADDIW never raises an overflow exception; any overflow beyond the low 32 bits is discarded.  
+RULE 7: When the immediate field of ADDIW is zero, the instruction copies the low 32 bits of rs1, sign‑extends them to 64 bits, and writes the result to rd, behaving as the pseudoinstruction SEXT.W.  
+RULE 8: The final result produced by ADDIW in rd is a 64‑bit value that is the sign‑extension of the 32‑bit addition result.
+======================================================= END - 1 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 2 =======================================================
+GLOBAL NUMBER: 2
+LOCAL NUMBER: 1
+NAME: CSRRWI
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for CSRRWI instruction, rewrite the following description as a list of rules. Each rule must explain about CSRRWI instruction. Essentially, for each rule, it is about CSRRWI instruction, not other things.
+
+Do not lose any information about CSRRWI instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is CSRRWI."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word CSRRWI.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+**CSRRWI (Atomic Read/Write CSR Immediate)**  
+
+- The instruction is the immediate‑form variant of **CSRRW**. It updates a CSR with an XLEN‑bit value obtained by zero‑extending a 5‑bit unsigned immediate **uimm[4:0]** that is encoded in the **rs1** field of the instruction.  
+
+- **Operation**  
+  1. If **rd ≠ x0**, the old value of the addressed CSR is read, zero‑extended to XLEN bits, and written to integer register **rd**.  
+  2. The zero‑extended immediate value is written to the CSR.  
+
+- **Special cases**  
+  - **rd = x0** – the instruction **shall not read the CSR** and **shall not cause any side effects** that might occur on a CSR read. The CSR is still written with the zero‑extended immediate.  
+  - The instruction **always writes** the CSR (even when **rd = x0**). Consequently, write side‑effects of the CSR are always triggered.  
+  - If the immediate field is zero, the value zero is written to the CSR (no exception to the "always write" rule).  
+
+- **Read/write determination (Table 7 excerpt)**  
+
+| Condition                | Reads CSR | Writes CSR |
+|--------------------------|-----------|------------|
+| CSRRWI, rd = x0          | No        | Yes        |
+| CSRRWI, rd ≠ x0          | Yes       | Yes        |
+
+- **Side‑effects on fields** – As an **CSRRW[I]** instruction, CSRRWI **acts side‑effects for all fields** within the written CSR (as opposed to CSRRSI/CSRRCI, which act only on fields whose bits are set in the immediate).  
+
+- **Atomicity** – The read of the old CSR value (when **rd ≠ x0**) and the write of the immediate value are performed atomically.  
+
+- **Assembler pseudoinstruction** – The pseudoinstruction **CSRWI csr, uimm** is encoded as **CSRRWI x0, csr, uimm**; i.e., it writes the immediate to the CSR without preserving the old value.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: CSRRWI updates a CSR with an XLEN‑bit value obtained by zero‑extending the 5‑bit unsigned immediate uimm[4:0] encoded in the rs1 field.  
+RULE 2: When the destination register rd of a CSRRWI instruction is not x0, CSRRWI reads the old value of the addressed CSR, zero‑extends it to XLEN bits, and writes that value to rd.  
+RULE 3: CSRRWI writes the zero‑extended immediate value to the addressed CSR after any read operation.  
+RULE 4: If the destination register rd of a CSRRWI instruction is x0, CSRRWI does not read the CSR and does not cause any side effects that would result from a CSR read.  
+RULE 5: Even when rd is x0, CSRRWI always writes the zero‑extended immediate value to the addressed CSR.  
+RULE 6: The write performed by CSRRWI always triggers the write side‑effects of the addressed CSR, regardless of the value of rd.  
+RULE 7: When the immediate field of a CSRRWI instruction is zero, CSRRWI writes the value zero to the addressed CSR.  
+RULE 8: For a CSRRWI instruction with rd = x0, the architectural behavior is that the CSR is not read and is written.  
+RULE 9: For a CSRRWI instruction with rd ≠ x0, the architectural behavior is that the CSR is both read and written.  
+RULE 10: As a CSRRW‑type instruction, CSRRWI causes side‑effects for all fields within the written CSR, not limited to bits set in the immediate.  
+RULE 11: The read of the old CSR value (when rd ≠ x0) and the write of the immediate value performed by CSRRWI are executed atomically.  
+RULE 12: The assembler pseudoinstruction CSRWI csr, uimm is encoded as CSRRWI x0, csr, uimm, causing the immediate to be written to the CSR without preserving the old value.
+======================================================= END - 2 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 3 =======================================================
+GLOBAL NUMBER: 3
+LOCAL NUMBER: 2
+NAME: CSRRWI
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for CSRRWI instruction, rewrite the following description as a list of rules. Each rule must explain about CSRRWI instruction. Essentially, for each rule, it is about CSRRWI instruction, not other things.
+
+Do not lose any information about CSRRWI instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is CSRRWI."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word CSRRWI.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+- **Classification**  
+  CSRRWI is a CSR (Control‑and‑Status‑Register) instruction.
+
+- **Source‑register rule for CSRRWI**  
+  For an instruction *i* that is CSRRWI, a register *r* (other than *x0*) is considered a source register if the *csr* field of the opcode selects *r*, **unless** the destination register *rd* of the CSRRWI instruction is *x0*. In the case where *rd = x0*, the CSR selected by the *csr* field is **not** treated as a source register.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: CSRRWI is classified as a Control‑and‑Status‑Register (CSR) instruction.  
+RULE 2: For a CSRRWI instruction whose destination register rd is not x0, any register r other than x0 that is selected by the csr field is treated as a source register.  
+RULE 3: For a CSRRWI instruction whose destination register rd is x0, the CSR selected by the csr field is not treated as a source register.  
+RULE 4: For CSRRWI, the register x0 is never considered a source register.
+======================================================= END - 3 ========================================================

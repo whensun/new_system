@@ -1,0 +1,6 @@
+## 32.2.15.4. add/sub with carry
+
+- ⚫ vadc.v[ivx]m
+- ⚫ vmadc.v[ivx][m]
+- ⚫ vmsbc.v[vx]m
+- ⚫ vsbc.v[vx]m

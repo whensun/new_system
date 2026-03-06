@@ -1,0 +1,13 @@
+## 31.5.2. Entropy Source Requirements
+
+The output entropy ( seed[15:0] in  ES16  state)  is  not  necessarily  fully  conditioned  randomness due to hardware  and  energy  limitations  of  smaller,  low-powered  implementations.  However,  minimum requirements are defined. The main requirement is that 2-to-1 cryptographic post-processing in 256-
+
+bit  input  blocks  will  yield  128-bit  "full  entropy"  output  blocks.  Entropy  source  users  may  make  this conservative assumption but are not prohibited from using more than twice the number of seed bits relative to the desired resulting entropy.
+
+An implementation of the entropy source should meet at least one of the following requirements sets in order to be considered a secure and safe design:
+
+- ⚫ Section 31.5.2.1: A physical entropy source meeting NIST SP 800-90B (Turan et al., 2018) criteria with evaluated min-entropy of 192 bits for each 256 output bits (min-entropy rate 0.75).
+- ⚫ Section 31.5.2.2: A physical entropy source meeting the AIS-31 PTG.2 (Killmann & Schindler, 2011) criteria, implying average Shannon entropy rate 0.997. The source must also meet the NIST 80090B min-entropy rate 192/256 = 0.75.
+- ⚫ Section 31.5.2.3: A virtual entropy source is a DRBG seeded from a physical entropy source. It must have at least a 256-bit (Post-Quantum Category 5) internal security level.
+
+All implementations must signal initialization, test mode, and health alarms as required by respective standards. This may require the implementer to add non-standard (custom) test interfaces in a secure and safe manner, an example of which is described in Section 31.8.6

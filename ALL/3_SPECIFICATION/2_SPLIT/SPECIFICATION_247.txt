@@ -1,0 +1,10 @@
+## 29.4.2.4. Integer minimum/maximum
+
+The  integer  minimum/maximum  instructions  are  arithmetic  R-type  instructions  that  return  the smaller/larger of two operands.
+
+| RV32   | RV64   | Mnemonic            | Instruction      |
+|--------|--------|---------------------|------------------|
+| ✓      | ✓      | max rd , rs1 , rs2  | Maximum          |
+| ✓      | ✓      | maxu rd , rs1 , rs2 | Unsigned maximum |
+| ✓      | ✓      | min rd , rs1 , rs2  | Minimum          |
+| ✓      | ✓      | minu rd , rs1 , rs2 | Unsigned minimum |

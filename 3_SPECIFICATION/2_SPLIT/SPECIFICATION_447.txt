@@ -1,0 +1,30 @@
+## 30.18.1. Zvl*: Minimum Vector Length Standard Extensions
+
+All  standard  vector  extensions  have  a  minimum  required  VLEN  as  described  below.  A  set  of  vector length extensions are provided to increase the minimum vector length of a vector extension.
+
+<image>
+
+<image>
+
+The  vector  length  extensions  can  be  used  to  either  specify  additional  software  or
+
+-  architecture profile requirements, or to advertise hardware capabilities.
+-  Longer vector length extensions should follow the same pattern.
+-  Every vector length extension effectively includes all shorter vector length extensions.
+
+Table 60. Vector length extensions
+
+| Extension   |   Minimum VLEN |
+|-------------|----------------|
+| Zvl32b      |             32 |
+| Zvl64b      |             64 |
+| Zvl128b     |            128 |
+| Zvl256b     |            256 |
+| Zvl512b     |            512 |
+| Zvl1024b    |           1024 |
+
+<image>
+
+<image>
+
+Explicit  use  of  the  Zvl32b  extension  string  is  not  required  for  any  standard  vector extension as they all effectively mandate at least this minimum, but the string can be useful when stating hardware capabilities.

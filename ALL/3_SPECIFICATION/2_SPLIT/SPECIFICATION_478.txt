@@ -1,0 +1,31 @@
+## 31.4.1. aes32dsi
+
+## Synopsis
+
+AES final round decryption instruction for RV32.
+
+## Mnemonic
+
+aes32dsi rd, rs1, rs2, bs
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction sources a single byte from rs2 according to bs .  To this it applies the inverse AES SBox operation, and XOR's the result with rs1 .  This instruction must always be implemented such that its execution latency does not depend on the data being operated on.
+
+## Operation
+
+```
+function clause execute (AES32DSI (bs,rs2,rs1,rd)) = { let shamt   : bits( 5) = bs @ 0b000; /* shamt = bs*8 */ let si      : bits( 8) = (X(rs2)[31..0] >> shamt)[7..0]; /* SBox Input */ let so      : bits(32) = 0x000000 @ aes_sbox_inv(si); let result  : bits(32) = X(rs1)[31..0] ^ rol32(so, unsigned(shamt)); X(rd) = EXTS(result); RETIRE_SUCCESS }
+```
+
+## Included in
+
+| Extension   | Minimum version   | Lifecycle state   |
+|-------------|-------------------|-------------------|
+| Zknd (RV32) | v1.0.0            | Ratified          |
+| Zkn (RV32)  | v1.0.0            | Ratified          |
+| Zk (RV32)   | v1.0.0            | Ratified          |

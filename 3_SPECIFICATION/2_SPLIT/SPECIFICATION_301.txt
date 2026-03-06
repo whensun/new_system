@@ -1,0 +1,35 @@
+## 29.5.45. slli.uw
+
+## Synopsis
+
+Shift-left unsigned word (Immediate)
+
+## Mnemonic
+
+slli.uw rd , rs1 , shamt
+
+## Encoding
+
+<image>
+
+## Description
+
+This  instruction  takes  the  least-significant  word  of rs1 ,  zero-extends  it,  and  shifts  it  left  by  the immediate.
+
+## Operation
+
+```
+X(rd) = (EXTZ(X(rs)[31..0]) << shamt);
+```
+
+## Included in
+
+| Extension                             |   Minimum version | Lifecycle state   |
+|---------------------------------------|-------------------|-------------------|
+| Zba (Address generation instructions) |              0.93 | Ratified          |
+
+<image>
+
+Architecture Explanation
+
+This instruction is the same as slli with zext.w performed on rs1 before shifting.

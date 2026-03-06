@@ -1,0 +1,11 @@
+## 30.13.16. Vector Floating-Point Move Instruction
+
+The vector floating-point move instruction splats a  floating-point scalar operand to a vector register group. The instruction copies a scalar f register value to all active elements of a vector register group. This instruction is encoded as an unmasked instruction ( vm=1 ). The instruction must have the vs2 field set to v0 , with all other values for vs2 reserved.
+
+```
+vfmv.v.f vd, rs1  # vd[i] = f[rs1]
+```
+
+<image>
+
+The vfmv.v.f instruction shares the encoding with the vfmerge.vfm instruction, but with vm=1 and vs2=v0 .

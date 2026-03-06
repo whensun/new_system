@@ -1,0 +1,19 @@
+## 21.5.3. Memory-Management Fences
+
+The behavior of the SFENCE.VMA instruction is affected by the current virtualization mode V. When V=0, the virtual-address argument is an HS-level virtual address, and the ASID argument is an HS-level ASID.  The  instruction  orders  stores  only  to  HS-level  address-translation  structures  with  subsequent HS-level address translations.
+
+When V=1, the virtual-address argument to SFENCE.VMA is a guest virtual address within the current virtual  machine,  and  the  ASID  argument  is  a  VS-level  ASID  within  the  current  virtual  machine.  The current virtual machine is identified by the VMID field of CSR hgatp ,  and  the  effective  ASID  can  be considered to be the combination of this VMID with the VS-level ASID. The SFENCE.VMA instruction orders  stores  only  to  the  VS-level  address-translation  structures  with  subsequent  VS-stage  address translations  for  the  same  virtual  machine,  i.e.,  only  when hgatp .VMID  is  the  same  as  when  the SFENCE.VMA executed.
+
+Hypervisor  instructions  HFENCE.VVMA  and  HFENCE.GVMA  provide  additional  memory-management fences to complement SFENCE.VMA. These instructions are described in Section 21.3.2.
+
+Section 3.7.2 discusses the intersection between physical memory protection (PMP) and page-based address translation. It is noted there that, when PMP settings are modified in a manner that affects either the physical memory that holds page tables or the physical memory to which page tables point, M-mode software must synchronize  the  PMP  settings  with  the  virtual  memory  system.  For  HS-level address  translation,  this  is  accomplished  by  executing  in  M-mode  an  SFENCE.VMA  instruction  with rs1 = x0 and rs2 = x0 ,  after  the  PMP CSRs are written. Synchronization with G-stage and VS-stage data structures is also needed. Executing an HFENCE.GVMA instruction with rs1 = x0 and rs2 = x0 suffices to flush  all  G-stage  or  VS-stage  address-translation  cache  entries  that  have  cached  PMP  settings corresponding to the final translated supervisor physical address. An HFENCE.VVMA instruction is not required.
+
+Similarly, if the setting of the PBMTE bit in menvcfg is changed, an HFENCE.GVMA instruction with rs1 = x0 and rs2 = x0 suffices to synchronize with respect to the altered interpretation of G-stage and VSstage PTEs' PBMT fields.
+
+By contrast, if the PBMTE bit in henvcfg is changed, executing an HFENCE.VVMA with rs1 = x0 and rs2 = x0 suffices to synchronize with respect to the altered interpretation of VS-stage PTEs' PBMT fields for the currently active VMID.
+
+<image>
+
+No mechanism is provided to atomically change vsatp and hgatp together. Hence, to prevent  speculative  execution  causing  one  guest's  VS-stage  translations  to  be cached under another guest's VMID, world-switch code should zero vsatp , then swap
+
+hgatp , then finally write the new vsatp value. Similarly, if henvcfg .PBMTE need be worldswitched, it should be switched after zeroing vsatp but before writing the new vsatp value, obviating the need to execute an HFENCE.VVMA instruction.

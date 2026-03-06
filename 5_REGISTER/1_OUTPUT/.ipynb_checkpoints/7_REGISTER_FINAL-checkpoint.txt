@@ -1,0 +1,1064 @@
+REGISTER: fcsr
+NUMBER: 0x003
+MODE: U-mode
+WIDTH: 32
+FIELDS: 7..5=FRM, 4..4=NV, 3..3=DZ, 2..2=OF, 1..1=UF, 0..0=NX
+EXTENSIONS: F, Zdinx, Zfinx
+RULE 1: The fcsr CSR is private to a hart and is not visible to other harts.
+RULE 2: Accesses to the fcsr may be freely reordered in the global memory order with respect to FENCE instructions without violating this specification.
+RULE 3: The fcsr CSR is defined with bit‑field granularity comprising bits 7‑5, bit 4, bit 3, bit 2, bit 1, and bit 0.
+RULE 4: The fflags CSR is an alias of bits 4‑0 of fcsr, so any access to fflags reads or writes those bits in fcsr.
+RULE 5: The frm CSR is an alias of bits 7‑5 of fcsr, so any access to frm reads or writes those bits in fcsr.
+RULE 6: Any write to fcsr updates both the fflags sub‑field (bits 4‑0) and the frm sub‑field (bits 7‑5) within the same register.
+RULE 7: For syntactic dependency tracking, each individual bit of fcsr (bits 7‑5, 4, 3, 2, 1, and 0) is treated as an independent unit, and a read or write to any one of those bits, whether via fcsr directly or through its fflags or frm aliases, creates a distinct dependency.
+RULE 8: The floating‑point control and status register fcsr is defined as part of the RISC‑V "F" extension.
+RULE 9: The fcsr register contains the operating mode and the exception status of the floating‑point unit.
+RULE 10: The RISC‑V "F" extension adds thirty‑two floating‑point registers (f0‑f31) and also adds the floating‑point control and status register fcsr.
+RULE 11: In the architectural state diagram the fcsr register appears as the final element of the floating‑point state block, positioned after register f31.
+RULE 12: The fcsr register occupies bits 31 down to 0 of the floating‑point state block.
+RULE 13: The fcsr is a 32‑bit read/write control‑status register.
+RULE 14: Bits 7‑5 of the fcsr constitute the rounding‑mode field (frm).
+RULE 15: Bits 4‑0 of the fcsr constitute the accrued‑exception flags field (fflags).
+RULE 16: Bits 31‑8 of the fcsr are reserved for optional standard extensions.
+RULE 17: The FRCSR instruction reads the entire fcsr and writes its value to the integer register specified as rd.
+RULE 18: The FSCSR instruction atomically swaps the whole fcsr with the integer register rs1, returning the previous fcsr value in rd.
+RULE 19: The FRRM instruction reads the frm field of the fcsr, places its three bits into the least‑significant bits of rd, and zero‑extends the remaining bits of rd.
+RULE 20: The FSRM instruction swaps the frm field of the fcsr with the three least‑significant bits of rs1, returning the previous frm value in rd.
+RULE 21: The FRFLAGS instruction reads the fflags field of the fcsr, places its five bits into the least‑significant bits of rd, and zero‑extends the remaining bits of rd.
+RULE 22: The FSFLAGS instruction swaps the fflags field of the fcsr with the five least‑significant bits of rs1, returning the previous fflags value in rd.
+RULE 23: An implementation that does not provide the extensions associated with bits 31‑8 shall ignore any writes to those bits of the fcsr.
+RULE 24: When bits 31‑8 are not implemented, reads of the fcsr shall return zero for those bits.
+RULE 25: Software that modifies the fcsr shall preserve the contents of bits 31‑8.
+RULE 26: The dynamic rounding mode used by floating‑point arithmetic instructions is taken from the frm field of the fcsr.
+RULE 27: The frm field of the fcsr is encoded as follows: 000 = round‑to‑nearest‑ties‑to‑even, 001 = round‑toward‑zero, 010 = round‑down, 011 = round‑up, 100 = round‑to‑nearest‑ties‑to‑max‑magnitude, 101 and 110 are reserved, and 111 is reserved as a value of the frm field.
+RULE 28: The value 111 in an instruction’s rm field selects the dynamic rounding mode held in the frm field of the fcsr.
+RULE 29: The fflags field of the fcsr records, in bits 4‑0, the exception conditions that have occurred on any floating‑point arithmetic instruction since the field was last cleared by software.
+RULE 30: The base RISC‑V ISA does not generate a trap when a bit in the fflags field of the fcsr is set; software must explicitly test the fflags.
+RULE 31: Writing to the fflags field of the fcsr replaces only its five least‑significant bits; higher bits of the written value are ignored.
+RULE 32: Writing to the frm field of the fcsr replaces only its three bits (7‑5); other bits of the written value are ignored.
+RULE 33: In a system that implements the Zfinx extension, the mstatus.FS field being hard‑wired to 0 does not affect the trapping behavior of any fcsr register access.
+RULE 34: The floating‑point control and status register fcsr is included in the architectural floating‑point state whose status is tracked by the FS field in mstatus.
+RULE 35: The FS field in mstatus encodes the status of the floating‑point unit, and this encoding includes the state of the fcsr.
+RULE 36: If an instruction explicitly or implicitly writes the fcsr without changing its value while the FS field is Initial or Clean, it is implementation‑defined whether the FS field transitions to Dirty.
+RULE 37: The FCSR bit in each state‑enable CSR (mstateen0, hstateen0, sstateen0) controls access to the fcsr register when floating‑point instructions are defined to operate on integer registers by the Zfinx or Zdinx extensions.
+RULE 38: When the F bit in the misa register is set (misa.F = 1), the FCSR bit of mstateen0 is permanently read‑only zero.
+RULE 39: When the F bit in the misa register is set (misa.F = 1), the FCSR bits of hstateen0 and sstateen0 are also permanently read‑only zero.
+RULE 40: If misa.F = 0 and the state‑enable CSRs are implemented, and the FCSR bit of the controlling stateen0 CSR for the current privilege level is zero, every floating‑point instruction raises an illegal‑instruction exception (or a virtual‑instruction exception where applicable).
+RULE 41: When the condition in RULE 4 occurs, the exception is generated as if the executed instruction accessed the fcsr register, even when the instruction does not actually reference fcsr.
+RULE 42: In M-mode, accessing fcsr register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; csrr a0, 0x003; # Result: mcause = 0x0].
+RULE 43: In S-mode, accessing fcsr register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_supervisor; csrr a0, 0x003; # Result: mcause = 0x0].
+RULE 44: In U-mode, accessing fcsr register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_user; csrr a0, 0x003; # Result: mcause = 0x0].
+RULE 45: In M-mode, setting fcsr.FRM (bit 5) must be reflected on the readback (# Result: a2 = 0x20) [# Extension Must Be Active: NONE; li a0, 0x20; csrs 0x003, a0; csrr a1, 0x003; and a2, a0, a1; # Result: a2 = 0x20].
+RULE 46: In M-mode, setting fcsr.NV (bit 4) must be reflected on the readback (# Result: a2 = 0x10) [# Extension Must Be Active: NONE; li a0, 0x10; csrs 0x003, a0; csrr a1, 0x003; and a2, a0, a1; # Result: a2 = 0x10].
+RULE 47: In M-mode, setting fcsr.DZ (bit 3) must be reflected on the readback (# Result: a2 = 0x8) [# Extension Must Be Active: NONE; li a0, 0x8; csrs 0x003, a0; csrr a1, 0x003; and a2, a0, a1; # Result: a2 = 0x8].
+RULE 48: In M-mode, setting fcsr.OF (bit 2) must be reflected on the readback (# Result: a2 = 0x4) [# Extension Must Be Active: NONE; li a0, 0x4; csrs 0x003, a0; csrr a1, 0x003; and a2, a0, a1; # Result: a2 = 0x4].
+RULE 49: In M-mode, setting fcsr.UF (bit 1) must be reflected on the readback (# Result: a2 = 0x2) [# Extension Must Be Active: NONE; li a0, 0x2; csrs 0x003, a0; csrr a1, 0x003; and a2, a0, a1; # Result: a2 = 0x2].
+RULE 50: In M-mode, setting fcsr.NX (bit 0) must be reflected on the readback (# Result: a2 = 0x1) [# Extension Must Be Active: NONE; li a0, 0x1; csrs 0x003, a0; csrr a1, 0x003; and a2, a0, a1; # Result: a2 = 0x1].
+RULE 51: In M-mode, writing 0xffffffffffffffff to the fcsr register must not set it to 0xffffffff or 0xffffffffffffffff (# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff) [# Extension Must Be Active: NONE; li a0, 0xffffffffffffffff; csrw 0x003, a0; csrr a1, 0x003; # Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff].
+RULE 52: In M-mode, accessing fcsr register while F extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: F; csrr a0, 0x003; # Result: mcause = 0x0].
+RULE 53: In M-mode, accessing fcsr register while Zdinx extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: Zdinx; csrr a0, 0x003; # Result: mcause = 0x0].
+RULE 54: In M-mode, accessing fcsr register while Zfinx extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: Zfinx; csrr a0, 0x003; # Result: mcause = 0x0].
+
+REGISTER: fflags
+NUMBER: 0x001
+MODE: U-mode
+WIDTH: 32
+FIELDS: 4..4=NV, 3..3=DZ, 2..2=OF, 1..1=UF, 0..0=NX
+EXTENSIONS: F, V
+RULE 1: The bits 4, 3, 2, 1, and 0 of the fflags register are tracked as independent units for syntactic dependencies.
+RULE 2: The fflags register is an alias of the fcsr register, so any read or write to fflags accesses the same architectural state as fcsr.
+RULE 3: The fflags register is not read‑only, allowing software to write values to it.
+RULE 4: The fflags register is a control‑and‑status register accessible via CSR instructions.
+RULE 5: The fflags register occupies bits 4‑0 of the floating‑point control and status register (fcsr).
+RULE 6: The FRFLAGS instruction reads the fflags field and copies its value into the least‑significant five bits of integer register rd, setting all other bits of rd to zero.
+RULE 7: The FSFLAGS instruction swaps the fflags field by first copying its current value into integer register rd and then writing the five least‑significant bits of integer register rs1 into the fflags field.
+RULE 8: The fflags bits indicate the exception conditions that have arisen on any floating‑point arithmetic instruction since the field was last reset by software.
+RULE 9: Bit 0 of fflags (NV) is set when an invalid operation exception occurs.
+RULE 10: Bit 1 of fflags (DZ) is set when a divide‑by‑zero exception occurs.
+RULE 11: Bit 2 of fflags (OF) is set when an overflow exception occurs.
+RULE 12: Bit 3 of fflags (UF) is set when an underflow exception occurs.
+RULE 13: Bit 4 of fflags (NX) is set when an inexact result exception occurs.
+RULE 14: The base RISC‑V ISA does not automatically generate a trap when any fflags bit is set; software must explicitly test the fflags field to detect floating‑point exceptions.
+RULE 15: Writing a zero value to the fflags field clears all accrued exception flags.
+RULE 16: A vector floating‑point exception that occurs in any active floating‑point element causes the corresponding standard floating‑point exception flags to be set in the fflags register.
+RULE 17: A vector floating‑point exception that occurs in an inactive floating‑point element does not cause any floating‑point exception flags to be set in the fflags register.
+RULE 18: The fflags register is a control‑status register that belongs to the floating‑point unit state.
+RULE 19: The FS field of the mstatus register encodes the status of the floating‑point unit, and that status includes the fflags register.
+RULE 20: In M-mode, accessing fflags register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; csrr a0, 0x001; # Result: mcause = 0x0].
+RULE 21: In S-mode, accessing fflags register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_supervisor; csrr a0, 0x001; # Result: mcause = 0x0].
+RULE 22: In U-mode, accessing fflags register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_user; csrr a0, 0x001; # Result: mcause = 0x0].
+RULE 23: In M-mode, setting fflags.NV (bit 4) must be reflected on the readback (# Result: a2 = 0x10) [# Extension Must Be Active: NONE; li a0, 0x10; csrs 0x001, a0; csrr a1, 0x001; and a2, a0, a1; # Result: a2 = 0x10].
+RULE 24: In M-mode, setting fflags.DZ (bit 3) must be reflected on the readback (# Result: a2 = 0x8) [# Extension Must Be Active: NONE; li a0, 0x8; csrs 0x001, a0; csrr a1, 0x001; and a2, a0, a1; # Result: a2 = 0x8].
+RULE 25: In M-mode, setting fflags.OF (bit 2) must be reflected on the readback (# Result: a2 = 0x4) [# Extension Must Be Active: NONE; li a0, 0x4; csrs 0x001, a0; csrr a1, 0x001; and a2, a0, a1; # Result: a2 = 0x4].
+RULE 26: In M-mode, setting fflags.UF (bit 1) must be reflected on the readback (# Result: a2 = 0x2) [# Extension Must Be Active: NONE; li a0, 0x2; csrs 0x001, a0; csrr a1, 0x001; and a2, a0, a1; # Result: a2 = 0x2].
+RULE 27: In M-mode, setting fflags.NX (bit 0) must be reflected on the readback (# Result: a2 = 0x1) [# Extension Must Be Active: NONE; li a0, 0x1; csrs 0x001, a0; csrr a1, 0x001; and a2, a0, a1; # Result: a2 = 0x1].
+RULE 28: In M-mode, writing 0xffffffffffffffff to the fflags register must not set it to 0xffffffff or 0xffffffffffffffff (# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff) [# Extension Must Be Active: NONE; li a0, 0xffffffffffffffff; csrw 0x001, a0; csrr a1, 0x001; # Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff].
+RULE 29: In M-mode, accessing fflags register while F extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: F; csrr a0, 0x001; # Result: mcause = 0x0].
+RULE 30: In M-mode, accessing fflags register while V extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: V; csrr a0, 0x001; # Result: mcause = 0x0].
+
+REGISTER: frm
+NUMBER: 0x002
+MODE: U-mode
+WIDTH: 32
+FIELDS: 2..0=ROUNDINGMODE
+EXTENSIONS: D, F, Q, V
+RULE 1: For syntactic dependency analysis, the frm CSR is treated as a whole‑register unit rather than as separate bit fields.
+RULE 2: Any instruction that reads or writes any part of frm is considered to read or write the entire frm register.
+RULE 3: The frm CSR is an alias of the fcsr CSR, and reads of frm return the same value as reads of fcsr.
+RULE 4: The frm CSR is an alias of the fcsr CSR, and writes to frm modify the same underlying hardware state as writes to fcsr.
+RULE 5: Because read‑only CSRs are omitted from the dependency table, frm is not classified as a read‑only CSR.
+RULE 6: The frm field occupies bits 7‑5 of the floating‑point control and status register fcsr.
+RULE 7: The FRRM instruction reads the frm field and copies its three least‑significant bits into the destination integer register rd while writing zeros to all other bits of rd.
+RULE 8: The FSRM instruction first copies the current frm value to the destination integer register rd and then overwrites frm with the three least‑significant bits of the source integer register rs1.
+RULE 9: Floating‑point instructions whose rm field is set to 111 select the dynamic rounding mode held in frm.
+RULE 10: The rounding behavior of a floating‑point instruction that uses the dynamic rounding mode is determined by the value currently stored in frm.
+RULE 11: When frm contains the binary value 000 it specifies the rounding mode RNE (round to nearest, ties to even).
+RULE 12: When frm contains the binary value 001 it specifies the rounding mode RTZ (round towards zero).
+RULE 13: When frm contains the binary value 010 it specifies the rounding mode RDN (round down toward –∞).
+RULE 14: When frm contains the binary value 011 it specifies the rounding mode RUP (round up toward +∞).
+RULE 15: When frm contains the binary value 100 it specifies the rounding mode RMM (round to nearest, ties to max magnitude).
+RULE 16: The binary values 101 and 110 in frm are reserved for future use and must be treated as reserved.
+RULE 17: The binary value 111 in frm is reserved in the rounding‑mode register and must be treated as reserved.
+RULE 18: Executing a floating‑point instruction while frm holds any reserved encoding (101, 110, or 111) results in reserved behavior.
+RULE 19: The current specification does not require an illegal‑instruction exception for a reserved dynamic rounding mode in frm, though implementations may still raise such an exception.
+RULE 20: Writes to frm may serialize the pipeline in typical implementations.
+RULE 21: Software must preserve the contents of frm when saving and restoring fcsr if the rounding mode is required to remain unchanged.
+RULE 22: The frm CSR stores a rounding‑mode encoding that can be supplied to floating‑point operations.
+RULE 23: When a scalar floating‑point instruction’s rm field is set to the DYN encoding (binary 111), the instruction uses the rounding mode currently stored in the frm CSR.
+RULE 24: The rounding mode applied by each floating‑point instruction is fetched from the frm register.
+RULE 25: The frm register holds the current floating‑point rounding‑mode that controls rounding of floating‑point operations.
+RULE 26: The sum produced by the vfwmaccbf16 instruction is rounded using the rounding mode specified in the frm register.
+RULE 27: All vector floating‑point instructions obtain their dynamic rounding mode from the frm register.
+RULE 28: The frm register supplies the rounding mode that controls every vector floating‑point arithmetic operation.
+RULE 29: If the frm register contains an invalid rounding‑mode encoding, the effect of any vector floating‑point instruction is reserved, even when the vector length is zero or when vstart ≥ vl.
+RULE 30: Vector floating‑point software must assume that the frm register holds a valid rounding‑mode value.
+RULE 31: An implementation may raise an exception on any vector floating‑point instruction when the frm register encodes an invalid rounding mode.
+RULE 32: For any floating‑point conversion instruction that does not specify round‑towards‑zero, the rounding mode applied is the current dynamic rounding mode stored in the frm register.
+RULE 33: For any floating‑point conversion instruction that specifies round‑towards‑zero, the instruction ignores the frm register and always rounds toward zero.
+RULE 34: The frm register is a floating‑point control and status register that belongs to the floating‑point unit state together with the fcsr and fflags registers.
+RULE 35: The FS[1:0] field of the mstatus register encodes the status of the entire floating‑point unit state, which includes the frm register.
+RULE 36: Any modification of the frm register causes the FS field in mstatus to be updated to reflect the new floating‑point unit state.
+RULE 37: Privileged code must examine the FS field to determine whether the frm register, along with the rest of the floating‑point state, must be saved or restored during a context switch.
+RULE 38: The floating‑point unit state, including the frm register, is always initialized, saved, and restored using the standard floating‑point instructions (F, D, and/or Q).
+RULE 39: When accessing the frm register, privileged software must respect the current FS status and act only in accordance with that status.
+RULE 40: In M-mode, accessing frm register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; csrr a0, 0x002; # Result: mcause = 0x0].
+RULE 41: In S-mode, accessing frm register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_supervisor; csrr a0, 0x002; # Result: mcause = 0x0].
+RULE 42: In U-mode, accessing frm register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_user; csrr a0, 0x002; # Result: mcause = 0x0].
+RULE 43: In M-mode, setting frm.ROUNDINGMODE (bit 0) must be reflected on the readback (# Result: a2 = 0x1) [# Extension Must Be Active: NONE; li a0, 0x1; csrs 0x002, a0; csrr a1, 0x002; and a2, a0, a1; # Result: a2 = 0x1].
+RULE 44: In M-mode, writing 0xffffffffffffffff to the frm register must not set it to 0xffffffff or 0xffffffffffffffff (# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff) [# Extension Must Be Active: NONE; li a0, 0xffffffffffffffff; csrw 0x002, a0; csrr a1, 0x002; # Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff].
+RULE 45: In M-mode, accessing frm register while D extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: D; csrr a0, 0x002; # Result: mcause = 0x0].
+RULE 46: In M-mode, accessing frm register while F extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: F; csrr a0, 0x002; # Result: mcause = 0x0].
+RULE 47: In M-mode, accessing frm register while Q extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: Q; csrr a0, 0x002; # Result: mcause = 0x0].
+RULE 48: In M-mode, accessing frm register while V extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: V; csrr a0, 0x002; # Result: mcause = 0x0].
+
+REGISTER: vcsr
+NUMBER: 0x00f
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 2..1=VXRM, 0..0=VXSAT
+EXTENSIONS: V
+RULE 1: The vcsr register is located at CSR address 0x00F.
+RULE 2: The vcsr register is accessible with unprivileged read‑write privilege (URW).
+RULE 3: The vcsr register provides the vector control and status functionality defined by the RISC‑V architecture.
+RULE 4: CSR numbers 0x00B‑0x00E are tentatively reserved for future vector CSRs and may be mirrored into the vcsr register.
+RULE 5: Reads or writes to any future vector CSR whose number falls in the range 0x00B‑0x00E may affect the contents of the vcsr register.
+RULE 6: The vcsr register contains a rounding‑mode field that reflects the current value of the vector fixed‑point rounding‑mode register vxrm.
+RULE 7: The rounding‑mode field in vcsr must hold the identical two‑bit value found in vxrm[1:0].
+RULE 8: The vcsr register contains a mirrored copy of the vxsat single‑bit saturation flag, so its corresponding bit always has the same value as vxsat[0].
+RULE 9: The vcsr register is an XLEN‑bit‑wide vector control and status CSR.
+RULE 10: Bits XLEN‑1 down to 3 of the vcsr register are reserved and have no defined function.
+RULE 11: Bits 2 and 1 of the vcsr register form the vxrm field that specifies the fixed‑point rounding mode.
+RULE 12: Bit 0 of the vcsr register is the vxsat field that indicates the fixed‑point accrued saturation flag.
+RULE 13: The vector rounding mode and accrued saturation flag can be read from or written to the vcsr register via the vxrm and vxsat fields.
+RULE 14: vcsr is a control‑status register defined by the RISC‑V V extension.
+RULE 15: vcsr is one of the CSRs whose state is considered part of the vector extension state, alongside vxrm, vxsat, vstart, vl, vtype, and vlenb.
+RULE 16: The VS[1:0] field in the mstatus register encodes the status of the entire vector extension state, including the vcsr register.
+RULE 17: The VS field uses the four‑value encoding Off = 0, Initial = 1, Clean = 2, Dirty = 3 to indicate whether the vector registers and vector CSRs such as vcsr are off, in the initial state, clean, or dirty.
+RULE 18: Changing the VS field never modifies the value stored in vcsr.
+RULE 19: In M-mode, accessing vcsr register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; csrr a0, 0x00f; # Result: mcause = 0x0].
+RULE 20: In S-mode, accessing vcsr register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_supervisor; csrr a0, 0x00f; # Result: mcause = 0x0].
+RULE 21: In U-mode, accessing vcsr register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_user; csrr a0, 0x00f; # Result: mcause = 0x0].
+RULE 22: In M-mode, setting vcsr.VXRM (bit 1) must be reflected on the readback (# Result: a2 = 0x2) [# Extension Must Be Active: NONE; li a0, 0x2; csrs 0x00f, a0; csrr a1, 0x00f; and a2, a0, a1; # Result: a2 = 0x2].
+RULE 23: In M-mode, setting vcsr.VXSAT (bit 0) must be reflected on the readback (# Result: a2 = 0x1) [# Extension Must Be Active: NONE; li a0, 0x1; csrs 0x00f, a0; csrr a1, 0x00f; and a2, a0, a1; # Result: a2 = 0x1].
+RULE 24: In M-mode, writing 0xffffffffffffffff to the vcsr register must not set it to 0xffffffff or 0xffffffffffffffff (# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff) [# Extension Must Be Active: NONE; li a0, 0xffffffffffffffff; csrw 0x00f, a0; csrr a1, 0x00f; # Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff].
+RULE 25: In M-mode, accessing vcsr register while V extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: V; csrr a0, 0x00f; # Result: mcause = 0x0].
+
+REGISTER: vl
+NUMBER: 0xc20
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..0=VALUE
+EXTENSIONS: V, Zvkt
+RULE 1: The vl register is a vector‑extension CSR located at address 0xC20.
+RULE 2: The vl register is accessible at the unprivileged read‑only privilege level (URO).
+RULE 3: The vl register holds the current vector length used by vector instructions.
+RULE 4: The vl register can be read but cannot be written by any privilege level.
+RULE 5: The vl register is a read‑only CSR whose physical width is XLEN bits.
+RULE 6: Software cannot write vl directly; vl is updated only by the vset{i}vl{i} instructions and by the fault‑only‑first vector load instruction variants.
+RULE 7: The value stored in vl is an unsigned integer that specifies the number of vector elements to be updated by a vector instruction.
+RULE 8: The implemented width of vl (the number of bits that actually hold the value) is determined by the implementation’s maximum vector length for the smallest supported element type.
+RULE 9: In an implementation where VLEN = 32 and the smallest supported SEW is 8, vl must have at least six implemented bits so that it can represent the range 0 – 32.
+RULE 10: After reset, the vector extension must present a consistent architectural state that includes a vl register whose contents are readable.
+RULE 11: The value held in vl at reset must be restorable to the same value with a single vsetvl instruction.
+RULE 12: The recommended reset value for vl is zero.
+RULE 13: No constraints other than readability and single‑instruction restorability are imposed on vl at reset.
+RULE 14: An element x is classified as a body element if and only if its index satisfies vstart ≤ x < vl.
+RULE 15: An element x is classified as a tail element if and only if its index satisfies vl ≤ x < max(VLMAX, VLEN/SEW).
+RULE 16: If vstart is greater than or equal to vl, then no body elements exist for the instruction.
+RULE 17: If vstart is greater than or equal to vl, then no destination vector register group is updated.
+RULE 18: If vstart is greater than or equal to vl, then tail elements are not written with agnostic values, suppressing the agnostic‑write behavior.
+RULE 19: If vl equals zero, then no elements, including any agnostic elements, are updated in any destination vector register group regardless of the value of vstart.
+RULE 20: If vl equals zero, then the no‑update rule applies equally to both body‑type processing and tail‑agnostic writes.
+RULE 21: In the element‑classification pseudocode, the predicate body(x) is defined as (vstart ≤ x < vl), directly using the current vl value.
+RULE 22: In the element‑classification pseudocode, the predicate tail(x) is defined as (vl ≤ x < max(VLMAX, VLEN/SEW)), directly using the current vl value.
+RULE 23: An element is considered active if it satisfies both body(x) (which requires vstart ≤ x < vl) and the mask condition.
+RULE 24: The vector length register vl is a CSR that holds the actual number of vector elements the hardware will process in each vector‑length iteration.
+RULE 25: The application supplies a candidate vector length (AVL) via a general‑purpose register rs1 or an unsigned immediate uimm, which the hardware may use to determine vl.
+RULE 26: After executing a configuration‑setting instruction, the hardware may set vl to a value less than or equal to the supplied AVL based on implementation limits and the current vtype setting.
+RULE 27: The vsetvli instruction sets vl (and vtype) according to the AVL provided in rs1 and the vtypei operand, and writes the resulting vl value into the destination register rd.
+RULE 28: The vsetivli instruction sets vl (and vtype) according to the unsigned immediate uimm (AVL) and the vtypei operand, and writes the resulting vl value into the destination register rd.
+RULE 29: The vsetvl instruction sets vl (and vtype) according to the AVL provided in rs1 and the new vtype value supplied in rs2, and writes the resulting vl value into the destination register rd.
+RULE 30: The newly computed vl value is returned in the architectural register rd, making the exact vector length visible to software.
+RULE 31: In strip‑mining loops, the application tracks remaining elements with AVL while the hardware‑chosen vl determines how many elements are processed in each iteration.
+RULE 32: If the vtype value is not supported by the implementation, the processor sets the vl register to zero.
+RULE 33: When the vill bit in vtype is set, the vl register must be zero.
+RULE 34: The vector‑length register vl holds the current vector length and its value can be read from the vl CSR.
+RULE 35: When a vsetvli or vsetvl instruction executes with rs1 ≠ x0, the unsigned integer contained in the register specified by rs1 is taken as the AVL and the computed new vector length is written to vl.
+RULE 36: When a vsetvli or vsetvl instruction executes with rs1 = x0 and rd ≠ x0, the AVL is defined as the maximum unsigned integer value and the resulting VLMAX for the current vtype is written to vl.
+RULE 37: When a vsetvli or vsetvl instruction executes with rs1 = x0 and rd = x0, the current value of vl is treated as the AVL and the resulting vector length is written to vl only, provided that the new SEW/LMUL configuration does not change VLMAX; otherwise the operation is reserved, and if vill was 1 before the instruction the implementation may set vill again.
+RULE 38: If a change in SEW/LMUL would cause VLMAX (and therefore vl) to shrink, the effect on vl is reserved and implementations may assume vl remains unchanged for micro‑architectural optimization.
+RULE 39: The vsetivli instruction encodes the AVL as a zero‑extended 5‑bit immediate, and the computed vector length is written to vl following the same rules that apply to vsetvli and vsetvl.
+RULE 40: If the active vector length (AVL) supplied to a vsetvl instruction is less than or equal to the computed VLMAX, then vl is set equal to AVL.
+RULE 41: If AVL is less than two times VLMAX, then vl is set to a value that satisfies ceil(AVL/2) ≤ vl ≤ VLMAX.
+RULE 42: If AVL is greater than or equal to two times VLMAX, then vl is set equal to VLMAX.
+RULE 43: For any given implementation, the value written to vl by a vsetvl instruction is deterministic for the same pair of input values AVL and VLMAX.
+RULE 44: vl is zero when AVL is zero.
+RULE 45: vl is greater than zero when AVL is greater than zero.
+RULE 46: vl never exceeds VLMAX.
+RULE 47: vl never exceeds AVL.
+RULE 48: If the current vl value is read and then used as the AVL argument to a subsequent vsetvl instruction, and the VLMAX computed for that new instruction equals the VLMAX that existed when the original vl was read, then the new vl will be identical to the value that was read.
+RULE 49: The vsetvli instruction writes the current vector length, denoted as vl, into the specified destination integer register.
+RULE 50: The value of vl produced by vsetvli equals the number of vector elements that will be processed in that iteration.
+RULE 51: After vsetvli execution, the scalar register holding vl may be read by subsequent scalar instructions.
+RULE 52: A scalar instruction that subtracts the value in a register containing vl reduces the remaining element count by exactly vl.
+RULE 53: Architecturally, vl represents the current vector length for the active iteration of a vector operation.
+RULE 54: For the additional unit‑stride mask load and store instructions, the effective vector length evl is defined as the ceiling of vl divided by eight (evl = ceil(vl/8)).
+RULE 55: A mask load instruction (vlm.v) transfers a byte vector whose length is the ceiling of vl divided by eight.
+RULE 56: A mask store instruction (vsm.v) transfers a byte vector whose length is the ceiling of vl divided by eight.
+RULE 57: For vlm.v and vsm.v, the vstart register is interpreted in units of bytes, using the current value of vl.
+RULE 58: The mask load and store instructions honor the vill field in vtype indirectly by applying the constraints that vill imposes on vl.
+RULE 59: When vill is set, the execution of vlm.v and vsm.v follows the illegal‑value semantics associated with an illegal vtype, based on the resulting vl.
+RULE 60: If a unit‑stride fault‑only‑first load raises a synchronous exception on element 0, the vl register is not modified and a trap is taken.
+RULE 61: If a synchronous exception occurs on any element index greater than 0 of a fault‑only‑first load, vl is reduced to that element’s index.
+RULE 62: The vl CSR can be read with a CSRR instruction, and the value returned is the current vector length, i.e., the number of elements that will be processed (or have been processed) by the most recent vector instruction.
+RULE 63: Implementations may process fewer than the current vl elements and may consequently reduce vl, provided that when vstart = 0 and vl > 0 at least one element is processed.
+RULE 64: When a fault‑only‑first instruction traps because of an interrupt, vl must not be reduced; instead a vstart value is set to indicate the resume point.
+RULE 65: When a fault‑only‑first instruction would cause a debug data‑watchpoint trap on an element after the first, vl must not be reduced and the debug trap must be taken so the event is not lost.
+RULE 66: Fault‑only‑first load instructions may update active destination elements beyond the element that caused vl trimming, but they must never write past the original vl value before trimming.
+RULE 67: The vl register defines the number of segments that a vector load‑store segment instruction will move.
+RULE 68: For segment instructions, the value held in vl equals the number of elements transferred to each vector‑register group.
+RULE 69: Masking for segment load and store instructions is applied at the granularity of whole segments, and the vl register determines how many segments are processed.
+RULE 70: The vl register determines the scope of masking for segment load and store instructions.
+RULE 71: For fault‑only‑first unit‑stride segment load instructions, if an exception is detected partway through accessing a segment whose index is greater than zero, the architectural vector‑length register vl is set to the index of that segment.
+RULE 72: If an exception is detected partway through accessing the zeroth segment of a fault‑only‑first unit‑stride segment load, a trap is taken and the architectural vector‑length register vl may be reduced.
+RULE 73: The amount by which vl may be reduced when an exception occurs in the zeroth segment is implementation‑defined.
+RULE 74: When an exception occurs in either the zeroth or a later segment, it is implementation‑defined whether only a subset of the segment is loaded, and the instruction may write destination vector‑register‑group elements beyond the point at which vl is trimmed or the trap is reported.
+RULE 75: vl is a control‑status register that holds the current vector length.
+RULE 76: The current vector length held in vl can be read with a CSR‑read instruction such as `csrr rd, vl`.
+RULE 77: The value stored in vl is used by the vector unit to define the active element range for ordinary vector instructions.
+RULE 78: Whole‑register load and store instructions compute an effective vector length (evl) as NFIELDS × VLEN / EEW and ignore the current settings in vl and vtype.
+RULE 79: For whole‑register loads and stores the rule "no elements are written if vstart ≥ vl" does not apply.
+RULE 80: For whole‑register loads and stores no elements are written when vstart ≥ evl, independent of vl.
+RULE 81: Software may preserve the architectural state of vl across code that changes vector configuration by reading vl with a CSR‑read instruction and later restoring it with vsetvli.
+RULE 82: Restoring a previously saved vl value is performed by executing `vsetvli x0, <saved value>, <new type>`.
+RULE 83: Any vector instruction that is affected by the vector‑length register vl must have a control dependency on vl instead of a data dependency.
+RULE 84: The execution of an instruction affected by the vector‑length register vl must rely on the current value of vl for control‑flow decisions and must not treat vl as a source operand supplying data.
+RULE 85: If vl equals zero, any vector‑floating‑point instruction that accesses the frm field executes in a reserved manner.
+RULE 86: When vl is zero, vector‑floating‑point instructions that do not depend on the rounding mode are still subject to the reservation on using the frm field.
+RULE 87: The reservation on using the frm field also applies whenever vstart is greater than or equal to vl.
+RULE 88: The current vector length is stored in the vl register.
+RULE 89: For vector‑integer merge instructions, the operation is performed on the body elements defined by the current vector length held in vl.
+RULE 90: The body elements for vector‑integer merge instructions are the element indices i that satisfy vstart ≤ i < vl.
+RULE 91: For the vector‑scalar floating‑point merge instruction, processing includes every element whose index i satisfies i ≥ vstart and i < vl.
+RULE 92: The vector‑scalar floating‑point merge instruction disregards the mask value and determines the elements to operate on solely from the current vector length held in vl.
+RULE 93: When vl = 0, a vector reduction operation performs no operation and does not update the destination register.
+RULE 94: The no‑operation behavior for vl = 0 is defined to simplify implementation and to be consistent with other operations on vector register state.
+RULE 95: If the source and destination scalar operands are located in different vector registers, the instruction does not copy the source scalar into the destination when vl = 0.
+RULE 96: Software that requires the source scalar to be copied to the destination when vl may be zero must test that vl ≠ 0 before executing the reduction.
+RULE 97: Software may achieve the copy semantics for a zero‑vl case by explicitly setting vl = 1 and performing a register‑register copy.
+RULE 98: The vector‑length register vl specifies that only elements with indices from 0 up to vl‑1 are active in a vector operation, while elements with index ≥ vl are inactive.
+RULE 99: In an ordered sum reduction, the hardware accesses the source vector vs2 exclusively for indices 0 through vl‑1.
+RULE 100: When vl equals 0, the ordered sum reduction performs no vector‑element additions.
+RULE 101: When vl equals 0, the scalar value in vs1[0] is copied unchanged to the destination register.
+RULE 102: When vl equals 0, no NaN canonicalization, exception‑flag setting, or rounding is performed, preserving scalar‑summation handling of NaNs, exceptions, and rounding.
+RULE 103: The active vector length register vl determines which elements of a vector register are active, and any element whose index is greater than or equal to vl is treated as masked‑off (not active).
+RULE 104: In a reduction operation, if an input to a tree node is derived only from elements that are masked‑off or have indices greater than or equal to vl, the implementation may either treat that input as the additive identity for the appropriate EEW or copy the other input directly to the node’s output.
+RULE 105: The reduction tree used by unordered‑sum reduction instructions must be deterministic for a given VTYPE configuration and the current value of vl.
+RULE 106: For any vector mask‑logical instruction, all mask‑register elements whose indices are greater than or equal to the current value of vl are always written by the hardware.
+RULE 107: The write to mask‑register elements with indices ≥ vl obeys a tail‑agnostic policy, meaning the architecture does not define a specific value to be stored.
+RULE 108: The current value of vl defines the boundary between active elements (indices < vl) and tail elements (indices ≥ vl) for vector mask‑logical instructions.
+RULE 109: Tail elements, i.e., mask‑register entries with indices ≥ vl, are not required to preserve their previous contents after a vector mask‑logical instruction.
+RULE 110: The vector‑length register (vl) may hold the value zero.
+RULE 111: When vl equals zero, the vcpop.m instruction writes the value 0 to its destination scalar register because no mask elements are active.
+RULE 112: The architectural register vl is permitted to contain the value 0.
+RULE 113: When vl equals 0, the vfirst.m instruction writes the destination integer register with the value –1 (all‑ones).
+RULE 114: The vl CSR always contains the active vector length, defined as the number of vector elements fetched by the most‑recent vector load.
+RULE 115: Executing a csrr instruction with vl as the source CSR copies the current value of vl into the specified general‑purpose register.
+RULE 116: The vsetvli instruction updates the internal active vector length, and the updated value becomes the new content of the vl CSR.
+RULE 117: When vsetvli writes its result to the zero register (x0), the vl CSR is still updated but no general‑purpose register receives the value.
+RULE 118: When vsetvli writes its result to a non‑zero integer register, the computed active vector length is written both to that register and to the vl CSR.
+RULE 119: After a vsetvli execution, any subsequent csrr …, vl instruction returns the active vector length that was computed by that vsetvli.
+RULE 120: A csrr read of vl immediately after a vector load returns the number of bytes fetched by that load.
+RULE 121: When a vid.v instruction executes, it writes to each element of the destination vector register group an index value ranging from 0 to vl‑1 inclusive.
+RULE 122: The index of the last active element written by vid.v is exactly one less than the current value of the vl register.
+RULE 123: The set of element indices generated by vid.v is defined by the current value of the vl register at the time the instruction is executed.
+RULE 124: When the scalar‑to‑vector move instruction vmv.x.s is executed, it must read element 0 of the source vector register and write the result to the destination integer register regardless of the current vl value, even if vstart ≥ vl or vl = 0.
+RULE 125: When the vector‑to‑scalar move instruction vmv.s.x is executed and vstart ≥ vl, it must perform no operation and must leave the destination vector register unchanged.
+RULE 126: When vl = 0, the vector‑to‑scalar move instruction vmv.s.x must update zero elements of the destination vector register group, irrespective of the value of vstart.
+RULE 127: The vector‑length register vl may contain the value zero.
+RULE 128: When vl = 0, the vfmv.f.s instruction copies element 0 from the source vector register to the scalar floating‑point register.
+RULE 129: When vl = 0, the vfmv.s.f instruction updates no elements of the destination vector register group.
+RULE 130: The vfmv.f.s instruction executes its copy operation even if vstart ≥ vl.
+RULE 131: The vfmv.s.f instruction performs no operation when vstart ≥ vl, leaving the destination vector register unchanged.
+RULE 132: When vl = 0, vfmv.s.f updates no elements regardless of the value of vstart.
+RULE 133: For any vslideup, vslidedown, vfslide1up, or vfslide1down instruction, if vstart is greater than or equal to vl then the instruction performs no operation and leaves the destination vector register unchanged.
+RULE 134: When vl equals zero, no elements are updated in the destination vector register group for these slide instructions, regardless of the value of vstart.
+RULE 135: The value in vl determines the maximum number of destination elements that a vslideup instruction may write.
+RULE 136: Destination elements whose indices range from OFFSET through vl‑1 are written by vslideup only when they are unmasked and when OFFSET is less than vl.
+RULE 137: For a vslideup instruction, the set of element indices that are processed is defined by 0 ≤ i < min(vl, max(vstart, OFFSET)).
+RULE 138: In a vslideup instruction, element indices satisfying max(vstart, OFFSET) ≤ i < vl are left unchanged except for possible masking effects.
+RULE 139: For a vslideup instruction, element indices from vl up to VLMAX‑1 follow the tail‑policy.
+RULE 140: In a vslidedown instruction, the architectural register vl specifies the maximum number of destination vector elements that may be written.
+RULE 141: For a vslidedown instruction, any element index i that is greater than or equal to vl is never written by the instruction; such elements are processed according to the current tail policy.
+RULE 142: When vstart is less than vl, source elements are fetched for each slide index i such that 0 ≤ i + OFFSET < VLMAX, and if i + OFFSET ≥ VLMAX the source value is defined as zero.
+RULE 143: When vstart is less than vl, destination elements with indices i satisfying 0 ≤ i < vstart remain unchanged.
+RULE 144: When vstart is less than vl, destination elements with indices i satisfying vstart ≤ i < vl are written with the corresponding source value, provided the mask bit for that element is enabled.
+RULE 145: When vstart is less than vl, destination elements with indices i satisfying vl ≤ i < VLMAX are handled according to the tail policy.
+RULE 146: The vl register defines the maximum number of destination vector register elements that may be updated by any vector instruction; elements with indices greater than or equal to vl are not updated and are processed according to the current tail policy.
+RULE 147: For the vslide1up instruction the value of vl limits participation to the first vl‑1 elements of the source vector register group, which are the only elements that can be copied to the destination vector register group.
+RULE 148: When vl > 0 and an element index i is less than vstart, the vslide1up instruction leaves the destination element unchanged regardless of mask bits.
+RULE 149: When vl > 0 and i equals vstart (or i equals 0 if vstart equals 0), the vslide1up instruction writes the scalar integer register x[rs1] to destination element vd[i] only if the corresponding mask bit v0.mask[i] is enabled.
+RULE 150: When vl > 0 and i satisfies max(vstart, 1) ≤ i < vl, the vslide1up instruction writes the source element vs2[i‑1] to destination element vd[i] only if the corresponding mask bit v0.mask[i] is enabled.
+RULE 151: For any element index i such that vl ≤ i < VLMAX, the vslide1up instruction does not update the destination element and the element is handled according to the current tail policy.
+RULE 152: The vl register specifies the maximum number of destination vector‑register elements that may be written by a vector operation, and any element with an index greater than or equal to vl is not written but is instead processed according to the current tail policy.
+RULE 153: For the vslide1down instruction, the scalar source register is written to the destination vector element at index vl‑1 only if that element is active.
+RULE 154: If the element at index vl‑1 is not active for vslide1down, the update of that destination element follows the current mask‑agnostic or undisturbed policy.
+RULE 155: In vslide1down, for any element index i satisfying vstart ≤ i < vl‑1, the destination element is written with the source vector element i+1 only when the corresponding mask bit v0.mask[i] is enabled.
+RULE 156: In vslide1down, for element index i equal to vl‑1 and satisfying vstart ≤ i, the destination element is written with the scalar source register only when the corresponding mask bit v0.mask[i] is enabled.
+RULE 157: In vslide1down, any destination element with an index i such that vl ≤ i < VLMAX is handled by the tail policy rather than being written with source values.
+RULE 158: Because vl defines the highest active element index as vl‑1, any vector instruction that references vl‑1 must first determine whether that element is active, and if it is not active the mask policy governs whether a write occurs.
+RULE 159: The value of the vl register specifies the maximum number of elements that a vector‑register‑gather instruction may write to its destination register.
+RULE 160: For element indices that are greater than the current vl register value, processing of those elements follows the configured tail policy.
+RULE 161: A source vector register group can be read at any element index less than VLMAX, and this read capability is independent of the current vl register value.
+RULE 162: The vl register defines the count of vector register elements that are active for a given vector operation.
+RULE 163: The vector mask register specified by vs1 selects elements only among the first vl elements of the source vector register group vs2.
+RULE 164: Only the elements selected by the mask within the first vl elements are extracted and packed into the destination vector register group.
+RULE 165: For vmv<nr>r.v instructions, vector elements are not written only when vstart ≥ evl, and the usual rule that no elements are written when vstart ≥ vl does not apply.
+RULE 166: The vmv<nr>r.v instructions must function without requiring the compiler to read or modify the vl register.
+RULE 167: When LMUL is greater than 1, the implementation must perform additional checks on the vl value because element groups may span multiple registers within a vector‑register group.
+RULE 168: For element‑group sizes that are not powers of two, an element group may straddle individual vector registers inside a vector‑register group, so the vl setting must respect those boundaries.
+RULE 169: Non‑power‑of‑two element‑group sizes can raise the lowest common multiple of element‑group sizes, thereby adding constraints on the allowed vl values.
+RULE 170: The vl value must be selected so that no element group is divided across strip‑mine iterations in vector‑length‑agnostic code.
+RULE 171: When a vector instruction’s source or destination operand is a vector of element groups, the architectural register vl must be set to an integer multiple of the element‑group size.
+RULE 172: Any vl value that is not an integer multiple of the element‑group size for a vector‑of‑element‑group operand is reserved and therefore illegal.
+RULE 173: If the application vector length (AVL) exceeds VLMAX, the value placed in vl must be either equal to VLMAX or a positive integer multiple of EGSMAX.
+RULE 174: For the base vector extension where the element‑group size is 1, vl may be any integer value up to VLMAX.
+RULE 175: vsetvl instructions that set vl must select a SEW that is consistent with the encoded element width (EEW) of the instruction or with the EEW of all vector‑of‑element‑group operands.
+RULE 176: When an instruction has multiple vector‑of‑element‑group operands with differing EEW, the implementation must choose a SEW that satisfies all operands before setting vl.
+RULE 177: Implementation‑specific constraints may further restrict the set of legal vl values for particular element‑group instructions to guarantee that all operands receive legal length values.
+RULE 178: The vector length register vl determines the number of elements that a vector instruction will process.
+RULE 179: For vector crypto instructions, the number of element groups operated on is computed as vl divided by the element‑group size (EGS).
+RULE 180: For any Vector Crypto instruction that operates on element groups, vl must be an integer multiple of the instruction’s Element Group Size (EGS).
+RULE 181: If vl is not a multiple of the required EGS for a Vector Crypto instruction, the instruction is reserved and its behavior is architecturally undefined, possibly raising a reserved‑instruction exception.
+RULE 182: For all vaes* Vector Crypto instructions, the required EGS for vl is 4.
+RULE 183: For all vsha2* Vector Crypto instructions, the required EGS for vl is 4.
+RULE 184: For all vg* Vector Crypto instructions, the required EGS for vl is 4.
+RULE 185: For all vsm3* Vector Crypto instructions, the required EGS for vl is 8.
+RULE 186: For all vsm4* Vector Crypto instructions, the required EGS for vl is 4.
+RULE 187: For each listed Vector Crypto instruction, vl modulo EGS must equal zero; otherwise the instruction is reserved.
+RULE 188: The multiple‑of‑EGS requirement that applies to vl also applies to vstart.
+RULE 189: The architectural vl register determines the number of element groups that are processed by any vector instruction.
+RULE 190: Required LMUL values for certain algorithms are expressed as fractions of vl.
+RULE 191: For the SHA‑512 algorithm with VLEN = 64, the required LMUL value equals vl divided by 2.
+RULE 192: For the SM3 algorithm with VLEN = 32, the required LMUL value equals vl divided by 4.
+RULE 193: The number of element groups to be processed is computed as vl divided by the element‑group size (EGS).
+RULE 194: vl must be programmed to equal the total number of 32‑bit elements (SEW = 32) that are to be processed.
+RULE 195: vl must always be a multiple of the element‑group size, which is 4.
+RULE 196: For AES vector instructions, the hardware determines the number of element groups processed by dividing the current value of vl by the element‑group size (EGS).
+RULE 197: For AES vector instructions, software must set vl to the exact number of SEW‑32 elements that are to be processed.
+RULE 198: For AES vector instructions, the value written to vl must be an integer multiple of the element‑group size, which is 4.
+RULE 199: The hardware computes the number of element groups to be processed as the integer division of vl by the element‑group size (EGS).
+RULE 200: vl must be set to the total number of SEW elements to be processed and therefore must be an integer multiple of the element‑group size, which is defined as 4.
+RULE 201: The number of element groups processed is calculated as vl divided by the element‑group size (EGS).
+RULE 202: When the selected element width (SEW) is 32 bits, vl must be set to the number of 32‑bit elements to be processed.
+RULE 203: vl must be an integer multiple of the element‑group size (EGS), which is 4.
+RULE 204: The number of element groups to be processed is computed as vl divided by EGS.
+RULE 205: vl must be set to the number of elements whose SEW is 32 that are to be processed.
+RULE 206: vl must be a multiple of EGS, which is 8.
+RULE 207: For Zvkt instructions, the vl register is considered a control value and not a data operand with respect to Data-Independent Execution Latency.
+RULE 208: The value in the vl register is exempt from the latency-independence guarantees of Data-Independent Execution Latency that apply to all data operands of Zvkt instructions.
+RULE 209: For the vaesdf instruction, the vector‑length register vl is divided by the element‑group size (EGS) to produce eg_len, the total number of element groups to be processed.
+RULE 210: For the vaesdf instruction, the element‑group size (EGS) used in the division of vl is a constant value of 4.
+RULE 211: The upper bound of the element‑group processing loop for vaesdf is the eg_len value that results from dividing vl by EGS, so the loop never iterates with an index equal to or exceeding eg_len.
+RULE 212: The range of element groups that the vaesdf instruction operates on is limited by vl, such that the highest element‑group index processed is (vl / EGS) − 1.
+RULE 213: The current value of vl is used by the instruction to determine how many element groups will be processed.
+RULE 214: The number of element groups processed (eg_len) is calculated as the integer division of vl by the element‑group size (EGS).
+RULE 215: The integer‑division result of vl divided by EGS specifies the count of element groups of the vector register that the instruction operates on.
+RULE 216: The architectural register vl contains the current vector length used by vector operations.
+RULE 217: For a vaesef instruction, the number of element groups to be processed (eg_len) is calculated as the integer division of vl by the element‑group size EGS.
+RULE 218: In a vaesef instruction, vl influences the range of element groups iterated over by contributing to the computation of eg_len.
+RULE 219: The vaesem instruction uses the current value of the vl register to compute how many element groups are processed.
+RULE 220: The number of element groups (eg_len) is calculated as the integer division of the vl register by the element‑group size (EGS).
+RULE 221: The vl register value determines the count of element groups iterated over during the execution of the vaesem instruction.
+RULE 222: The effective group length for a vector instruction is computed as the integer division of the current value of the vl register by the element grouping size (EGS), i.e., eg_len = (vl / EGS).
+RULE 223: The start index of the effective group is obtained by integer‑dividing the VSTART register by EGS, and the VSTART value used in this calculation is derived from, or constrained by, the current vl register value.
+RULE 224: The architectural register vl holds the current vector length that determines how many element groups the vaeskf2.vi instruction may process.
+RULE 225: For the vaeskf2.vi instruction the number of element groups to be processed, eg_len, is calculated as the integer division of vl by the element‑group size EGS.
+RULE 226: The value eg_len derived from vl establishes the exclusive upper bound for the element‑group loop, so the loop iterates while the group index i is less than eg_len.
+RULE 227: The element‑group loop for vaeskf2.vi iterates with index i from the starting group up to eg_len‑1, where eg_len is defined as vl divided by EGS.
+RULE 228: The architectural vl register value is divided by the element‑group size (EGS) using integer division that truncates toward zero to compute eg_len, the total number of element groups the instruction will process.
+RULE 229: The instruction iterates over element groups i from eg_start up to eg_len‑1, where the upper bound eg_len‑1 is derived from the value of vl.
+RULE 230: The number of element groups processed by the instruction is exactly the integer quotient of vl divided by EGS; no additional groups are processed beyond this count.
+RULE 231: The vl register is read at the start of the instruction to determine eg_len and its value remains unchanged by the execution of the instruction.
+RULE 232: A vector instruction processes elements only for indices i that satisfy i ≤ vl‑1.
+RULE 233: The element whose index equals vl‑1 is included in the set of elements processed by the instruction.
+RULE 234: The iteration range for a vector instruction is defined by the condition vstart ≤ i ≤ vl‑1.
+RULE 235: The vl register defines the exclusive upper bound for element indices that a vector instruction may process.
+RULE 236: For any vector instruction, only elements with index i satisfying vstart ≤ i < vl are operated on.
+RULE 237: The vl register defines the upper bound of the element index range for vector instructions, making the highest element index that can be processed equal to vl‑1.
+RULE 238: During execution of a vector instruction that iterates over element indices, the hardware starts the iteration at the current vstart value and continues consecutively until the index reaches vl‑1 inclusive.
+RULE 239: The value contained in the vl register is consulted for every vector instruction to determine whether an element index is within the permissible processing range.
+RULE 240: Updating the vl register changes the maximum element index that subsequent vector instructions are allowed to process.
+RULE 241: A vector instruction must not process any element with an index greater than vl‑1, regardless of other register values.
+RULE 242: For any vector instruction, the element index variable i starts at vstart and increments while i ≤ vl‑1, processing all indices i such that vstart ≤ i ≤ vl‑1.
+RULE 243: The value stored in the vl register defines the highest element index that the instruction will operate on, which is always vl‑1.
+RULE 244: When the vl register holds zero, the range vstart … vl‑1 is empty and the vector instruction performs no element‑wise operations.
+RULE 245: For the vclz.v instruction, vector elements are processed only when their indices satisfy vstart ≤ i ≤ vl‑1, meaning the operation applies exclusively to elements whose index is less than the current value of the vl register.
+RULE 246: The loop bound used by vclz.v is vl‑1, establishing that the highest element index that can be accessed by the instruction is one less than the value held in the vl register.
+RULE 247: The architectural register vl specifies the maximum index of vector elements that are considered active for a vector instruction, establishing the upper bound of the active element range.
+RULE 248: For instructions such as vcpop.v, the processing loop iterates over element indices i starting at vstart and continuing up to vl‑1 inclusive, thereby using vl to determine the final element index processed.
+RULE 249: An element index i is considered active for the instruction only if i is less than vl, because the loop terminates at vl‑1.
+RULE 250: In the vctz.v algorithm, the iteration variable i runs from vstart up to vl‑1, using the current value of the vl register as the upper bound.
+RULE 251: The vctz.v instruction processes exactly those vector elements whose indices are strictly less than the current vl value.
+RULE 252: The vghsh.vv instruction uses the current value of the vector‑length register vl to decide how many element groups are operated on.
+RULE 253: For the vghsh.vv instruction the element‑group size is 4, and it computes eg_len as the integer division of vl by 4.
+RULE 254: The computed eg_len is used as the loop’s upper bound, causing the vghsh.vv instruction to process exactly vl divided by 4 element groups.
+RULE 255: The architectural register vl holds the current vector length.
+RULE 256: During execution of the vgmul.vv instruction, the value of vl is divided by the instruction’s element‑group size (EGS) to produce the number of element groups, calculated as eg_len = vl / EGS.
+RULE 257: The architectural register vl always contains the current vector length for the executing vector instruction.
+RULE 258: The value of vl defines the exclusive upper bound for element indices, preventing any index equal to or greater than vl from being processed.
+RULE 259: Vector element processing is performed for every index i that satisfies vstart ≤ i ≤ vl‑1, where vl is the current vector length.
+RULE 260: The VROL operation iterates element indices beginning at vstart and terminates when the index reaches the current value of the vl register, so it never processes an index equal to or greater than vl.
+RULE 261: The VROL operation processes each element only while its index i satisfies i ≤ vl‑1, meaning the element index must be strictly less than the current vl value.
+RULE 262: The vl register holds the current vector length.
+RULE 263: For vror instructions, the operation is performed for each element index i ranging from vstart to vl − 1.
+RULE 264: The value of vl determines the highest element index that can be processed, so no element with an index equal to or greater than vl is processed.
+RULE 265: The architectural register vl always contains the current vector length measured in number of elements.
+RULE 266: For any vector operation that defines an element‑group size EGS, the effective group length eg_len is computed as the integer division of vl by EGS (eg_len = vl / EGS, truncating toward zero).
+RULE 267: The number of loop iterations performed by the VSHA2c instruction is determined by vl because the loop runs from eg_start up to eg_len‑1, and eg_len is derived from vl.
+RULE 268: The vl CSR holds the current vector length value used by the hardware to control vector instruction execution.
+RULE 269: Software may program the vl register with a specific integer (for example 4) to specify the exact number of vector elements that a vector-merge instruction will process.
+RULE 270: For each vector instruction the hardware computes eg_len as the integer division of vl by the element-group size (EGS), thereby determining how many element groups the instruction will iterate over.
+RULE 271: The architectural behavior of vl is to serve as the controller of the total number of element groups processed by a vector instruction.
+RULE 272: The architectural vector‑length register vl holds the current vector length value that vector instructions use to determine processing size.
+RULE 273: For a vector instruction, the number of element groups processed (eg_len) is computed as the integer division of vl by the instruction’s effective group size (EGS).
+RULE 274: The vl register holds the current vector length that defines how many vector elements are active for the executing instruction.
+RULE 275: For the vsm3me.vv instruction, the implementation computes eg_len as the integer division of the vl register value by the element‑group size (EGS).
+RULE 276: The integer division of vl by EGS determines the number of element groups that the vsm3me.vv instruction processes, with a loop iterating from eg_start up to eg_len‑1.
+RULE 277: For the vsm4k.vi instruction the architectural value of vl is divided by the element‑group size (EGS = 4) using integer division to compute eg_len, the effective number of element groups the instruction will process.
+RULE 278: The integer‑division result eg_len derived from vl establishes the exclusive upper bound of the iteration loop, so the instruction processes element groups with indices i such that i < eg_len.
+RULE 279: Because eg_len is computed directly from vl, any change to vl before the execution of vsm4k.vi changes the number of element groups that the instruction operates on.
+RULE 280: The element‑group size employed in the division of vl for vsm4k.vi is fixed at four scalar elements per group.
+RULE 281: The execution of vsm4k.vi does not modify the vl register; vl solely determines the count of groups processed.
+RULE 282: For the vsm4r instruction, the vector‑length register vl provides the operand that determines how many element groups the instruction will process.
+RULE 283: The element‑group length used by vsm4r is calculated as the integer division of vl by the element‑group size EGS.
+RULE 284: The value obtained from dividing vl by EGS is the effective length in element groups (eg_len) for the vsm4r instruction’s loop.
+RULE 285: The vl register defines the exclusive upper bound of active vector element indices, so a vector instruction executes only for element indices i that satisfy i < vl.
+RULE 286: For any vector instruction, the active element range is all indices i that satisfy vstart ≤ i ≤ vl‑1.
+RULE 287: The vl register is a vector‑extension CSR whose state is tracked by the VS field in the mstatus register.
+RULE 288: The VS field encodes the status of the vector extension state, and this encoding includes the vl CSR.
+RULE 289: If the VS field in mstatus is set to Off, any instruction that attempts to read or write the vl CSR must raise an illegal‑instruction exception.
+RULE 290: Changing the VS field to any value (Off, Initial, Clean, or Dirty) does not modify the stored value of the vl register.
+RULE 291: In M-mode, accessing vl register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; csrr a0, 0xc20; # Result: mcause = 0x0].
+RULE 292: In S-mode, accessing vl register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_supervisor; csrr a0, 0xc20; # Result: mcause = 0x0].
+RULE 293: In U-mode, accessing vl register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_user; csrr a0, 0xc20; # Result: mcause = 0x0].
+RULE 294: In M-mode, setting vl.VALUE (bit 0) must be reflected on the readback (# Result: a2 = 0x1) [# Extension Must Be Active: NONE; li a0, 0x1; csrs 0xc20, a0; csrr a1, 0xc20; and a2, a0, a1; # Result: a2 = 0x1].
+RULE 295: In M-mode, writing 0xffffffffffffffff to the vl register must not set it to 0xffffffff or 0xffffffffffffffff (# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff) [# Extension Must Be Active: NONE; li a0, 0xffffffffffffffff; csrw 0xc20, a0; csrr a1, 0xc20; # Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff].
+RULE 296: In M-mode, accessing vl register while V extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: V; csrr a0, 0xc20; # Result: mcause = 0x0].
+RULE 297: In M-mode, accessing vl register while Zvkt extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: Zvkt; csrr a0, 0xc20; # Result: mcause = 0x0].
+
+REGISTER: vlenb
+NUMBER: 0xc22
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..0=VALUE
+EXTENSIONS: V
+RULE 1: vlenb is one of seven unprivileged CSRs defined by the RISC‑V vector extension.
+RULE 2: The architectural address of vlenb is 0xC22.
+RULE 3: vlenb has privilege level URO, indicating it is unprivileged and read‑only.
+RULE 4: The architectural value of vlenb equals VLEN divided by 8, representing the vector register length in bytes.
+RULE 5: vlenb always holds the constant value VLEN/8 and cannot be altered by software.
+RULE 6: Any attempt to write vlenb must be ignored or raise an illegal‑instruction trap in accordance with the URO access type.
+RULE 7: vlenb is a read‑only control‑and‑status register (CSR).
+RULE 8: vlenb is XLEN bits wide, where XLEN matches the implementation’s integer register width (e.g., 32 or 64 bits).
+RULE 9: vlenb holds the value VLEN divided by 8, representing the vector register length in bytes.
+RULE 10: The value contained in vlenb is a design‑time constant that does not change during program execution.
+RULE 11: For a given hardware implementation, vlenb provides a fixed value that remains unchanged at runtime.
+RULE 12: The existence of vlenb enables software to obtain the vector length in bytes directly, avoiding the need to compute it from other registers and preserving current vl and vtype settings.
+RULE 13: The vlenb register reports the number of bytes transferred by each whole‑register vector load or store instruction.
+RULE 14: Software obtains the current byte‑transfer count for whole‑register vector operations by reading the vlenb register.
+RULE 15: vlenb is a control‑status register that is defined by the RISC‑V Vector (V) extension.
+RULE 16: The vector‑extension architectural state includes the vector registers v0‑v31 and the CSRs vcsr, vxrm, vxsat, vstart, vl, vtype, and vlenb.
+RULE 17: Any write to the vlenb CSR is a modification of vector‑extension state and participates in the VS status tracking defined for the VS field in the mstatus register.
+RULE 18: A write to vlenb may cause the VS field in mstatus to transition from Initial or Clean to Dirty in accordance with the VS state‑transition rules.
+RULE 19: In M-mode, accessing vlenb register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; csrr a0, 0xc22; # Result: mcause = 0x0].
+RULE 20: In S-mode, accessing vlenb register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_supervisor; csrr a0, 0xc22; # Result: mcause = 0x0].
+RULE 21: In U-mode, accessing vlenb register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_user; csrr a0, 0xc22; # Result: mcause = 0x0].
+RULE 22: In M-mode, setting vlenb.VALUE (bit 0) must be reflected on the readback (# Result: a2 = 0x1) [# Extension Must Be Active: NONE; li a0, 0x1; csrs 0xc22, a0; csrr a1, 0xc22; and a2, a0, a1; # Result: a2 = 0x1].
+RULE 23: In M-mode, writing 0xffffffffffffffff to the vlenb register must not set it to 0xffffffff or 0xffffffffffffffff (# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff) [# Extension Must Be Active: NONE; li a0, 0xffffffffffffffff; csrw 0xc22, a0; csrr a1, 0xc22; # Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff].
+RULE 24: In M-mode, accessing vlenb register while V extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: V; csrr a0, 0xc22; # Result: mcause = 0x0].
+
+REGISTER: vstart
+NUMBER: 0x008
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..0=VALUE
+EXTENSIONS: V, Zvkg
+RULE 1: The architectural control‑and‑status register vstart is located at CSR address 0x008.
+RULE 2: The CSR vstart is accessible at user privilege level for both reads and writes (URW).
+RULE 3: The vstart register holds the vector start element index that determines where a vector instruction begins execution.
+RULE 4: The value read from vstart specifies the index of the first element to be processed by the currently executing vector instruction.
+RULE 5: vstart is an XLEN‑bit read‑write CSR that holds the index of the first element to be executed by a vector instruction.
+RULE 6: When a trap occurs during execution of a vector instruction, hardware writes vstart with the element index at which the trap occurred.
+RULE 7: After a trap is handled, execution of the trapped vector instruction resumes at the element index stored in vstart.
+RULE 8: Each vector instruction starts execution using the element number currently held in vstart.
+RULE 9: Elements whose indices are lower than the value in vstart are left unchanged in the destination vector of a vector instruction.
+RULE 10: At the completion of any vector instruction, vstart is reset to zero.
+RULE 11: The reset‑to‑zero behavior also applies to the vector‑setting instructions vsetvl and vsetvli.
+RULE 12: Vector instructions that raise illegal‑instruction exceptions do not modify vstart.
+RULE 13: Implementations may raise illegal‑instruction exceptions when a vector instruction is executed with a vstart value that cannot be generated for the current vtype setting.
+RULE 14: Implementations may raise illegal‑instruction exceptions when certain vector arithmetic instructions are executed with a non‑zero vstart on implementations that never take interrupts during those instructions.
+RULE 15: The vstart CSR provides only the number of writable bits required to represent the largest valid element index (one less than the maximum VLMAX).
+RULE 16: For the maximum configuration (LMUL = 8, SEW = 8) with VLEN = 256, vstart requires 8 writable bits to represent indices 0 through 255.
+RULE 17: Values of vstart that exceed the largest element index permitted by the current vtype setting are reserved.
+RULE 18: Implementations may trap on out‑of‑range vstart values but are not required to.
+RULE 19: Unprivileged code may write to vstart.
+RULE 20: Writing a non‑zero value to vstart may have performance implications on some implementations.
+RULE 21: vstart is implemented as a Control and Status Register (CSR) in the RISC‑V vector extension.
+RULE 22: After a processor reset, vstart may contain any value and the architecture does not require it to be defined.
+RULE 23: Executing an initial vsetvl instruction must set vstart to a defined state before any further vector‑unit operations.
+RULE 24: Executing an initial vsetivl instruction must set vstart to a defined state before any further vector‑unit operations.
+RULE 25: The defined state to which vstart is set by an initial vsetvl or vsetivl instruction is normally zero.
+RULE 26: When vstart is non‑zero, a masked vector instruction must not have its destination vector register group overlap the source mask register v0 unless the destination is being written with a mask value.
+RULE 27: When vstart is non‑zero, a masked vector instruction must not have its destination vector register group overlap the source mask register v0 unless the destination is being written with a scalar reduction result.
+RULE 28: The restriction that a masked vector instruction’s destination vector register group may not overlap source mask register v0 (except for mask writes or scalar reduction results) exists to enable correct restart behavior with a non‑zero vstart.
+RULE 29: Prestart elements are those vector elements whose index x satisfies 0 ≤ x < vstart.
+RULE 30: Prestart elements never raise exceptions.
+RULE 31: Prestart elements never update any destination vector register group.
+RULE 32: Body elements are those vector elements whose index x satisfies vstart ≤ x < vl.
+RULE 33: The definition of the body element set depends solely on the current vstart value.
+RULE 34: If vstart ≥ vl then there are no body elements.
+RULE 35: If vstart ≥ vl then no elements are updated in any destination vector register group.
+RULE 36: If vstart ≥ vl then tail elements are not updated with agnostic values; the vtype.vta agnostic‑update behavior does not apply.
+RULE 37: If vl = 0 then no elements, including any agnostic elements, are updated in the destination vector register group regardless of vstart.
+RULE 38: The initial vstart value is read at the start of each vector instruction and is used to partition element indices into prestart, body, and tail subsets.
+RULE 39: The architectural vstart register may hold a non‑zero value when a vector load or store instruction begins execution.
+RULE 40: A vector load or store instruction may accept a non‑zero vstart value as part of its operation.
+RULE 41: A vector load or store instruction may update (generate) the architectural vstart register with a new non‑zero value during its execution.
+RULE 42: For the vector unit‑stride mask load (vlm.v) and mask store (vsm.v) instructions, vstart is interpreted in units of bytes.
+RULE 43: For the vector unit‑stride mask load (vlm.v) and mask store (vsm.v) instructions, vstart specifies the byte offset applied to the memory address used by these byte‑oriented operations.
+RULE 44: If vstart = 0 and vl > 0, the implementation must process at least one element before it may reduce vl.
+RULE 45: When vstart is non‑zero, the implementation may process fewer than the remaining vl elements and may consequently reduce vl.
+RULE 46: When a fault‑only‑first vector load instruction traps because of an interrupt, the implementation must write vstart with the element index at which execution should resume after the interrupt.
+RULE 47: When a fault‑only‑first vector load instruction traps because of an interrupt, the implementation must not reduce vl while updating vstart to the appropriate resume value.
+RULE 48: The vstart register holds a value that is interpreted in units of whole segments for vector segment load and store instructions.
+RULE 49: The vstart register is used to indicate the current segment index during the execution of a segment‑wise memory operation.
+RULE 50: When a trap occurs while accessing a segment, the architecture does not prescribe whether any memory accesses belonging to that segment associated with the current vstart value are completed before the trap, and this outcome is implementation‑defined.
+RULE 51: For vector whole‑register load and store instructions, the architectural rule that suppresses element writes when vstart ≥ vl does not apply.
+RULE 52: For vector whole‑register load and store instructions, element writes are suppressed when vstart ≥ evl, where evl is defined as NFIELDS × VLEN / EEW.
+RULE 53: If a vector‑floating‑point instruction is executed while the vstart register contains a value greater than or equal to the current vector length (vl), then the behavior of that instruction is reserved.
+RULE 54: For a vector integer merge instruction, the architectural definition of the "body" elements is the set of vector elements whose indices satisfy vstart ≤ i < vl.
+RULE 55: A vector integer merge instruction performs element‑wise processing only for indices i that are greater than or equal to vstart.
+RULE 56: Elements with indices i less than vstart are never processed by a vector integer merge instruction.
+RULE 57: The vector‑scalar floating‑point merge instruction begins processing body elements at the element index specified by vstart.
+RULE 58: The vector‑scalar floating‑point merge instruction processes every body element whose index is greater than or equal to vstart and less than the current vector length vl, ignoring any mask value.
+RULE 59: When a trap is taken on a vector reduction instruction, the architectural vstart register is reported as zero.
+RULE 60: Executing a vector reduction instruction while vstart is non‑zero must raise an illegal‑instruction exception.
+RULE 61: For any vector‑mask logical instruction, the architectural effect on each element whose index is less than the current value of vstart is that the element remains unchanged.
+RULE 62: For any vector‑mask logical instruction, the architecture resets vstart to zero after the instruction has completed execution.
+RULE 63: The treatment of vstart for vector‑mask logical instructions is defined to be identical to its treatment for all other vector instructions.
+RULE 64: When a trap is generated by the vcpop.m instruction, the architectural vstart register is reported as zero.
+RULE 65: The vcpop.m instruction raises an illegal‑instruction exception if the architectural vstart register contains a non‑zero value.
+RULE 66: When a trap occurs on a vfirst instruction, the architectural state must report the vstart register value as zero.
+RULE 67: The vfirst instruction must raise an illegal-instruction exception if the vstart register is non-zero at the time the instruction is executed.
+RULE 68: When a trap is taken on execution of the vmsbf.m instruction, the architectural state must report vstart equal to 0.
+RULE 69: The vmsbf.m instruction raises an illegal‑instruction exception whenever the architectural value of vstart is non‑zero.
+RULE 70: When a trap occurs during the execution of the vmsif.m instruction, the architectural state reports the vstart register as 0.
+RULE 71: The vmsif.m instruction generates an illegal‑instruction exception if vstart is not zero.
+RULE 72: When a trap is caused by the vmsof.m instruction, the architectural state reports vstart equal to 0.
+RULE 73: The vmsof.m instruction raises an illegal-instruction exception if the vstart CSR holds a non-zero value at the time the instruction is executed.
+RULE 74: When a trap occurs during execution of a viota.m instruction, the architectural register vstart is set to 0.
+RULE 75: After handling a trap taken on a viota.m instruction, the processor restarts the viota.m instruction with vstart equal to 0.
+RULE 76: If the architectural register vstart is non‑zero when a viota.m instruction is decoded, an illegal‑instruction exception is raised.
+RULE 77: For the vmv.x.s instruction, the operation is performed even when vstart ≥ vl or vl = 0, so the element at index zero of the source vector is read and written to the integer register irrespective of the current vstart value.
+RULE 78: For the vmv.s.x instruction, if vstart ≥ vl, the instruction performs no operation and does not modify the destination register.
+RULE 79: For the vmv.s.x instruction, when vl = 0, no elements of the destination vector register group are updated, regardless of the value of vstart.
+RULE 80: The vfmv.f.s instruction must execute its operation even when vstart is greater than or equal to the current vector length (vl) or when vl equals zero.
+RULE 81: When vstart is greater than or equal to vl, the vfmv.f.s instruction copies element 0 of the source vector register into the destination floating‑point scalar register.
+RULE 82: The vfmv.s.f instruction must not perform any operation and must leave its destination register unmodified if vstart is greater than or equal to vl.
+RULE 83: When vstart is greater than or equal to vl, the vfmv.s.f instruction results in no update to element 0 of the destination vector register.
+RULE 84: For any vslideup, vslidedown, vfslide1up, vfslide1down, vfsld1down, or related slide instruction, if the current value of vstart is greater than or equal to vl, the instruction performs no operation and leaves the destination vector register unchanged.
+RULE 85: When vl equals zero, no elements of the destination vector register group are updated by these slide instructions, regardless of the value of vstart.
+RULE 86: A vslideup instruction only defines destination elements for which the current value of vstart is less than the vector length vl.
+RULE 87: The set of indices written by a vslideup instruction is 0 ≤ i < min(vl, max(vstart, OFFSET)), where OFFSET is the slide‑up amount.
+RULE 88: For a vslideup instruction, all destination elements with indices i that satisfy max(vstart, OFFSET) ≤ i < vl must remain unchanged.
+RULE 89: Destination elements with indices i such that vl ≤ i < VLMAX are processed according to the tail‑policy, independent of the value of vstart.
+RULE 90: The architecture permits a non‑zero value in vstart to be used for restarting a vslideup instruction after a trap, provided the source and destination register groups do not overlap.
+RULE 91: The vstart register specifies the start index for vector slide‑down operations.
+RULE 92: The vstart register is consulted in the per‑element behavior rules for both source element selection and destination element handling.
+RULE 93: For a destination element i, the source element is read from vs2[i+OFFSET] only if vstart < vl and 0 <= i+OFFSET < VLMAX.
+RULE 94: If i+OFFSET >= VLMAX, the source element is defined as zero irrespective of the value of vstart.
+RULE 95: For any element index i satisfying 0 <= i < vstart, the destination element vd[i] remains unchanged.
+RULE 96: For any element index i satisfying vstart <= i < vl, the destination element vd[i] is written with the source value when the corresponding mask bit v0.mask[i] is enabled.
+RULE 97: For any element index i satisfying vl <= i < VLMAX, the destination element vd[i] is processed according to the current tail‑policy, independent of vstart.
+RULE 98: The condition vstart < vl determines whether the slide‑down operation is active for the current vector length.
+RULE 99: When vstart >= vl, no source elements are read and all destination elements are handled by the tail‑policy.
+RULE 100: The architectural register vstart acts as an index threshold that determines which elements of a vector instruction may be updated.
+RULE 101: For the vslide1up instruction when vl > 0, any element whose index i is less than vstart is left unchanged regardless of the mask setting.
+RULE 102: For the vslide1up instruction when vl > 0, the element whose index i equals vstart is written with the scalar integer value from integer register rs1 (vd[i] = x[rs1]) only if the corresponding mask bit v0.mask[i] is enabled; if the mask bit is disabled the element follows the mask‑agnostic undisturbed policy.
+RULE 103: For the vslide1up instruction when vl > 0, every element whose index i satisfies max(vstart,1) ≤ i < vl is written with the value from the source vector register group shifted by one element (vd[i] = vs2[i‑1]) only if the corresponding mask bit v0.mask[i] is enabled; if the mask bit is disabled the element remains unchanged according to the mask‑agnostic policy.
+RULE 104: The vstart‑dependent behavior for vslide1up is defined only for indices i < vl; elements with index i ≥ vl are processed according to the current tail policy and are not affected by vstart.
+RULE 105: For any vector instruction, all element indices i such that i < vstart are left unchanged by the instruction.
+RULE 106: For any vector instruction, all element indices i that satisfy vstart ≤ i < vl‑1 are processed according to the instruction’s normal semantics and any applicable mask.
+RULE 107: For any vector instruction, the element with index i = vl‑1, when active, is processed according to the instruction’s normal semantics and this processing occurs even when vstart ≤ vl‑1.
+RULE 108: For any vector instruction, element indices i that satisfy vl ≤ i < VLMAX are handled according to the current tail policy, and this handling is independent of the value in vstart.
+RULE 109: The architectural effect of the vstart register is to establish the lower bound on element indices that a vector instruction may modify.
+RULE 110: Elements whose indices are below the value in vstart are exempt from modification by any vector instruction, regardless of masking.
+RULE 111: Elements whose indices are at or above vstart and below the active vector length are treated as active and follow the instruction’s normal semantics and masking rules.
+RULE 112: When a trap is taken on a vcompress instruction, the architectural vstart CSR reported to the trap handler is zero.
+RULE 113: If the architectural vstart CSR holds a non‑zero value when a vcompress instruction is executed, the implementation must raise an illegal‑instruction exception.
+RULE 114: When a vcompress instruction is restarted after a trap, the implementation shall restart processing from element index zero regardless of the prior value of vstart.
+RULE 115: After a vcompress instruction is restarted from element zero, elements of the destination register that would have been written for indices greater than the original non‑zero vstart may already contain updated values.
+RULE 116: For vmv<nr>r.v whole‑vector‑register‑move instructions, the instruction writes no vector elements when the current vstart value is greater than or equal to evl.
+RULE 117: For vmv<nr>r.v whole‑vector‑register‑move instructions, the condition vstart ≥ vl does not prevent element writes; element writes are instead suppressed only when vstart ≥ evl.
+RULE 118: For vmv<nr>r.v whole‑vector‑register‑move instructions, vstart is compared against evl, where evl is calculated as EMUL multiplied by VLEN divided by SEW.
+RULE 119: The hardware writes the vstart CSR whenever a trap—whether a synchronous exception or an asynchronous interrupt—occurs during the execution of a vector instruction.
+RULE 120: After such a trap, the vstart CSR contains the element index of the vector instruction at which the trap was taken.
+RULE 121: The implementation may resume a partially‑executed vector instruction after trap handling by starting execution at the element index stored in vstart, thereby reducing interrupt latency and simplifying forward‑progress guarantees.
+RULE 122: vstart is a CSR that holds the element index to be used when a vector instruction traps.
+RULE 123: For any trapping vector instruction, all operations that affect result elements with indices less than vstart must have already committed their results to architectural state.
+RULE 124: For any trapping vector instruction, operations that affect result elements with indices equal to or greater than vstart must not have altered architectural state, except when restarting the instruction from vstart would still produce the correct final state.
+RULE 125: Implementations may permit updates to elements with indices greater than vstart at trap time provided that re‑executing the instruction starting at vstart overwrites those elements correctly.
+RULE 126: When a vector store executes in an idempotent memory region, it may update elements whose indices are beyond the element that caused a synchronous trap.
+RULE 127: When a vector store executes in a non‑idempotent memory region, it must not update any elements whose indices are equal to or greater than the element that caused the trap.
+RULE 128: The restart point for a trapped vector instruction shall be the element index specified by vstart.
+RULE 129: Implementations must ensure forward progress can eventually be achieved for the element or segment whose index is indicated by vstart.
+RULE 130: Imprecise traps caused by synchronous vector exceptions shall set the vstart register to the index of the faulting element.
+RULE 131: The starting element group for a vector‑crypto instruction is calculated as the integer division of the architectural register vstart by the element‑group size (EGS) defined for that instruction.
+RULE 132: The architectural register vstart holds the vector‑start index used by vector‑crypto instructions.
+RULE 133: The value stored in vstart must satisfy the constraints on allowed vstart values defined for vector‑crypto instructions.
+RULE 134: The vstart register holds a count of vector elements and is interpreted as the element index from which a vector instruction begins processing.
+RULE 135: For any Vector Crypto instruction that operates on element groups, the vstart value must be an integer multiple of that instruction’s Element Group Size (EGS).
+RULE 136: If the vstart value is not an integer multiple of the required EGS for the executing Vector Crypto instruction, the instruction is reserved, its behavior is undefined, and it must not be implemented.
+RULE 137: For all vaes* Vector Crypto instructions, the vstart value must be a multiple of 4.
+RULE 138: For all vsha2* Vector Crypto instructions, the vstart value must be a multiple of 4.
+RULE 139: For all vg* Vector Crypto instructions, the vstart value must be a multiple of 4.
+RULE 140: For all vsm4* Vector Crypto instructions, the vstart value must be a multiple of 4.
+RULE 141: For all vsm3* Vector Crypto instructions, the vstart value must be a multiple of 8.
+RULE 142: When executing Zvkg vector GCM/GMAC instructions, the architectural vstart register must contain a value that is a multiple of the element‑group size (EGS) equal to 4.
+RULE 143: vstart must be a multiple of the element-group size (EGS).
+RULE 144: For these AES vector instructions, the element-group size (EGS) is 4, therefore vstart must be a multiple of 4.
+RULE 145: The architectural vstart register value shall always be a multiple of the element‑group size, which is 4.
+RULE 146: When configuring the vector unit for SHA‑2 instructions, the architectural vstart register value shall be aligned to a 4‑element boundary.
+RULE 147: When executing SM4 vector instructions, the vstart register must hold a value that is a multiple of 4.
+RULE 148: When any SM3 vector instruction is executed, the value stored in the vstart CSR must be a multiple of that instruction's element‑group size.
+RULE 149: For all SM3 vector instructions the element‑group size is defined as 8, so the vstart CSR value must be a multiple of 8.
+RULE 150: The vstart register is read by the execution model of each vector instruction to determine the starting element‑group index.
+RULE 151: The starting element‑group index is calculated as the integer division of vstart by the element‑group size (EGS).
+RULE 152: A vector instruction iterates over element‑group indices i from the value computed from vstart (vstart / EGS) up to eg_len‑1.
+RULE 153: The value eg_len is defined as VL divided by EGS and is not influenced by the vstart register.
+RULE 154: The first element group processed by a vector instruction is the group whose index equals vstart divided by EGS.
+RULE 155: For a vector‑AES instruction, the hardware uses the current value of the vstart CSR to decide the element‑group index at which the instruction begins its operation.
+RULE 156: The vector‑AES instruction computes the starting element‑group index as the integer result of dividing the vstart value by the instruction’s element‑group size (EGS).
+RULE 157: The vector‑AES instruction iterates over element groups starting with the group index given by vstart/EGS and continues sequentially up to the end‑group index (eg_len‑1).
+RULE 158: Architecturally, the vstart CSR is interpreted as a count of individual elements, and its value must be divided by the element‑group size to obtain the first element group processed by a vector‑AES instruction.
+RULE 159: The instruction reads the architectural register vstart.
+RULE 160: The instruction computes eg_start as the integer quotient of vstart divided by the element‑group size (EGS) for that instruction.
+RULE 161: The value of vstart, after being divided to form eg_start, is used as the lower bound of the element‑group loop that iterates from eg_start to eg_len‑1.
+RULE 162: The value stored in vstart determines the index of the first element group the instruction will operate on after a trap or any other restart condition.
+RULE 163: The architectural start index for element‑group processing of the vaesem instruction is taken from the vstart CSR.
+RULE 164: The element‑group start value eg_start is calculated as the integer division of vstart by the element‑group size EGS.
+RULE 165: For AES‑128 vaesem operations the element‑group size EGS is fixed to 4, so eg_start equals vstart divided by 4.
+RULE 166: The value eg_start derived from vstart is used as the lower bound of the loop that iterates over element groups in the vaesem implementation.
+RULE 167: Consequently, the vstart register provides the element‑group offset at which execution of a vector instruction such as vaesem begins.
+RULE 168: In the VAESKF1 instruction, the starting element‑group index (eg_start) is computed as the integer division of the architectural register vstart by the element‑group size (EGS).
+RULE 169: The VAESKF1 instruction processes element groups beginning at the index derived from vstart and continues sequentially up to the index (vl/EGS)‑1.
+RULE 170: The value held in vstart directly selects the subset of element groups on which VAESKF1 operates.
+RULE 171: The vstart register supplies the vector start index that determines where a vector instruction begins processing elements.
+RULE 172: The effective‑group start index (eg_start) is computed by dividing the value in vstart by the element‑group size (EGS) using integer division.
+RULE 173: The vstart‑derived eg_start is used as the lower bound of the element‑group loop, iterating i from that value through eg_len‑1.
+RULE 174: If the value of vstart is not a multiple of the element‑group size EGS (i.e., vstart % EGS ≠ 0) the instruction must raise an illegal‑instruction exception and retire as a failed instruction.
+RULE 175: When vstart is a multiple of EGS, the implementation must compute the starting element‑group index as eg_start = vstart / EGS.
+RULE 176: The instruction must iterate over element groups i starting from the index computed from vstart (vstart / EGS) up to eg_len − 1, where eg_len is defined as vl / EGS.
+RULE 177: The value of vstart determines which element groups of the destination register vd are processed, so that only groups with indices greater than or equal to vstart / EGS are updated.
+RULE 178: The vstart register supplies the lower bound of the element index for vector‑element processing.
+RULE 179: The vstart register determines the first vector element that a vector instruction will operate on.
+RULE 180: For the vandn instruction, processing iterates over each vector element i such that i ≥ vstart and i ≤ vl‑1.
+RULE 181: Execution of a vector instruction proceeds sequentially from the element indexed by vstart up to the element indexed by vl‑1.
+RULE 182: The vstart register determines the first element index processed by the vbrev.v instruction.
+RULE 183: During execution of vbrev.v, the instruction processes element indices i starting at the value held in vstart and continuing up to vl‑1 inclusive.
+RULE 184: The range of element indices processed by vbrev.v is defined as i ∈ [vstart, vl‑1], where vl is the current vector length.
+RULE 185: The vstart CSR determines the lower bound of the element index loop for a vector instruction such as vbrev8.v.
+RULE 186: A vector instruction iterates over element indices i starting at the value of vstart and continuing while i ≤ vl‑1.
+RULE 187: The set of element indices processed by a vector instruction is exactly those i that satisfy vstart ≤ i ≤ vl‑1.
+RULE 188: When vstart = 0, the vector instruction begins processing with element index 0.
+RULE 189: When vstart = vl, the vector instruction’s element loop body is not entered and no element updates are performed.
+RULE 190: The vstart register defines the starting element index for the execution of a vector instruction.
+RULE 191: A vector instruction processes elements whose indices are greater than or equal to the value in vstart and less than or equal to vl‑1.
+RULE 192: The vstart register provides the lower bound of the element index range, while vl‑1 provides the upper bound for vector instruction execution.
+RULE 193: The vstart register specifies the lower bound of the element index range for vector instruction execution.
+RULE 194: For every vector instruction, the element‑wise loop iterates from index vstart up to vl‑1 inclusive.
+RULE 195: An element is processed by a vector instruction only if its index i satisfies vstart ≤ i ≤ vl‑1.
+RULE 196: Elements with indices lower than the value of vstart are never processed by the vector instruction.
+RULE 197: The vstart register supplies the lower bound index for the element range processed by a vector instruction, determining the first element on which the instruction operates.
+RULE 198: During execution of the vclz.v instruction, the hardware iterates over element indices i such that i ranges from the value in vstart up to vl‑1 inclusive.
+RULE 199: The iteration performed by vclz.v includes every element whose index i satisfies i ≥ vstart and i ≤ vl‑1.
+RULE 200: If the value of vstart is equal to vl, the vclz.v loop executes zero iterations and produces no element results.
+RULE 201: If the value of vstart is greater than vl‑1, the vclz.v loop executes zero iterations and produces no element results.
+RULE 202: The vstart register supplies the lower bound for the element index that a vector instruction uses when iterating over vector elements.
+RULE 203: For a vector instruction, the element indices processed begin at the value contained in vstart and continue sequentially up to vl-1, where vl is the current vector length.
+RULE 204: The hardware processes vector elements for a vector instruction by iterating index i from the current value of vstart up to vl‑1, where vl is the current vector length.
+RULE 205: Elements whose indices are lower than the current value of vstart are not operated on by the vector instruction.
+RULE 206: When executing the vghsh.vv instruction, the architectural register vstart is read and its value is divided by the element‑group size (EGS) to compute eg_start = vstart / EGS.
+RULE 207: The eg_start value derived from vstart determines the first element‑group processed by the vghsh.vv instruction, causing the loop to iterate over element groups i from eg_start up to eg_len‑1, where eg_len = vl / EGS.
+RULE 208: The vstart register supplies the starting element‑group offset for a vector instruction.
+RULE 209: For a vector instruction, the starting element‑group index is computed as the integer division of vstart by the instruction’s element‑group size (EGS).
+RULE 210: The value held in vstart determines the first element group that the vector instruction processes.
+RULE 211: The execution loop of a vector instruction iterates from the element‑group index derived from vstart up to the index eg_len‑1.
+RULE 212: The vstart register holds the index of the first vector element that a vector instruction will process.
+RULE 213: When a vector instruction executes, it processes elements in order from the index given by vstart up to the index vl‑1, where vl is the current vector length.
+RULE 214: The first element processed by a vector instruction has index equal to the current value of vstart.
+RULE 215: Any vector element with an index lower than the value in vstart is not processed by that vector instruction.
+RULE 216: For VROL (vector rotate left) instructions, the hardware iterates over element indices starting at the value held in the vstart register and continuing sequentially up to vl − 1.
+RULE 217: The vstart register defines the lower bound of the element‑index range processed by VROL instructions, so any element whose index is less than the value in vstart is not operated on.
+RULE 218: All vector elements whose indices are between vstart and vl − 1 inclusive are processed exactly once by VROL instructions.
+RULE 219: The vstart register supplies the lower bound for the element index used by any vector‑rotate‑right (vror) instruction.
+RULE 220: For each vror form (vector‑vector, vector‑scalar, vector‑immediate), the instruction iterates over element indices i starting at the current vstart value and continuing while i ≤ vl‑1.
+RULE 221: Elements whose indices are less than the current vstart value are never read or written by a vror instruction; processing begins at the element indexed by vstart.
+RULE 222: The upper bound of the vror element loop is the current vl register value minus one, therefore the number of elements processed by the instruction equals vl minus vstart.
+RULE 223: The architectural register vstart determines the starting element-group index eg_start by integer division of vstart by the instruction's element-group size (EGS), i.e., eg_start = vstart / EGS.
+RULE 224: For a vector-SHA-2 instruction, the element-wise loop begins at the element-group index computed from vstart (eg_start) and iterates up to, but not including, eg_len = vl / EGS.
+RULE 225: The vector-SHA-2 instruction processes only those element groups whose indices are greater than or equal to vstart / EGS, and it skips all element groups with lower indices.
+RULE 226: The observable result of a vector-SHA-2 instruction must be identical to the result obtained by executing the specified algorithm on the subset of element groups starting at the element-group that contains the element indexed by vstart.
+RULE 227: The architectural vstart register supplies the starting element index for a vector instruction.
+RULE 228: The element‑group loop start index eg_start is defined as the integer division of vstart by the instruction’s element‑group size (EGS).
+RULE 229: The element‑group loop iterates over element groups i from the start computed from vstart (eg_start) up to eg_len−1, where eg_len equals the integer division of the current vector length vl by EGS.
+RULE 230: The value stored in vstart determines the first element group that a vector instruction operates on.
+RULE 231: A non‑zero vstart causes a vector instruction to resume execution at the corresponding element group after an exception or trap.
+RULE 232: vstart is a CSR that supplies the vector start index for a vector SM3‑C instruction.
+RULE 233: For a vector SM3‑C instruction, the starting element‑group index eg_start is calculated as the integer division of vstart by the element‑group size EGS.
+RULE 234: A vector SM3‑C instruction iterates over element groups with loop variable i beginning at (vstart/EGS) and continuing while i < (vl/EGS), thereby processing groups from eg_start up to eg_len‑1.
+RULE 235: Any vector element with an index smaller than the value held in vstart is excluded from processing by the vector SM3‑C instruction.
+RULE 236: The vstart CSR holds a count that is used to calculate the starting element‑group index of a vector instruction.
+RULE 237: When a vector instruction such as vsm3me.vv is executed, the hardware reads the value of vstart and divides it by the element‑group size (EGS) to compute the loop start index.
+RULE 238: The computed loop start index is defined as eg_start = (vstart / EGS) using integer division.
+RULE 239: The execution loop of the vector instruction begins iteration with i equal to the value of vstart divided by EGS.
+RULE 240: The execution loop iterates from the start index derived from vstart up to eg_len‑1, where eg_len is the total number of element groups.
+RULE 241: The total number of element groups eg_len is calculated as (vl / EGS) and together with vstart defines the loop’s termination condition.
+RULE 242: The value held in vstart therefore determines the element‑group position in the vector registers at which the instruction begins processing elements.
+RULE 243: The element‑group start index used by the instruction is computed as eg_start = (vstart / EGS), where the division is integer division and EGS is the instruction’s element‑group size.
+RULE 244: The instruction’s processing loop iterates over element‑group indices i from (vstart / EGS) up to eg_len − 1, where eg_len = (vl / EGS) and vl is the current vector length.
+RULE 245: The value contained in the vstart register determines which element‑group is the first one processed by the instruction.
+RULE 246: When the vsm4r instruction is executed, the hardware must compute eg_start as the integer division of the current vstart value by the element‑group size EGS.
+RULE 247: The integer division of vstart by EGS yields the index of the first element group that the vsm4r instruction will process.
+RULE 248: The foreach loop that implements vsm4r must iterate from i = eg_start to i = eg_len‑1, so the value stored in vstart determines the loop’s starting element‑group index.
+RULE 249: The division of the byte‑addressed vstart value by EGS must convert that byte offset into an element‑group index used by the vector operation.
+RULE 250: For VWSLL instructions, the element‑wise computation loop iterates over indices i starting from the current vstart CSR value up to vl‑1 inclusive.
+RULE 251: A VWSLL instruction processes only those vector elements whose index i satisfies vstart ≤ i < vl.
+RULE 252: The value contained in the vstart CSR at the moment of execution determines the first element index on which a VWSLL instruction operates.
+RULE 253: The vector‑extension CSR vstart is part of the architectural state defined by the RISC‑V vector extension.
+RULE 254: The mstatus register’s VS field encodes the status of the vector‑extension state, and this encoding includes the vstart CSR.
+RULE 255: The presence and dirty/clean/initial/off status of the vstart CSR are reflected in the VS field’s WARL encoding using the values Off, Initial, Clean, and Dirty.
+RULE 256: In M-mode, accessing vstart register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; csrr a0, 0x008; # Result: mcause = 0x0].
+RULE 257: In S-mode, accessing vstart register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_supervisor; csrr a0, 0x008; # Result: mcause = 0x0].
+RULE 258: In U-mode, accessing vstart register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_user; csrr a0, 0x008; # Result: mcause = 0x0].
+RULE 259: In M-mode, setting vstart.VALUE (bit 0) must be reflected on the readback (# Result: a2 = 0x1) [# Extension Must Be Active: NONE; li a0, 0x1; csrs 0x008, a0; csrr a1, 0x008; and a2, a0, a1; # Result: a2 = 0x1].
+RULE 260: In M-mode, writing 0xffffffffffffffff to the vstart register must not set it to 0xffffffff or 0xffffffffffffffff (# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff) [# Extension Must Be Active: NONE; li a0, 0xffffffffffffffff; csrw 0x008, a0; csrr a1, 0x008; # Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff].
+RULE 261: In M-mode, accessing vstart register while V extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: V; csrr a0, 0x008; # Result: mcause = 0x0].
+RULE 262: In M-mode, accessing vstart register while Zvkg extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: Zvkg; csrr a0, 0x008; # Result: mcause = 0x0].
+
+REGISTER: vtype
+NUMBER: 0xc21
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..63=VILL, 7..7=VMA, 6..6=VTA, 5..3=VSEW, 2..0=VLMUL
+EXTENSIONS: V, Zvkt
+RULE 1: The vtype CSR is located at CSR address 0xC21.
+RULE 2: The vtype CSR has URO privilege, allowing reads in unprivileged mode but prohibiting any writes.
+RULE 3: An attempt to write the vtype CSR causes an illegal‑instruction exception.
+RULE 4: The vtype CSR contains the vector data type configuration for the current hart.
+RULE 5: The vtype CSR is one of the seven unprivileged CSRs introduced by the RISC‑V vector extension.
+RULE 6: The vtype CSR is classified as the vector data type register.
+RULE 7: The vtype CSR is an XLEN‑wide, read‑only register whose architectural value can be changed only by the vset{i}vl{i} instructions and cannot be modified by any other instruction.
+RULE 8: The vtype register provides the default vector type that defines how elements are organized within each vector register, how vector registers are grouped, and how masked‑off elements and elements beyond the current vector length are treated in vector results.
+RULE 9: The most‑significant bit of vtype (bit XLEN‑1, named vill) indicates an illegal vector‑type value, and implementations must raise an illegal‑value trap whenever this bit is set.
+RULE 10: Bits XLEN‑2 down to 8 of vtype are reserved and must be written with zero; any non‑zero value in this field is treated as reserved.
+RULE 11: Bit 7 of vtype (vma) is the vector‑mask‑agnostic flag that controls whether vector operations ignore mask bits.
+RULE 12: Bit 6 of vtype (vta) is the vector‑tail‑agnostic flag that controls whether vector operations ignore tail elements past the current vector length.
+RULE 13: Bits 5 down to 3 of vtype (vsew[2:0]) select the selected element width (SEW) for vector operations.
+RULE 14: Bits 2 down to 0 of vtype (vlmul[2:0]) select the vector‑register‑group multiplier (LMUL) for vector operations.
+RULE 15: Implementations may internally represent the illegal‑value condition indicated by the vill bit by using an illegal 64‑bit combination in the vsew[1:0] field instead of storing a separate vill bit.
+RULE 16: For implementations with ELEN = 32, the architectural state of vtype can be reduced to the seven bits that encode vma, vta, vsew[1:0], and vlmul[2:0].
+RULE 17: The vtype CSR exists to allow the vector ISA to be encoded within a 32‑bit instruction, and the vset{i}vl{i} instruction sets both the vector length (vl) and the vtype fields before any vector instruction executes.
+RULE 18: Implementations may fuse a vset{i}vl{i} instruction with subsequent vector instructions into a single internal micro‑operation, reusing the same vl and vtype values across multiple vector instructions.
+RULE 19: Future standard or custom vector extensions may add new fields to vtype, extending its existing layout to support additional data types.
+RULE 20: After any write to the vtype CSR, software must read the vill bit in vtype.
+RULE 21: If the vill bit in vtype is set after a write, the configuration encoded in vtype is not supported and software must follow an alternate code path.
+RULE 22: The vsew[2:0] field of vtype encodes the selected element width (SEW) for subsequent vector instructions according to the mapping 000->8, 001->16, 010->32, 011->64, and any 1xx pattern is reserved.
+RULE 23: Writing a value to vtype sets the SEW for all later vector operations based on the vsew[2:0] mapping defined for vtype.
+RULE 24: The 1xx encodings of the vsew[2:0] field in vtype are reserved and must not be used to select an SEW.
+RULE 25: The vill bit in vtype must be checked after any modification of vtype fields, including changes to vsew or LMUL, to confirm that the selected configuration is supported by the implementation.
+RULE 26: The vtype CSR contains a signed 3‑bit field vlmul[2:0] whose value determines LMUL as LMUL = 2^(signed vlmul[2:0]).
+RULE 27: Any vtype encoding that would produce an LMUL value smaller than SEWMIN/ELEN is defined as reserved.
+RULE 28: Implementations that do not support LMUL values less than SEWMIN/ELEN may set the vill (illegal‑value) flag in the vtype CSR for those encodings.
+RULE 29: Implementations are not required to set the vill flag for vtype encodings that produce LMUL < SEWMIN/ELEN, allowing future extensions to define behavior.
+RULE 30: Assemblers are recommended to emit a warning, not an error, when a vsetvli instruction attempts to write an LMUL smaller than SEWMIN/ELEN into the vtype CSR.
+RULE 31: When the vlmul[2:0] field of vtype equals 100, the encoding is reserved and does not define a legal LMUL.
+RULE 32: When the vlmul[2:0] field of vtype equals 001, the LMUL derived from vtype is 1/8.
+RULE 33: When the vlmul[2:0] field of vtype equals 001, vtype defines 32 register groups.
+RULE 34: When the vlmul[2:0] field of vtype equals 001, the maximum number of elements (VLMAX) for that vtype configuration is VLEN/SEW/8.
+RULE 35: When the vlmul[2:0] field of vtype equals 001, each register group defined by vtype consists of a single vector register v n.
+RULE 36: When the vlmul[2:0] field of vtype equals 010, the LMUL derived from vtype is 1/4.
+RULE 37: When the vlmul[2:0] field of vtype equals 010, vtype defines 32 register groups.
+RULE 38: When the vlmul[2:0] field of vtype equals 010, the maximum number of elements (VLMAX) for that vtype configuration is VLEN/SEW/4.
+RULE 39: When the vlmul[2:0] field of vtype equals 010, each register group defined by vtype consists of a single vector register v n.
+RULE 40: When the vlmul[2:0] field of vtype equals 011, the LMUL derived from vtype is 1/2.
+RULE 41: When the vlmul[2:0] field of vtype equals 011, vtype defines 32 register groups.
+RULE 42: When the vlmul[2:0] field of vtype equals 011, the maximum number of elements (VLMAX) for that vtype configuration is VLEN/SEW/2.
+RULE 43: When the vlmul[2:0] field of vtype equals 011, each register group defined by vtype consists of a single vector register v n.
+RULE 44: When the vlmul[2:0] field of vtype equals 000, the LMUL derived from vtype is 1.
+RULE 45: When the vlmul[2:0] field of vtype equals 000, vtype defines 32 register groups.
+RULE 46: When the vlmul[2:0] field of vtype equals 000, the maximum number of elements (VLMAX) for that vtype configuration is VLEN/SEW.
+RULE 47: When the vlmul[2:0] field of vtype equals 000, each register group defined by vtype consists of a single vector register v n.
+RULE 48: When the vlmul[2:0] field of vtype equals 101, the LMUL derived from vtype is 2.
+RULE 49: When the vlmul[2:0] field of vtype equals 101, vtype defines 16 register groups.
+RULE 50: When the vlmul[2:0] field of vtype equals 101, the maximum number of elements (VLMAX) for that vtype configuration is 2 × VLEN/SEW.
+RULE 51: When the vlmul[2:0] field of vtype equals 101, each register group defined by vtype consists of the consecutive registers v n and v n+1.
+RULE 52: When a register group for LMUL = 2 defined by vtype starts with an odd‑numbered register, that group encoding is reserved.
+RULE 53: When the vlmul[2:0] field of vtype equals 110, the LMUL derived from vtype is 4.
+RULE 54: When the vlmul[2:0] field of vtype equals 110, vtype defines 8 register groups.
+RULE 55: When the vlmul[2:0] field of vtype equals 110, the maximum number of elements (VLMAX) for that vtype configuration is 4 × VLEN/SEW.
+RULE 56: When the vlmul[2:0] field of vtype equals 110, each register group defined by vtype consists of the consecutive registers v n through v n+3.
+RULE 57: When a register group for LMUL = 4 defined by vtype starts with a register number that is not a multiple of four, that group encoding is reserved.
+RULE 58: When the vlmul[2:0] field of vtype equals 111, the LMUL derived from vtype is 8.
+RULE 59: When the vlmul[2:0] field of vtype equals 111, vtype defines 4 register groups.
+RULE 60: When the vlmul[2:0] field of vtype equals 111, the maximum number of elements (VLMAX) for that vtype configuration is 8 × VLEN/SEW.
+RULE 61: When the vlmul[2:0] field of vtype equals 111, each register group defined by vtype consists of the consecutive registers v n through v n+7.
+RULE 62: When a register group for LMUL = 8 defined by vtype starts with a register number that is not a multiple of eight, that group encoding is reserved.
+RULE 63: Mask registers are always contained in a single vector register regardless of the LMUL value encoded in vtype.
+RULE 64: The vtype CSR contains the two architectural bits vta and vma.
+RULE 65: The vta bit in vtype determines whether destination tail elements are handled as undisturbed when vta=0 or as agnostic when vta=1.
+RULE 66: The vma bit in vtype determines whether destination inactive masked‑off elements are handled as undisturbed when vma=0 or as agnostic when vma=1.
+RULE 67: When vtype has vta=0 and vma=0, both tail elements and inactive masked‑off elements follow the undisturbed policy.
+RULE 68: When vtype has vta=0 and vma=1, tail elements follow the undisturbed policy and inactive masked‑off elements follow the agnostic policy.
+RULE 69: When vtype has vta=1 and vma=0, tail elements follow the agnostic policy and inactive masked‑off elements follow the undisturbed policy.
+RULE 70: When vtype has vta=1 and vma=1, both tail elements and inactive masked‑off elements follow the agnostic policy.
+RULE 71: Mask‑destination tail elements are always treated as if vta=1 regardless of the actual vta setting in vtype.
+RULE 72: Under the undisturbed policy selected via vtype, each affected destination element retains the value it held before the instruction.
+RULE 73: Under the agnostic policy selected via vtype, each affected destination element may either retain its previous value or be overwritten with all‑1s, with the choice possibly varying per element and not required to be deterministic across identical executions.
+RULE 74: When the agnostic policy is applied via vtype, any overwritten value must be all‑1s rather than all‑0s.
+RULE 75: An in‑order implementation may ignore the vta and vma bits in vtype and always apply the undisturbed policy, provided it still writes the bits to vtype for compatibility.
+RULE 76: An out‑of‑order implementation may treat tail elements as undisturbed while keeping mask elements agnostic even when vtype indicates both agnostic, if that simplifies the design.
+RULE 77: The vtype CSR must contain the vta and vma bits so that software can read, write, and migrate thread state correctly.
+RULE 78: The vsetvli instruction encodes the vta and vma bits of vtype using the flags ta (set vta=1), tu (set vta=0), ma (set vma=1), and mu (set vma=0).
+RULE 79: The assembly encoding vsetvli ... ta, ma sets vtype bits vta=1 and vma=1; tu, ma sets vta=0 and vma=1; ta, mu sets vta=1 and vma=0; and tu, mu sets vta=0 and vma=0.
+RULE 80: Prior to specification version 0.9 omitted vsetvli flags caused vtype to default to vta=0 and vma=0, but this defaulting behavior is now deprecated and current assembly must explicitly set the flags, thereby defining the vtype bits.
+RULE 81: The vtype CSR includes a vill (vector‑type‑illegal) bit that records whether a prior vsetvl instruction attempted to write an unsupported value.
+RULE 82: The vill bit is located in the most‑significant bit position of vtype, i.e., bit XLEN‑1.
+RULE 83: Because the vill bit occupies the sign bit of vtype, software can test its state with a branch on the sign bit.
+RULE 84: When the vill bit in vtype is 1, every vector instruction whose operation depends on the contents of vtype raises an illegal‑instruction exception.
+RULE 85: When the vill bit in vtype is 1, vsetvl instructions are exception‑free because they do not depend on vtype.
+RULE 86: When the vill bit in vtype is 1, whole‑register vector load and store instructions are exception‑free because they do not depend on vtype.
+RULE 87: When the vill bit in vtype is 1, all other bits of vtype (bits XLEN‑2 down to 0) shall be zero, so the CSR appears as a sign‑extended zero value with only the vill bit set.
+RULE 88: After a hardware reset, the vtype register must be in a state that can be read and then restored with a single vsetvl instruction.
+RULE 89: The recommended reset configuration sets the vill field of vtype to 1.
+RULE 90: The recommended reset configuration clears all bits of vtype other than the vill field to zero.
+RULE 91: The reset values for vtype are recommended but not mandatory, yet the architecture requires that the reset state of vtype be restorable by a single vsetvl instruction.
+RULE 92: Software must modify the vtype register dynamically when operating on multiple vectors that use different precision values.
+RULE 93: The dynamic modification of vtype must preserve the SEW and LMUL fields unchanged.
+RULE 94: Keeping the SEW and LMUL fields constant through vtype guarantees that the VLMAX value remains constant.
+RULE 95: When source and destination vector registers overlap and have different effective element widths, the instruction is mask‑agnostic regardless of the value of the vma bit in the vtype register.
+RULE 96: When source and destination vector registers overlap and have different effective element widths, the instruction is tail‑agnostic regardless of the value of the vta bit in the vtype register.
+RULE 97: The vtype register includes a vma bit that selects the masking policy for elements that are masked‑off in a vector instruction.
+RULE 98: When the vtype vma bit selects the mask‑undisturbed policy, masked‑off destination elements retain their previous architectural values.
+RULE 99: When the vtype vma bit selects the mask‑agnostic policy, masked‑off destination elements are written as if the mask were irrelevant.
+RULE 100: The masking behavior of any vector instruction that depends on the vtype vma setting is applied according to the value of that bit.
+RULE 101: The vtype register includes a vta (vector tail‑agnostic) bit that normally controls whether tail elements of a vector operation are treated as agnostic or undisturbed.
+RULE 102: Mask destination values are always treated as tail‑agnostic regardless of the setting of the vtype vta bit.
+RULE 103: When vtype.vma = 1, a vector instruction may overwrite inactive elements (elements whose mask bit is disabled) with the value 1.
+RULE 104: When vtype.vma = 0, inactive elements do not raise exceptions and the instruction does not modify any destination vector register group for those elements.
+RULE 105: When vtype.vta = 1, a vector instruction may overwrite tail elements (elements with indices ≥ vl) with the value 1, or with the instruction’s result for mask‑producing instructions except mask loads.
+RULE 106: When vtype.vta = 0, tail elements do not raise exceptions and the instruction does not modify any destination vector register group for those elements.
+RULE 107: The vtype register is a control‑and‑status register that holds the vector configuration settings for the processor.
+RULE 108: Each execution of a vector‑configuration instruction (vsetvli, vsetivli, or vsetvl) overwrites the vtype register with the value supplied by the instruction’s vtypei operand or rs2 source operand.
+RULE 109: The hardware determines the actual vector length placed in the vl register based on the current value of the vtype register together with the microarchitectural implementation and the requested application vector length.
+RULE 110: For every subsequent vector instruction, the hardware consults the current value of the vtype register to compute the effective vector length that will be used by that instruction.
+RULE 111: If the vtype.vill bit (bit XLEN‑1) is set to 1, the vtype value is illegal and the implementation must treat the configuration as illegal.
+RULE 112: All bits of vtype from XLEN‑2 down to bit 8 are reserved and must be zero; any non‑zero value in these bits has no defined architectural effect.
+RULE 113: When the vtype.vma bit (bit 7) is 1, the vector instruction is mask‑agnostic; when it is 0, the instruction is mask‑sensitive.
+RULE 114: When the vtype.vta bit (bit 6) is 1, the vector instruction is tail‑agnostic; when it is 0, the instruction is tail‑sensitive.
+RULE 115: The vtype.vsew[2:0] field (bits 5‑3) encodes the selected element width (SEW) and determines the element size used by subsequent vector instructions.
+RULE 116: The vtype.vlmul[2:0] field (bits 2‑0) encodes the vector‑register‑group multiplier (LMUL) and determines how many vector registers constitute a logical vector group.
+RULE 117: The described vtype layout applies to RV32, and for any XLEN the vtype.vill field remains at bit XLEN‑1 with the same semantics.
+RULE 118: A new vtype value is supplied to the hardware via the immediate fields of the vsetvli and vsetivli instructions.
+RULE 119: The vsetvl instruction obtains the vtype value from its rs2 register operand, allowing software to restore a previously saved vtype configuration.
+RULE 120: If a value written to vtype is not supported by the implementation, the vill bit in vtype is set, all other bits in vtype are cleared to zero, and the vl register is set to zero.
+RULE 121: A vtype value that has the vill bit set is defined as an unsupported configuration.
+RULE 122: Implementations must examine every bit of a vtype value to determine support, and the presence of any unsupported bit in any location of vtype must cause vill to be set.
+RULE 123: For the vsetvl instruction, the implementation must check the entire XLEN‑wide vtype argument and may not ignore any bits, ensuring that unsupported vector features in vtype cause a trap.
+RULE 124: An implementation is allowed to trap on a write of an illegal vtype value instead of setting vill, providing a mechanism for forward‑compatible emulation of new configurations.
+RULE 125: Software can determine whether a particular vector unit configuration is supported by testing that vill in vtype remains clear after writing the desired vtype value.
+RULE 126: When a vsetvli or vsetvl instruction is executed with rd = x0 and rs1 = x0, the implementation may update the vtype register while preserving the current vl value, provided that the resulting VLMAX is not reduced.
+RULE 127: If the new SEW/LMUL ratio implied by an updated vtype would cause VLMAX to shrink, the vsetvli/vsetvl form with rd = x0 and rs1 = x0 is reserved and must not be used.
+RULE 128: After a vtype change performed by the rd = x0, rs1 = x0 form, vl must remain a legal value for the current vtype setting.
+RULE 129: When a vsetvli or vsetvl instruction is executed with rd ≠ x0 and rs1 = x0 (AVL = maximum unsigned integer), the implementation may change the vtype register and must write the resulting VLMAX to both vl and the destination register rd.
+RULE 130: An implementation may set the vill (illegal‑vtype) bit whenever the vtype register is changed, but setting vill does not modify the normative behavior of vtype updates specified in the other rules.
+RULE 131: The vset{i}vl{i} instructions set VLMAX based on the vtype argument supplied to the instruction.
+RULE 132: The architectural vtype register determines the maximum vector length (VLMAX) that is used for subsequent vector‑length (vl) calculations.
+RULE 133: The VLMAX value derived from the vtype register (or vtype argument) remains in effect for all following vl calculations until a later vset{i}vl{i} instruction or a write to the vtype register changes it.
+RULE 134: The vtype register holds the current vector type configuration, encoding the selected SEW, LMUL, and the tail‑aggr policy bits ta and ma.
+RULE 135: Executing a vsetvli instruction with SEW e16, LMUL m4, ta, and ma updates vtype so that the processor interprets vector registers as 16‑bit integer vectors.
+RULE 136: Executing a vsetvli instruction with SEW e32, LMUL m8, ta, and ma updates vtype so that the processor interprets vector registers as 32‑bit values.
+RULE 137: Every vsetvli instruction rewrites vtype to reflect the newly requested vector configuration.
+RULE 138: The vtype register contains a field named vma that controls vector‑mask‑agnostic behavior.
+RULE 139: When vtype.vma equals 1, masked vector load instructions must update inactive elements in the destination vector‑register group.
+RULE 140: When vtype.vma equals 0, masked vector load instructions must not update inactive elements in the destination vector‑register group.
+RULE 141: For unit‑stride and constant‑stride vector memory operations, the vtype register does not need to be updated because the effective element width is encoded directly in the instruction.
+RULE 142: For indexed vector memory operations, the SEW and LMUL fields of the vtype register specify the data width of the loaded or stored elements.
+RULE 143: For indexed vector memory operations, the effective element width of the index elements is taken from the instruction, not from the vtype register.
+RULE 144: The vtype register contains fields that hold the SEW (standard element width) and LMUL values.
+RULE 145: For vector indexed load and store instructions, the SEW and LMUL values stored in vtype determine the size of the data elements accessed.
+RULE 146: The vtype register includes a field named vill.
+RULE 147: The vill field in vtype is consulted by the vector mask‑load (vlm.v) and vector mask‑store (vsm.v) instructions to determine their operation.
+RULE 148: The operation of vlm.v and vsm.v is influenced by vtype through the constraints that vtype imposes on the effective vector length (vl).
+RULE 149: When a whole‑register load or store instruction is executed, the effective vector length (evl) is calculated as evl = NFIELDS * VLEN / EEW, and this calculation is performed without consulting the vtype CSR.
+RULE 150: Whole‑register load and store instructions ignore the current value of the vtype register, so changes to vtype have no effect on their operation.
+RULE 151: The reduction tree used by unordered single‑width floating‑point sum‑reduction instructions must be deterministic for each specific value held in the vtype register together with the current vector length (vl).
+RULE 152: The architectural behavior of the reduction tree for unordered single‑width floating‑point sum‑reduction instructions is defined solely by the present contents of the vtype register in conjunction with the current vector length.
+RULE 153: The vtype architectural register contains a field named vlmul.
+RULE 154: Vector mask‑register logical instructions operate on a single vector register independent of the vlmul field setting in vtype.
+RULE 155: Execution of vector mask‑register logical instructions does not modify the vlmul field of vtype.
+RULE 156: The vtype CSR includes a field named vma.
+RULE 157: When executing a masked viota.m instruction, the vma field of the vtype register is defined to be 0.
+RULE 158: The vtype register contains a SEW field.
+RULE 159: The vtype SEW field is used to indicate or calculate the Effective Element Size (EEW) for one or more operands of an element‑group instruction.
+RULE 160: When an operand is an element group, the vtype SEW field and the resulting EEW refer to the number of bits in each individual element within the group, not to the total number of bits in the whole group.
+RULE 161: The vtype register contains an LMUL field that supplies the LMUL value used by the hardware.
+RULE 162: The LMUL setting in the vtype register is used to indicate or calculate the effective length multiplier (EMUL) for one or more operands of a vector instruction.
+RULE 163: The data‑independent execution latency defined for the Zvkt extension must not be applied to the vtype register, which is treated as a control value exempt from DIEL.
+RULE 164: vtype is a control‑and‑status register that is defined by the RISC‑V vector extension.
+RULE 165: The vector‑extension state encoded by the VS field of the mstatus register includes the CSR vtype.
+RULE 166: The vector‑extension state comprises the vector registers v0‑v31 and the CSRs vcsr, vxrm, vxsat, vstart, vl, vtype, and vlenb.
+RULE 167: In M-mode, accessing vtype register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; csrr a0, 0xc21; # Result: mcause = 0x0].
+RULE 168: In S-mode, accessing vtype register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_supervisor; csrr a0, 0xc21; # Result: mcause = 0x0].
+RULE 169: In U-mode, accessing vtype register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_user; csrr a0, 0xc21; # Result: mcause = 0x0].
+RULE 170: In M-mode, setting vtype.VILL (bit 63) must be reflected on the readback (# Result: a2 = 0x8000000000000000) [# Extension Must Be Active: NONE; li a0, 0x8000000000000000; csrs 0xc21, a0; csrr a1, 0xc21; and a2, a0, a1; # Result: a2 = 0x8000000000000000].
+RULE 171: In M-mode, setting vtype.VMA (bit 7) must be reflected on the readback (# Result: a2 = 0x80) [# Extension Must Be Active: NONE; li a0, 0x80; csrs 0xc21, a0; csrr a1, 0xc21; and a2, a0, a1; # Result: a2 = 0x80].
+RULE 172: In M-mode, setting vtype.VTA (bit 6) must be reflected on the readback (# Result: a2 = 0x40) [# Extension Must Be Active: NONE; li a0, 0x40; csrs 0xc21, a0; csrr a1, 0xc21; and a2, a0, a1; # Result: a2 = 0x40].
+RULE 173: In M-mode, setting vtype.VSEW (bit 3) must be reflected on the readback (# Result: a2 = 0x8) [# Extension Must Be Active: NONE; li a0, 0x8; csrs 0xc21, a0; csrr a1, 0xc21; and a2, a0, a1; # Result: a2 = 0x8].
+RULE 174: In M-mode, setting vtype.VLMUL (bit 0) must be reflected on the readback (# Result: a2 = 0x1) [# Extension Must Be Active: NONE; li a0, 0x1; csrs 0xc21, a0; csrr a1, 0xc21; and a2, a0, a1; # Result: a2 = 0x1].
+RULE 175: In M-mode, writing 0xffffffffffffffff to the vtype register must not set it to 0xffffffff or 0xffffffffffffffff (# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff) [# Extension Must Be Active: NONE; li a0, 0xffffffffffffffff; csrw 0xc21, a0; csrr a1, 0xc21; # Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff].
+RULE 176: In M-mode, accessing vtype register while V extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: V; csrr a0, 0xc21; # Result: mcause = 0x0].
+RULE 177: In M-mode, accessing vtype register while Zvkt extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: Zvkt; csrr a0, 0xc21; # Result: mcause = 0x0].
+
+REGISTER: vxrm
+NUMBER: 0x00a
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..0=VALUE
+EXTENSIONS: V
+RULE 1: vxrm is a CSR located at address 0x00A.
+RULE 2: vxrm is accessible in User‑mode with read/write privileges (URW).
+RULE 3: vxrm holds the vector fixed‑point rounding mode.
+RULE 4: The rounding mode stored in vxrm controls how vector fixed‑point arithmetic instructions round their results.
+RULE 5: The vector fixed-point rounding-mode register (vxrm) is a control-and-status register that stores a two-bit read/write field in its least-significant bits vxrm[1:0].
+RULE 6: All bits of vxrm above bit 1 (vxrm[XLEN-1:2]) must be written with zeros.
+RULE 7: The vxrm register has a unique CSR address that allows software to read or write it independently of other registers.
+RULE 8: The current value of vxrm is also mirrored as a field inside the vcsr register.
+RULE 9: A csrwi instruction can write a new rounding mode to vxrm while returning the previous vxrm value in the destination register.
+RULE 10: The rounding mode encoded in vxrm determines the rounding increment r used by the fixed-point rounding algorithm.
+RULE 11: When vxrm[1:0] equals 0b00 (round-to-nearest-up), the rounding increment r is equal to the bit v[d-1] of the pre-rounding value.
+RULE 12: When vxrm[1:0] equals 0b01 (round-to-nearest-even), the rounding increment r is v[d-1] && (v[d-2:0] != 0 || v[d]).
+RULE 13: When vxrm[1:0] equals 0b10 (round-down), the rounding increment r is zero.
+RULE 14: When vxrm[1:0] equals 0b11 (round-to-odd), the rounding increment r is (!v[d]) && (v[d-1:0] != 0).
+RULE 15: The fixed-point rounding result for a value v with d discarded bits is computed as (v >> d) plus the rounding increment r selected according to vxrm.
+RULE 16: The roundoff_unsigned(v,d) function computes (unsigned(v) >> d) plus the rounding increment r defined by vxrm.
+RULE 17: The roundoff_signed(v,d) function computes (signed(v) >> d) plus the rounding increment r defined by vxrm.
+RULE 18: The vxrm register is a 2‑bit field that resides in bits 2 and 1 of the XLEN‑wide vector control and status CSR (vcsr).
+RULE 19: The vxrm register defines the fixed‑point rounding mode used by vector operations.
+RULE 20: The vxrm register can be accessed both as an independent CSR and as the vxrm field within the vcsr CSR.
+RULE 21: Any write to the vxrm register via the independent CSR updates bits 2:1 of vcsr, and any read of vxrm through either CSR returns the same current architectural value.
+RULE 22: The vxrm register shares the same architectural state regardless of whether it is accessed through the independent CSR or through the vcsr register.
+RULE 23: After a reset, the value of the vxrm control‑and‑status register may be arbitrary.
+RULE 24: Executing a vsetvl or vsetivl instruction does not modify the vxrm register.
+RULE 25: Software must explicitly write a defined value to the vxrm register before using the vector unit.
+RULE 26: The vxrm register holds a rounding‑mode setting that determines how the result of any vector averaging‑add or averaging‑subtract instruction is rounded after the mandatory one‑bit right shift.
+RULE 27: For every averaging‑add (vaaddu, vaadd) and averaging‑subtract (vasubu, vasub) instruction, the value produced after infinite‑precision computation and a one‑bit right shift is rounded according to the setting in vxrm.
+RULE 28: The rounding‑mode value stored in vxrm is used identically for both unsigned and signed variants of the vector averaging instructions.
+RULE 29: In a vasub instruction, overflow can occur only when the smallest operand is subtracted from the largest operand and the vxrm setting specifies either round‑to‑nearest‑up (rnu) or round‑to‑nearest‑even (rne).
+RULE 30: In signed fractional‑multiply‑with‑rounding‑and‑saturation instructions, the bits discarded by the right‑shift of the 2 × SEW product are rounded according to the current setting of the vxrm register.
+RULE 31: The vxrm register selects the rounding mode (e.g., round‑to‑nearest, round‑down, round‑up, or round‑toward‑zero) that the hardware applies when rounding fractional‑multiply results.
+RULE 32: The rounding operation governed by the vxrm register is performed before any saturation is applied to the final SEW‑sized result.
+RULE 33: The architectural behavior of fractional‑multiply‑with‑rounding instructions depends on the value stored in the vxrm register, and this value directly determines how the discarded bits are rounded regardless of later saturation outcomes.
+RULE 34: For all vector scaling shift‑right instructions, both logical (vssrl) and arithmetic (vssra), the bits that are shifted out are rounded based on the current value of the vxrm register.
+RULE 35: The logical scaling right‑shift forms vssrl.vv, vssrl.vx, and vssrl.vi perform rounding by invoking the roundoff_unsigned function, which uses the current setting of the vxrm register.
+RULE 36: The arithmetic scaling right‑shift forms vssra.vv, vssra.vx, and vssra.vi perform rounding by invoking the roundoff_signed function, which uses the current setting of the vxrm register.
+RULE 37: The vxrm CSR holds the rounding mode that is applied by the vector narrowing fixed‑point clip instructions vnclipu and vnclip.
+RULE 38: The rounding mode specified in vxrm controls rounding around the least‑significant bit of the destination element and is applied before any saturation occurs.
+RULE 39: The vxrm register is a Control‑Status Register (CSR) defined by the RISC‑V vector extension.
+RULE 40: The vxrm register belongs to the vector‑extension architectural state together with vector registers v0‑v31 and the CSRs vcsr, vxsat, vstart, vl, vtype, and vlenb.
+RULE 41: The state of the vxrm CSR is reflected in the VS field of the mstatus register.
+RULE 42: In M-mode, accessing vxrm register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; csrr a0, 0x00a; # Result: mcause = 0x0].
+RULE 43: In S-mode, accessing vxrm register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_supervisor; csrr a0, 0x00a; # Result: mcause = 0x0].
+RULE 44: In U-mode, accessing vxrm register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_user; csrr a0, 0x00a; # Result: mcause = 0x0].
+RULE 45: In M-mode, setting vxrm.VALUE (bit 0) must be reflected on the readback (# Result: a2 = 0x1) [# Extension Must Be Active: NONE; li a0, 0x1; csrs 0x00a, a0; csrr a1, 0x00a; and a2, a0, a1; # Result: a2 = 0x1].
+RULE 46: In M-mode, writing 0xffffffffffffffff to the vxrm register must not set it to 0xffffffff or 0xffffffffffffffff (# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff) [# Extension Must Be Active: NONE; li a0, 0xffffffffffffffff; csrw 0x00a, a0; csrr a1, 0x00a; # Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff].
+RULE 47: In M-mode, accessing vxrm register while V extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: V; csrr a0, 0x00a; # Result: mcause = 0x0].
+
+REGISTER: vxsat
+NUMBER: 0x009
+MODE: U-mode
+WIDTH: MXLEN
+FIELDS: 63..0=VALUE
+EXTENSIONS: V
+RULE 1: The vxsat CSR is located at architectural address 0x009.
+RULE 2: The vxsat CSR is readable and writable from user mode, having URW (unprivileged read/write) privilege.
+RULE 3: The vxsat CSR is an unprivileged CSR, so no higher privilege level is required to access it.
+RULE 4: The vxsat CSR holds the Fixed‑Point Saturate Flag used by vector operations.
+RULE 5: The vxsat CSR is defined as part of the vector extension programmer’s model specification.
+RULE 6: The vxsat CSR is a read‑write register.
+RULE 7: The only architecturally defined field of vxsat is bit 0 (vxsat[0]).
+RULE 8: vxsat[0] is set to 1 when a fixed‑point vector instruction saturates an output value and is cleared to 0 otherwise.
+RULE 9: All bits of vxsat from XLEN‑1 down to 1 are reserved, must be written as zeros, and read back as zeros.
+RULE 10: Writes to vxsat[0] update the corresponding saturation‑flag bit in the vcsr register, mirroring the value.
+RULE 11: Reads of the saturation‑flag bit from vcsr return the same value as vxsat[0].
+RULE 12: The vxsat register is defined as an independent CSR that can also be accessed as a field of the XLEN‑bit‑wide vector control and status CSR vcsr.
+RULE 13: Within the vcsr CSR, the vxsat field occupies bit position 0.
+RULE 14: In the vcsr layout, bits 2:1 are allocated to the vxrm field and bit 0 is allocated to the vxsat field.
+RULE 15: The vxsat field functions as a fixed‑point accrued saturation flag.
+RULE 16: After reset, the vxsat CSR may contain an arbitrary value.
+RULE 17: Software must explicitly set the vxsat field to a known state before using the vector unit.
+RULE 18: The vxsat bit in the vector status register is set when a signed fractional multiply operation causes the result to saturate.
+RULE 19: The vxsat bit is set only for vector single‑width fractional multiply instructions that round the product according to the current vxrm setting and then saturate the rounded value to fit into SEW bits.
+RULE 20: If a signed fractional multiply instruction does not trigger the saturation condition, the vxsat bit is not set.
+RULE 21: The vxsat register contains a single saturation flag bit.
+RULE 22: Whenever any destination element of a vector narrowing fixed‑point clip instruction (vnclipu or vnclip) is saturated, the vxsat bit in the vxsat register is set.
+RULE 23: vxsat is a vector‑extension Control‑and‑Status Register (CSR).
+RULE 24: The architectural state of vxsat is tracked by the VS[1:0] field in the mstatus register.
+RULE 25: The VS[1:0] field encodes the status of vxsat using the four values Off, Initial, Clean, and Dirty.
+RULE 26: In M-mode, accessing vxsat register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; csrr a0, 0x009; # Result: mcause = 0x0].
+RULE 27: In S-mode, accessing vxsat register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_supervisor; csrr a0, 0x009; # Result: mcause = 0x0].
+RULE 28: In U-mode, accessing vxsat register must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: NONE; call machine_to_user; csrr a0, 0x009; # Result: mcause = 0x0].
+RULE 29: In M-mode, setting vxsat.VALUE (bit 0) must be reflected on the readback (# Result: a2 = 0x1) [# Extension Must Be Active: NONE; li a0, 0x1; csrs 0x009, a0; csrr a1, 0x009; and a2, a0, a1; # Result: a2 = 0x1].
+RULE 30: In M-mode, writing 0xffffffffffffffff to the vxsat register must not set it to 0xffffffff or 0xffffffffffffffff (# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff) [# Extension Must Be Active: NONE; li a0, 0xffffffffffffffff; csrw 0x009, a0; csrr a1, 0x009; # Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff].
+RULE 31: In M-mode, accessing vxsat register while V extension is active must result in no exception (# Result: mcause = 0x0) [# Extension Must Be Active: V; csrr a0, 0x009; # Result: mcause = 0x0].

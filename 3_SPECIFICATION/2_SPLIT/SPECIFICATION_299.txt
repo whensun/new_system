@@ -1,0 +1,29 @@
+## 29.5.43. sh3add
+
+## Synopsis
+
+Shift left by 3 and add
+
+## Mnemonic
+
+sh3add rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction shifts rs1 to the left by 3 places and adds it to rs2 .
+
+## Operation
+
+```
+X(rd) = X(rs2) + (X(rs1) << 3);
+```
+
+## Included in
+
+| Extension                             |   Minimum version | Lifecycle state   |
+|---------------------------------------|-------------------|-------------------|
+| Zba (Address generation instructions) |              0.93 | Ratified          |

@@ -1,0 +1,5 @@
+## 30.17.3. Selectable precise/imprecise traps
+
+Some profiles may choose to provide a privileged mode bit to select between precise and imprecise vector traps. Imprecise mode would run at high-performance but possibly make it difficult to discern error causes, while precise mode would run more slowly, but support debugging of errors albeit with a possibility of not experiencing the same errors as in imprecise mode.
+
+This mechanism is not defined in the current standard extensions.

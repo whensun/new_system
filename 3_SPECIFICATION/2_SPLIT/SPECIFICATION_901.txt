@@ -1,0 +1,111 @@
+## 21.6.1. Trap Cause Codes
+
+The hypervisor extension augments the trap cause encoding. Table 43 lists the possible M-mode and HS-mode trap cause codes when the hypervisor extension is implemented. Codes are added for VSlevel  interrupts  (interrupts  2,  6,  10),  for  supervisor-level  guest  external  interrupts  (interrupt  12),  for virtual-instruction  exceptions  (exception  22),  and  for  guest-page  faults  (exceptions  20,  21,  23). Furthermore, environment calls from VS-mode are assigned cause 10, whereas those from HS-mode or S-mode use cause 9 as usual.
+
+Table 43. Machine and supervisor cause register ( mcause and scause ) values when the hypervisor extension is implemented.
+
+|   Interrupt | Code Description                           |
+|-------------|--------------------------------------------|
+|           1 | 0 Reserved                                 |
+|           1 | 1 Supervisor software interrupt            |
+|           1 | 2 Virtual supervisor software interrupt    |
+|           1 | 3 Machine software interrupt               |
+|           1 | 4 Reserved                                 |
+|           1 | 5 Supervisor timer interrupt               |
+|           1 | 6 Virtual supervisor timer interrupt       |
+|           1 | 7 Machine timer interrupt                  |
+|           1 | 8 Reserved                                 |
+|           1 | 9 Supervisor external interrupt            |
+|           1 | 10 Virtual supervisor external interrupt   |
+|           1 | 11 Machine external interrupt              |
+|           1 | 12 Supervisor guest external interrupt     |
+|           1 | 13 Reserved for counter-overflow interrupt |
+|           1 | 14-15 Reserved                             |
+|           1 | ≥16 Designated for platform use            |
+
+|   Interrupt | Exception Code Description                |
+|-------------|-------------------------------------------|
+|           0 | 0 Instruction address misaligned          |
+|           0 | 1 Instruction access fault                |
+|           0 | 2 Illegal instruction                     |
+|           0 | 3 Breakpoint                              |
+|           0 | 4 Load address misaligned                 |
+|           0 | 5 Load access fault                       |
+|           0 | 6 Store/AMO address misaligned            |
+|           0 | 7 Store/AMO access fault                  |
+|           0 | 8 Environment call from U-mode or VU-mode |
+|           0 | 9 Environment call from HS-mode           |
+|           0 | 10 Environment call from VS-mode          |
+|           0 | 11 Environment call from M-mode           |
+|           0 | 12 Instruction page fault                 |
+|           0 | 13 Load page fault                        |
+|           0 | 14 Reserved                               |
+|           0 | 15 Store/AMO page fault                   |
+|           0 | 16-19 Reserved                            |
+|           0 | 20 Instruction guest-page fault           |
+|           0 | 21 Load guest-page fault                  |
+|           0 | 22 Virtual instruction                    |
+|           0 | 23 Store/AMO guest-page fault             |
+|           0 | 24-31 Designated for custom use           |
+|           0 | 32-47 Reserved                            |
+|           0 | 48-63 Designated for custom use           |
+|           0 | ≥64 Reserved                              |
+
+HS-mode and VS-mode ECALLs use different cause values so they can be delegated separately.
+
+When V=1, a virtual-instruction exception (code 22) is normally raised instead of an illegal-instruction exception if the attempted instruction is HS-qualified but is prevented from executing when V=1 either due  to  insufficient  privilege  or  because  the  instruction  is  expressly  disabled  by  a  supervisor  or hypervisor CSR such as scounteren or hcounteren .  An instruction is HS-qualified if  it  would  be valid to execute in HS-mode (for some values of the instruction's register operands), assuming fields TSR and TVM of CSR mstatus are both zero.
+
+A  special  rule  applies  for  CSR  instructions  that  access  32-bit  high-half  CSRs  such  as cycleh and htimedeltah .  When  V=1  and  XLEN=32,  an  invalid  attempt  to  access  a  high-half  CSR  raises  a  virtualinstruction  exception  instead  of  an  illegal-instruction  exception  if  the  same  CSR  instruction  for  the corresponding low-half CSR (e.g. cycle or htimedelta ) is HS-qualified.
+
+<image>
+
+When  XLEN>32,  an  attempt  to  access  a  high-half  CSR  always  raises  an  illegalinstruction exception.
+
+Specifically, a virtual-instruction exception is raised for the following cases:
+
+- ⚫ in  VS-mode,  attempts  to  access  a  non-high-half  counter  CSR  when  the  corresponding  bit  in hcounteren is 0 and the same bit in mcounteren is 1;
+- ⚫ in VS-mode, if XLEN=32, attempts to access a high-half counter CSR when the corresponding bit in hcounteren is 0 and the same bit in mcounteren is 1;
+- ⚫ in VU-mode, attempts to access a non-high-half counter CSR when the corresponding bit in either hcounteren or scounteren is 0 and the same bit in mcounteren is 1;
+
+- ⚫ in VU-mode, if XLEN=32, attempts to access a high-half counter CSR when the corresponding bit in either hcounteren or scounteren is 0 and the same bit in mcounteren is 1;
+- ⚫ in  VS-mode  or  VU-mode,  attempts  to  execute  a  hypervisor  instruction  (HLV,  HLVX,  HSV,  or HFENCE);
+- ⚫ in VS-mode or VU-mode, attempts to access an implemented non-high-half hypervisor CSR or VS CSR when the same access (read/write) would be allowed in HS-mode, assuming mstatus .TVM=0;
+- ⚫ in VS-mode or VU-mode, if XLEN=32, attempts to access an implemented high-half hypervisor CSR or  high-half  VS  CSR  when  the  same  access  (read/write)  to  the  CSR"s  low-half  partner  would  be allowed in HS-mode, assuming mstatus .TVM=0;
+- ⚫ in VU-mode, attempts to execute WFI when mstatus .TW=0, or to execute a supervisor instruction (SRET or SFENCE);
+- ⚫ in  VU-mode,  attempts  to  access  an  implemented  non-high-half  supervisor  CSR  when  the  same access (read/write) would be allowed in HS-mode, assuming mstatus .TVM=0;
+- ⚫ in VU-mode, if XLEN=32, attempts to access an implemented high-half supervisor CSR when the same access to the CSR's low-half partner would be allowed in HS-mode, assuming mstatus .TVM=0;
+- ⚫ in VS-mode, attempts to execute WFI when hstatus .VTW=1 and mstatus .TW=0, unless the instruction completes within an implementation-specific, bounded time;
+- ⚫ in VS-mode, attempts to execute SRET when hstatus .VTSR=1; and
+- ⚫ in  VS-mode, attempts to execute an SFENCE.VMA or SINVAL.VMA instruction or to access satp , when hstatus .VTVM=1.
+
+Other extensions to the RISC-V Privileged Architecture may add to the set of circumstances that cause a virtual-instruction exception when V=1.
+
+On a virtual-instruction trap, mtval or stval is written the same as for an illegal-instruction trap.
+
+<image>
+
+It  is  not  unusual  that  hypervisors  must  emulate  the  instructions  that  raise  virtualinstruction exceptions, to support nested hypervisors or for other reasons. Machine level is expected ordinarily to delegate virtual-instruction traps directly to HS-level, whereas illegal-instruction  traps  are  likely  to  be  processed  first  in  M-mode  before being  conditionally delegated  (by software) to HS-level. Consequently,  virtualinstruction traps are expected typically to be handled faster than illegal-instruction traps.
+
+When not emulating the trapping instruction, a hypervisor should convert a virtualinstruction trap into an illegal-instruction exception for the guest virtual machine.
+
+Because TSR and TVM in mstatus are  intended  to  impact  only  S-mode  (HS-mode), they are ignored for determining exceptions in VS-mode.
+
+Fields  FS  and  VS  in  registers sstatus and vsstatus deviate  from  the  usual HS-qualified rule.  If  an instruction  is  prevented  from  executing  because  FS  or  VS  is  zero  in  either sstatus or vsstatus ,  the exception raised is always an illegal-instruction exception, never a virtual-instruction exception.
+
+<image>
+
+Early implementations of the H extension treated FS and VS in sstatus and vsstatus specially this way, and the behavior has been codified to maintain compatibility for software.
+
+Table 44. Synchronous exception priority when the hypervisor extension is implemented.
+
+| Priority   | Exc.Code                | Description                                                                                                                                 |
+|------------|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| Highest    | 3                       | Instruction address breakpoint                                                                                                              |
+|            | 12, 20, 1               | During instruction address translation: First encountered page fault, guest-page fault, or access fault                                     |
+|            | 1                       | With physical address for instruction: Instruction access fault                                                                             |
+|            | 2 22 0 8, 9, 10, 11 3 3 | Illegal instruction Virtual instruction Instruction address misaligned Environment call Environment break Load/store/AMO address breakpoint |
+|            | 4,6                     | Optionally: Load/store/AMO address misaligned                                                                                               |
+|            | 13, 15, 21, 23, 5, 7    | During address translation for an explicit memory access: First encountered page fault, guest-page fault, or access fault                   |
+| Lowest     | 4, 6                    | Load/store/AMO address misaligned                                                                                                           |
+
+If an instruction may raise multiple synchronous exceptions, the decreasing priority order of Table 44 indicates which exception is taken and reported in mcause or scause .

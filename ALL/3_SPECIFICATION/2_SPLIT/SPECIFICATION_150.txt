@@ -1,0 +1,22 @@
+## 24.4.2. Zvfbfmin - Vector BF16 Converts
+
+This extension provides the minimal set of instructions needed to enable vector support of the BF16 format. It enables BF16 as an interchange format as it provides conversion between BF16 values and FP32 values.
+
+This extension depends upon Zve32f vector extension.
+
+<image>
+
+<image>
+
+While  conversion  instructions  tend  to  include  all  supported  formats,  in  these extensions we only support conversion between BF16 and FP32 as we are targeting a special  use  case.  These  extensions  are  intended  to  support  the  case  where  BF16 values  are  used  as  reduced  precision  versions  of  FP32  values,  where  use  of  BF16 provides a two-fold advantage for storage, bandwidth, and computation. In this use case,  the  BF16  values  are  typically  multiplied  by  each  other  and  accumulated  into FP32 sums. These sums are typically converted to BF16 and then used as subsequent inputs. The operations on the BF16 values can be performed on the CPU or a loosely coupled coprocessor.
+
+Subsequent  extensions  might  provide  support  for  native  BF16  arithmetic.  Such extensions  could  add  additional  conversion  instructions  to  allow  all  supported formats to be converted to and from BF16.
+
+BF16 addition, subtraction, multiplication, division, and square-root operations can be faithfully emulated by converting the BF16 operands to single-precision, performing the  operation  using  single-precision  arithmetic,  and  then  converting  back  to  BF16. Performing BF16 fused multiply-addition using this method can produce results that differ by 1-ulp on some inputs for the RNE and RMM rounding modes.
+
+Conversions between BF16 and formats larger than FP32 can be faithfully emulated. Exact widening conversions from BF16 can be synthesized by first converting to FP32 and  then  converting  from  FP32  to  the  target  precision.  Conversions  narrowing  to BF16 can be synthesized by first converting to FP32 through a series of halving steps using  vector  round-towards-odd  narrowing  conversion  instructions  (vfncvt.rod.f.f.w). The final convert from FP32 to BF16 would use the desired rounding mode.
+
+| Mnemonic         | Instruction                 |
+|------------------|-----------------------------|
+| vfncvtbf16.f.f.w | Vector convert FP32 to BF16 |
+| vfwcvtbf16.f.f.v | Vector convert BF16 to FP32 |

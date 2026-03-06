@@ -1,0 +1,3680 @@
+INSTRUCTION: ADD
+FORMAT: add rd, rs1, rs2
+
+INSTRUCTION: ADD.UW
+FORMAT: add.uw rd, rs1, rs2
+
+INSTRUCTION: ADDI
+FORMAT: addi rd, rs1, imm12
+
+INSTRUCTION: ADDIW
+FORMAT: addiw rd, rs1, imm12
+
+INSTRUCTION: ADDW
+FORMAT: addw rd, rs1, rs2
+
+INSTRUCTION: AES32DSI
+FORMAT: aes32dsi rd, rs1, rs2, bs
+
+INSTRUCTION: AES32DSMI
+FORMAT: aes32dsmi rd, rs1, rs2, bs
+
+INSTRUCTION: AES32ESI
+FORMAT: aes32esi rd, rs1, rs2, bs
+
+INSTRUCTION: AES32ESMI
+FORMAT: aes32esmi rd, rs1, rs2, bs
+
+INSTRUCTION: AES64DS
+FORMAT: aes64ds rd, rs1, rs2
+
+INSTRUCTION: AES64DSM
+FORMAT: aes64dsm rd, rs1, rs2
+
+INSTRUCTION: AES64ES
+FORMAT: aes64es rd, rs1, rs2
+
+INSTRUCTION: AES64ESM
+FORMAT: aes64esm rd, rs1, rs2
+
+INSTRUCTION: AES64IM
+FORMAT: aes64im rd, rs1
+
+INSTRUCTION: AES64KS1I
+FORMAT: aes64ks1i rd, rs1, rnum
+
+INSTRUCTION: AES64KS2
+FORMAT: aes64ks2 rd, rs1, rs2
+
+INSTRUCTION: AMOADD.B
+FORMAT: amoadd.b rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.B.AQ
+FORMAT: amoadd.b.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.B.AQRL
+FORMAT: amoadd.b.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.B.RL
+FORMAT: amoadd.b.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.D
+FORMAT: amoadd.d rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.D.AQ
+FORMAT: amoadd.d.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.D.AQRL
+FORMAT: amoadd.d.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.D.RL
+FORMAT: amoadd.d.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.H
+FORMAT: amoadd.h rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.H.AQ
+FORMAT: amoadd.h.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.H.AQRL
+FORMAT: amoadd.h.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.H.RL
+FORMAT: amoadd.h.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.W
+FORMAT: amoadd.w rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.W.AQ
+FORMAT: amoadd.w.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.W.AQRL
+FORMAT: amoadd.w.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOADD.W.RL
+FORMAT: amoadd.w.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.B
+FORMAT: amoand.b rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.B.AQ
+FORMAT: amoand.b.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.B.AQRL
+FORMAT: amoand.b.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.B.RL
+FORMAT: amoand.b.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.D
+FORMAT: amoand.d rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.D.AQ
+FORMAT: amoand.d.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.D.AQRL
+FORMAT: amoand.d.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.D.RL
+FORMAT: amoand.d.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.H
+FORMAT: amoand.h rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.H.AQ
+FORMAT: amoand.h.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.H.AQRL
+FORMAT: amoand.h.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.H.RL
+FORMAT: amoand.h.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.W
+FORMAT: amoand.w rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.W.AQ
+FORMAT: amoand.w.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.W.AQRL
+FORMAT: amoand.w.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOAND.W.RL
+FORMAT: amoand.w.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.B
+FORMAT: amocas.b rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.B.AQ
+FORMAT: amocas.b.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.B.AQRL
+FORMAT: amocas.b.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.B.RL
+FORMAT: amocas.b.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.D
+FORMAT: amocas.d rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.D.AQ
+FORMAT: amocas.d.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.D.AQRL
+FORMAT: amocas.d.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.D.RL
+FORMAT: amocas.d.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.H
+FORMAT: amocas.h rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.H.AQ
+FORMAT: amocas.h.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.H.AQRL
+FORMAT: amocas.h.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.H.RL
+FORMAT: amocas.h.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.Q
+FORMAT: amocas.q rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.Q.AQ
+FORMAT: amocas.q.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.Q.AQRL
+FORMAT: amocas.q.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.Q.RL
+FORMAT: amocas.q.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.W
+FORMAT: amocas.w rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.W.AQ
+FORMAT: amocas.w.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.W.AQRL
+FORMAT: amocas.w.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOCAS.W.RL
+FORMAT: amocas.w.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.B
+FORMAT: amomax.b rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.B.AQ
+FORMAT: amomax.b.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.B.AQRL
+FORMAT: amomax.b.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.B.RL
+FORMAT: amomax.b.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.D
+FORMAT: amomax.d rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.D.AQ
+FORMAT: amomax.d.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.D.AQRL
+FORMAT: amomax.d.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.D.RL
+FORMAT: amomax.d.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.H
+FORMAT: amomax.h rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.H.AQ
+FORMAT: amomax.h.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.H.AQRL
+FORMAT: amomax.h.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.H.RL
+FORMAT: amomax.h.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.W
+FORMAT: amomax.w rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.W.AQ
+FORMAT: amomax.w.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.W.AQRL
+FORMAT: amomax.w.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAX.W.RL
+FORMAT: amomax.w.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.B
+FORMAT: amomaxu.b rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.B.AQ
+FORMAT: amomaxu.b.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.B.AQRL
+FORMAT: amomaxu.b.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.B.RL
+FORMAT: amomaxu.b.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.D
+FORMAT: amomaxu.d rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.D.AQ
+FORMAT: amomaxu.d.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.D.AQRL
+FORMAT: amomaxu.d.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.D.RL
+FORMAT: amomaxu.d.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.H
+FORMAT: amomaxu.h rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.H.AQ
+FORMAT: amomaxu.h.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.H.AQRL
+FORMAT: amomaxu.h.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.H.RL
+FORMAT: amomaxu.h.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.W
+FORMAT: amomaxu.w rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.W.AQ
+FORMAT: amomaxu.w.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.W.AQRL
+FORMAT: amomaxu.w.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMAXU.W.RL
+FORMAT: amomaxu.w.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.B
+FORMAT: amomin.b rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.B.AQ
+FORMAT: amomin.b.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.B.AQRL
+FORMAT: amomin.b.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.B.RL
+FORMAT: amomin.b.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.D
+FORMAT: amomin.d rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.D.AQ
+FORMAT: amomin.d.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.D.AQRL
+FORMAT: amomin.d.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.D.RL
+FORMAT: amomin.d.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.H
+FORMAT: amomin.h rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.H.AQ
+FORMAT: amomin.h.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.H.AQRL
+FORMAT: amomin.h.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.H.RL
+FORMAT: amomin.h.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.W
+FORMAT: amomin.w rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.W.AQ
+FORMAT: amomin.w.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.W.AQRL
+FORMAT: amomin.w.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMIN.W.RL
+FORMAT: amomin.w.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.B
+FORMAT: amominu.b rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.B.AQ
+FORMAT: amominu.b.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.B.AQRL
+FORMAT: amominu.b.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.B.RL
+FORMAT: amominu.b.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.D
+FORMAT: amominu.d rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.D.AQ
+FORMAT: amominu.d.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.D.AQRL
+FORMAT: amominu.d.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.D.RL
+FORMAT: amominu.d.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.H
+FORMAT: amominu.h rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.H.AQ
+FORMAT: amominu.h.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.H.AQRL
+FORMAT: amominu.h.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.H.RL
+FORMAT: amominu.h.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.W
+FORMAT: amominu.w rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.W.AQ
+FORMAT: amominu.w.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.W.AQRL
+FORMAT: amominu.w.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOMINU.W.RL
+FORMAT: amominu.w.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.B
+FORMAT: amoor.b rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.B.AQ
+FORMAT: amoor.b.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.B.AQRL
+FORMAT: amoor.b.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.B.RL
+FORMAT: amoor.b.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.D
+FORMAT: amoor.d rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.D.AQ
+FORMAT: amoor.d.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.D.AQRL
+FORMAT: amoor.d.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.D.RL
+FORMAT: amoor.d.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.H
+FORMAT: amoor.h rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.H.AQ
+FORMAT: amoor.h.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.H.AQRL
+FORMAT: amoor.h.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.H.RL
+FORMAT: amoor.h.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.W
+FORMAT: amoor.w rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.W.AQ
+FORMAT: amoor.w.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.W.AQRL
+FORMAT: amoor.w.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOOR.W.RL
+FORMAT: amoor.w.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.B
+FORMAT: amoswap.b rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.B.AQ
+FORMAT: amoswap.b.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.B.AQRL
+FORMAT: amoswap.b.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.B.RL
+FORMAT: amoswap.b.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.D
+FORMAT: amoswap.d rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.D.AQ
+FORMAT: amoswap.d.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.D.AQRL
+FORMAT: amoswap.d.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.D.RL
+FORMAT: amoswap.d.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.H
+FORMAT: amoswap.h rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.H.AQ
+FORMAT: amoswap.h.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.H.AQRL
+FORMAT: amoswap.h.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.H.RL
+FORMAT: amoswap.h.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.W
+FORMAT: amoswap.w rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.W.AQ
+FORMAT: amoswap.w.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.W.AQRL
+FORMAT: amoswap.w.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOSWAP.W.RL
+FORMAT: amoswap.w.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.B
+FORMAT: amoxor.b rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.B.AQ
+FORMAT: amoxor.b.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.B.AQRL
+FORMAT: amoxor.b.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.B.RL
+FORMAT: amoxor.b.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.D
+FORMAT: amoxor.d rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.D.AQ
+FORMAT: amoxor.d.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.D.AQRL
+FORMAT: amoxor.d.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.D.RL
+FORMAT: amoxor.d.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.H
+FORMAT: amoxor.h rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.H.AQ
+FORMAT: amoxor.h.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.H.AQRL
+FORMAT: amoxor.h.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.H.RL
+FORMAT: amoxor.h.rl rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.W
+FORMAT: amoxor.w rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.W.AQ
+FORMAT: amoxor.w.aq rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.W.AQRL
+FORMAT: amoxor.w.aqrl rd, rs2, (rs1)
+
+INSTRUCTION: AMOXOR.W.RL
+FORMAT: amoxor.w.rl rd, rs2, (rs1)
+
+INSTRUCTION: AND
+FORMAT: and rd, rs1, rs2
+
+INSTRUCTION: ANDI
+FORMAT: andi rd, rs1, imm12
+
+INSTRUCTION: ANDN
+FORMAT: andn rd, rs1, rs2
+
+INSTRUCTION: AUIPC
+FORMAT: auipc rd, uimm20
+
+INSTRUCTION: BCLR
+FORMAT: bclr rd, rs1, rs2
+
+INSTRUCTION: BCLRI
+FORMAT: bclri rd, rs1, shamt
+
+INSTRUCTION: BEQ
+FORMAT: beq rs1, rs2, label
+
+INSTRUCTION: BEXT
+FORMAT: bext rd, rs1, rs2
+
+INSTRUCTION: BEXTI
+FORMAT: bexti rd, rs1, shamt
+
+INSTRUCTION: BGE
+FORMAT: bge rs1, rs2, label
+
+INSTRUCTION: BGEU
+FORMAT: bgeu rs1, rs2, label
+
+INSTRUCTION: BINV
+FORMAT: binv rd, rs1, rs2
+
+INSTRUCTION: BINVI
+FORMAT: binvi rd, rs1, shamt
+
+INSTRUCTION: BLT
+FORMAT: blt rs1, rs2, label
+
+INSTRUCTION: BLTU
+FORMAT: bltu rs1, rs2, label
+
+INSTRUCTION: BNE
+FORMAT: bne rs1, rs2, label
+
+INSTRUCTION: BREV8
+FORMAT: brev8 rd, rs1
+
+INSTRUCTION: BSET
+FORMAT: bset rd, rs1, rs2
+
+INSTRUCTION: BSETI
+FORMAT: bseti rd, rs1, shamt
+
+INSTRUCTION: CBO.CLEAN
+FORMAT: cbo.clean (rs1)
+
+INSTRUCTION: CBO.FLUSH
+FORMAT: cbo.flush (rs1)
+
+INSTRUCTION: CBO.INVAL
+FORMAT: cbo.inval (rs1)
+
+INSTRUCTION: CBO.ZERO
+FORMAT: cbo.zero (rs1)
+
+INSTRUCTION: CLMUL
+FORMAT: clmul rd, rs1, rs2
+
+INSTRUCTION: CLMULH
+FORMAT: clmulh rd, rs1, rs2
+
+INSTRUCTION: CLMULR
+FORMAT: clmulr rd, rs1, rs2
+
+INSTRUCTION: CLZ
+FORMAT: clz rd, rs1
+
+INSTRUCTION: CLZW
+FORMAT: clzw rd, rs1
+
+INSTRUCTION: CM.JALT
+FORMAT: cm.jalt index
+
+INSTRUCTION: CM.JT
+FORMAT: cm.jt index
+
+INSTRUCTION: CM.MVA01S
+FORMAT: cm.mva01s r1s, r2s
+
+INSTRUCTION: CM.MVSA01
+FORMAT: cm.mvsa01 r1s, r2s
+
+INSTRUCTION: CM.POP
+FORMAT: cm.pop reg_list, stack_adj
+
+INSTRUCTION: CM.POPRET
+FORMAT: cm.popret reg_list, stack_adj
+
+INSTRUCTION: CM.POPRETZ
+FORMAT: cm.popretz reg_list, stack_adj
+
+INSTRUCTION: CM.PUSH
+FORMAT: cm.push reg_list, -stack_adj
+
+INSTRUCTION: CPOP
+FORMAT: cpop rd, rs1
+
+INSTRUCTION: CPOPW
+FORMAT: cpopw rd, rs1
+
+INSTRUCTION: CSRRC
+FORMAT: csrrc rd, csr, rs1
+
+INSTRUCTION: CSRRCI
+FORMAT: csrrci rd, csr, zimm5
+
+INSTRUCTION: CSRRS
+FORMAT: csrrs rd, csr, rs1
+
+INSTRUCTION: CSRRSI
+FORMAT: csrrsi rd, csr, zimm5
+
+INSTRUCTION: CSRRW
+FORMAT: csrrw rd, csr, rs1
+
+INSTRUCTION: CSRRWI
+FORMAT: csrrwi rd, csr, zimm5
+
+INSTRUCTION: CTZ
+FORMAT: ctz rd, rs1
+
+INSTRUCTION: CTZW
+FORMAT: ctzw rd, rs1
+
+INSTRUCTION: CZERO.EQZ
+FORMAT: czero.eqz rd, rs1, rs2
+
+INSTRUCTION: CZERO.NEZ
+FORMAT: czero.nez rd, rs1, rs2
+
+INSTRUCTION: DIV
+FORMAT: div rd, rs1, rs2
+
+INSTRUCTION: DIVU
+FORMAT: divu rd, rs1, rs2
+
+INSTRUCTION: DIVUW
+FORMAT: divuw rd, rs1, rs2
+
+INSTRUCTION: DIVW
+FORMAT: divw rd, rs1, rs2
+
+INSTRUCTION: DRET
+FORMAT: dret
+
+INSTRUCTION: EBREAK
+FORMAT: ebreak
+
+INSTRUCTION: ECALL
+FORMAT: ecall
+
+INSTRUCTION: FADD.D
+FORMAT: fadd.d fd, fs1, fs2, rm
+
+INSTRUCTION: FADD.H
+FORMAT: fadd.h fd, fs1, fs2, rm
+
+INSTRUCTION: FADD.Q
+FORMAT: fadd.q fd, fs1, fs2, rm
+
+INSTRUCTION: FADD.S
+FORMAT: fadd.s fd, fs1, fs2, rm
+
+INSTRUCTION: FCLASS.D
+FORMAT: fclass.d rd, fs1
+
+INSTRUCTION: FCLASS.H
+FORMAT: fclass.h rd, fs1
+
+INSTRUCTION: FCLASS.Q
+FORMAT: fclass.q rd, fs1
+
+INSTRUCTION: FCLASS.S
+FORMAT: fclass.s rd, fs1
+
+INSTRUCTION: FCVT.BF16.S
+FORMAT: fcvt.bf16.s fd, fs1, rm
+
+INSTRUCTION: FCVT.D.H
+FORMAT: fcvt.d.h fd, fs1, rm
+
+INSTRUCTION: FCVT.D.L
+FORMAT: fcvt.d.l fd, rs1, rm
+
+INSTRUCTION: FCVT.D.LU
+FORMAT: fcvt.d.lu fd, rs1, rm
+
+INSTRUCTION: FCVT.D.Q
+FORMAT: fcvt.d.q fd, fs1, rm
+
+INSTRUCTION: FCVT.D.S
+FORMAT: fcvt.d.s fd, fs1, rm
+
+INSTRUCTION: FCVT.D.W
+FORMAT: fcvt.d.w fd, rs1, rm
+
+INSTRUCTION: FCVT.D.WU
+FORMAT: fcvt.d.wu fd, rs1, rm
+
+INSTRUCTION: FCVT.H.D
+FORMAT: fcvt.h.d fd, fs1, rm
+
+INSTRUCTION: FCVT.H.L
+FORMAT: fcvt.h.l fd, rs1, rm
+
+INSTRUCTION: FCVT.H.LU
+FORMAT: fcvt.h.lu fd, rs1, rm
+
+INSTRUCTION: FCVT.H.Q
+FORMAT: fcvt.h.q fd, fs1, rm
+
+INSTRUCTION: FCVT.H.S
+FORMAT: fcvt.h.s fd, fs1, rm
+
+INSTRUCTION: FCVT.H.W
+FORMAT: fcvt.h.w fd, rs1, rm
+
+INSTRUCTION: FCVT.H.WU
+FORMAT: fcvt.h.wu fd, rs1, rm
+
+INSTRUCTION: FCVT.L.D
+FORMAT: fcvt.l.d rd, fs1, rm
+
+INSTRUCTION: FCVT.L.H
+FORMAT: fcvt.l.h rd, fs1, rm
+
+INSTRUCTION: FCVT.L.Q
+FORMAT: fcvt.l.q rd, fs1, rm
+
+INSTRUCTION: FCVT.L.S
+FORMAT: fcvt.l.s rd, fs1, rm
+
+INSTRUCTION: FCVT.LU.D
+FORMAT: fcvt.lu.d rd, fs1, rm
+
+INSTRUCTION: FCVT.LU.H
+FORMAT: fcvt.lu.h rd, fs1, rm
+
+INSTRUCTION: FCVT.LU.Q
+FORMAT: fcvt.lu.q rd, fs1, rm
+
+INSTRUCTION: FCVT.LU.S
+FORMAT: fcvt.lu.s rd, fs1, rm
+
+INSTRUCTION: FCVT.Q.D
+FORMAT: fcvt.q.d fd, fs1, rm
+
+INSTRUCTION: FCVT.Q.H
+FORMAT: fcvt.q.h fd, fs1, rm
+
+INSTRUCTION: FCVT.Q.L
+FORMAT: fcvt.q.l fd, rs1, rm
+
+INSTRUCTION: FCVT.Q.LU
+FORMAT: fcvt.q.lu fd, rs1, rm
+
+INSTRUCTION: FCVT.Q.S
+FORMAT: fcvt.q.s fd, fs1, rm
+
+INSTRUCTION: FCVT.Q.W
+FORMAT: fcvt.q.w fd, rs1, rm
+
+INSTRUCTION: FCVT.Q.WU
+FORMAT: fcvt.q.wu fd, rs1, rm
+
+INSTRUCTION: FCVT.S.BF16
+FORMAT: fcvt.s.bf16 fd, fs1, rm
+
+INSTRUCTION: FCVT.S.D
+FORMAT: fcvt.s.d fd, fs1, rm
+
+INSTRUCTION: FCVT.S.H
+FORMAT: fcvt.s.h fd, fs1, rm
+
+INSTRUCTION: FCVT.S.L
+FORMAT: fcvt.s.l fd, rs1, rm
+
+INSTRUCTION: FCVT.S.LU
+FORMAT: fcvt.s.lu fd, rs1, rm
+
+INSTRUCTION: FCVT.S.Q
+FORMAT: fcvt.s.q fd, fs1, rm
+
+INSTRUCTION: FCVT.S.W
+FORMAT: fcvt.s.w fd, rs1, rm
+
+INSTRUCTION: FCVT.S.WU
+FORMAT: fcvt.s.wu fd, rs1, rm
+
+INSTRUCTION: FCVT.W.D
+FORMAT: fcvt.w.d rd, fs1, rm
+
+INSTRUCTION: FCVT.W.H
+FORMAT: fcvt.w.h rd, fs1, rm
+
+INSTRUCTION: FCVT.W.Q
+FORMAT: fcvt.w.q rd, fs1, rm
+
+INSTRUCTION: FCVT.W.S
+FORMAT: fcvt.w.s rd, fs1, rm
+
+INSTRUCTION: FCVT.WU.D
+FORMAT: fcvt.wu.d rd, fs1, rm
+
+INSTRUCTION: FCVT.WU.H
+FORMAT: fcvt.wu.h rd, fs1, rm
+
+INSTRUCTION: FCVT.WU.Q
+FORMAT: fcvt.wu.q rd, fs1, rm
+
+INSTRUCTION: FCVT.WU.S
+FORMAT: fcvt.wu.s rd, fs1, rm
+
+INSTRUCTION: FCVTMOD.W.D
+FORMAT: fcvtmod.w.d rd, fs1, rm
+
+INSTRUCTION: FDIV.D
+FORMAT: fdiv.d fd, fs1, fs2, rm
+
+INSTRUCTION: FDIV.H
+FORMAT: fdiv.h fd, fs1, fs2, rm
+
+INSTRUCTION: FDIV.Q
+FORMAT: fdiv.q fd, fs1, fs2, rm
+
+INSTRUCTION: FDIV.S
+FORMAT: fdiv.s fd, fs1, fs2, rm
+
+INSTRUCTION: FENCE
+FORMAT: fence pred, succ
+
+INSTRUCTION: FENCE.I
+FORMAT: fence.i
+
+INSTRUCTION: FENCE.TSO
+FORMAT: fence.tso
+
+INSTRUCTION: FEQ.D
+FORMAT: feq.d rd, fs1, fs2
+
+INSTRUCTION: FEQ.H
+FORMAT: feq.h rd, fs1, fs2
+
+INSTRUCTION: FEQ.Q
+FORMAT: feq.q rd, fs1, fs2
+
+INSTRUCTION: FEQ.S
+FORMAT: feq.s rd, fs1, fs2
+
+INSTRUCTION: FLD
+FORMAT: fld fd, imm12(rs1)
+
+INSTRUCTION: FLE.D
+FORMAT: fle.d rd, fs1, fs2
+
+INSTRUCTION: FLE.H
+FORMAT: fle.h rd, fs1, fs2
+
+INSTRUCTION: FLE.Q
+FORMAT: fle.q rd, fs1, fs2
+
+INSTRUCTION: FLE.S
+FORMAT: fle.s rd, fs1, fs2
+
+INSTRUCTION: FLEQ.D
+FORMAT: fleq.d rd, fs1, fs2
+
+INSTRUCTION: FLEQ.H
+FORMAT: fleq.h rd, fs1, fs2
+
+INSTRUCTION: FLEQ.Q
+FORMAT: fleq.q rd, fs1, fs2
+
+INSTRUCTION: FLEQ.S
+FORMAT: fleq.s rd, fs1, fs2
+
+INSTRUCTION: FLH
+FORMAT: flh fd, imm12(rs1)
+
+INSTRUCTION: FLI.D
+FORMAT: fli.d fd, rs1
+
+INSTRUCTION: FLI.H
+FORMAT: fli.h fd, rs1
+
+INSTRUCTION: FLI.Q
+FORMAT: fli.q fd, rs1
+
+INSTRUCTION: FLI.S
+FORMAT: fli.s fd, rs1
+
+INSTRUCTION: FLQ
+FORMAT: flq fd, rs1, imm12
+
+INSTRUCTION: FLT.D
+FORMAT: flt.d rd, fs1, fs2
+
+INSTRUCTION: FLT.H
+FORMAT: flt.h rd, fs1, fs2
+
+INSTRUCTION: FLT.Q
+FORMAT: flt.q rd, fs1, fs2
+
+INSTRUCTION: FLT.S
+FORMAT: flt.s rd, fs1, fs2
+
+INSTRUCTION: FLTQ.D
+FORMAT: fltq.d rd, fs1, fs2
+
+INSTRUCTION: FLTQ.H
+FORMAT: fltq.h rd, fs1, fs2
+
+INSTRUCTION: FLTQ.Q
+FORMAT: fltq.q fd, fs1, fs2
+
+INSTRUCTION: FLTQ.S
+FORMAT: fltq.s rd, fs1, fs2
+
+INSTRUCTION: FLW
+FORMAT: flw fd, imm12(rs1)
+
+INSTRUCTION: FMADD.D
+FORMAT: fmadd.d fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FMADD.H
+FORMAT: fmadd.h fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FMADD.Q
+FORMAT: fmadd.q fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FMADD.S
+FORMAT: fmadd.s fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FMAX.D
+FORMAT: fmax.d fd, fs1, fs2
+
+INSTRUCTION: FMAX.H
+FORMAT: fmax.h fd, fs1, fs2
+
+INSTRUCTION: FMAX.Q
+FORMAT: fmax.q fd, fs1, fs2
+
+INSTRUCTION: FMAX.S
+FORMAT: fmax.s fd, fs1, fs2
+
+INSTRUCTION: FMAXM.D
+FORMAT: fmaxm.d fd, fs1, fs2
+
+INSTRUCTION: FMAXM.H
+FORMAT: fmaxm.h fd, fs1, fs2
+
+INSTRUCTION: FMAXM.Q
+FORMAT: fmaxm.q fd, fs1, fs2
+
+INSTRUCTION: FMAXM.S
+FORMAT: fmaxm.s fd, fs1, fs2
+
+INSTRUCTION: FMIN.D
+FORMAT: fmin.d fd, fs1, fs2
+
+INSTRUCTION: FMIN.H
+FORMAT: fmin.h fd, fs1, fs2
+
+INSTRUCTION: FMIN.Q
+FORMAT: fmin.q fd, fs1, fs2
+
+INSTRUCTION: FMIN.S
+FORMAT: fmin.s fd, fs1, fs2
+
+INSTRUCTION: FMINM.D
+FORMAT: fminm.d fd, fs1, fs2
+
+INSTRUCTION: FMINM.H
+FORMAT: fminm.h fd, fs1, fs2
+
+INSTRUCTION: FMINM.Q
+FORMAT: fminm.q fd, fs1, fs2
+
+INSTRUCTION: FMINM.S
+FORMAT: fminm.s fd, fs1, fs2
+
+INSTRUCTION: FMSUB.D
+FORMAT: fmsub.d fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FMSUB.H
+FORMAT: fmsub.h fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FMSUB.Q
+FORMAT: fmsub.q fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FMSUB.S
+FORMAT: fmsub.s fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FMUL.D
+FORMAT: fmul.d fd, fs1, fs2, rm
+
+INSTRUCTION: FMUL.H
+FORMAT: fmul.h fd, fs1, fs2, rm
+
+INSTRUCTION: FMUL.Q
+FORMAT: fmul.q fd, fs1, fs2, rm
+
+INSTRUCTION: FMUL.S
+FORMAT: fmul.s fd, fs1, fs2, rm
+
+INSTRUCTION: FMV.D.X
+FORMAT: fmv.d.x fd, rs1
+
+INSTRUCTION: FMV.H.X
+FORMAT: fmv.h.x fd, rs1
+
+INSTRUCTION: FMV.W.X
+FORMAT: fmv.w.x fd, rs1
+
+INSTRUCTION: FMV.X.D
+FORMAT: fmv.x.d rd, fs1
+
+INSTRUCTION: FMV.X.H
+FORMAT: fmv.x.h rd, fs1
+
+INSTRUCTION: FMV.X.W
+FORMAT: fmv.x.w rd, fs1
+
+INSTRUCTION: FMVH.X.D
+FORMAT: fmvh.x.d rd, fs1
+
+INSTRUCTION: FMVH.X.Q
+FORMAT: fmvh.x.q rd, fs1
+
+INSTRUCTION: FMVP.D.X
+FORMAT: fmvp.d.x fd, rs1, rs2
+
+INSTRUCTION: FMVP.Q.X
+FORMAT: fmvp.q.x fd, rs1, rs2
+
+INSTRUCTION: FNMADD.D
+FORMAT: fnmadd.d fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FNMADD.H
+FORMAT: fnmadd.h fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FNMADD.Q
+FORMAT: fnmadd.q fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FNMADD.S
+FORMAT: fnmadd.s fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FNMSUB.D
+FORMAT: fnmsub.d fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FNMSUB.H
+FORMAT: fnmsub.h fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FNMSUB.Q
+FORMAT: fnmsub.q fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FNMSUB.S
+FORMAT: fnmsub.s fd, fs1, fs2, fs3, rm
+
+INSTRUCTION: FROUND.D
+FORMAT: fround.d fd, fs1, rm
+
+INSTRUCTION: FROUND.H
+FORMAT: fround.h fd, fs1, rm
+
+INSTRUCTION: FROUND.Q
+FORMAT: fround.q fd, fs1, rm
+
+INSTRUCTION: FROUND.S
+FORMAT: fround.s fd, fs1, rm
+
+INSTRUCTION: FROUNDNX.D
+FORMAT: froundnx.d fd, fs1, rm
+
+INSTRUCTION: FROUNDNX.H
+FORMAT: froundnx.h fd, fs1, rm
+
+INSTRUCTION: FROUNDNX.Q
+FORMAT: froundnx.q fd, fs1, rm
+
+INSTRUCTION: FROUNDNX.S
+FORMAT: froundnx.s fd, fs1, rm
+
+INSTRUCTION: FSD
+FORMAT: fsd fs2, imm12(rs1)
+
+INSTRUCTION: FSGNJ.D
+FORMAT: fsgnj.d fd, fs1, fs2
+
+INSTRUCTION: FSGNJ.H
+FORMAT: fsgnj.h fd, fs1, fs2
+
+INSTRUCTION: FSGNJ.Q
+FORMAT: fsgnj.q fd, fs1, fs2
+
+INSTRUCTION: FSGNJ.S
+FORMAT: fsgnj.s fd, fs1, fs2
+
+INSTRUCTION: FSGNJN.D
+FORMAT: fsgnjn.d fd, fs1, fs2
+
+INSTRUCTION: FSGNJN.H
+FORMAT: fsgnjn.h fd, fs1, fs2
+
+INSTRUCTION: FSGNJN.Q
+FORMAT: fsgnjn.q fd, fs1, fs2
+
+INSTRUCTION: FSGNJN.S
+FORMAT: fsgnjn.s fd, fs1, fs2
+
+INSTRUCTION: FSGNJX.D
+FORMAT: fsgnjx.d fd, fs1, fs2
+
+INSTRUCTION: FSGNJX.H
+FORMAT: fsgnjx.h fd, fs1, fs2
+
+INSTRUCTION: FSGNJX.Q
+FORMAT: fsgnjx.q fd, fs1, fs2
+
+INSTRUCTION: FSGNJX.S
+FORMAT: fsgnjx.s fd, fs1, fs2
+
+INSTRUCTION: FSH
+FORMAT: fsh fs2, imm12(rs1)
+
+INSTRUCTION: FSQ
+FORMAT: fsq fs2, imm12(rs1)
+
+INSTRUCTION: FSQRT.D
+FORMAT: fsqrt.d fd, fs1, rm
+
+INSTRUCTION: FSQRT.H
+FORMAT: fsqrt.h fd, fs1, rm
+
+INSTRUCTION: FSQRT.Q
+FORMAT: fsqrt.q fd, fs1, rm
+
+INSTRUCTION: FSQRT.S
+FORMAT: fsqrt.s fd, fs1, rm
+
+INSTRUCTION: FSUB.D
+FORMAT: fsub.d fd, fs1, fs2, rm
+
+INSTRUCTION: FSUB.H
+FORMAT: fsub.h fd, fs1, fs2, rm
+
+INSTRUCTION: FSUB.Q
+FORMAT: fsub.q fd, fs1, fs2, rm
+
+INSTRUCTION: FSUB.S
+FORMAT: fsub.s fd, fs1, fs2, rm
+
+INSTRUCTION: FSW
+FORMAT: fsw fs2, imm12(rs1)
+
+INSTRUCTION: HFENCE.GVMA
+FORMAT: hfence.gvma rs1, rs2
+
+INSTRUCTION: HFENCE.VVMA
+FORMAT: hfence.vvma rs1, rs2
+
+INSTRUCTION: HINVAL.GVMA
+FORMAT: hinval.gvma rs1, rs2
+
+INSTRUCTION: HINVAL.VVMA
+FORMAT: hinval.vvma rs1, rs2
+
+INSTRUCTION: HLV.B
+FORMAT: hlv.b rd, rs1
+
+INSTRUCTION: HLV.BU
+FORMAT: hlv.bu rd, rs1
+
+INSTRUCTION: HLV.D
+FORMAT: hlv.d rd, rs1
+
+INSTRUCTION: HLV.H
+FORMAT: hlv.h rd, rs1
+
+INSTRUCTION: HLV.HU
+FORMAT: hlv.hu rd, rs1
+
+INSTRUCTION: HLV.W
+FORMAT: hlv.w rd, rs1
+
+INSTRUCTION: HLV.WU
+FORMAT: hlv.wu rd, rs1
+
+INSTRUCTION: HLVX.HU
+FORMAT: hlvx.hu rd, rs1
+
+INSTRUCTION: HLVX.WU
+FORMAT: hlvx.wu rd, rs1
+
+INSTRUCTION: HSV.B
+FORMAT: hsv.b rs1, rs2
+
+INSTRUCTION: HSV.D
+FORMAT: hsv.d rs1, rs2
+
+INSTRUCTION: HSV.H
+FORMAT: hsv.h rs1, rs2
+
+INSTRUCTION: HSV.W
+FORMAT: hsv.w rs1, rs2
+
+INSTRUCTION: JAL
+FORMAT: jal rd, label
+
+INSTRUCTION: JALR
+FORMAT: jalr rd, imm12(rs1)
+
+INSTRUCTION: LB
+FORMAT: lb rd, imm12(rs1)
+
+INSTRUCTION: LB.AQ
+FORMAT: lb.aq rd, (rs1)
+
+INSTRUCTION: LBU
+FORMAT: lbu rd, imm12(rs1)
+
+INSTRUCTION: LD
+FORMAT: ld rd, imm12(rs1)
+
+INSTRUCTION: LD.AQ
+FORMAT: ld.aq rd, (rs1)
+
+INSTRUCTION: LH
+FORMAT: lh rd, imm12(rs1)
+
+INSTRUCTION: LH.AQ
+FORMAT: lh.aq rd, (rs1)
+
+INSTRUCTION: LHU
+FORMAT: lhu rd, imm12(rs1)
+
+INSTRUCTION: LPAD
+FORMAT: lpad imm20
+
+INSTRUCTION: LR.D
+FORMAT: lr.d rd, (rs1)
+
+INSTRUCTION: LR.W
+FORMAT: lr.w rd, (rs1)
+
+INSTRUCTION: LUI
+FORMAT: lui rd, uimm20
+
+INSTRUCTION: LW
+FORMAT: lw rd, imm12(rs1)
+
+INSTRUCTION: LW.AQ
+FORMAT: lw.aq rd, (rs1)
+
+INSTRUCTION: LWU
+FORMAT: lwu rd, imm12(rs1)
+
+INSTRUCTION: MAX
+FORMAT: max rd, rs1, rs2
+
+INSTRUCTION: MAXU
+FORMAT: maxu rd, rs1, rs2
+
+INSTRUCTION: MIN
+FORMAT: min rd, rs1, rs2
+
+INSTRUCTION: MINU
+FORMAT: minu rd, rs1, rs2
+
+INSTRUCTION: MNRET
+FORMAT: mnret
+
+INSTRUCTION: MOP.R.N
+FORMAT: mop.r.n rd, rs1
+
+INSTRUCTION: MOP.RR.N
+FORMAT: mop.rr.n rd, rs1, rs2
+
+INSTRUCTION: MRET
+FORMAT: mret
+
+INSTRUCTION: MUL
+FORMAT: mul rd, rs1, rs2
+
+INSTRUCTION: MULH
+FORMAT: mulh rd, rs1, rs2
+
+INSTRUCTION: MULHSU
+FORMAT: mulhsu rd, rs1, rs2
+
+INSTRUCTION: MULHU
+FORMAT: mulhu rd, rs1, rs2
+
+INSTRUCTION: MULW
+FORMAT: mulw rd, rs1, rs2
+
+INSTRUCTION: NTL.ALL
+FORMAT: ntl.all
+
+INSTRUCTION: NTL.P1
+FORMAT: ntl.p1
+
+INSTRUCTION: NTL.PALL
+FORMAT: ntl.pall
+
+INSTRUCTION: NTL.S1
+FORMAT: ntl.s1
+
+INSTRUCTION: OR
+FORMAT: or rd, rs1, rs2
+
+INSTRUCTION: ORC.B
+FORMAT: orc.b rd, rs1
+
+INSTRUCTION: ORI
+FORMAT: ori rd, rs1, imm12
+
+INSTRUCTION: ORN
+FORMAT: orn rd, rs1, rs2
+
+INSTRUCTION: PACK
+FORMAT: pack rd, rs1, rs2
+
+INSTRUCTION: PACKH
+FORMAT: packh rd, rs1, rs2
+
+INSTRUCTION: PACKW
+FORMAT: packw rd, rs1, rs2
+
+INSTRUCTION: PAUSE
+FORMAT: pause
+
+INSTRUCTION: PREFETCH.I
+FORMAT: prefetch.i imm12(rs1)
+
+INSTRUCTION: PREFETCH.R
+FORMAT: prefetch.r imm12(rs1)
+
+INSTRUCTION: PREFETCH.W
+FORMAT: prefetch.w imm12(rs1)
+
+INSTRUCTION: REM
+FORMAT: rem rd, rs1, rs2
+
+INSTRUCTION: REMU
+FORMAT: remu rd, rs1, rs2
+
+INSTRUCTION: REMUW
+FORMAT: remuw rd, rs1, rs2
+
+INSTRUCTION: REMW
+FORMAT: remw rd, rs1, rs2
+
+INSTRUCTION: REV8
+FORMAT: rev8 rd, rs1
+
+INSTRUCTION: ROL
+FORMAT: rol rd, rs1, rs2
+
+INSTRUCTION: ROLW
+FORMAT: rolw rd, rs1, rs2
+
+INSTRUCTION: ROR
+FORMAT: ror rd, rs1, rs2
+
+INSTRUCTION: RORI
+FORMAT: rori rd, rs1, shamt
+
+INSTRUCTION: RORIW
+FORMAT: roriw rd, rs1, shamt
+
+INSTRUCTION: RORW
+FORMAT: rorw rd, rs1, rs2
+
+INSTRUCTION: SB
+FORMAT: sb rs2, imm12(rs1)
+
+INSTRUCTION: SB.RL
+FORMAT: sb.rl rs2, (rs1)
+
+INSTRUCTION: SC.D
+FORMAT: sc.d rd, rs2, (rs1)
+
+INSTRUCTION: SC.W
+FORMAT: sc.w rd, rs2, (rs1)
+
+INSTRUCTION: SCTRCLR
+FORMAT: sctrclr
+
+INSTRUCTION: SD
+FORMAT: sd rs2, imm12(rs1)
+
+INSTRUCTION: SD.RL
+FORMAT: sd.rl rs2, (rs1)
+
+INSTRUCTION: SEXT.B
+FORMAT: sext.b rd, rs1
+
+INSTRUCTION: SEXT.H
+FORMAT: sext.h rd, rs1
+
+INSTRUCTION: SFENCE.INVAL.IR
+FORMAT: sfence.inval.ir
+
+INSTRUCTION: SFENCE.VMA
+FORMAT: sfence.vma rs1, rs2
+
+INSTRUCTION: SFENCE.W.INVAL
+FORMAT: sfence.w.inval
+
+INSTRUCTION: SH
+FORMAT: sh rs2, imm12(rs1)
+
+INSTRUCTION: SH.RL
+FORMAT: sh.rl rs2, (rs1)
+
+INSTRUCTION: SH1ADD
+FORMAT: sh1add rd, rs1, rs2
+
+INSTRUCTION: SH1ADD.UW
+FORMAT: sh1add.uw rd, rs1, rs2
+
+INSTRUCTION: SH2ADD
+FORMAT: sh2add rd, rs1, rs2
+
+INSTRUCTION: SH2ADD.UW
+FORMAT: sh2add.uw rd, rs1, rs2
+
+INSTRUCTION: SH3ADD
+FORMAT: sh3add rd, rs1, rs2
+
+INSTRUCTION: SH3ADD.UW
+FORMAT: sh3add.uw rd, rs1, rs2
+
+INSTRUCTION: SHA256SIG0
+FORMAT: sha256sig0 rd, rs1
+
+INSTRUCTION: SHA256SIG1
+FORMAT: sha256sig1 rd, rs1
+
+INSTRUCTION: SHA256SUM0
+FORMAT: sha256sum0 rd, rs1
+
+INSTRUCTION: SHA256SUM1
+FORMAT: sha256sum1 rd, rs1
+
+INSTRUCTION: SHA512SIG0
+FORMAT: sha512sig0 rd, rs1
+
+INSTRUCTION: SHA512SIG0H
+FORMAT: sha512sig0h rd, rs1, rs2
+
+INSTRUCTION: SHA512SIG0L
+FORMAT: sha512sig0l rd, rs1, rs2
+
+INSTRUCTION: SHA512SIG1
+FORMAT: sha512sig1 rd, rs1
+
+INSTRUCTION: SHA512SIG1H
+FORMAT: sha512sig1h rd, rs1, rs2
+
+INSTRUCTION: SHA512SIG1L
+FORMAT: sha512sig1l rd, rs1, rs2
+
+INSTRUCTION: SHA512SUM0
+FORMAT: sha512sum0 rd, rs1
+
+INSTRUCTION: SHA512SUM0R
+FORMAT: sha512sum0r rd, rs1, rs2
+
+INSTRUCTION: SHA512SUM1
+FORMAT: sha512sum1 rd, rs1
+
+INSTRUCTION: SHA512SUM1R
+FORMAT: sha512sum1r rd, rs1, rs2
+
+INSTRUCTION: SINVAL.VMA
+FORMAT: sinval.vma rs1, rs2
+
+INSTRUCTION: SLL
+FORMAT: sll rd, rs1, rs2
+
+INSTRUCTION: SLLI
+FORMAT: slli rd, rs1, shamt
+
+INSTRUCTION: SLLI.UW
+FORMAT: slli.uw rd, rs1, shamt
+
+INSTRUCTION: SLLIW
+FORMAT: slliw rd, rs1, shamt
+
+INSTRUCTION: SLLW
+FORMAT: sllw rd, rs1, rs2
+
+INSTRUCTION: SLT
+FORMAT: slt rd, rs1, rs2
+
+INSTRUCTION: SLTI
+FORMAT: slti rd, rs1, imm12
+
+INSTRUCTION: SLTIU
+FORMAT: sltiu rd, rs1, imm12
+
+INSTRUCTION: SLTU
+FORMAT: sltu rd, rs1, rs2
+
+INSTRUCTION: SM3P0
+FORMAT: sm3p0 rd, rs1
+
+INSTRUCTION: SM3P1
+FORMAT: sm3p1 rd, rs1
+
+INSTRUCTION: SM4ED
+FORMAT: sm4ed rd, rs1, rs2, bs
+
+INSTRUCTION: SM4KS
+FORMAT: sm4ks rd, rs1, rs2, bs
+
+INSTRUCTION: SRA
+FORMAT: sra rd, rs1, rs2
+
+INSTRUCTION: SRAI
+FORMAT: srai rd, rs1, shamt
+
+INSTRUCTION: SRAIW
+FORMAT: sraiw rd, rs1, shamt
+
+INSTRUCTION: SRAW
+FORMAT: sraw rd, rs1, rs2
+
+INSTRUCTION: SRET
+FORMAT: sret
+
+INSTRUCTION: SRL
+FORMAT: srl rd, rs1, rs2
+
+INSTRUCTION: SRLI
+FORMAT: srli rd, rs1, shamt
+
+INSTRUCTION: SRLIW
+FORMAT: srliw rd, rs1, shamt
+
+INSTRUCTION: SRLW
+FORMAT: srlw rd, rs1, rs2
+
+INSTRUCTION: SSAMOSWAP.D
+FORMAT: ssamoswap.d rd, rs2, rs1
+
+INSTRUCTION: SSAMOSWAP.W
+FORMAT: ssamoswap.w rd, rs2, rs1
+
+INSTRUCTION: SSPOPCHK.X1
+FORMAT: sspopchk.x1 sspopchk_x1
+
+INSTRUCTION: SSPOPCHK.X5
+FORMAT: sspopchk.x5 sspopchk_x5
+
+INSTRUCTION: SSPUSH.X1
+FORMAT: sspush.x1 sspush_x1
+
+INSTRUCTION: SSPUSH.X5
+FORMAT: sspush.x5 sspush_x5
+
+INSTRUCTION: SSRDP
+FORMAT: ssrdp rd
+
+INSTRUCTION: SUB
+FORMAT: sub rd, rs1, rs2
+
+INSTRUCTION: SUBW
+FORMAT: subw rd, rs1, rs2
+
+INSTRUCTION: SW
+FORMAT: sw rs2, imm12(rs1)
+
+INSTRUCTION: SW.RL
+FORMAT: sw.rl rs2, (rs1)
+
+INSTRUCTION: UNZIP
+FORMAT: unzip rd, rs1
+
+INSTRUCTION: VAADD.VV
+FORMAT: vaadd.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VAADD.VX
+FORMAT: vaadd.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VAADDU.VV
+FORMAT: vaaddu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VAADDU.VX
+FORMAT: vaaddu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VADC.VIM
+FORMAT: vadc.vim vd, vs2, simm5, v0
+
+INSTRUCTION: VADC.VVM
+FORMAT: vadc.vvm vd, vs2, vs1, v0
+
+INSTRUCTION: VADC.VXM
+FORMAT: vadc.vxm vd, vs2, rs1, v0
+
+INSTRUCTION: VADD.VI
+FORMAT: vadd.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VADD.VV
+FORMAT: vadd.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VADD.VX
+FORMAT: vadd.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VAESDF.VS
+FORMAT: vaesdf.vs vd, vs2
+
+INSTRUCTION: VAESDF.VV
+FORMAT: vaesdf.vv vd, vs2
+
+INSTRUCTION: VAESDM.VS
+FORMAT: vaesdm.vs vd, vs2
+
+INSTRUCTION: VAESDM.VV
+FORMAT: vaesdm.vv vd, vs2
+
+INSTRUCTION: VAESEF.VS
+FORMAT: vaesef.vs vd, vs2
+
+INSTRUCTION: VAESEF.VV
+FORMAT: vaesef.vv vd, vs2
+
+INSTRUCTION: VAESEM.VS
+FORMAT: vaesem.vs vd, vs2
+
+INSTRUCTION: VAESEM.VV
+FORMAT: vaesem.vv vd, vs2
+
+INSTRUCTION: VAESKF1.VI
+FORMAT: vaeskf1.vi vd, vs2, zimm5
+
+INSTRUCTION: VAESKF2.VI
+FORMAT: vaeskf2.vi vd, vs2, zimm5
+
+INSTRUCTION: VAESZ.VS
+FORMAT: vaesz.vs vd, vs2
+
+INSTRUCTION: VAND.VI
+FORMAT: vand.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VAND.VV
+FORMAT: vand.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VAND.VX
+FORMAT: vand.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VANDN.VV
+FORMAT: vandn.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VANDN.VX
+FORMAT: vandn.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VASUB.VV
+FORMAT: vasub.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VASUB.VX
+FORMAT: vasub.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VASUBU.VV
+FORMAT: vasubu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VASUBU.VX
+FORMAT: vasubu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VBREV.V
+FORMAT: vbrev.v vd, vs2, vm
+
+INSTRUCTION: VBREV8.V
+FORMAT: vbrev8.v vd, vs2, vm
+
+INSTRUCTION: VCLMUL.VV
+FORMAT: vclmul.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VCLMUL.VX
+FORMAT: vclmul.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VCLMULH.VV
+FORMAT: vclmulh.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VCLMULH.VX
+FORMAT: vclmulh.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VCLZ.V
+FORMAT: vclz.v vd, vs2, vm
+
+INSTRUCTION: VCOMPRESS.VM
+FORMAT: vcompress.vm vd, vs2, vs1
+
+INSTRUCTION: VCPOP.M
+FORMAT: vcpop.m rd, vs2, vm
+
+INSTRUCTION: VCPOP.V
+FORMAT: vcpop.v vd, vs2, vm
+
+INSTRUCTION: VCTZ.V
+FORMAT: vctz.v vd, vs2, vm
+
+INSTRUCTION: VDIV.VV
+FORMAT: vdiv.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VDIV.VX
+FORMAT: vdiv.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VDIVU.VV
+FORMAT: vdivu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VDIVU.VX
+FORMAT: vdivu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VFADD.VF
+FORMAT: vfadd.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFADD.VV
+FORMAT: vfadd.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFCLASS.V
+FORMAT: vfclass.v vd, vs2, vm
+
+INSTRUCTION: VFCVT.F.X.V
+FORMAT: vfcvt.f.x.v vd, vs2, vm
+
+INSTRUCTION: VFCVT.F.XU.V
+FORMAT: vfcvt.f.xu.v vd, vs2, vm
+
+INSTRUCTION: VFCVT.RTZ.X.F.V
+FORMAT: vfcvt.rtz.x.f.v vd, vs2, vm
+
+INSTRUCTION: VFCVT.RTZ.XU.F.V
+FORMAT: vfcvt.rtz.xu.f.v vd, vs2, vm
+
+INSTRUCTION: VFCVT.X.F.V
+FORMAT: vfcvt.x.f.v vd, vs2, vm
+
+INSTRUCTION: VFCVT.XU.F.V
+FORMAT: vfcvt.xu.f.v vd, vs2, vm
+
+INSTRUCTION: VFDIV.VF
+FORMAT: vfdiv.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFDIV.VV
+FORMAT: vfdiv.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFIRST.M
+FORMAT: vfirst.m rd, vs2, vm
+
+INSTRUCTION: VFMACC.VF
+FORMAT: vfmacc.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFMACC.VV
+FORMAT: vfmacc.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFMADD.VF
+FORMAT: vfmadd.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFMADD.VV
+FORMAT: vfmadd.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFMAX.VF
+FORMAT: vfmax.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFMAX.VV
+FORMAT: vfmax.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFMERGE.VFM
+FORMAT: vfmerge.vfm vd, vs2, fs1, v0
+
+INSTRUCTION: VFMIN.VF
+FORMAT: vfmin.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFMIN.VV
+FORMAT: vfmin.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFMSAC.VF
+FORMAT: vfmsac.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFMSAC.VV
+FORMAT: vfmsac.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFMSUB.VF
+FORMAT: vfmsub.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFMSUB.VV
+FORMAT: vfmsub.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFMUL.VF
+FORMAT: vfmul.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFMUL.VV
+FORMAT: vfmul.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFMV.F.S
+FORMAT: vfmv.f.s fd, vs2
+
+INSTRUCTION: VFMV.S.F
+FORMAT: vfmv.s.f vd, fs1
+
+INSTRUCTION: VFMV.V.F
+FORMAT: vfmv.v.f vd, fs1
+
+INSTRUCTION: VFNCVT.F.F.W
+FORMAT: vfncvt.f.f.w vd, vs2, vm
+
+INSTRUCTION: VFNCVT.F.X.W
+FORMAT: vfncvt.f.x.w vd, vs2, vm
+
+INSTRUCTION: VFNCVT.F.XU.W
+FORMAT: vfncvt.f.xu.w vd, vs2, vm
+
+INSTRUCTION: VFNCVT.ROD.F.F.W
+FORMAT: vfncvt.rod.f.f.w vd, vs2, vm
+
+INSTRUCTION: VFNCVT.RTZ.X.F.W
+FORMAT: vfncvt.rtz.x.f.w vd, vs2, vm
+
+INSTRUCTION: VFNCVT.RTZ.XU.F.W
+FORMAT: vfncvt.rtz.xu.f.w vd, vs2, vm
+
+INSTRUCTION: VFNCVT.X.F.W
+FORMAT: vfncvt.x.f.w vd, vs2, vm
+
+INSTRUCTION: VFNCVT.XU.F.W
+FORMAT: vfncvt.xu.f.w vd, vs2, vm
+
+INSTRUCTION: VFNCVTBF16.F.F.W
+FORMAT: vfncvtbf16.f.f.w vd, vs2, vm
+
+INSTRUCTION: VFNMACC.VF
+FORMAT: vfnmacc.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFNMACC.VV
+FORMAT: vfnmacc.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFNMADD.VF
+FORMAT: vfnmadd.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFNMADD.VV
+FORMAT: vfnmadd.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFNMSAC.VF
+FORMAT: vfnmsac.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFNMSAC.VV
+FORMAT: vfnmsac.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFNMSUB.VF
+FORMAT: vfnmsub.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFNMSUB.VV
+FORMAT: vfnmsub.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFRDIV.VF
+FORMAT: vfrdiv.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFREC7.V
+FORMAT: vfrec7.v vd, vs2, vm
+
+INSTRUCTION: VFREDMAX.VS
+FORMAT: vfredmax.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VFREDMIN.VS
+FORMAT: vfredmin.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VFREDOSUM.VS
+FORMAT: vfredosum.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VFREDUSUM.VS
+FORMAT: vfredusum.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VFRSQRT7.V
+FORMAT: vfrsqrt7.v vd, vs2, vm
+
+INSTRUCTION: VFRSUB.VF
+FORMAT: vfrsub.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFSGNJ.VF
+FORMAT: vfsgnj.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFSGNJ.VV
+FORMAT: vfsgnj.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFSGNJN.VF
+FORMAT: vfsgnjn.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFSGNJN.VV
+FORMAT: vfsgnjn.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFSGNJX.VF
+FORMAT: vfsgnjx.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFSGNJX.VV
+FORMAT: vfsgnjx.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFSLIDE1DOWN.VF
+FORMAT: vfslide1down.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFSLIDE1UP.VF
+FORMAT: vfslide1up.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFSQRT.V
+FORMAT: vfsqrt.v vd, vs2, vm
+
+INSTRUCTION: VFSUB.VF
+FORMAT: vfsub.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFSUB.VV
+FORMAT: vfsub.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFWADD.VF
+FORMAT: vfwadd.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFWADD.VV
+FORMAT: vfwadd.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFWADD.WF
+FORMAT: vfwadd.wf vd, vs2, fs1, vm
+
+INSTRUCTION: VFWADD.WV
+FORMAT: vfwadd.wv vd, vs2, vs1, vm
+
+INSTRUCTION: VFWCVT.F.F.V
+FORMAT: vfwcvt.f.f.v vd, vs2, vm
+
+INSTRUCTION: VFWCVT.F.X.V
+FORMAT: vfwcvt.f.x.v vd, vs2, vm
+
+INSTRUCTION: VFWCVT.F.XU.V
+FORMAT: vfwcvt.f.xu.v vd, vs2, vm
+
+INSTRUCTION: VFWCVT.RTZ.X.F.V
+FORMAT: vfwcvt.rtz.x.f.v vd, vs2, vm
+
+INSTRUCTION: VFWCVT.RTZ.XU.F.V
+FORMAT: vfwcvt.rtz.xu.f.v vd, vs2, vm
+
+INSTRUCTION: VFWCVT.X.F.V
+FORMAT: vfwcvt.x.f.v vd, vs2, vm
+
+INSTRUCTION: VFWCVT.XU.F.V
+FORMAT: vfwcvt.xu.f.v vd, vs2, vm
+
+INSTRUCTION: VFWCVTBF16.F.F.V
+FORMAT: vfwcvtbf16.f.f.v vd, vs2, vm
+
+INSTRUCTION: VFWMACC.VF
+FORMAT: vfwmacc.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFWMACC.VV
+FORMAT: vfwmacc.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFWMACCBF16.VF
+FORMAT: vfwmaccbf16.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFWMACCBF16.VV
+FORMAT: vfwmaccbf16.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFWMSAC.VF
+FORMAT: vfwmsac.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFWMSAC.VV
+FORMAT: vfwmsac.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFWMUL.VF
+FORMAT: vfwmul.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFWMUL.VV
+FORMAT: vfwmul.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFWNMACC.VF
+FORMAT: vfwnmacc.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFWNMACC.VV
+FORMAT: vfwnmacc.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFWNMSAC.VF
+FORMAT: vfwnmsac.vf vd, fs1, vs2, vm
+
+INSTRUCTION: VFWNMSAC.VV
+FORMAT: vfwnmsac.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VFWREDOSUM.VS
+FORMAT: vfwredosum.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VFWREDUSUM.VS
+FORMAT: vfwredusum.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VFWSUB.VF
+FORMAT: vfwsub.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VFWSUB.VV
+FORMAT: vfwsub.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VFWSUB.WF
+FORMAT: vfwsub.wf vd, vs2, fs1, vm
+
+INSTRUCTION: VFWSUB.WV
+FORMAT: vfwsub.wv vd, vs2, vs1, vm
+
+INSTRUCTION: VGHSH.VV
+FORMAT: vghsh.vv vd, vs2, vs1
+
+INSTRUCTION: VGMUL.VV
+FORMAT: vgmul.vv vd, vs2
+
+INSTRUCTION: VID.V
+FORMAT: vid.v vd, vm
+
+INSTRUCTION: VIOTA.M
+FORMAT: viota.m vd, vs2, vm
+
+INSTRUCTION: VL1RE16.V
+FORMAT: vl1re16.v vd, (rs1)
+
+INSTRUCTION: VL1RE32.V
+FORMAT: vl1re32.v vd, (rs1)
+
+INSTRUCTION: VL1RE64.V
+FORMAT: vl1re64.v vd, (rs1)
+
+INSTRUCTION: VL1RE8.V
+FORMAT: vl1re8.v vd, (rs1)
+
+INSTRUCTION: VL2RE16.V
+FORMAT: vl2re16.v vd, (rs1)
+
+INSTRUCTION: VL2RE32.V
+FORMAT: vl2re32.v vd, (rs1)
+
+INSTRUCTION: VL2RE64.V
+FORMAT: vl2re64.v vd, (rs1)
+
+INSTRUCTION: VL2RE8.V
+FORMAT: vl2re8.v vd, (rs1)
+
+INSTRUCTION: VL4RE16.V
+FORMAT: vl4re16.v vd, (rs1)
+
+INSTRUCTION: VL4RE32.V
+FORMAT: vl4re32.v vd, (rs1)
+
+INSTRUCTION: VL4RE64.V
+FORMAT: vl4re64.v vd, (rs1)
+
+INSTRUCTION: VL4RE8.V
+FORMAT: vl4re8.v vd, (rs1)
+
+INSTRUCTION: VL8RE16.V
+FORMAT: vl8re16.v vd, (rs1)
+
+INSTRUCTION: VL8RE32.V
+FORMAT: vl8re32.v vd, (rs1)
+
+INSTRUCTION: VL8RE64.V
+FORMAT: vl8re64.v vd, (rs1)
+
+INSTRUCTION: VL8RE8.V
+FORMAT: vl8re8.v vd, (rs1)
+
+INSTRUCTION: VLE16.V
+FORMAT: vle16.v vd, (rs1), vm
+
+INSTRUCTION: VLE16FF.V
+FORMAT: vle16ff.v vd, (rs1), vm
+
+INSTRUCTION: VLE32.V
+FORMAT: vle32.v vd, (rs1), vm
+
+INSTRUCTION: VLE32FF.V
+FORMAT: vle32ff.v vd, (rs1), vm
+
+INSTRUCTION: VLE64.V
+FORMAT: vle64.v vd, (rs1), vm
+
+INSTRUCTION: VLE64FF.V
+FORMAT: vle64ff.v vd, (rs1), vm
+
+INSTRUCTION: VLE8.V
+FORMAT: vle8.v vd, (rs1), vm
+
+INSTRUCTION: VLE8FF.V
+FORMAT: vle8ff.v vd, (rs1), vm
+
+INSTRUCTION: VLM.V
+FORMAT: vlm.v vd, (rs1)
+
+INSTRUCTION: VLOXEI16.V
+FORMAT: vloxei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXEI32.V
+FORMAT: vloxei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXEI64.V
+FORMAT: vloxei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXEI8.V
+FORMAT: vloxei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG2EI16.V
+FORMAT: vloxseg2ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG2EI32.V
+FORMAT: vloxseg2ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG2EI64.V
+FORMAT: vloxseg2ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG2EI8.V
+FORMAT: vloxseg2ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG3EI16.V
+FORMAT: vloxseg3ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG3EI32.V
+FORMAT: vloxseg3ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG3EI64.V
+FORMAT: vloxseg3ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG3EI8.V
+FORMAT: vloxseg3ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG4EI16.V
+FORMAT: vloxseg4ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG4EI32.V
+FORMAT: vloxseg4ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG4EI64.V
+FORMAT: vloxseg4ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG4EI8.V
+FORMAT: vloxseg4ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG5EI16.V
+FORMAT: vloxseg5ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG5EI32.V
+FORMAT: vloxseg5ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG5EI64.V
+FORMAT: vloxseg5ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG5EI8.V
+FORMAT: vloxseg5ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG6EI16.V
+FORMAT: vloxseg6ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG6EI32.V
+FORMAT: vloxseg6ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG6EI64.V
+FORMAT: vloxseg6ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG6EI8.V
+FORMAT: vloxseg6ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG7EI16.V
+FORMAT: vloxseg7ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG7EI32.V
+FORMAT: vloxseg7ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG7EI64.V
+FORMAT: vloxseg7ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG7EI8.V
+FORMAT: vloxseg7ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG8EI16.V
+FORMAT: vloxseg8ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG8EI32.V
+FORMAT: vloxseg8ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG8EI64.V
+FORMAT: vloxseg8ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLOXSEG8EI8.V
+FORMAT: vloxseg8ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLSE16.V
+FORMAT: vlse16.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSE32.V
+FORMAT: vlse32.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSE64.V
+FORMAT: vlse64.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSE8.V
+FORMAT: vlse8.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSEG2E16.V
+FORMAT: vlseg2e16.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG2E16FF.V
+FORMAT: vlseg2e16ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG2E32.V
+FORMAT: vlseg2e32.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG2E32FF.V
+FORMAT: vlseg2e32ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG2E64.V
+FORMAT: vlseg2e64.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG2E64FF.V
+FORMAT: vlseg2e64ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG2E8.V
+FORMAT: vlseg2e8.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG2E8FF.V
+FORMAT: vlseg2e8ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG3E16.V
+FORMAT: vlseg3e16.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG3E16FF.V
+FORMAT: vlseg3e16ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG3E32.V
+FORMAT: vlseg3e32.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG3E32FF.V
+FORMAT: vlseg3e32ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG3E64.V
+FORMAT: vlseg3e64.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG3E64FF.V
+FORMAT: vlseg3e64ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG3E8.V
+FORMAT: vlseg3e8.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG3E8FF.V
+FORMAT: vlseg3e8ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG4E16.V
+FORMAT: vlseg4e16.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG4E16FF.V
+FORMAT: vlseg4e16ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG4E32.V
+FORMAT: vlseg4e32.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG4E32FF.V
+FORMAT: vlseg4e32ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG4E64.V
+FORMAT: vlseg4e64.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG4E64FF.V
+FORMAT: vlseg4e64ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG4E8.V
+FORMAT: vlseg4e8.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG4E8FF.V
+FORMAT: vlseg4e8ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG5E16.V
+FORMAT: vlseg5e16.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG5E16FF.V
+FORMAT: vlseg5e16ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG5E32.V
+FORMAT: vlseg5e32.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG5E32FF.V
+FORMAT: vlseg5e32ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG5E64.V
+FORMAT: vlseg5e64.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG5E64FF.V
+FORMAT: vlseg5e64ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG5E8.V
+FORMAT: vlseg5e8.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG5E8FF.V
+FORMAT: vlseg5e8ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG6E16.V
+FORMAT: vlseg6e16.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG6E16FF.V
+FORMAT: vlseg6e16ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG6E32.V
+FORMAT: vlseg6e32.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG6E32FF.V
+FORMAT: vlseg6e32ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG6E64.V
+FORMAT: vlseg6e64.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG6E64FF.V
+FORMAT: vlseg6e64ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG6E8.V
+FORMAT: vlseg6e8.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG6E8FF.V
+FORMAT: vlseg6e8ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG7E16.V
+FORMAT: vlseg7e16.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG7E16FF.V
+FORMAT: vlseg7e16ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG7E32.V
+FORMAT: vlseg7e32.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG7E32FF.V
+FORMAT: vlseg7e32ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG7E64.V
+FORMAT: vlseg7e64.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG7E64FF.V
+FORMAT: vlseg7e64ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG7E8.V
+FORMAT: vlseg7e8.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG7E8FF.V
+FORMAT: vlseg7e8ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG8E16.V
+FORMAT: vlseg8e16.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG8E16FF.V
+FORMAT: vlseg8e16ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG8E32.V
+FORMAT: vlseg8e32.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG8E32FF.V
+FORMAT: vlseg8e32ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG8E64.V
+FORMAT: vlseg8e64.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG8E64FF.V
+FORMAT: vlseg8e64ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG8E8.V
+FORMAT: vlseg8e8.v vd, (rs1), vm
+
+INSTRUCTION: VLSEG8E8FF.V
+FORMAT: vlseg8e8ff.v vd, (rs1), vm
+
+INSTRUCTION: VLSSEG2E16.V
+FORMAT: vlsseg2e16.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG2E32.V
+FORMAT: vlsseg2e32.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG2E64.V
+FORMAT: vlsseg2e64.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG2E8.V
+FORMAT: vlsseg2e8.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG3E16.V
+FORMAT: vlsseg3e16.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG3E32.V
+FORMAT: vlsseg3e32.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG3E64.V
+FORMAT: vlsseg3e64.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG3E8.V
+FORMAT: vlsseg3e8.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG4E16.V
+FORMAT: vlsseg4e16.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG4E32.V
+FORMAT: vlsseg4e32.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG4E64.V
+FORMAT: vlsseg4e64.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG4E8.V
+FORMAT: vlsseg4e8.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG5E16.V
+FORMAT: vlsseg5e16.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG5E32.V
+FORMAT: vlsseg5e32.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG5E64.V
+FORMAT: vlsseg5e64.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG5E8.V
+FORMAT: vlsseg5e8.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG6E16.V
+FORMAT: vlsseg6e16.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG6E32.V
+FORMAT: vlsseg6e32.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG6E64.V
+FORMAT: vlsseg6e64.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG6E8.V
+FORMAT: vlsseg6e8.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG7E16.V
+FORMAT: vlsseg7e16.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG7E32.V
+FORMAT: vlsseg7e32.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG7E64.V
+FORMAT: vlsseg7e64.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG7E8.V
+FORMAT: vlsseg7e8.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG8E16.V
+FORMAT: vlsseg8e16.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG8E32.V
+FORMAT: vlsseg8e32.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG8E64.V
+FORMAT: vlsseg8e64.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLSSEG8E8.V
+FORMAT: vlsseg8e8.v vd, (rs1), rs2, vm
+
+INSTRUCTION: VLUXEI16.V
+FORMAT: vluxei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXEI32.V
+FORMAT: vluxei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXEI64.V
+FORMAT: vluxei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXEI8.V
+FORMAT: vluxei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG2EI16.V
+FORMAT: vluxseg2ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG2EI32.V
+FORMAT: vluxseg2ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG2EI64.V
+FORMAT: vluxseg2ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG2EI8.V
+FORMAT: vluxseg2ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG3EI16.V
+FORMAT: vluxseg3ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG3EI32.V
+FORMAT: vluxseg3ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG3EI64.V
+FORMAT: vluxseg3ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG3EI8.V
+FORMAT: vluxseg3ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG4EI16.V
+FORMAT: vluxseg4ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG4EI32.V
+FORMAT: vluxseg4ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG4EI64.V
+FORMAT: vluxseg4ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG4EI8.V
+FORMAT: vluxseg4ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG5EI16.V
+FORMAT: vluxseg5ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG5EI32.V
+FORMAT: vluxseg5ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG5EI64.V
+FORMAT: vluxseg5ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG5EI8.V
+FORMAT: vluxseg5ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG6EI16.V
+FORMAT: vluxseg6ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG6EI32.V
+FORMAT: vluxseg6ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG6EI64.V
+FORMAT: vluxseg6ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG6EI8.V
+FORMAT: vluxseg6ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG7EI16.V
+FORMAT: vluxseg7ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG7EI32.V
+FORMAT: vluxseg7ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG7EI64.V
+FORMAT: vluxseg7ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG7EI8.V
+FORMAT: vluxseg7ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG8EI16.V
+FORMAT: vluxseg8ei16.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG8EI32.V
+FORMAT: vluxseg8ei32.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG8EI64.V
+FORMAT: vluxseg8ei64.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VLUXSEG8EI8.V
+FORMAT: vluxseg8ei8.v vd, (rs1), vs2, vm
+
+INSTRUCTION: VMACC.VV
+FORMAT: vmacc.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VMACC.VX
+FORMAT: vmacc.vx vd, rs1, vs2, vm
+
+INSTRUCTION: VMADC.VI
+FORMAT: vmadc.vi vd, vs2, simm5
+
+INSTRUCTION: VMADC.VIM
+FORMAT: vmadc.vim vd, vs2, simm5, v0
+
+INSTRUCTION: VMADC.VV
+FORMAT: vmadc.vv vd, vs2, vs1
+
+INSTRUCTION: VMADC.VVM
+FORMAT: vmadc.vvm vd, vs2, vs1, v0
+
+INSTRUCTION: VMADC.VX
+FORMAT: vmadc.vx vd, vs2, rs1
+
+INSTRUCTION: VMADC.VXM
+FORMAT: vmadc.vxm vd, vs2, rs1, v0
+
+INSTRUCTION: VMADD.VV
+FORMAT: vmadd.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VMADD.VX
+FORMAT: vmadd.vx vd, rs1, vs2, vm
+
+INSTRUCTION: VMAND.MM
+FORMAT: vmand.mm vd, vs2, vs1
+
+INSTRUCTION: VMANDN.MM
+FORMAT: vmandn.mm vd, vs2, vs1
+
+INSTRUCTION: VMAX.VV
+FORMAT: vmax.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMAX.VX
+FORMAT: vmax.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMAXU.VV
+FORMAT: vmaxu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMAXU.VX
+FORMAT: vmaxu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMERGE.VIM
+FORMAT: vmerge.vim vd, vs2, simm5, v0
+
+INSTRUCTION: VMERGE.VVM
+FORMAT: vmerge.vvm vd, vs2, vs1, v0
+
+INSTRUCTION: VMERGE.VXM
+FORMAT: vmerge.vxm vd, vs2, rs1, v0
+
+INSTRUCTION: VMFEQ.VF
+FORMAT: vmfeq.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VMFEQ.VV
+FORMAT: vmfeq.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMFGE.VF
+FORMAT: vmfge.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VMFGT.VF
+FORMAT: vmfgt.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VMFLE.VF
+FORMAT: vmfle.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VMFLE.VV
+FORMAT: vmfle.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMFLT.VF
+FORMAT: vmflt.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VMFLT.VV
+FORMAT: vmflt.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMFNE.VF
+FORMAT: vmfne.vf vd, vs2, fs1, vm
+
+INSTRUCTION: VMFNE.VV
+FORMAT: vmfne.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMIN.VV
+FORMAT: vmin.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMIN.VX
+FORMAT: vmin.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMINU.VV
+FORMAT: vminu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMINU.VX
+FORMAT: vminu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMNAND.MM
+FORMAT: vmnand.mm vd, vs2, vs1
+
+INSTRUCTION: VMNOR.MM
+FORMAT: vmnor.mm vd, vs2, vs1
+
+INSTRUCTION: VMOR.MM
+FORMAT: vmor.mm vd, vs2, vs1
+
+INSTRUCTION: VMORN.MM
+FORMAT: vmorn.mm vd, vs2, vs1
+
+INSTRUCTION: VMSBC.VV
+FORMAT: vmsbc.vv vd, vs2, vs1
+
+INSTRUCTION: VMSBC.VVM
+FORMAT: vmsbc.vvm vd, vs2, vs1, v0
+
+INSTRUCTION: VMSBC.VX
+FORMAT: vmsbc.vx vd, vs2, rs1
+
+INSTRUCTION: VMSBC.VXM
+FORMAT: vmsbc.vxm vd, vs2, rs1, v0
+
+INSTRUCTION: VMSBF.M
+FORMAT: vmsbf.m vd, vs2, vm
+
+INSTRUCTION: VMSEQ.VI
+FORMAT: vmseq.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VMSEQ.VV
+FORMAT: vmseq.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMSEQ.VX
+FORMAT: vmseq.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMSGT.VI
+FORMAT: vmsgt.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VMSGT.VX
+FORMAT: vmsgt.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMSGTU.VI
+FORMAT: vmsgtu.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VMSGTU.VX
+FORMAT: vmsgtu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMSIF.M
+FORMAT: vmsif.m vd, vs2, vm
+
+INSTRUCTION: VMSLE.VI
+FORMAT: vmsle.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VMSLE.VV
+FORMAT: vmsle.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMSLE.VX
+FORMAT: vmsle.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMSLEU.VI
+FORMAT: vmsleu.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VMSLEU.VV
+FORMAT: vmsleu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMSLEU.VX
+FORMAT: vmsleu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMSLT.VV
+FORMAT: vmslt.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMSLT.VX
+FORMAT: vmslt.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMSLTU.VV
+FORMAT: vmsltu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMSLTU.VX
+FORMAT: vmsltu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMSNE.VI
+FORMAT: vmsne.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VMSNE.VV
+FORMAT: vmsne.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMSNE.VX
+FORMAT: vmsne.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMSOF.M
+FORMAT: vmsof.m vd, vs2, vm
+
+INSTRUCTION: VMUL.VV
+FORMAT: vmul.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMUL.VX
+FORMAT: vmul.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMULH.VV
+FORMAT: vmulh.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMULH.VX
+FORMAT: vmulh.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMULHSU.VV
+FORMAT: vmulhsu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMULHSU.VX
+FORMAT: vmulhsu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMULHU.VV
+FORMAT: vmulhu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VMULHU.VX
+FORMAT: vmulhu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VMV.S.X
+FORMAT: vmv.s.x vd, rs1
+
+INSTRUCTION: VMV.V.I
+FORMAT: vmv.v.i vd, simm5
+
+INSTRUCTION: VMV.V.V
+FORMAT: vmv.v.v vd, vs1
+
+INSTRUCTION: VMV.V.X
+FORMAT: vmv.v.x vd, rs1
+
+INSTRUCTION: VMV.X.S
+FORMAT: vmv.x.s rd, vs2
+
+INSTRUCTION: VMV1R.V
+FORMAT: vmv1r.v vd, vs2
+
+INSTRUCTION: VMV2R.V
+FORMAT: vmv2r.v vd, vs2
+
+INSTRUCTION: VMV4R.V
+FORMAT: vmv4r.v vd, vs2
+
+INSTRUCTION: VMV8R.V
+FORMAT: vmv8r.v vd, vs2
+
+INSTRUCTION: VMXNOR.MM
+FORMAT: vmxnor.mm vd, vs2, vs1
+
+INSTRUCTION: VMXOR.MM
+FORMAT: vmxor.mm vd, vs2, vs1
+
+INSTRUCTION: VNCLIP.WI
+FORMAT: vnclip.wi vd, vs2, zimm5, vm
+
+INSTRUCTION: VNCLIP.WV
+FORMAT: vnclip.wv vd, vs2, vs1, vm
+
+INSTRUCTION: VNCLIP.WX
+FORMAT: vnclip.wx vd, vs2, rs1, vm
+
+INSTRUCTION: VNCLIPU.WI
+FORMAT: vnclipu.wi vd, vs2, zimm5, vm
+
+INSTRUCTION: VNCLIPU.WV
+FORMAT: vnclipu.wv vd, vs2, vs1, vm
+
+INSTRUCTION: VNCLIPU.WX
+FORMAT: vnclipu.wx vd, vs2, rs1, vm
+
+INSTRUCTION: VNMSAC.VV
+FORMAT: vnmsac.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VNMSAC.VX
+FORMAT: vnmsac.vx vd, rs1, vs2, vm
+
+INSTRUCTION: VNMSUB.VV
+FORMAT: vnmsub.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VNMSUB.VX
+FORMAT: vnmsub.vx vd, rs1, vs2, vm
+
+INSTRUCTION: VNSRA.WI
+FORMAT: vnsra.wi vd, vs2, zimm5, vm
+
+INSTRUCTION: VNSRA.WV
+FORMAT: vnsra.wv vd, vs2, vs1, vm
+
+INSTRUCTION: VNSRA.WX
+FORMAT: vnsra.wx vd, vs2, rs1, vm
+
+INSTRUCTION: VNSRL.WI
+FORMAT: vnsrl.wi vd, vs2, zimm5, vm
+
+INSTRUCTION: VNSRL.WV
+FORMAT: vnsrl.wv vd, vs2, vs1, vm
+
+INSTRUCTION: VNSRL.WX
+FORMAT: vnsrl.wx vd, vs2, rs1, vm
+
+INSTRUCTION: VOR.VI
+FORMAT: vor.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VOR.VV
+FORMAT: vor.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VOR.VX
+FORMAT: vor.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VREDAND.VS
+FORMAT: vredand.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VREDMAX.VS
+FORMAT: vredmax.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VREDMAXU.VS
+FORMAT: vredmaxu.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VREDMIN.VS
+FORMAT: vredmin.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VREDMINU.VS
+FORMAT: vredminu.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VREDOR.VS
+FORMAT: vredor.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VREDSUM.VS
+FORMAT: vredsum.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VREDXOR.VS
+FORMAT: vredxor.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VREM.VV
+FORMAT: vrem.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VREM.VX
+FORMAT: vrem.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VREMU.VV
+FORMAT: vremu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VREMU.VX
+FORMAT: vremu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VREV8.V
+FORMAT: vrev8.v vd, vs2, vm
+
+INSTRUCTION: VRGATHER.VI
+FORMAT: vrgather.vi vd, vs2, zimm5, vm
+
+INSTRUCTION: VRGATHER.VV
+FORMAT: vrgather.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VRGATHER.VX
+FORMAT: vrgather.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VRGATHEREI16.VV
+FORMAT: vrgatherei16.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VROL.VV
+FORMAT: vrol.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VROL.VX
+FORMAT: vrol.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VROR.VI
+FORMAT: vror.vi vd, vs2, zimm6, vm
+
+INSTRUCTION: VROR.VV
+FORMAT: vror.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VROR.VX
+FORMAT: vror.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VRSUB.VI
+FORMAT: vrsub.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VRSUB.VX
+FORMAT: vrsub.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VS1R.V
+FORMAT: vs1r.v vs3, (rs1)
+
+INSTRUCTION: VS2R.V
+FORMAT: vs2r.v vs3, (rs1)
+
+INSTRUCTION: VS4R.V
+FORMAT: vs4r.v vs3, (rs1)
+
+INSTRUCTION: VS8R.V
+FORMAT: vs8r.v vs3, (rs1)
+
+INSTRUCTION: VSADD.VI
+FORMAT: vsadd.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VSADD.VV
+FORMAT: vsadd.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSADD.VX
+FORMAT: vsadd.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSADDU.VI
+FORMAT: vsaddu.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VSADDU.VV
+FORMAT: vsaddu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSADDU.VX
+FORMAT: vsaddu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSBC.VVM
+FORMAT: vsbc.vvm vd, vs2, vs1, v0
+
+INSTRUCTION: VSBC.VXM
+FORMAT: vsbc.vxm vd, vs2, rs1, v0
+
+INSTRUCTION: VSE16.V
+FORMAT: vse16.v vs3, (rs1), vm
+
+INSTRUCTION: VSE32.V
+FORMAT: vse32.v vs3, (rs1), vm
+
+INSTRUCTION: VSE64.V
+FORMAT: vse64.v vs3, (rs1), vm
+
+INSTRUCTION: VSE8.V
+FORMAT: vse8.v vs3, (rs1), vm
+
+INSTRUCTION: VSETIVLI
+FORMAT: vsetivli rd, uimm, vtypei
+
+INSTRUCTION: VSETVL
+FORMAT: vsetvl rd, rs1, rs2
+
+INSTRUCTION: VSETVLI
+FORMAT: vsetvli rd, rs1, vtypei
+
+INSTRUCTION: VSEXT.VF2
+FORMAT: vsext.vf2 vd, vs2, vm
+
+INSTRUCTION: VSEXT.VF4
+FORMAT: vsext.vf4 vd, vs2, vm
+
+INSTRUCTION: VSEXT.VF8
+FORMAT: vsext.vf8 vd, vs2, vm
+
+INSTRUCTION: VSHA2CH.VV
+FORMAT: vsha2ch.vv vd, vs2, vs1
+
+INSTRUCTION: VSHA2CL.VV
+FORMAT: vsha2cl.vv vd, vs2, vs1
+
+INSTRUCTION: VSHA2MS.VV
+FORMAT: vsha2ms.vv vd, vs2, vs1
+
+INSTRUCTION: VSLIDE1DOWN.VX
+FORMAT: vslide1down.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSLIDE1UP.VX
+FORMAT: vslide1up.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSLIDEDOWN.VI
+FORMAT: vslidedown.vi vd, vs2, zimm5, vm
+
+INSTRUCTION: VSLIDEDOWN.VX
+FORMAT: vslidedown.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSLIDEUP.VI
+FORMAT: vslideup.vi vd, vs2, zimm5, vm
+
+INSTRUCTION: VSLIDEUP.VX
+FORMAT: vslideup.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSLL.VI
+FORMAT: vsll.vi vd, vs2, zimm5, vm
+
+INSTRUCTION: VSLL.VV
+FORMAT: vsll.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSLL.VX
+FORMAT: vsll.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSM.V
+FORMAT: vsm.v vs3, (rs1)
+
+INSTRUCTION: VSM3C.VI
+FORMAT: vsm3c.vi vd, vs2, zimm5
+
+INSTRUCTION: VSM3ME.VV
+FORMAT: vsm3me.vv vd, vs2, vs1
+
+INSTRUCTION: VSM4K.VI
+FORMAT: vsm4k.vi vd, vs2, zimm5
+
+INSTRUCTION: VSM4R.VS
+FORMAT: vsm4r.vs vd, vs2
+
+INSTRUCTION: VSM4R.VV
+FORMAT: vsm4r.vv vd, vs2
+
+INSTRUCTION: VSMUL.VV
+FORMAT: vsmul.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSMUL.VX
+FORMAT: vsmul.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSOXEI16.V
+FORMAT: vsoxei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXEI32.V
+FORMAT: vsoxei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXEI64.V
+FORMAT: vsoxei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXEI8.V
+FORMAT: vsoxei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG2EI16.V
+FORMAT: vsoxseg2ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG2EI32.V
+FORMAT: vsoxseg2ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG2EI64.V
+FORMAT: vsoxseg2ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG2EI8.V
+FORMAT: vsoxseg2ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG3EI16.V
+FORMAT: vsoxseg3ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG3EI32.V
+FORMAT: vsoxseg3ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG3EI64.V
+FORMAT: vsoxseg3ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG3EI8.V
+FORMAT: vsoxseg3ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG4EI16.V
+FORMAT: vsoxseg4ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG4EI32.V
+FORMAT: vsoxseg4ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG4EI64.V
+FORMAT: vsoxseg4ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG4EI8.V
+FORMAT: vsoxseg4ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG5EI16.V
+FORMAT: vsoxseg5ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG5EI32.V
+FORMAT: vsoxseg5ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG5EI64.V
+FORMAT: vsoxseg5ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG5EI8.V
+FORMAT: vsoxseg5ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG6EI16.V
+FORMAT: vsoxseg6ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG6EI32.V
+FORMAT: vsoxseg6ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG6EI64.V
+FORMAT: vsoxseg6ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG6EI8.V
+FORMAT: vsoxseg6ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG7EI16.V
+FORMAT: vsoxseg7ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG7EI32.V
+FORMAT: vsoxseg7ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG7EI64.V
+FORMAT: vsoxseg7ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG7EI8.V
+FORMAT: vsoxseg7ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG8EI16.V
+FORMAT: vsoxseg8ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG8EI32.V
+FORMAT: vsoxseg8ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG8EI64.V
+FORMAT: vsoxseg8ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSOXSEG8EI8.V
+FORMAT: vsoxseg8ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSRA.VI
+FORMAT: vsra.vi vd, vs2, zimm5, vm
+
+INSTRUCTION: VSRA.VV
+FORMAT: vsra.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSRA.VX
+FORMAT: vsra.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSRL.VI
+FORMAT: vsrl.vi vd, vs2, zimm5, vm
+
+INSTRUCTION: VSRL.VV
+FORMAT: vsrl.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSRL.VX
+FORMAT: vsrl.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSSE16.V
+FORMAT: vsse16.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSE32.V
+FORMAT: vsse32.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSE64.V
+FORMAT: vsse64.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSE8.V
+FORMAT: vsse8.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSEG2E16.V
+FORMAT: vsseg2e16.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG2E32.V
+FORMAT: vsseg2e32.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG2E64.V
+FORMAT: vsseg2e64.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG2E8.V
+FORMAT: vsseg2e8.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG3E16.V
+FORMAT: vsseg3e16.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG3E32.V
+FORMAT: vsseg3e32.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG3E64.V
+FORMAT: vsseg3e64.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG3E8.V
+FORMAT: vsseg3e8.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG4E16.V
+FORMAT: vsseg4e16.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG4E32.V
+FORMAT: vsseg4e32.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG4E64.V
+FORMAT: vsseg4e64.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG4E8.V
+FORMAT: vsseg4e8.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG5E16.V
+FORMAT: vsseg5e16.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG5E32.V
+FORMAT: vsseg5e32.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG5E64.V
+FORMAT: vsseg5e64.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG5E8.V
+FORMAT: vsseg5e8.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG6E16.V
+FORMAT: vsseg6e16.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG6E32.V
+FORMAT: vsseg6e32.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG6E64.V
+FORMAT: vsseg6e64.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG6E8.V
+FORMAT: vsseg6e8.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG7E16.V
+FORMAT: vsseg7e16.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG7E32.V
+FORMAT: vsseg7e32.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG7E64.V
+FORMAT: vsseg7e64.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG7E8.V
+FORMAT: vsseg7e8.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG8E16.V
+FORMAT: vsseg8e16.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG8E32.V
+FORMAT: vsseg8e32.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG8E64.V
+FORMAT: vsseg8e64.v vs3, (rs1), vm
+
+INSTRUCTION: VSSEG8E8.V
+FORMAT: vsseg8e8.v vs3, (rs1), vm
+
+INSTRUCTION: VSSRA.VI
+FORMAT: vssra.vi vd, vs2, zimm5, vm
+
+INSTRUCTION: VSSRA.VV
+FORMAT: vssra.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSSRA.VX
+FORMAT: vssra.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSSRL.VI
+FORMAT: vssrl.vi vd, vs2, zimm5, vm
+
+INSTRUCTION: VSSRL.VV
+FORMAT: vssrl.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSSRL.VX
+FORMAT: vssrl.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSSSEG2E16.V
+FORMAT: vssseg2e16.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG2E32.V
+FORMAT: vssseg2e32.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG2E64.V
+FORMAT: vssseg2e64.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG2E8.V
+FORMAT: vssseg2e8.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG3E16.V
+FORMAT: vssseg3e16.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG3E32.V
+FORMAT: vssseg3e32.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG3E64.V
+FORMAT: vssseg3e64.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG3E8.V
+FORMAT: vssseg3e8.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG4E16.V
+FORMAT: vssseg4e16.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG4E32.V
+FORMAT: vssseg4e32.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG4E64.V
+FORMAT: vssseg4e64.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG4E8.V
+FORMAT: vssseg4e8.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG5E16.V
+FORMAT: vssseg5e16.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG5E32.V
+FORMAT: vssseg5e32.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG5E64.V
+FORMAT: vssseg5e64.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG5E8.V
+FORMAT: vssseg5e8.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG6E16.V
+FORMAT: vssseg6e16.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG6E32.V
+FORMAT: vssseg6e32.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG6E64.V
+FORMAT: vssseg6e64.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG6E8.V
+FORMAT: vssseg6e8.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG7E16.V
+FORMAT: vssseg7e16.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG7E32.V
+FORMAT: vssseg7e32.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG7E64.V
+FORMAT: vssseg7e64.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG7E8.V
+FORMAT: vssseg7e8.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG8E16.V
+FORMAT: vssseg8e16.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG8E32.V
+FORMAT: vssseg8e32.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG8E64.V
+FORMAT: vssseg8e64.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSSEG8E8.V
+FORMAT: vssseg8e8.v vs3, (rs1), rs2, vm
+
+INSTRUCTION: VSSUB.VV
+FORMAT: vssub.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSSUB.VX
+FORMAT: vssub.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSSUBU.VV
+FORMAT: vssubu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSSUBU.VX
+FORMAT: vssubu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSUB.VV
+FORMAT: vsub.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VSUB.VX
+FORMAT: vsub.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VSUXEI16.V
+FORMAT: vsuxei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXEI32.V
+FORMAT: vsuxei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXEI64.V
+FORMAT: vsuxei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXEI8.V
+FORMAT: vsuxei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG2EI16.V
+FORMAT: vsuxseg2ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG2EI32.V
+FORMAT: vsuxseg2ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG2EI64.V
+FORMAT: vsuxseg2ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG2EI8.V
+FORMAT: vsuxseg2ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG3EI16.V
+FORMAT: vsuxseg3ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG3EI32.V
+FORMAT: vsuxseg3ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG3EI64.V
+FORMAT: vsuxseg3ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG3EI8.V
+FORMAT: vsuxseg3ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG4EI16.V
+FORMAT: vsuxseg4ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG4EI32.V
+FORMAT: vsuxseg4ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG4EI64.V
+FORMAT: vsuxseg4ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG4EI8.V
+FORMAT: vsuxseg4ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG5EI16.V
+FORMAT: vsuxseg5ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG5EI32.V
+FORMAT: vsuxseg5ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG5EI64.V
+FORMAT: vsuxseg5ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG5EI8.V
+FORMAT: vsuxseg5ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG6EI16.V
+FORMAT: vsuxseg6ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG6EI32.V
+FORMAT: vsuxseg6ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG6EI64.V
+FORMAT: vsuxseg6ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG6EI8.V
+FORMAT: vsuxseg6ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG7EI16.V
+FORMAT: vsuxseg7ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG7EI32.V
+FORMAT: vsuxseg7ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG7EI64.V
+FORMAT: vsuxseg7ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG7EI8.V
+FORMAT: vsuxseg7ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG8EI16.V
+FORMAT: vsuxseg8ei16.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG8EI32.V
+FORMAT: vsuxseg8ei32.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG8EI64.V
+FORMAT: vsuxseg8ei64.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VSUXSEG8EI8.V
+FORMAT: vsuxseg8ei8.v vs3, (rs1), vs2, vm
+
+INSTRUCTION: VWADD.VV
+FORMAT: vwadd.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VWADD.VX
+FORMAT: vwadd.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VWADD.WV
+FORMAT: vwadd.wv vd, vs2, vs1, vm
+
+INSTRUCTION: VWADD.WX
+FORMAT: vwadd.wx vd, vs2, rs1, vm
+
+INSTRUCTION: VWADDU.VV
+FORMAT: vwaddu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VWADDU.VX
+FORMAT: vwaddu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VWADDU.WV
+FORMAT: vwaddu.wv vd, vs2, vs1, vm
+
+INSTRUCTION: VWADDU.WX
+FORMAT: vwaddu.wx vd, vs2, rs1, vm
+
+INSTRUCTION: VWMACC.VV
+FORMAT: vwmacc.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VWMACC.VX
+FORMAT: vwmacc.vx vd, rs1, vs2, vm
+
+INSTRUCTION: VWMACCSU.VV
+FORMAT: vwmaccsu.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VWMACCSU.VX
+FORMAT: vwmaccsu.vx vd, rs1, vs2, vm
+
+INSTRUCTION: VWMACCU.VV
+FORMAT: vwmaccu.vv vd, vs1, vs2, vm
+
+INSTRUCTION: VWMACCU.VX
+FORMAT: vwmaccu.vx vd, rs1, vs2, vm
+
+INSTRUCTION: VWMACCUS.VX
+FORMAT: vwmaccus.vx vd, rs1, vs2, vm
+
+INSTRUCTION: VWMUL.VV
+FORMAT: vwmul.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VWMUL.VX
+FORMAT: vwmul.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VWMULSU.VV
+FORMAT: vwmulsu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VWMULSU.VX
+FORMAT: vwmulsu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VWMULU.VV
+FORMAT: vwmulu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VWMULU.VX
+FORMAT: vwmulu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VWREDSUM.VS
+FORMAT: vwredsum.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VWREDSUMU.VS
+FORMAT: vwredsumu.vs vd, vs2, vs1, vm
+
+INSTRUCTION: VWSLL.VI
+FORMAT: vwsll.vi vd, vs2, zimm5, vm
+
+INSTRUCTION: VWSLL.VV
+FORMAT: vwsll.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VWSLL.VX
+FORMAT: vwsll.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VWSUB.VV
+FORMAT: vwsub.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VWSUB.VX
+FORMAT: vwsub.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VWSUB.WV
+FORMAT: vwsub.wv vd, vs2, vs1, vm
+
+INSTRUCTION: VWSUB.WX
+FORMAT: vwsub.wx vd, vs2, rs1, vm
+
+INSTRUCTION: VWSUBU.VV
+FORMAT: vwsubu.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VWSUBU.VX
+FORMAT: vwsubu.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VWSUBU.WV
+FORMAT: vwsubu.wv vd, vs2, vs1, vm
+
+INSTRUCTION: VWSUBU.WX
+FORMAT: vwsubu.wx vd, vs2, rs1, vm
+
+INSTRUCTION: VXOR.VI
+FORMAT: vxor.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VXOR.VV
+FORMAT: vxor.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VXOR.VX
+FORMAT: vxor.vx vd, vs2, rs1, vm
+
+INSTRUCTION: VZEXT.VF2
+FORMAT: vzext.vf2 vd, vs2, vm
+
+INSTRUCTION: VZEXT.VF4
+FORMAT: vzext.vf4 vd, vs2, vm
+
+INSTRUCTION: VZEXT.VF8
+FORMAT: vzext.vf8 vd, vs2, vm
+
+INSTRUCTION: WFI
+FORMAT: wfi
+
+INSTRUCTION: WRS.NTO
+FORMAT: wrs.nto
+
+INSTRUCTION: WRS.STO
+FORMAT: wrs.sto
+
+INSTRUCTION: XNOR
+FORMAT: xnor rd, rs1, rs2
+
+INSTRUCTION: XOR
+FORMAT: xor rd, rs1, rs2
+
+INSTRUCTION: XORI
+FORMAT: xori rd, rs1, imm12
+
+INSTRUCTION: XPERM4
+FORMAT: xperm4 rd, rs1, rs2
+
+INSTRUCTION: XPERM8
+FORMAT: xperm8 rd, rs1, rs2
+
+INSTRUCTION: ZEXT.H
+FORMAT: zext.h rd, rs1
+
+INSTRUCTION: ZIP
+FORMAT: zip rd, rs1

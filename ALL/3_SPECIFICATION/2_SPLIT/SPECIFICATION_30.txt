@@ -1,0 +1,37 @@
+## 4.2.1. Integer Register-Immediate Instructions
+
+<image>
+
+ADDIW  is  an  RV64I  instruction  that  adds  the  sign-extended  12-bit  immediate  to  register rs1 and produces the proper sign extension of a 32-bit result in rd . Overflows are ignored and the result is the low 32 bits of the result sign-extended to 64 bits. Note, ADDIW rd, rs1, 0 writes the sign extension of the lower 32 bits of register rs1 into register rd (assembler pseudoinstruction SEXT.W).
+
+<image>
+
+Shifts by a constant are encoded as a specialization of the I-type format using the same instruction opcode as RV32I. The operand to be shifted is in rs1 , and the shift amount is encoded in the lower 6 bits of the I-immediate field for RV64I. The right shift type is encoded in bit 30. SLLI is a logical left
+
+shift (zeros are shifted into the lower bits); SRLI is a logical right shift (zeros are shifted into the upper bits); and SRAI is an arithmetic right shift (the original sign bit is copied into the vacated upper bits).
+
+<image>
+
+| 31        | 25 26   | 20         |     | 14     | 11 12   | 6 7    | 0         |
+|-----------|---------|------------|-----|--------|---------|--------|-----------|
+| imm[11:6] | [5]     | imm[4:0]   | rs1 | funct3 | rd      | opcode |           |
+| 6         | 1       | 5          | 5   | 3      |         | 5      | 7         |
+| 000000    | 0       | shamt[4:0] | src | SLLIW  |         | dest   | OP-IMM-32 |
+| 000000    | 0       | shamt[4:0] | src | SRLIW  |         | dest   | OP-IMM-32 |
+| 010000    | 0       | shamt[4:0] | src | SRAIW  |         | dest   | OP-IMM-32 |
+
+SLLIW, SRLIW, and SRAIW are RV64I-only instructions that are analogously defined but operate on 32-bit  values  and  sign-extend  their  32-bit  results  to  64  bits.  SLLIW,  SRLIW,  and  SRAIW  encodings with imm[5] ≠ 0 are reserved.
+
+<image>
+
+Previously, SLLIW, SRLIW, and SRAIW with imm[5] ≠ 0 were defined to cause illegalinstruction  exceptions,  whereas  now  they  are  marked  as  reserved.  This  is  a backwards-compatible change.
+
+<image>
+
+LUI (load upper immediate) uses the same opcode as RV32I. LUI places the 32-bit U-immediate into register rd , filling in the lowest 12 bits with zeros. The 32-bit result is sign-extended to 64 bits.
+
+AUIPC  (add  upper  immediate  to pc )  uses  the  same  opcode  as  RV32I.  AUIPC  is  used  to  build pc -relative addresses and uses the U-type format. AUIPC forms a 32-bit offset from the U-immediate, filling in the lowest 12 bits with zeros, sign-extends the result to 64 bits, adds it to the address of the AUIPC instruction, then places the result in register rd .
+
+<image>
+
+-  Note  that  the  set  of  address  offsets  that  can  be  formed  by  pairing  LUI  with  LD, AUIPC with JALR, etc. in RV64I is [ , ].

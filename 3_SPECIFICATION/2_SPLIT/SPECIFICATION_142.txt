@@ -1,0 +1,5 @@
+## 24.3.2.2. Infinities:
+
+Infinities are used to represent values that are too large to be represented by the target format. These are  usually  produced  as  a  result  of  overflows  (depending  on  the  rounding  mode),  but  can  also  be provided  as  inputs.  Infinities  have  a  sign  associated  with  them:  there  are  positive  infinities  and negative infinities.
+
+Infinities are important for keeping meaningless results from being operated upon.

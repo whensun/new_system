@@ -1,0 +1,9 @@
+## 26.1. Processing of Narrower Values
+
+Floating-point  operands  of  width w XLEN  bits  occupy  bits w -1:0  of  an x register.  Floating-point operations on w -bit operands ignore operand bits XLEN-1: w .
+
+Floating-point operations that produce w XLEN-bit results fill bits XLEN-1: w with copies of bit w -1 (the sign bit).
+
+The  NaN-boxing  scheme  employed  in  the f registers  was  designed  to  efficiently support recoded floating-point formats. Recoding is less practical for Zfinx, though, since the same registers hold both floating-point and integer operands. Hence, the need for NaN boxing is diminished.
+
+<image>

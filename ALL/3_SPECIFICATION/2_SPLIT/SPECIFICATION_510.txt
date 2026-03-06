@@ -1,0 +1,41 @@
+## 31.4.33. sha512sig1h
+
+## Synopsis
+
+Implements the high  half of  the  Sigma1  transformation,  as  used  in  the  SHA2-512  hash  function (NIST, 2015).
+
+## Mnemonic
+
+sha512sig1h rd, rs1, rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction is implemented on RV32 only. Used to compute the Sigma1 transform of the SHA2512 hash function in conjunction with the sha512sig1l instruction. The transform is a 64-bit to 64-bit function, so the input and output are each represented by two 32-bit registers. This instruction must always be implemented such that its execution latency does not depend on the data being operated on.
+
+Note to software developers
+
+The  entire  Sigma1  transform  for  SHA2-512  may  be  computed  on  RV32  using  the following instruction sequence:
+
+```
+sha512sig1l    t0, a0, a1 sha512sig1h    t1, a1, a0
+```
+
+<image>
+
+## Operation
+
+```
+function clause execute (SHA512SIG1H(rs2, rs1, rd)) = { X(rd) = EXTS((X(rs1) <<  3) ^ (X(rs1) >>  6) ^ (X(rs1) >> 19) ^ (X(rs2) >> 29)                  ^ (X(rs2) << 13) ); RETIRE_SUCCESS }
+```
+
+## Included in
+
+| Extension   | Minimum version   | Lifecycle state   |
+|-------------|-------------------|-------------------|
+| Zknh (RV32) | v1.0.0            | Ratified          |
+| Zkn (RV32)  | v1.0.0            | Ratified          |
+| Zk (RV32)   | v1.0.0            | Ratified          |

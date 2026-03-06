@@ -1,0 +1,7 @@
+## 30.13.11. Vector Floating-Point MIN/MAX Instructions
+
+The vector floating-point vfmin and vfmax instructions  have  the  same  behavior  as  the  corresponding scalar  floating-point  instructions  in  version  2.2  of  the  RISC-V  F/D/Q  extension:  they  perform  the minimumNumber or maximumNumber operation on active elements.
+
+```
+# Floating-point minimum vfmin.vv vd, vs2, vs1, vm   # Vector-vector vfmin.vf vd, vs2, rs1, vm   # vector-scalar # Floating-point maximum vfmax.vv vd, vs2, vs1, vm   # Vector-vector vfmax.vf vd, vs2, rs1, vm   # vector-scalar
+```

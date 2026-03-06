@@ -1,0 +1,23 @@
+## 3.6.5. Memory-Ordering PMAs
+
+Regions of the address space are classified as either main memory or I/O for the purposes of ordering by the FENCE instruction and atomic-instruction ordering bits.
+
+Accesses by one hart to main memory regions are observable not only by other harts but also by other devices  with  the  capability  to  initiate  requests  in  the  main  memory  system  (e.g.,  DMA  engines). Coherent main memory regions always have either the RVWMO or RVTSO memory model. Incoherent main memory regions have an implementation-defined memory model.
+
+Accesses  by  one  hart  to  an  I/O  region  are  observable  not  only  by  other  harts  and  bus  mastering devices but also by the targeted I/O devices, and I/O regions may be accessed with either relaxed or strong ordering. Accesses to an I/O region with relaxed ordering are generally observed by other harts and bus mastering devices in a manner similar to the ordering of accesses to an RVWMO memory region,  as  discussed  in  the  I/O  Ordering  section  in  the  RVWMO  Explanatory  Material  appendix  of Volume  I  of  this  specification.  By  contrast,  accesses  to  an  I/O  region  with  strong  ordering  are generally observed by other harts and bus mastering devices in program order.
+
+Each strongly ordered I/O region specifies a numbered ordering channel, which is a mechanism by which  ordering  guarantees  can  be  provided  between  different  I/O  regions.  Channel  0  is  used  to indicate point-to-point strong ordering only, where only accesses by the hart to the single associated I/O region are strongly ordered.
+
+Channel 1 is used to provide global strong ordering across all I/O regions. Any accesses by a hart to any I/O region associated with channel 1 can only be observed to have occurred in program order by all other harts and I/O devices, including relative to accesses made by that hart to relaxed I/O regions or strongly ordered I/O regions with different channel numbers. In other words, any access to a region in channel 1 is equivalent to executing a fence io,io instruction before and after the instruction.
+
+Other larger channel numbers provide program ordering to accesses by that hart across any regions with the same channel number.
+
+Systems might support dynamic configuration of ordering properties on each memory region.
+
+Strong ordering can be used to improve compatibility with legacy device driver code, or  to  enable  increased  performance  compared  to  insertion  of  explicit  ordering instructions when the implementation is known to not reorder accesses.
+
+<image>
+
+Local strong ordering (channel 0) is the default form of strong ordering as it is often straightforward  to  provide  if  there  is  only  a  single  in-order  communication  path between the hart and the I/O device.
+
+Generally,  different  strongly  ordered  I/O  regions  can  share  the  same  ordering channel  without  additional  ordering  hardware  if  they  share  the  same  interconnect path and the path does not reorder requests.

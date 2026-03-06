@@ -1,0 +1,3 @@
+## 36.1. Extension Terminology
+
+This section defines some standard terminology for describing RISC-V extensions.

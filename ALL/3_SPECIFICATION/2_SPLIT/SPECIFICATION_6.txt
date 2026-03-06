@@ -1,0 +1,43 @@
+## 1.5. Base Instruction-Length Encoding
+
+The  base  RISC-V  ISA  has  fixed-length  32-bit  instructions  that  must  be  naturally  aligned  on  32-bit boundaries. However, the standard RISC-V encoding scheme is designed to support ISA extensions with  variable-length  instructions,  where  each  instruction  can  be  any  number  of  16-bit  instruction parcels in length and parcels are naturally aligned on 16-bit boundaries. The standard compressed ISA extension described in Chapter 27 reduces code size by providing compressed 16-bit instructions and relaxes the alignment constraints to allow all instructions (16 bit and 32 bit) to be aligned on any 16-bit boundary to improve code density.
+
+We use the term IALIGN (measured in bits) to refer to the instruction-address alignment constraint the implementation enforces. IALIGN is 32 bits in the base ISA, but some ISA extensions, including the compressed ISA extension, relax IALIGN to 16 bits. IALIGN may not take on any value other than 16 or 32.
+
+We use the term ILEN (measured in bits) to refer to the maximum instruction length supported by an implementation,  and  which  is  always  a  multiple  of  IALIGN.  For  implementations  supporting  only  a base  instruction  set,  ILEN  is  32  bits.  Implementations  supporting  longer  instructions  have  larger values of ILEN.
+
+All the 32-bit instructions in the base ISA have their lowest two bits set to 11 . The optional compressed 16-bit instruction-set extensions have their lowest two bits equal to 00 , 01 , or 10 .
+
+<image>
+
+Given the code size and energy savings of a compressed format, we wanted to build in support for a compressed format to the ISA encoding scheme rather than adding this as an afterthought, but to allow simpler implementations we didn't want to make the  compressed  format  mandatory.  We  also  wanted  to  optionally  allow  longer
+
+instructions to support experimentation and larger instruction-set extensions. Although our encoding convention required a tighter encoding of the core RISC-V ISA, this has several beneficial effects.
+
+An implementation of the standard IMAFD ISA need only hold the most-significant 30  bits  in  instruction  caches  (a  6.25%  saving).  On  instruction  cache  refills,  any instructions encountered with either low bit clear should be recoded into illegal 30bit instructions before storing in the cache to preserve illegal-instruction exception behavior.
+
+Perhaps more importantly, by condensing our base ISA into a subset of the 32-bit instruction  word,  we  leave  more  space  available  for  non-standard  and  custom extensions.  In  particular,  the  base  RV32I  ISA  uses  less  than  1/8  of  the  encoding space in the 32-bit instruction word. As described in Chapter 36, an implementation that does not require support for the standard compressed instruction extension can map  3  additional  non-conforming  30-bit  instruction  spaces  into  the  32-bit  fixedwidth format, while preserving support for standard ≥32-bit instruction-set extensions.
+
+Encodings  with  bits  [15:0]  all  zeros  are  defined  as  illegal  instructions.  These  instructions  are considered to be of minimal length: 16 bits if any 16-bit instruction-set extension is present, otherwise 32 bits. The encoding with bits [ILEN-1:0] all ones is also illegal; this instruction is considered to be ILEN bits long.
+
+We consider it a feature that any length of instruction containing all zero bits is not legal,  as  this  quickly  traps  erroneous  jumps  into  zeroed  memory regions. Similarly, we  also  reserve  the  instruction  encoding  containing  all  ones  to  be  an  illegal instruction,  to  catch  the  other  common  pattern  observed  with  unprogrammed  nonvolatile memory devices, disconnected memory buses, or broken memory devices.
+
+<image>
+
+Software  can  rely  on  a  naturally  aligned  32-bit  word  containing  zero  to  act  as  an illegal instruction on all RISC-V implementations, to be used by software where an illegal instruction is explicitly desired. Defining a corresponding known illegal value for  all  ones  is  more  difficult  due  to  the  variable-length  encoding.  Software  cannot generally use the illegal value of ILEN bits of all 1s, as software might not know ILEN for the eventual target machine (e.g., if software is compiled into a standard binary library used by many different machines). Defining a 32-bit word of all ones as illegal was also considered, as all machines must support a 32-bit instruction size, but this requires  the  instruction-fetch  unit  on  machines  with  ILEN  >32  report  an  illegalinstruction exception rather than an access-fault exception when such an instruction borders  a  protection  boundary,  complicating  variable-instruction-length  fetch  and decode.
+
+RISC-V  base  ISAs  have  either  little-endian  or  big-endian  memory  systems,  with  the  privileged architecture further defining bi-endian operation. Instructions are stored in memory as a sequence of 16-bit little-endian parcels, regardless of memory system endianness. Parcels forming one instruction are  stored  at  increasing  halfword  addresses,  with  the  lowest-addressed  parcel  holding  the  lowestnumbered bits in the instruction specification.
+
+<image>
+
+We  originally  chose  little-endian  byte  ordering  for  the  RISC-V  memory  system because little-endian systems are currently dominant commercially (all x86 systems; iOS, Android, and Windows for ARM). A minor point is that we have also found little-
+
+endian memory systems to be more natural for hardware designers. However, certain application areas, such as IP networking, operate on big-endian data structures, and certain  legacy  code  bases  have  been  built  assuming  big-endian  processors,  so  we have defined big-endian and bi-endian variants of RISC-V.
+
+We  have  to  fix  the  order  in  which  instruction  parcels  are  stored  in  memory, independent of memory system endianness, to ensure that the length-encoding bits always appear first in halfword address order. This allows the length of a variablelength instruction to be quickly determined by an instruction-fetch unit by examining only the first few bits of the first 16-bit instruction parcel.
+
+We  further  make  the  instruction  parcels  themselves  little-endian  to  decouple  the instruction  encoding  from  the  memory  system  endianness  altogether.  This  design benefits  both  software  tooling  and  bi-endian  hardware.  Otherwise,  for  instance,  a RISC-V assembler or disassembler would always need to know the intended active endianness, despite that in bi-endian systems, the endianness mode might change dynamically during execution. In contrast, by giving instructions a fixed endianness, it is sometimes possible for carefully written software to be endianness-agnostic even in binary form, much like position-independent code.
+
+The  choice  to  have  instructions  be  only  little-endian  does  have  consequences, however,  for  RISC-V  software  that  encodes  or  decodes  machine  instructions.  Bigendian  JIT  compilers,  for  example,  must  swap  the  byte  order  when  storing  to instruction memory.
+
+Once we had decided to fix on a little-endian instruction encoding, this naturally led to placing the length-encoding bits in the LSB positions of the instruction format to avoid breaking up opcode fields.

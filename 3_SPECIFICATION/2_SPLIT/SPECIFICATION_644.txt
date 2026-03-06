@@ -1,0 +1,69 @@
+## 32.3.21. vsha2c[hl].vv
+
+## Synopsis
+
+Vector SHA-2 two rounds of compression.
+
+## Mnemonic
+
+vsha2ch.vv vd, vs2, vs1 vsha2cl.vv vd, vs2, vs1
+
+## Encoding (Vector-Vector) High part
+
+<image>
+
+## Encoding (Vector-Vector) Low part
+
+<image>
+
+## Reserved Encodings
+
+- ⚫ zvknha : SEW is any value other than 32
+- ⚫ zvknhb : SEW is any value other than 32 or 64
+- ⚫ The vd register group overlaps with either vs1 or vs2
+
+## Arguments
+
+| Register   | Direction   | EGW   |   EGS | EEW   | Definition                      |
+|------------|-------------|-------|-------|-------|---------------------------------|
+| Vd         | input       | 4*SEW |     4 | SEW   | current state {c, d, g, h}      |
+| Vs1        | input       | 4*SEW |     4 | SEW   | MessageSched plus constant[3:0] |
+| Vs2        | input       | 4*SEW |     4 | SEW   | current state {a, b, e, f}      |
+| Vd         | output      | 4*SEW |     4 | SEW   | next state {a, b, e, f}         |
+
+## Description
+
+- ⚫ SEW =32: 2 rounds of SHA-256 compression are performed ( zvknha and zvknhb )
+- ⚫ SEW =64: 2 rounds of SHA-512 compression are performed ( zvkhnb )
+
+Two words of vs1 are processed with the 8 words of current state held in vd and vs1 to  perform two rounds of hash computation producing four words of the next state.
+
+## Note to software developers
+
+The NIST standard (see zvknh[ab]) requires the final hash to be in big-endian byte ordering  within  SEW-sized  words.  Since  this  instruction  treats  all  words  as  littleendian,  software  needs  to  perform  an  endian  swap  on  the  final  output  of  this instruction after all of the message blocks have been processed.
+
+The vsha2ch version  of  this  instruction  uses  the  two  most  significant  message schedule words from the element group in vs1 while the vsha2cl version uses the two least significant message  schedule words. Otherwise, these versions of the instruction  are  identical.  Having  a  high  and  low  version  of  this  instruction  typically
+
+<image>
+
+<image>
+
+<image>
+
+## Operation
+
+```
+function clause execute (VSHA2c(vs2, vs1, vd)) = { if(LMUL*VLEN < EGW)  then { handle_illegal();  // illegal-instruction exception RETIRE_FAIL } else { eg_len = (vl/EGS) eg_start = (vstart/EGS) foreach (i from eg_start to eg_len-1) { let {a @ b @ e @ f} : bits(4*SEW) = get_velem(vs2, 4*SEW, i); let {c @ d @ g @ h} : bits(4*SEW) = get_velem(vd, 4*SEW, i); let MessageShedPlusC[3:0] : bits(4*SEW) = get_velem(vs1, 4*SEW, i); let {W1, W0} == VSHA2cl ? MessageSchedPlusC[1:0] : MessageSchedPlusC[3:2]; // l vs h difference is the words selected let T1 : bits(SEW) = h + sum1(e) + ch(e,f,g) + W0; let T2 : bits(SEW) = sum0(a) + maj(a,b,c); h  = g; g  = f; f  = e; e  = d + T1; d  = c; c  = b; b  = a; a  = T1 + T2; T1  = h + sum1(e) + ch(e,f,g) + W1; T2  = sum0(a) + maj(a,b,c); h = g; g = f; f = e; e = d + T1; d = c; c = b; b = a; a = T1 + T2; set_velem(vd, 4*SEW, i, {a @ b @ e @ f}); } RETIRE_SUCCESS }
+```
+
+improves performance when interleaving independent hashing operations (i.e., when hashing several files at once).
+
+Preventing overlap between vd and vs1 or vs2 simplifies implementation with VLEN < EGW . This restriction does not have any coding impact since proper implementation of the algorithm requires that vd , vs1 and vs2 each are different registers.
+
+```
+} function sum0(x) = { match SEW { 32 => rotr(x,2)  XOR rotr(x,13) XOR rotr(x,22), 64 => rotr(x,28) XOR rotr(x,34) XOR rotr(x,39) } } function sum1(x) = { match SEW { 32 => rotr(x,6)  XOR rotr(x,11) XOR rotr(x,25), 64 => rotr(x,14) XOR rotr(x,18) XOR rotr(x,41) } } function ch(x, y, z) = ((x & y) ^ ((~x) & z)) function maj(x, y, z) =  ((x & y) ^ (x & z) ^ (y & z)) function ROTR(x,n) = (x >> n) | (x << SEW - n)
+```
+
+## Included in
+
+Zvkn, Zvknc, Zvkng, zvknh[ab]

@@ -1,0 +1,37 @@
+## 29.5.16. cpop
+
+## Synopsis
+
+Count set bits
+
+## Mnemonic
+
+cpop rd , rs
+
+## Encoding
+
+<image>
+
+## Description
+
+This instructions counts the number of 1's (i.e., set bits) in the source register.
+
+## Operation
+
+```
+let bitcount = 0; let rs = X(rs); foreach (i from 0 to (xlen - 1) in inc) if rs[i] == 0b1 then bitcount = bitcount + 1 else (); X[rd] = bitcount
+```
+
+Software Hint
+
+This operations is known  as population count, popcount, sideways sum, bit summation, or Hamming weight.
+
+The GCC builtin function \_\_builtin\_popcount (unsigned int x) is implemented by cpop on  RV32  and  by cpopw on  RV64.  The  GCC  builtin  function \_\_builtin\_popcountl (unsigned long x) for LP64 is implemented by cpop on RV64.
+
+<image>
+
+## Included in
+
+| Extension                    | Minimum version   | Lifecycle state   |
+|------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation) | v1.0              | Ratified          |

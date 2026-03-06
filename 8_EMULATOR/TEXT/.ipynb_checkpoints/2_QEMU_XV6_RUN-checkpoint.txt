@@ -1,0 +1,41 @@
+============
+START ITER 1
+
+# 288 # Extension Must Be Active: NONE
+li t0, 0x80001000
+li t1, 0x12345678
+sw t1, 0(t0)
+li t2, 0xdeadbeef
+amoxor.w a0, t2, (t0)
+lw a1, 0(t0)
+# Result: a0 = 0x12345678 & a1 = 0xcc99e897
+
+priv           0x3	prv:3 [Machine]
+pc             0x80000210	0x80000210 <test_end>
+a0             0x12345678	305419896
+a1             0xffffffffcc99e897	-862328681
+a2             0x0	0
+a3             0x0	0
+
+END ITER 1
+==========
+
+============
+START ITER 2
+
+# 146 # Extension Must Be Active: NONE
+addi x5, x0, 5
+addi x6, x0, 3
+addi x7, x0, 0
+czero.eqz x10, x5, x6, x7
+addi x7, x0, 1
+czero.eqz x10, x5, x6, x7
+# Result: x10 = 0x0
+
+bootloader/code.S: Assembler messages:
+bootloader/code.S:106: Error: illegal operands `czero.eqz x10,x5,x6,x7'
+bootloader/code.S:108: Error: illegal operands `czero.eqz x10,x5,x6,x7'
+make: *** [Makefile:61: bootloader/code.o] Error 1
+
+END ITER 2
+==========

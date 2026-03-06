@@ -1,0 +1,11 @@
+## 30.14.2. Vector Widening Integer Reduction Instructions
+
+The  unsigned vwredsumu.vs instruction  zero-extends  the  SEW-wide  vector  elements  before  summing them,  then  adds  the  2*SEW-width  scalar  element,  and  stores  the  result  in  a  2*SEW-width  scalar element.
+
+The vwredsum.vs instruction sign-extends the SEW-wide vector elements before summing them.
+
+For both vwredsumu.vs and vwredsum.vs , overflows wrap around.
+
+```
+# Unsigned sum reduction into double-width accumulator vwredsumu.vs vd, vs2, vs1, vm   # 2*SEW = 2*SEW + sum(zero-extend(SEW)) # Signed sum reduction into double-width accumulator vwredsum.vs  vd, vs2, vs1, vm   # 2*SEW = 2*SEW + sum(sign-extend(SEW))
+```

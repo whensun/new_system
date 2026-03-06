@@ -1,0 +1,9 @@
+## 30.11.15. Vector Integer Merge Instructions
+
+The vector integer merge instructions combine two source operands based on a mask. Unlike regular arithmetic instructions, the merge operates on all body elements (i.e., the set of elements from vstart up to the current vector length in vl ).
+
+The vmerge instructions  are  encoded  as  masked  instructions  ( vm=0 ).  The  instructions  combine  two sources  as  follows.  At  elements  where  the  mask  value  is  zero,  the  first  operand  is  copied  to  the destination  element,  otherwise  the  second  operand  is  copied  to  the  destination  element.  The  first operand is always a vector register group specified by vs2 .  The  second operand is a vector register group specified by vs1 or a scalar x register specified by rs1 or a 5-bit sign-extended immediate.
+
+```
+vmerge.vvm vd, vs2, vs1, v0  # vd[i] = v0.mask[i] ? vs1[i] : vs2[i] vmerge.vxm vd, vs2, rs1, v0  # vd[i] = v0.mask[i] ? x[rs1] : vs2[i] vmerge.vim vd, vs2, imm, v0  # vd[i] = v0.mask[i] ? imm    : vs2[i]
+```

@@ -1,0 +1,36 @@
+## 32.3.13. vclz.v
+
+## Synopsis
+
+Vector Count Leading Zeros
+
+## Mnemonic
+
+vclz.v vd, vs2, vm
+
+## Encoding (Vector)
+
+<image>
+
+## Arguments
+
+| Register   | Direction   | Definition                 |
+|------------|-------------|----------------------------|
+| Vs2        | input       | Input elements             |
+| Vd         | output      | Count of leading zero bits |
+
+## Description
+
+A leading zero count is performed on each element.
+
+The result for zero-valued inputs is the value SEW.
+
+## Operation
+
+```
+function clause execute (VCLZ(vs2)) = { foreach (i from vstart to vl-1) { let input = get_velem(vs2, SEW, i); for (j = (SEW - 1); j >= 0;  j--) if [input[j]] == 0b1 then break; set_velem(vd, SEW, i, SEW - 1 - j) } RETIRE_SUCCESS }
+```
+
+## Included in
+
+Zvbb

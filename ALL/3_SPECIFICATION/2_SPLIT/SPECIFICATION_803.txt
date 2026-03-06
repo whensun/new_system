@@ -1,0 +1,32 @@
+## 11.1.5. Supervisor Control Transfer Records Status Register ( sctrstatus )
+
+The 32-bit sctrstatus register grants access to CTR status information and is updated by the hardware whenever CTR is active. CTR is active when the current privilege mode is enabled for recording and CTR is not frozen.
+
+Figure 45. Supervisor Control Transfer Records Status Register Format
+
+<image>
+
+Table 24. Supervisor Control Transfer Records Status Register Field Definitions
+
+| Field   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| WRPTR   | WARL field that indicates the physical CTR buffer entry to be written next. It is incremented after new transfers are recorded (see Section 11.5), though there are exceptions when x ctrctl .RASEMU=1, see Section 11.5.4. For a given CTR depth (where depth = 2 (DEPTH+4) ), WRPTR wraps to 0 on an increment when the value matches depth-1, and to depth-1 on a decrement when the value is 0. Bits above those needed to represent depth-1 (e.g., bits 7:4 for a depth of 16) are read-only 0. On depth changes, WRPTR holds an unspecified but legal value. |
+| FROZEN  | Inhibit transfer recording. See Section 11.5.5.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+
+Undefined bits in sctrstatus are WPRI. Status fields may be added by future extensions, and software should ignore but preserve any fields that it does not recognize. Undefined bits must be implemented as read-only 0, unless a custom extension is implemented and enabled (see Section 11.6).
+
+<image>
+
+Logical  entry  0,  accessed  via sireg* when siselect =0x200,  is  always  the  physical buffer entry preceding the WRPTR entry. More generally, the physical buffer entry Y associated with logical entry X (X < depth) can be determined using the formula Y = (WRPTR - X - 1) % depth, where depth = 2 (DEPTH+4) . Logical entries >= depth are readonly 0.
+
+<image>
+
+<image>
+
+<image>
+
+|    | Because the sctrstatus register is updated by hardware, writes should be performed with caution. If a multi-instruction read-modify-write to sctrstatus is performed while CTR is active, and between the read and write a qualified transfer or trap that causes CTR freeze completes, a hardware update could be lost. Software may wish to ensure that CTR is inactive before performing a read-modify-write, by ensuring that either sctrstatus .FROZEN=1, or that the current privilege mode is not enabled for recording. When restoring CTR state, sctrstatus should be written before CTR entry state is   |
+|-----|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|     | Exposing the WRPTR provides a more efficient means for synthesizing CTR entries. If a qualified control transfer is emulated, the emulator can simply increment the WRPTR, then write the synthesized record to logical entry 0. If a qualified function return is emulated while RASEMU=1, the emulator can clear ctrsource .V for logical entry 0, then decrement the WRPTR.                                                                                                                                                                                                                                     |
+|    | Exposing the WRPTR may also allow support for Linux perf's stack stitching capability. depends upon implementation of S-mode because much of CTR state                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|    | Smctr/Ssctr is accessible only through S-mode CSRs. If, in the future, it becomes desirable to remove this dependency, an extension could add mctrdepth and mctrstatus CSRs that reflect the same state as sctrdepth and sctrstatus , respectively. Further, such an extension should make CTR entries accessible via miselect / mireg* . See Section 11.2.                                                                                                                                                                                                                                                        |

@@ -1,0 +1,51 @@
+## 2.5.1. Unconditional Jumps
+
+The jump and link (JAL) instruction uses the J-type format, where the J-immediate encodes a signed offset  in  multiples  of  2  bytes.  The  offset  is  sign-extended  and  added  to  the  address  of  the  jump instruction to form the jump target address. Jumps can therefore target a ±1 MiB range. JAL stores the address of the instruction following the jump ('pc'+4) into register rd .  The  standard  software  calling convention uses 'x1' as the return address register and 'x5' as an alternate link register.
+
+<image>
+
+The alternate link register supports calling millicode routines (e.g., those to save and restore  registers  in  compressed  code)  while  preserving  the  regular  return  address register.  The  register x5 was  chosen  as  the  alternate  link  register  as  it  maps  to  a temporary in the standard calling convention, and has an encoding that is only one bit different than the regular link register.
+
+Plain unconditional jumps (assembler pseudoinstruction J) are encoded as a JAL with rd = x0 .
+
+<image>
+
+The  indirect  jump  instruction  JALR  (jump  and  link  register)  uses  the  I-type  encoding.  The  target address is obtained by adding the sign-extended 12-bit I-immediate to the register rs1 ,  then setting the least-significant bit of the result to zero. The address of the instruction following the jump ( pc +4) is written to register rd . Register x0 can be used as the destination if the result is not required.
+
+Plain unconditional indirect jumps (assembler pseudoinstruction JR) are encoded as a JALR with rd = x0 .  Procedure  returns  in  the  standard  calling  convention  (assembler  pseudoinstruction  RET)  are encoded as a JALR with rd = x0 , rs1 = x1 , and imm =0.
+
+<image>
+
+The unconditional jump instructions all use PC-relative addressing to help support position-independent  code.  The  JALR  instruction  was  defined  to  enable  a  twoinstruction  sequence  to  jump  anywhere  in  a  32-bit  absolute  address  range.  A  LUI instruction can first load rs1 with the upper 20 bits of a target address, then JALR can add in the lower bits. Similarly, AUIPC then JALR can jump anywhere in a 32-bit pc -relative address range.
+
+<image>
+
+Note that the JALR instruction does not treat the 12-bit immediate as multiples of 2 bytes,  unlike  the  conditional  branch  instructions.  This  avoids  one  more  immediate format in hardware. In practice, most uses of JALR will have either a zero immediate or be paired with a LUI or AUIPC, so the slight reduction in range is not significant.
+
+Clearing  the  least-significant  bit  when  calculating  the  JALR  target  address  both simplifies the hardware slightly and allows the low bit of function pointers to be used to  store  auxiliary  information.  Although  there  is  potentially  a  slight  loss  of  error checking  in  this  case,  in  practice  jumps  to  an  incorrect  instruction  address  will usually quickly raise an exception.
+
+When used with a base rs1= x0 ,  JALR can be used to implement a single instruction subroutine call to the lowest or highest address region from anywhere in the address space,  which  could  be  used  to  implement  fast  calls  to  a  small  runtime  library. Alternatively, an ABI could dedicate a general-purpose register to point to a library elsewhere in the address space.
+
+The JAL and JALR instructions will generate an instruction-address-misaligned exception if the target address is not aligned to a four-byte boundary.
+
+<image>
+
+Instruction-address-misaligned exceptions are not possible on machines  that support extensions with 16-bit aligned instructions,  such  as  the  compressed instruction-set extension, C.
+
+Return-address prediction stacks are a common feature of high-performance instruction-fetch units, but require accurate detection of instructions used for procedure calls and returns to be effective. For RISC-V, hints as to the instructions' usage are encoded implicitly via the register numbers used. A JAL instruction should push the return address onto a return-address stack (RAS) only when rd is 'x1' or x5 . JALR instructions should push/pop a RAS as shown in Table 3.
+
+Table 3. Return-address stack prediction hints encoded in the register operands of a JALR instruction.
+
+<image>
+
+| rd is x1/x5   | rs1 is x1/x5   | rd = rs1   | RAS action     |
+|---------------|----------------|------------|----------------|
+| No            | No             | -          | None           |
+| No            | Yes            | -          | Pop            |
+| Yes           | No             | -          | Push           |
+| Yes           | Yes            | No         | Pop, then push |
+| Yes           | Yes            | Yes        | Push           |
+
+Some other ISAs added explicit hint bits to their indirect-jump instructions to guide return-address stack manipulation. We use implicit hinting tied to register numbers and the calling convention to reduce the encoding space used for these hints.
+
+When two different link registers ( x1 and x5 ) are given as rs1 and rd, then the RAS is both  popped  and  pushed  to  support  coroutines.  If  rs1  and  rd  are  the  same  link register (either x1 or x5 ),  the  RAS  is  only  pushed  to  enable  macro-op fusion of the sequences: lui  ra,  imm20;  jalr  ra,  imm12(ra)\_  and  \_auipc  ra,  imm20;  jalr  ra, imm12(ra)

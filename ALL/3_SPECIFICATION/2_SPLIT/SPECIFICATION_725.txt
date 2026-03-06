@@ -1,0 +1,25 @@
+## 3.1.6.3. Base ISA Control in mstatus Register
+
+For RV64 harts, the SXL and UXL fields are WARL fields that control the value of XLEN for S-mode and U-mode, respectively. The encoding of these fields is the same as the MXL field of misa , shown in Table 9. The effective XLEN in S-mode and U-mode are termed SXLEN and UXLEN , respectively.
+
+When MXLEN=32, the SXL and UXL fields do not exist, and SXLEN=32 and UXLEN=32.
+
+When MXLEN=64, if S-mode is not supported, then SXL is read-only zero. Otherwise, it is a WARL field that encodes the current value of SXLEN. In particular, an implementation may make SXL be a readonly field whose value always ensures that SXLEN=MXLEN.
+
+When MXLEN=64, if U-mode is not supported, then UXL is read-only zero. Otherwise, it is a WARL field that encodes the current value of UXLEN. In particular, an implementation may make UXL be a read-only field whose value always ensures that UXLEN=MXLEN or UXLEN=SXLEN.
+
+If S-mode is implemented, the set of legal values that the UXL field may assume excludes those that would cause UXLEN to be greater than SXLEN.
+
+Whenever XLEN in any mode is set to a value less than the widest supported XLEN, all operations must ignore source operand register bits above the configured XLEN, and must sign-extend results to fill the entire widest supported XLEN in the destination register. Similarly, pc bits  above  XLEN are ignored, and when the pc is written, it is sign-extended to fill the widest supported XLEN.
+
+We require that operations always fill the entire underlying hardware registers with defined values to avoid implementation-defined behavior.
+
+<image>
+
+To  reduce  hardware  complexity,  the  architecture  imposes  no  checks  that  lowerprivilege modes have XLEN settings less than or equal to the next-higher privilege mode. In practice, such settings would almost always be a software bug, but machine operation is well-defined even in this case.
+
+Some  HINT  instructions  are  encoded  as  integer  computational  instructions  that  overwrite  their destination register with its current value, e.g., c.addi x8, 0 . When such a HINT is executed with XLEN <  MXLEN  and  bits  MXLEN..XLEN  of  the  destination  register  not  all  equal  to  bit  XLEN-1,  it  is implementation-defined whether bits MXLEN..XLEN of the destination register are unchanged or are overwritten with copies of bit XLEN-1.
+
+<image>
+
+This definition allows implementations to elide register writeback for some HINTs, while  allowing  them  to  execute  other  HINTs  in  the  same  manner  as  other  integer computational instructions. The implementation choice is observable only  by privilege modes with an XLEN setting greater than the current XLEN; it is invisible to the current privilege mode.

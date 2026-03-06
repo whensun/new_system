@@ -1,0 +1,11 @@
+## 30.19.5. Element Group Width
+
+The element group width (EGW) is the number of bits in the element group as a whole. For example, the  SHA-256  instructions  in  the  Zvknha  extension  operate  on  an  EGW  of  128,  with  EGS=4  and EEW=32. It is possible to use LMUL to concatenate multiple vector registers together to support larger EGW>VLEN.
+
+<image>
+
+If  software  using  large-EGW  instructions  need  be  portable  across  a  range  of implementations, some of which may have VLEN<EGW and hence require LMUL>1, then software can only use a subset of the architectural registers. Profiles can set minimum VLEN requirements to inform authors of such software.
+
+<image>
+
+Element group operations by their nature will gather data from across a wider portion of a vector datapath than regular vector instructions.  Some  element  group instructions  might  allow  temporal  execution  of  individual  element  operations  in  a larger group, while others will require all EGW bits of a group to be presented to a functional unit at the same time.

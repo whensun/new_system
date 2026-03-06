@@ -1,0 +1,15 @@
+## 24.4. Extensions
+
+The group of extensions introduced by the BF16 Instruction Set Extensions is listed here.
+
+Detection of individual BF16 extensions uses the unified software-based RISC-V discovery method.
+
+<image>
+
+At the time of writing, these discovery mechanisms are still a work in progress.
+
+The BF16 extensions defined in this specification (i.e., Zfbfmin , Zvfbfmin ,  and Zvfbfwma )  depend on the single-precision floating-point extension F .  Furthermore, the vector BF16 extensions (i.e., Zvfbfmin ,  and Zvfbfwma ) depend on the "V" Vector Extension for Application Processors or the Zve32f Vector Extension for Embedded Processors.
+
+As stated later in this specification, there exists a dependency between the newly defined extensions: Zvfbfwma depends on Zfbfmin and Zvfbfmin .
+
+This  initial  set  of  BF16  extensions  provides  very  basic  functionality  including  scalar  and  vector conversion  between  BF16  and  single-precision  values,  and  vector  widening  multiply-accumulate instructions.

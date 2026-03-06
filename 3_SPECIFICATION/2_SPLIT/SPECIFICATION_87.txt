@@ -1,0 +1,5 @@
+## 19.4.2.1. Illegal-Instruction and Virtual-Instruction Exceptions
+
+Cache-block management instructions and cache-block zero instructions may raise illegal-instruction exceptions or virtual-instruction exceptions depending on the current privilege mode and the state of the CMO control registers described in the Control and Status Register State section.
+
+Cache-block  prefetch  instructions  raise  neither  illegal-instruction  exceptions  nor  virtual-instruction exceptions.

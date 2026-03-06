@@ -1,0 +1,23 @@
+## 32.2.5. Zvkned - NIST Suite: Vector AES Block Cipher
+
+Instructions  for  accelerating  encryption,  decryption  and  key-schedule  functions  of  the  AES  block cipher as defined in Federal Information Processing Standards Publication 197 (NIST, 2001)
+
+All of these instructions work on 128-bit element groups comprised of four 32-bit elements.
+
+For  the  best  performance,  it  is  suggested  that  these  instruction  be  implemented  on  systems  with VLEN >=128.  On  systems  with VLEN <128,  element  groups  may  be  formed  by  concatenating  32-bit elements from two or four registers by using an LMUL =2 and LMUL=4 respectively.
+
+To  help  avoid  side-channel  timing  attacks,  these  instructions  shall  be  implemented  with  dataindependent timing.
+
+The  number  of  element  groups  to  be  processed  is vl / EGS . vl must  be  set  to  the  number  of SEW=32 elements to be processed and therefore must be a multiple of EGS=4 .
+
+Likewise, vstart must be a multiple of EGS=4 .
+
+|   SEW |   EGW | Mnemonic       | Instruction                        |
+|-------|-------|----------------|------------------------------------|
+|    32 |   128 | vaesef.[vv,vs] | Vector AES encrypt final round     |
+|    32 |   128 | vaesem.[vv,vs] | Vector AES encrypt middle round    |
+|    32 |   128 | vaesdf.[vv,vs] | Vector AES decrypt final round     |
+|    32 |   128 | vaesdm.[vv,vs] | Vector AES decrypt middle round    |
+|    32 |   128 | vaeskf1.vi     | Vector AES-128 Forward KeySchedule |
+|    32 |   128 | vaeskf2.vi     | Vector AES-256 Forward KeySchedule |
+|    32 |   128 | vaesz.vs       | Vector AES round zero              |

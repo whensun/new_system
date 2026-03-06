@@ -1,0 +1,23 @@
+## 24.3.2.5. Rounding Modes:
+
+As  is  the  case  with  other  floating-point  instructions,  the  BF16  instructions  support  all  5  RISC-V Floating-point rounding modes. These modes can be specified in the rm field of scalar instructions as well as in the frm CSR
+
+Table 34. RISC-V Floating Point Rounding Modes
+
+|   Rounding Mode | Mnemonic   | Meaning                                 |
+|-----------------|------------|-----------------------------------------|
+|             000 | RNE        | Round to Nearest, ties to Even          |
+|             001 | RTZ        | Round towards Zero                      |
+|             010 | RDN        | Round Down (towards - ∞)                |
+|             011 | RUP        | Round Up (towards +∞)                   |
+|             100 | RMM        | Round to Nearest, ties to Max Magnitude |
+
+As with other scalar floating-point instructions, the rounding mode field rm can  also  take  on  the DYN encoding, which indicates that the instruction uses the rounding mode specified in the frm CSR.
+
+Table 35. Additional encoding for the rm field of scalar instructions
+
+|   Rounding Mode | Mnemonic   | Meaning                      |
+|-----------------|------------|------------------------------|
+|             111 | DYN        | select dynamic rounding mode |
+
+In  practice,  the  default  IEEE  rounding  mode  (round  to  nearest,  ties  to  even)  is  generally  used  for arithmetic.

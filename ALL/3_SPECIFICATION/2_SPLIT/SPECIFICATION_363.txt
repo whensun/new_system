@@ -1,0 +1,64 @@
+## 30.10.1. Vector Arithmetic Instruction encoding
+
+The funct3 field encodes the operand type and source locations.
+
+Table 57. funct3
+
+|   funct3[2:0] |   funct3[2:0] |   funct3[2:0] | Category   | Operands         | Type of scalar operand         |
+|---------------|---------------|---------------|------------|------------------|--------------------------------|
+|             0 |             0 |             0 | OPIVV      | vector-vector    | N/A                            |
+|             0 |             0 |             1 | OPFVV      | vector-vector    | N/A                            |
+|             0 |             1 |             0 | OPMVV      | vector-vector    | N/A                            |
+|             0 |             1 |             1 | OPIVI      | vector-immediate | imm[4:0]                       |
+|             1 |             0 |             0 | OPIVX      | vector-scalar    | GPR x register rs1             |
+|             1 |             0 |             1 | OPFVF      | vector-scalar    | FP f register rs1              |
+|             1 |             1 |             0 | OPMVX      | vector-scalar    | GPR x register rs1             |
+|             1 |             1 |             1 | OPCFG      | scalars-imms     | GPR x register rs1 & rs2 / imm |
+
+Integer  operations  are  performed  using  unsigned  or  two's-complement  signed  integer  arithmetic depending on the opcode.
+
+<image>
+
+In this discussion, fixed-point operations are considered to be integer operations.
+
+All standard vector floating-point arithmetic operations follow the IEEE-754/2008 standard. All vector floating-point operations use the dynamic rounding mode in the frm register. Use of the frm field when it contains an invalid rounding mode by any vector floating-point instruction-even those that do not depend on the rounding mode, or when vl =0, or when vstart ≥ vl --is reserved.
+
+<image>
+
+All  vector  floating-point code will rely on a valid value in frm .  Implementations can make all vector FP instructions report exceptions when the rounding mode is invalid to simplify control logic.
+
+Vector-vector operations take two vectors of operands from vector register groups specified by vs2 and vs1 respectively.
+
+Vector-scalar operations can have three possible forms. In all three forms, the vector register group operand is specified by vs2 .  The  second scalar source operand comes from one of three alternative sources:
+
+1. For integer operations, the scalar can be a 5-bit immediate, imm[4:0] , encoded in the rs1 field. The value is sign-extended to SEW bits, unless otherwise specified.
+2. For  integer  operations,  the  scalar  can  be  taken  from  the  scalar x register  specified  by rs1 .  If XLEN>SEW, the least-significant SEW bits of the x register are used, unless otherwise specified. If XLEN<SEW, the value from the x register is sign-extended to SEW bits.
+3. For floating-point operations, the scalar can be taken from a scalar f register. If FLEN > SEW, the value in the f registers is checked for a valid NaN-boxed value, in which case the least-significant SEW bits of the f register are used, else the canonical NaN value is used. Vector instructions where any  floating-point  vector  operand's  EEW  is  not  a  supported  floating-point  type  width  (which includes when FLEN < SEW) are reserved.
+
+<image>
+
+Some instructions zero-extend the 5-bit immediate, and denote this by naming the immediate uimm in the assembly syntax.
+
+<image>
+
+When adding a vector extension to the Zfinx/Zdinx/Zhinx extensions, floating-point scalar  arguments  are  taken  from  the x registers.  NaN-boxing  is  not  supported  in these extensions, and so the vector floating-point scalar value is produced using the same rules as for an integer scalar operand (i.e., when XLEN > SEW use the lowest SEW bits, when XLEN < SEW use the sign-extended value).
+
+Vector arithmetic instructions are masked under control of the vm field.
+
+```
+# Assembly syntax pattern for vector binary arithmetic instructions # Operations returning vector results, masked by vm (v0.t, <nothing>) vop.vv  vd, vs2, vs1, vm  # integer vector-vector      vd[i] = vs2[i] op vs1[i] vop.vx  vd, vs2, rs1, vm  # integer vector-scalar      vd[i] = vs2[i] op x[rs1] vop.vi  vd, vs2, imm, vm  # integer vector-immediate   vd[i] = vs2[i] op imm vfop.vv  vd, vs2, vs1, vm # FP vector-vector operation vd[i] = vs2[i] fop vs1[i] vfop.vf  vd, vs2, rs1, vm # FP vector-scalar operation vd[i] = vs2[i] fop f[rs1]
+```
+
+<image>
+
+In the encoding, vs2 is the first operand, while rs1/imm is the second operand. This is the opposite to the standard scalar ordering. This arrangement retains the existing encoding conventions that instructions that read only one scalar register, read it from rs1 , and that 5-bit immediates are sourced from the rs1 field.
+
+# Assembly syntax pattern for vector ternary arithmetic instructions (multiplyadd)
+
+```
+# Integer operations overwriting sum input vop.vv vd, vs1, vs2, vm  # vd[i] = vs1[i] * vs2[i] + vd[i] vop.vx vd, rs1, vs2, vm  # vd[i] = x[rs1] * vs2[i] + vd[i] # Integer operations overwriting product input vop.vv vd, vs1, vs2, vm  # vd[i] = vs1[i] * vd[i] + vs2[i] vop.vx vd, rs1, vs2, vm  # vd[i] = x[rs1] * vd[i] + vs2[i] # Floating-point operations overwriting sum input vfop.vv vd, vs1, vs2, vm  # vd[i] = vs1[i] * vs2[i] + vd[i] vfop.vf vd, rs1, vs2, vm  # vd[i] = f[rs1] * vs2[i] + vd[i] # Floating-point operations overwriting product input vfop.vv vd, vs1, vs2, vm  # vd[i] = vs1[i] * vd[i] + vs2[i] vfop.vf vd, rs1, vs2, vm  # vd[i] = f[rs1] * vd[i] + vs2[i]
+```
+
+<image>
+
+For ternary multiply-add operations, the assembler syntax always places the destination vector register first, followed by either rs1 or vs1 , then vs2 . This ordering provides a more natural reading of the assembler for these ternary operations, as the multiply operands are always next to each other.

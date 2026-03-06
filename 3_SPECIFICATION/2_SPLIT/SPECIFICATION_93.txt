@@ -1,0 +1,9 @@
+## 19.4.4. Software Discovery
+
+The initial set of CMO extensions requires the following information to be discovered by software:
+
+- ⚫ The size of the cache block for management and prefetch instructions
+- ⚫ The size of the cache block for zero instructions
+- ⚫ CBIE support at each privilege level
+
+Other general cache characteristics may also be specified in the discovery mechanism.

@@ -1,0 +1,15 @@
+## 12.1.1.2. Memory Privilege in sstatus Register
+
+The  MXR  (Make  eXecutable  Readable)  bit  modifies  the  privilege  with  which  loads  access  virtual memory. When MXR=0, only loads from pages marked readable (R=1 in Figure 67) will succeed. When MXR=1, loads from pages marked either readable or executable (R=1 or X=1) will succeed. MXR has no effect when page-based virtual memory is not in effect.
+
+The SUM (permit Supervisor User Memory access) bit modifies the privilege with which S-mode loads and  stores  access  virtual  memory.  When  SUM=0,  S-mode  memory  accesses  to  pages  that  are accessible by U-mode (U=1 in Figure 67) will fault. When SUM=1, these accesses are permitted. SUM has no effect when page-based virtual memory is not in effect, nor when executing in U-mode. Note that S-mode can never execute instructions from user pages, regardless of the state of SUM.
+
+SUM is read-only 0 if satp .MODE is read-only 0.
+
+The SUM mechanism prevents supervisor software from inadvertently accessing user memory. Operating systems can execute the majority of code with SUM clear; the few code segments that should access user memory can temporarily set SUM.
+
+<image>
+
+The  SUM  mechanism  does  not  avail  S-mode  software  of  permission  to  execute instructions  in  user  code  pages.  Legitimate  use  cases  for  execution  from  user memory  in  supervisor  context  are  rare  in  general  and  nonexistent  in  POSIX environments. However, bugs in supervisors that lead to arbitrary code execution are much easier to exploit if the supervisor exploit code can be stored in a user buffer at a virtual address chosen by an attacker.
+
+Some non-POSIX single address space operating systems do allow certain privileged software  to  partially  execute  in  supervisor  mode,  while  most  programs  run  in  user mode, all in a shared address space. This use case can be realized by mapping the physical code pages at multiple virtual addresses with different permissions, possibly with the assistance of the instruction page-fault handler to direct supervisor software to use the alternate mapping.

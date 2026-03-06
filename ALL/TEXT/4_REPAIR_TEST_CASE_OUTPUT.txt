@@ -1,0 +1,97 @@
+# 1 # Extension Must Be Active: NONE
+lui x5, 0x80000 # x5 = 0x0000000080000000
+addiw x6, x5, -1 # x6 = x5 + (-1) sign‑extended, result should be 0x000000007fffffff
+# Result: x6 = 0x7fffffff
+
+# 2 # Extension Must Be Active: NONE
+addiw x2, x0, -2048
+# Result: x2 = 0xfffffffffffff800
+
+# 3 # Extension Must Be Active: NONE
+li x5, 0x7fffffff
+addiw x5, x5, 1
+# Result: x5 = 0xffffffff80000000
+
+# 4 # Extension Must Be Active: NONE
+lui x6, 0x7ffff
+addi x6, x6, -1
+addiw x5, x6, 1
+# Result: x5 = 0x7ffff000
+
+# 5 # Extension Must Be Active: NONE
+li x5, 0x80000001
+addiw x6, x5, 0
+# Result: x6 = 0xffffffff80000001
+
+# 6 # Extension Must Be Active: NONE
+li t0, 0x6000000000000000
+csrw 0x7a1, t0
+csrw 0x7a2, x0
+csrr t1, 0x7a1
+li t2, 0xF000000000000000
+and a0, t1, t2
+# Result: a0 = 0x6000000000000000
+
+# 7 # Extension Must Be Active: NONE
+li t1, 0x2000000000000000
+csrw 0x7a1, t1
+csrr t0, 0x7a1
+li t2, 0xF000000000000000
+and t0, t0, t2
+# Result: t0 != 0x2000000000000000
+
+# 8 # Extension Must Be Active: Zicbom
+li t0, 0x6000000000000000
+csrw 0x7a1, t0
+csrr t1, 0x7a1
+li t2, 0xF000000000000000
+and t3, t1, t2
+# Result: t3 = 0
+
+# 9 # Extension Must Be Active: Zicbop
+li a0, 0xF000000000000000 # a0 = TYPE field mask shifted (type=6 << 60, other bits zero)
+li a1, 0x6000000000000000 # a1 = (6 << 60) set TYPE=6, other bits zero
+csrw 0x7a1, a1 # attempt to write tdata1 with TYPE=6
+csrr a2, 0x7a1 # read back tdata1
+and a2, a2, a0 # isolate TYPE field
+srli a2, a2, 60 # shift TYPE field down to LSB
+# Result: a2 = 0
+
+# 10 # Extension Must Be Active: Zicboz
+li t0, 0x6000000000000001 # set TYPE=6 (bits 63..60) and mcontrol6.select=1 (bit 0)
+csrw 0x7a1, t0 # write to tdata1 CSR
+csrr t1, 0x7a1 # read back tdata1
+li t2, 0xF000000000000001 # mask for TYPE field and select bit
+and a0, t1, t2 # isolate and combine fields into a0
+# Result: a0 = 0x6000000000000001
+
+# 11 # Extension Must Be Active: Zicboz
+li t0, 0x6000000000000000 # set TYPE=6 in tdata1 (bits 63..60)
+csrw 0x7a1, t0 # write to tdata1 CSR
+li t1, 1 # set mcontrol6.select = 1
+csrw 0x7c4, t1 # write to mcontrol6 CSR (implementation‑specific address)
+csrr a0, 0x7a1 # read back tdata1
+li t2, 0xF000000000000000 # mask for TYPE field
+and a0, a0, t2 # isolate TYPE bits
+# Result: a0 = 0x6000000000000000
+
+# 12 # Extension Must Be Active: Zicbom
+li t0, 0x6000000000000000
+csrw 0x7a1, t0 # write TYPE=6 into tdata1
+csrr t1, 0x7a1 # read back tdata1
+li t2, 0xF000000000000000
+and t2, t1, t2 # isolate TYPE field (bits 63..60)
+# Result: t2 = 0x6000000000000000
+
+# 13 # Extension Must Be Active: Zicboz
+li t1, 0x6000000000000000
+csrw 0x7a1, t1
+csrr a0, 0x7a1
+# Result: a0 = 0x6000000000000000
+
+# 14 # Extension Must Be Active: Zicbop
+li a0, 0x6000000000000000
+csrw 0x7a1, a0
+csrr a1, 0x7a1
+andi a1, a1, 0x7ff
+# Result: a1 = 0x6000000000000000

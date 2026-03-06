@@ -1,0 +1,23 @@
+# 1 # Extension Must Be Active: NONE
+addi x11, x0, -1
+addiw x10, x11, 1
+# Result: a0 = 0
+
+# 2 # Extension Must Be Active: NONE
+addi x10, x0, 1
+addiw x11, x10, -2048
+# Result: a1 = 0xFFFFFFFFFFFFF801
+
+# 3 # Extension Must Be Active: NONE
+li x10, 0x6000000000000000
+csrw tdata1, x10
+csrr x10, tdata1
+# Result: a0 = 0x6000000000000000
+
+# 4 # Extension Must Be Active: NONE
+addi x10, x0, 0x6000000000000000
+csrw 0x7a1, x10
+addi x10, x0, 0x80000122
+csrw 0x7a2, x10
+and x10, x10, x10
+# Result: mcause = 0x3

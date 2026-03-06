@@ -1,0 +1,15 @@
+## 3.1.2. Machine Vendor ID ( mvendorid ) Register
+
+The mvendorid CSR is a 32-bit read-only register providing the JEDEC manufacturer ID of the provider of the core. This register must be readable in any implementation, but a value of 0 can be returned to indicate the field is not implemented or that this is a non-commercial implementation.
+
+Figure 3. Vendor ID register ( mvendorid )
+
+<image>
+
+JEDEC manufacturer IDs are ordinarily encoded as a sequence of one-byte continuation codes 0x7f , terminated by a one-byte ID not equal to 0x7f , with an odd parity bit in the most-significant bit of each byte. mvendorid encodes the number of one-byte continuation codes in the Bank field, and encodes the final byte in the Offset field, discarding the parity bit. For example, the JEDEC manufacturer ID 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x8a (twelve continuation codes followed by 0x8a ) would be encoded in the mvendorid CSR as 0x60a .
+
+In JEDEC's  parlance, the  bank  number  is  one  greater  than  the  number  of continuation codes; hence, the mvendorid Bank field encodes a value that is one less than the JEDEC bank number.
+
+<image>
+
+Previously the vendor ID was to be a number allocated by RISC-V International, but this duplicates the work of JEDEC in maintaining a manufacturer ID standard. At time of writing, registering a manufacturer ID with JEDEC has a one-time cost of $500.

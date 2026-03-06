@@ -1,0 +1,56 @@
+## 11.1.1. Machine Control Transfer Records Control Register ( mctrctl )
+
+The mctrctl register is a 64-bit read/write register that enables and configures the CTR capability.
+
+Figure 42. Machine Control Transfer Records Control Register Format
+
+<image>
+
+| 63         | 56 59 60   | 56 59 60   | 56 59 60   | 56 59 60   | 56 59 60   | 56 59 60   | 56 59 60   |
+|------------|------------|------------|------------|------------|------------|------------|------------|
+|            | Custom     | Custom     |            |            | WPRI       | WPRI       |            |
+| 55         |            |            |            |            |            |            | 48         |
+| WPRI       | WPRI       | WPRI       | WPRI       | WPRI       | WPRI       | WPRI       | WPRI       |
+| 47         | 46         | 45         | 44         | 43         | 42         | 41         | 40         |
+| DIRLJMPINH | INDLJMPINH | RETINH     | CORSWAPINH | DIRJMPINH  | INDJMPINH  | DIRCALLINH | INDCALLINH |
+| 39         | 38         | 37         | 36         | 35         | 34         | 33         | 32         |
+| WPRI       | WPRI       | TKBRINH    | NTBREN     | TRETINH    | INTRINH    | EXCINH     | WPRI       |
+| 31         |            |            |            |            |            |            | 24         |
+| WPRI       | WPRI       | WPRI       | WPRI       | WPRI       | WPRI       | WPRI       | WPRI       |
+| 23         |            |            |            |            |            |            | 16         |
+| WPRI       | WPRI       | WPRI       | WPRI       | WPRI       | WPRI       | WPRI       | WPRI       |
+| 15         |            | 13         | 12         | 11         | 10         | 9          | 8          |
+|            | WPRI       |            | LCOFIFRZ   | BPFRZ      | WPRI       | MTE        | STE        |
+| 7          | 6          |            |            | 3          | 2          | 1          | 0          |
+| RASEMU     |            | WPRI       |            |            | M          | S          | U          |
+
+Table 21. Machine Control Transfer Records Control Register Field Definitions
+
+| Field       | Description                                                                                                            |
+|-------------|------------------------------------------------------------------------------------------------------------------------|
+| M, S, U     | Enable transfer recording in the selected privileged mode(s).                                                          |
+| RASEMU      | Enables RAS (Return Address Stack) Emulation Mode. See Section 11.5.4.                                                 |
+| MTE         | Enables recording of traps to M-mode when M=0. See Section 11.5.1.2.                                                   |
+| STE         | Enables recording of traps to S-mode when S=0. See Section 11.5.1.2.                                                   |
+| BPFRZ       | Set sctrstatus .FROZEN on a breakpoint exception that traps to M-mode or S-mode. See Section 11.5.5.                   |
+| LCOFIFRZ    | Set sctrstatus .FROZEN on local-counter-overflow interrupt (LCOFI) that traps to M-mode or S-mode. See Section 11.5.5. |
+| EXCINH      | Inhibit recording of exceptions. See Section 11.5.2.                                                                   |
+| INTRINH     | Inhibit recording of interrupts. See Section 11.5.2.                                                                   |
+| TRETINH     | Inhibit recording of trap returns. See Section 11.5.2.                                                                 |
+| NTBREN      | Enable recording of not-taken branches. See Section 11.5.2.                                                            |
+| TKBRINH     | Inhibit recording of taken branches. See Section 11.5.2.                                                               |
+| INDCALLINH  | Inhibit recording of indirect calls. See Section 11.5.2.                                                               |
+| DIRCALLINH  | Inhibit recording of direct calls. See Section 11.5.2.                                                                 |
+| INDJMPINH   | Inhibit recording of indirect jumps (without linkage). See Section 11.5.2.                                             |
+| DIRJMPINH   | Inhibit recording of direct jumps (without linkage). See Section 11.5.2.                                               |
+| CORSWAPINH  | Inhibit recording of co-routine swaps. See Section 11.5.2.                                                             |
+| RETINH      | Inhibit recording of function returns. See Section 11.5.2.                                                             |
+| INDLJMPINH  | Inhibit recording of other indirect jumps (with linkage). See Section 11.5.2.                                          |
+| DIRLJMPINH  | Inhibit recording of other direct jumps (with linkage). See Section 11.5.2.                                            |
+| Custom[3:0] | WARL bits designated for custom use. The value 0 must correspond to standard behavior. See Section 11.6.               |
+
+All fields are optional except for M, S, U, and BPFRZ. All unimplemented fields are read-only 0, while all implemented  fields  are  writable.  If  the  Sscofpmf  extension  is  implemented,  LCOFIFRZ  must  be writable.
+
+<image>
+
+Because the ROI of CTR is perceived to be low for RV32 implementations, CTR does not fully support RV32. While control flow transfers in RV32 can be recorded, RV32 cannot access x ctrctl bits 63:32. A future extension could add support for RV32 by adding 3 new CSRs ( mctrctlh , sctrctlh , and vsctrctlh ) to provide this access.

@@ -1,0 +1,9 @@
+## 2.4.2. Integer Register-Register Operations
+
+RV32I defines several arithmetic R-type operations. All operations read the rs1 and rs2 registers  as source operands and write the result into register rd .  The funct7 and funct3 fields select the type of operation.
+
+<image>
+
+ADD performs the addition of rs1 and rs2 . SUB performs the subtraction of rs2 from rs1 . Overflows are ignored  and  the  low  XLEN  bits  of  results  are  written  to  the  destination rd .  SLT  and  SLTU  perform signed and unsigned compares respectively, writing 1 to rd if rs1 < rs2 , 0 otherwise. Note, SLTU rd , x0 , rs2 sets rd to 1 if rs2 is not equal to zero, otherwise sets rd to zero (assembler pseudoinstruction SNEZ rd, rs ). AND, OR, and XOR perform bitwise logical operations.
+
+SLL, SRL, and SRA perform logical left, logical right, and arithmetic right shifts on the value in register rs1 by the shift amount held in the lower 5 bits of register rs2 .

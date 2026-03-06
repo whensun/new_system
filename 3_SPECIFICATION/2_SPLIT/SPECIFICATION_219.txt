@@ -1,0 +1,7 @@
+## 28.13.5. Non-idempotent memory handling
+
+An  implementation  may  have  a  requirement  to  issue  a  PUSH/POP  instruction  to  non-idempotent memory.
+
+If the core implementation does not support PUSH/POP to non-idempotent memories, the core may use  an  idempotency  PMA  to  detect  it  and  take  a  load  (POP/POPRET)  or  store  (PUSH)  access-fault exception in order to avoid unpredictable results.
+
+Software should only use these instructions on non-idempotent memory regions when software can tolerate the required memory accesses being issued repeatedly in the case that they cause exceptions.

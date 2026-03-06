@@ -1,0 +1,11 @@
+## 30.14.3.3. Vector Single-Width Floating-Point Max and Min Reductions
+
+The vfredmin and vfredmax instructions reduce the scalar argument in vs1[0] and active elements in vs2 using the minimumNumber and maximumNumber operations, respectively.
+
+<image>
+
+Floating-point max and min reductions should return the same final value and raise the same exception flags regardless of operation order.
+
+<image>
+
+If  no  elements  are  active,  the  scalar  in vs1[0] is  simply  copied  to  the  destination register, without canonicalizing NaN values and without setting any exception flags.

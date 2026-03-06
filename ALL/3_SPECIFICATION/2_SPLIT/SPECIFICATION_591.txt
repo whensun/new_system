@@ -1,0 +1,67 @@
+## 32.1.5. Instruction Constraints
+
+All standard vector instruction constraints specified by RVV 1.0 apply to Vector Crypto instructions. In addition to those constraints a few additional specific constraints are introduced.
+
+The following is a quick reference for the various constraints of specific Vector Crypto instructions.
+
+## vl and vstart constraints
+
+Since vl and vstart refer  to  elements,  Vector  Crypto  instructions  that  use  elements  groups  (See Section 32.1.4) require that these values are an integer multiple of the Element Group Size ( EGS ).
+
+- ⚫ Instructions that violate the vl or vstart requirements are reserved .
+
+| Instructions   |   EGS |
+|----------------|-------|
+| vaes*          |     4 |
+| vsha2*         |     4 |
+| vg*            |     4 |
+| vsm3*          |     8 |
+| vsm4*          |     4 |
+
+## LMUL constraints
+
+For  element-group  instructions, LMUL * VLEN must  always  be  at  least  as  large  as EGW ,  otherwise  an illegal-instruction exception is raised, even if vl =0.
+
+| Instructions   |   SEW |   EGW |
+|----------------|-------|-------|
+| vaes*          |    32 |   128 |
+| vsha2*         |    32 |   128 |
+| vsha2*         |    64 |   256 |
+| vg*            |    32 |   128 |
+| vsm3*          |    32 |   256 |
+| vsm4*          |    32 |   128 |
+
+## SEW constraints
+
+Some Vector Crypto instructions are only defined for a specific SEW .  In  such  a  case  all  other SEW
+
+## values are reserved .
+
+| Instructions   | Required SEW   |
+|----------------|----------------|
+| vaes*          | 32             |
+| Zvknha: vsha2* | 32             |
+| Zvknhb: vsha2* | 32 or 64       |
+| vclmul[h]      | 64             |
+| vg*            | 32             |
+| vsm3*          | 32             |
+| vsm4*          | 32             |
+
+## Vector/Scalar constraints
+
+This  specification  defines  new  vector/scalar  (.vs)  instructions  that  uses Scalar Element Groups . The Scalar Element Group operand has EMUL = ceil(EGW / VLEN) .
+
+<image>
+
+Scalar  element  group  operands  do  not  need  to  be  aligned  to  LMUL  for  any implementation with VLEN >= EGW.
+
+In  the  case  of  the .vs instructions  defined  in  this  specification, vs2 holds  a  128-bit  scalar  element group. For implementations with VLEN ≥ 128, vs2 refers to a single register. Thus, the vd register group must  not  overlap  the vs2 register.  However,  in  implementations  where VLEN <  128, vs2 refers  to  a register group comprised of the number of registers needed to hold the 128-bit scalar element group. In this case, the vd register group must not overlap this vs2 register group.
+
+| Instruction   | Register   | Cannot Overlap   |
+|---------------|------------|------------------|
+| vaes*.vs      | vs2        | vd               |
+| vsm4r.vs      | vs2        | vd               |
+| vsha2c[hl]    | vs1, vs2   | vd               |
+| vsha2ms       | vs1, vs2   | vd               |
+| vsm3me        | vs2        | vd               |
+| vsm3c         | vs2        | vd               |

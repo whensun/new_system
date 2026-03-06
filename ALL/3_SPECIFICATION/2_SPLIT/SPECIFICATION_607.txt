@@ -1,0 +1,12 @@
+## 32.2.13. Zvksc - ShangMi Algorithm Suite with carryless multiplication
+
+This extension is shorthand for the following set of other extensions:
+
+| Included Extension   | Description   |
+|----------------------|---------------|
+| Zvks                 | Zvks          |
+| Zvbc                 | Zvbc          |
+
+<image>
+
+This  extension  combines  the  ShangMi  Algorithm  Suite  with  the  vector  carryless multiply extension to enable SM4-GCM.

@@ -1,0 +1,29 @@
+## 29.5.39. sh1add
+
+## Synopsis
+
+Shift left by 1 and add
+
+## Mnemonic
+
+sh1add rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction shifts rs1 to the left by 1 bit and adds it to rs2 .
+
+## Operation
+
+```
+X(rd) = X(rs2) + (X(rs1) << 1);
+```
+
+## Included in
+
+| Extension                             |   Minimum version | Lifecycle state   |
+|---------------------------------------|-------------------|-------------------|
+| Zba (Address generation instructions) |              0.93 | Ratified          |

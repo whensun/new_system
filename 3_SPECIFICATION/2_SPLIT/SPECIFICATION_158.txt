@@ -1,0 +1,65 @@
+## 25.1. Load-Immediate Instructions
+
+The  FLI.S  instruction  loads  one  of  32  single-precision  floating-point  constants,  encoded  in  the rs1 field,  into  floating-point  register rd .  The  correspondence  of rs1 field  values  and  single-precision floating-point values is shown in Table 37. FLI.S is encoded like FMV.W.X, but with rs2 =1.
+
+Table 36. Immediate values loaded by the FLI.S instruction.
+
+|   rs1 | Value           |   Sign |   Exponent | Significand   |
+|-------|-----------------|--------|------------|---------------|
+|     0 |                 |      1 |   01111111 | 000…000       |
+|     1 | positive normal |      0 |   00000001 | 000…000       |
+|     2 |                 |      0 |   01101111 | 000…000       |
+|     3 |                 |      0 |   01110000 | 000…000       |
+|     4 |                 |      0 |   01110111 | 000…000       |
+|     5 |                 |      0 |   01111000 | 000…000       |
+|     6 | 0.0625 ( )      |      0 |   01111011 | 000…000       |
+|     7 | 0.125 ( )       |      0 |   01111100 | 000…000       |
+|     8 | 0.25            |      0 |   01111101 | 000…000       |
+|     9 | 0.3125          |      0 |   01111101 | 010…000       |
+|    10 | 0.375           |      0 |   01111101 | 100…000       |
+|    11 | 0.4375          |      0 |   01111101 | 110…000       |
+|    12 | 0.5             |      0 |   01111110 | 000…000       |
+|    13 | 0.625           |      0 |   01111110 | 010…000       |
+|    14 | 0.75            |      0 |   01111110 | 100…000       |
+|    15 | 0.875           |      0 |   01111110 | 110…000       |
+|    16 | 1.0             |      0 |   01111111 | 000…000       |
+|    17 | 1.25            |      0 |   01111111 | 010…000       |
+|    18 | 1.5             |      0 |   01111111 | 100…000       |
+|    19 | 1.75            |      0 |   01111111 | 110…000       |
+|    20 | 2.0             |      0 |   10000000 | 000…000       |
+|    21 | 2.5             |      0 |   10000000 | 010…000       |
+|    22 | 3               |      0 |   10000000 | 100…000       |
+
+<image>
+
+<image>
+
+|   rs1 | Value         |   Sign |   Exponent | Significand   |
+|-------|---------------|--------|------------|---------------|
+|    23 | 4             |      0 |   10000001 | 000…000       |
+|    24 | 8             |      0 |   10000010 | 000…000       |
+|    25 | 16            |      0 |   10000011 | 000…000       |
+|    26 | 128 ( )       |      0 |   10000110 | 000…000       |
+|    27 | 256 ( )       |      0 |   10000111 | 000…000       |
+|    28 |               |      0 |   10001110 | 000…000       |
+|    29 |               |      0 |   10001111 | 000…000       |
+|    30 |               |      0 |   11111111 | 000…000       |
+|    31 | Canonical NaN |      0 |   11111111 | 100…000       |
+
+The  preferred  assembly  syntax  for  entries  1,  30,  and  31  is min , inf ,  and nan , respectively. For entries 0 through 29 (including entry 1), the assembler will accept decimal constants in C-like syntax.
+
+The set of 32 constants was chosen by examining floating-point libraries, including the C standard math library, and to optimize fixed-point to floating-point conversion.
+
+Entries 8-22 follow a regular encoding pattern. No entry sets mantissa bits other than the two most significant ones.
+
+If  the  D  extension  is  implemented,  FLI.D  performs  the  analogous  operation,  but  loads  a  doubleprecision  value  into  floating-point  register rd .  Note  that  entry  1  (corresponding  to  the  minimum positive normal value) has a numerically different value for double-precision than for single-precision. FLI.D is encoded like FLI.S, but with fmt =D.
+
+If  the  Q  extension  is  implemented,  FLI.Q  performs  the  analogous  operation,  but  loads  a  quadprecision  value  into  floating-point  register rd .  Note  that  entry  1  (corresponding  to  the  minimum positive normal value) has a numerically different value for quad-precision. FLI.Q is encoded like FLI.S, but with fmt =Q.
+
+If the Zfh or Zvfh extension is implemented, FLI.H performs the analogous operation, but loads a halfprecision  floating-point  value  into  register rd .  Note  that  entry  1  (corresponding  to  the  minimum positive normal value) has a numerically different value for half-precision. Furthermore, since is not representable in half-precision floating-point, entry 29 in the table instead loads positive infinity-i.e., it is redundant with entry 30. FLI.H is encoded like FLI.S, but with fmt =H.
+
+<image>
+
+Additionally, since and are subnormal in half-precision, entry 1 is numerically greater than entries 2 and 3 for FLI.H.
+
+The FLI. fmt instructions never set any floating-point exception flags.

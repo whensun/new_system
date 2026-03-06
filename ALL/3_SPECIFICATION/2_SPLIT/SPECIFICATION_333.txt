@@ -1,0 +1,26 @@
+## 30.4.4. Mapping across Mixed-Width Operations
+
+The  vector  ISA  is  designed  to  support  mixed-width  operations  without  requiring  additional  explicit rearrangement instructions. The recommended software strategy when operating on multiple vectors with different precision values is to modify vtype dynamically to keep SEW/LMUL constant (and hence VLMAX constant).
+
+The following example shows four different packed element widths (8b, 16b, 32b, 64b) in a VLEN=128b implementation. The vector register grouping factor (LMUL) is increased by the relative element size such that each group can hold the same number of vector elements (VLMAX=8 in this example) to simplify stripmining code.
+
+```
+Example VLEN=128b, with SEW/LMUL=16 Byte      F E D C B A 9 8 7 6 5 4 3 2 1 0 vn        - - - - - - - - 7 6 5 4 3 2 1 0  SEW=8b, LMUL=1/2 vn          7   6   5   4   3   2   1   0  SEW=16b, LMUL=1 v2*n            3       2       1       0  SEW=32b, LMUL=2 v2*n+1          7       6       5       4 v4*n                    1               0  SEW=64b, LMUL=4
+```
+
+| v4*n+1   |   3 |   2 |
+|----------|-----|-----|
+| v4*n+2   |   5 |   4 |
+| v4*n+3   |   7 |   6 |
+
+The following table shows each possible constant SEW/LMUL operating point for loops with mixedwidth operations. Each column represents a constant SEW/LMUL operating point. Entries in table are the  LMUL  values  that  yield  that  column's  SEW/LMUL  value  for  the  datawidth  on  that  row.  In  each column, an LMUL setting for a datawidth indicates that it can be aligned with the other datawidths in the same column that also have an LMUL setting, such that all have the same VLMAX.
+
+|         | SEW/LMUL   | SEW/LMUL   | SEW/LMUL   |   SEW/LMUL | SEW/LMUL   | SEW/LMUL   | SEW/LMUL   |
+|---------|------------|------------|------------|------------|------------|------------|------------|
+|         | 1          | 2          | 4          |          8 | 16         | 32         | 64         |
+| SEW= 8  | 8          | 4          | 2          |          1 | 1/2        | 1/4        | 1/8        |
+| SEW= 16 |            | 8          | 4          |          2 | 1          | 1/2        | 1/4        |
+| SEW= 32 |            |            | 8          |          4 | 2          | 1          | 1/2        |
+| SEW= 64 |            |            |            |          8 | 4          | 2          | 1          |
+
+Larger LMUL settings can also used to simply increase vector length to reduce instruction fetch and dispatch overheads in cases where fewer vector register groups are needed.

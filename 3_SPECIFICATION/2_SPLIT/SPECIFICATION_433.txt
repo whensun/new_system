@@ -1,0 +1,19 @@
+## 30.16.3.3. Vector Slide1up
+
+Variants  of  slide  are  provided  that  only  move  by  one  element  but  which  also  allow  a  scalar  integer value to be inserted at the vacated element position.
+
+```
+vslide1up.vx  vd, vs2, rs1, vm        # vd[0]=x[rs1], vd[i+1] = vs2[i]
+```
+
+The vslide1up instruction places the x register argument at location 0 of the destination vector register group, provided that element 0 is active, otherwise the destination element update follows the current mask agnostic/undisturbed policy. If XLEN < SEW, the value is sign-extended to SEW bits. If XLEN > SEW, the least-significant bits are copied over and the high XLEN-SEW bits are ignored.
+
+The remaining active vl -1 elements are copied over from index i in the source vector register group to index i +1 in the destination vector register group.
+
+The vl register specifies the maximum number of destination vector register elements updated with source values, and remaining elements past vl are handled according to the current tail policy (Section 30.3.4.3).
+
+```
+vslide1up behavior when vl > 0 i < vstart  unchanged 0 = i = vstart  vd[i] = x[rs1] if v0.mask[i] enabled max(vstart, 1) <= i < vl      vd[i] = vs2[i-1] if v0.mask[i] enabled vl <= i < VLMAX   Follow tail policy
+```
+
+The vslide1up instruction  requires  that  the  destination  vector  register  group  does  not  overlap  the source vector register group. Otherwise, the instruction encoding is reserved.

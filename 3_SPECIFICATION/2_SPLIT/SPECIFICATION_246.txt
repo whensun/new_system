@@ -1,0 +1,8 @@
+## 29.4.2.3. Count population
+
+These  instructions  count  the  number  of  set  bits  (1-bits).  This  is  also  commonly  referred  to  as population count.
+
+| RV32   | RV64   | Mnemonic      | Instruction            |
+|--------|--------|---------------|------------------------|
+| ✓      | ✓      | cpop rd , rs  | Count set bits         |
+|        | ✓      | cpopw rd , rs | Count set bits in word |

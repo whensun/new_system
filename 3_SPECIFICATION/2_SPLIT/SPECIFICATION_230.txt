@@ -1,0 +1,45 @@
+## 28.13.11. cm.mvsa01
+
+Synopsis:
+
+Move a0-a1 into two registers of s0-s7
+
+Mnemonic:
+
+cm.mvsa01 r1s' , r2s'
+
+Encoding (RV32, RV64):
+
+<image>
+
+<image>
+
+For the encoding to be legal r1s' != r2s'.
+
+Assembly Syntax:
+
+```
+cm.mvsa01 r1s', r2s'
+```
+
+Description: This instruction moves a0 into r1s' and a1 into r2s' . r1s' and r2s' must be different. The execution  is  atomic,  so  it  is  not  possible  to  observe  state  where  only  one  of r1s' or r2s' has  been updated.
+
+The encoding uses sreg number specifiers instead of xreg number specifiers to save encoding space. The mapping between them is specified in the pseudocode below.
+
+<image>
+
+The  s  register  mapping  is  taken  from  the  UABI,  and  may  not  match  the  currently unratified EABI. cm.mvsa01.e may be included in the future.
+
+Prerequisites:
+
+None
+
+32-bit equivalent:
+
+No direct equivalent encoding exists.
+
+Operation:
+
+```
+//This is not SAIL, it's pseudocode. The SAIL hasn't been written yet. if (RV32E && (r1sc>1 || r2sc>1)) { reserved(); } xreg1 = {r1sc[2:1]>0,r1sc[2:1]==0,r1sc[2:0]}; xreg2 = {r2sc[2:1]>0,r2sc[2:1]==0,r2sc[2:0]}; X[xreg1] = X[10]; X[xreg2] = X[11];
+```

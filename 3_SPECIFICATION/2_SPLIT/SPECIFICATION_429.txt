@@ -1,0 +1,21 @@
+## 30.16.2. Floating-Point Scalar Move Instructions
+
+The floating-point scalar read/write instructions transfer a single value between a scalar f register and element 0 of a vector register. The instructions ignore LMUL and vector register groups.
+
+```
+vfmv.f.s rd, vs2  # f[rd] = vs2[0] (rs1=0) vfmv.s.f vd, rs1  # vd[0] = f[rs1] (vs2=0)
+```
+
+The vfmv.f.s instruction copies a single SEW-wide element from index 0 of the source vector register to a destination scalar floating-point register.
+
+<image>
+
+vfmv.f.s performs its operation even if vstart ≥ vl or vl =0.
+
+The vfmv.s.f instruction copies the scalar floating-point register to element 0 of the destination vector register. The other elements in the destination vector register ( 0 < index < VLEN/SEW) are treated as tail  elements  using  the  current  tail  agnostic/undisturbed  policy.  If vstart ≥ vl ,  no  operation  is performed and the destination register is not updated.
+
+<image>
+
+As  a  consequence,  when vl =0,  no  elements  are  updated  in  the  destination  vector register group, regardless of vstart .
+
+The encodings corresponding to the masked versions ( vm=0 ) of vfmv.f.s and vfmv.s.f are reserved.

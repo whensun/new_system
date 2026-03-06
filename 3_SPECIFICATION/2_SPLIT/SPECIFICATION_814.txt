@@ -1,0 +1,65 @@
+## 11.5.2. Transfer Type Filtering
+
+Default CTR behavior, when all transfer type filter bits ( x ctrctl [47:32]) are unimplemented or 0, is to record all control transfers within enabled privileged modes. By setting transfer type filter bits, software can opt out of recording select transfer types, or opt into recording non-default operations. All transfer type filter bits are optional.
+
+<image>
+
+Because  not-taken  branches  are  not  recorded  by  default,  the  polarity  of  the associated enable bit (NTBREN) is the opposite of other bits associated with transfer type filtering  (TKBRINH, RETINH, etc). Non-default operations require opt-in rather than opt-out.
+
+The transfer type filter bits leverage the type definitions specified in the RISC-V Efficient Trace Spec v2.0 (Table 4.4 and Section 4.1.1). For completeness, the definitions are reproduced below.
+
+<image>
+
+Here "indirect" is used interchangeably with "uninferrable", which is used in the trace spec. Both imply that the target of the jump is not encoded in the opcode.
+
+Table 28. Control Transfer Type Definitions
+
+|   Encoding | Transfer Type Name                 |
+|------------|------------------------------------|
+|          0 | Not used by CTR                    |
+|          1 | Exception                          |
+|          2 | Interrupt                          |
+|          3 | Trap return                        |
+|          4 | Not-taken branch                   |
+|          5 | Taken branch                       |
+|          6 | reserved                           |
+|          7 | reserved                           |
+|          8 | Indirect call                      |
+|          9 | Direct call                        |
+|         10 | Indirect jump (without linkage)    |
+|         11 | Direct jump (without linkage)      |
+|         12 | Co-routine swap                    |
+|         13 | Function return                    |
+|         14 | Other indirect jump (with linkage) |
+|         15 | Other direct jump (with linkage)   |
+
+Encodings 8 through 15 refer to various encodings of jump instructions. The types are distinguished as described below.
+
+Table 29. Control Transfer Type Definitions
+
+| Transfer Type Name                 | Associated Opcodes                                                  |
+|------------------------------------|---------------------------------------------------------------------|
+| Indirect call                      | JALR x1 , rs where rs != x5                                         |
+| Indirect call                      | JALR x5 , rs where rs != x1                                         |
+| Indirect call                      | C.JALR rs1 where rs1 != x5                                          |
+| Direct call                        | JAL x1                                                              |
+| Direct call                        | JAL x5                                                              |
+| Direct call                        | C.JAL                                                               |
+| Direct call                        | CM.JALT index                                                       |
+| Indirect jump (without linkage)    | JALR x0 , rs where rs != ( x1 or x5 )                               |
+| Indirect jump (without linkage)    | C.JR rs1 where rs1 != ( x1 or x5 )                                  |
+| Direct jump (without linkage)      | JAL x0                                                              |
+| Direct jump (without linkage)      | C.J                                                                 |
+| Direct jump (without linkage)      | CM.JT index                                                         |
+| Co-routine swap                    | JALR x1 , x5                                                        |
+| Co-routine swap                    | JALR x5 , x1                                                        |
+| Co-routine swap                    | C.JALR x5                                                           |
+| Function return                    | JALR rd , rs where rs == ( x1 or x5 ) and rd != ( x1 or x5 )        |
+| Function return                    | C.JR rs1 where rs1 == ( x1 or x5 )                                  |
+| Function return                    | CM.POPRET(Z)                                                        |
+| Other indirect jump (with linkage) | JALR rd , rs where rs != ( x1 or x5 ) and rd != ( x0 , x1 , or x5 ) |
+| Other direct jump (with linkage)   | JAL rd where rd != ( x0 , x1 , or x5 )                              |
+
+<image>
+
+If implementation  of  any  transfer type filter bit results  in  reduced  software performance, perhaps  due  to additional retirement restrictions, it is strongly recommended  that  this  reduced  performance  apply  only  when  the  bit  is  set. Alternatively, support for the bit may be omitted. Maintaining software performance for  the  default  CTR  configuration,  when  all  transfer  type  bits  are  cleared,  is recommended.

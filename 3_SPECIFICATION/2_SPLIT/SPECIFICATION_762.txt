@@ -1,0 +1,35 @@
+## 3.7.1. Physical Memory Protection CSRs
+
+PMP entries  are  described  by  an  8-bit  configuration  register  and  one  MXLEN-bit  address  register. Some PMP settings additionally use the address register associated with the preceding PMP entry. Up to 64 PMP entries are supported. Implementations may implement zero, 16, or 64 PMP entries; the lowest-numbered PMP entries must be implemented first. All PMP CSR fields are WARL and may be read-only zero. PMP CSRs are only accessible to M-mode.
+
+The PMP configuration registers are densely packed into CSRs to minimize context-switch time. For RV32, sixteen CSRs, pmpcfg0 -pmpcfg15 , hold the configurations pmp0cfg -pmp63cfg for the 64 PMP entries, as  shown in Figure 30. For RV64, eight even-numbered CSRs, pmpcfg0 , pmpcfg2 ,  …, pmpcfg14 ,  hold  the configurations  for  the  64  PMP  entries,  as  shown  in  Figure  31.  For  RV64,  the  odd-numbered configuration registers, pmpcfg1 , pmpcfg3 , …, pmpcfg15 , are illegal.
+
+<image>
+
+RV64 harts use pmpcfg2 , rather than pmpcfg1 , to hold configurations for PMP entries 815.  This  design  reduces  the  cost  of  supporting  multiple  MXLEN  values,  since  the configurations for PMP entries 8-11 appear in pmpcfg2 [31:0] for both RV32 and RV64.
+
+Figure 30. RV32 PMP configuration CSR layout.
+
+<image>
+
+Figure 31. RV64 PMP configuration CSR layout.
+
+<image>
+
+The PMP address registers are CSRs named pmpaddr0 -pmpaddr63 .  Each PMP address register encodes bits 33-2 of a 34-bit physical address for RV32, as shown in Figure 32. For RV64, each PMP address register encodes bits 55-2 of a 56-bit physical address, as shown in Figure 33. Not all physical address bits may be implemented, and so the pmpaddr registers are WARL .
+
+<image>
+
+The Sv32 page-based virtual-memory scheme described in Section 12.3 supports 34bit physical addresses for RV32, so the PMP scheme must support addresses wider than  XLEN  for  RV32.  The  Sv39  and  Sv48  page-based  virtual-memory  schemes described in Section 12.4 and Section 12.5 support a 56-bit physical address space, so the RV64 PMP address registers impose the same limit.
+
+Figure 33. PMP address register format, RV64.
+
+<image>
+
+Figure 34 shows the layout of a PMP configuration register. The R, W, and X bits, when set, indicate that the PMP entry permits read, write, and instruction execution, respectively. When one of these bits is clear, the corresponding access type is denied. The R, W, and X fields form a collective WARL field for  which  the  combinations with R=0 and W=1 are reserved. The remaining two fields, A and L, are described in the following sections.
+
+Figure 34. PMP configuration register format.
+
+<image>
+
+Attempting to fetch an instruction from a PMP region that does not have execute permissions raises an instruction access-fault exception. Attempting to execute a load or load-reserved instruction which accesses a physical address within a PMP region without read permissions raises a load access-fault exception.  Attempting  to  execute  a  store,  store-conditional,  or  AMO  instruction  which  accesses  a physical address within a PMP region without write permissions raises a store access-fault exception.

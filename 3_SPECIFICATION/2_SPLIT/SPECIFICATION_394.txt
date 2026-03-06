@@ -1,0 +1,5 @@
+## 30.13.5. Vector Widening Floating-Point Multiply
+
+```
+# Widening floating-point multiply vfwmul.vv    vd, vs2, vs1, vm # vector-vector vfwmul.vf    vd, vs2, rs1, vm # vector-scalar
+```

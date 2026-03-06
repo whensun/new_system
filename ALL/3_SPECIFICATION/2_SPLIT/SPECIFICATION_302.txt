@@ -1,0 +1,37 @@
+## 29.5.46. unzip
+
+## Synopsis
+
+Place  odd  and  even  bits  of  the  source  register  into  upper  and  lower  halves  of  the  destination register, respectively.
+
+## Mnemonic
+
+unzip rd , rs
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction scatters all of the odd and even bits of a source word into the high and low halves of a destination word. It is the inverse of the zip instruction. This instruction is available only on RV32.
+
+## Operation
+
+```
+foreach (i from 0 to xlen/2-1) { X(rd)[i] = X(rs1)[2*i] X(rd)[i+xlen/2] = X(rs1)[2*i+1] }
+```
+
+Software Hint
+
+This instruction is useful for implementing the SHA3 cryptographic hash function on a 32-bit architecture, as it implements the bit-interleaving operation used to speed up the 64-bit rotations directly.
+
+<image>
+
+## Included in
+
+| Extension                                       | Minimum version   | Lifecycle state   |
+|-------------------------------------------------|-------------------|-------------------|
+| Zbkb (Bit-manipulation for Cryptography) (RV32) | v1.0              | Ratified          |
+
+OP-IMM

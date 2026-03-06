@@ -1,0 +1,7 @@
+## 30.11.14. Vector Widening Integer Multiply-Add Instructions
+
+The widening integer multiply-add instructions add the full 2*SEW-bit product from a SEW-bit*SEW-bit multiply  to  a  2*SEW-bit  value  and  produce  a  2*SEW-bit  result.  All  combinations  of  signed  and unsigned multiply operands are supported.
+
+```
+# Widening unsigned-integer multiply-add, overwrite addend vwmaccu.vv vd, vs1, vs2, vm    # vd[i] = +(vs1[i] * vs2[i]) + vd[i] vwmaccu.vx vd, rs1, vs2, vm    # vd[i] = +(x[rs1] * vs2[i]) + vd[i] # Widening signed-integer multiply-add, overwrite addend vwmacc.vv vd, vs1, vs2, vm    # vd[i] = +(vs1[i] * vs2[i]) + vd[i] vwmacc.vx vd, rs1, vs2, vm    # vd[i] = +(x[rs1] * vs2[i]) + vd[i] # Widening signed-unsigned-integer multiply-add, overwrite addend vwmaccsu.vv vd, vs1, vs2, vm  # vd[i] = +(signed(vs1[i]) * unsigned(vs2[i])) + vd[i] vwmaccsu.vx vd, rs1, vs2, vm  # vd[i] = +(signed(x[rs1]) * unsigned(vs2[i])) + vd[i] # Widening unsigned-signed-integer multiply-add, overwrite addend vwmaccus.vx vd, rs1, vs2, vm  # vd[i] = +(unsigned(x[rs1]) * signed(vs2[i])) + vd[i]
+```

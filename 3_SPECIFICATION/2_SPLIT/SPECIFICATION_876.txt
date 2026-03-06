@@ -1,0 +1,17 @@
+## 21.2.7. Hypervisor Time Delta ( htimedelta ) Register
+
+The htimedelta CSR is a 64-bit read/write register that contains the delta between the value of the time CSR and the value returned in VS-mode or VU-mode. That is, reading the time CSR in VS or VU mode returns the sum of the contents of htimedelta and the actual value of time .
+
+<image>
+
+ Because  overflow  is  ignored  when  summing htimedelta and time ,  large  values  of htimedelta may be used to represent negative time offsets.
+
+<image>
+
+64
+
+Figure 93. Hypervisor time delta register.
+
+When  XLEN=32, htimedeltah is  a  32-bit  read/write  register  that  aliases  bits  63:32  of htimedelta . Register htimedeltah does not exist when XLEN=64.
+
+If the time CSR is implemented, htimedelta (and htimedeltah for XLEN=32) must be implemented.

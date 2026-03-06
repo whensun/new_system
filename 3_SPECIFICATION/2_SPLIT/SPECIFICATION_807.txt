@@ -1,0 +1,21 @@
+## 11.2.3. Control Transfer Record Metadata Register ( ctrdata )
+
+The ctrdata register contains metadata for the recorded transfer. This register must be implemented, though  all  fields  within  it  are  optional.  Unimplemented  fields  are  read-only  0. ctrdata is  a  64-bit register.
+
+Figure 48. Control Transfer Record Metadata Register Format
+
+<image>
+
+Table 25. Control Transfer Record Metadata Register Field Definitions
+
+| Field     | Description                                                                                                                                                                   | Access   |
+|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| TYPE[3:0] | Identifies the type of the control flow transfer recorded in the entry, using the encodings listed in Table 28. Implementations that do not support this field will report 0. | WARL     |
+| CCV       | Cycle Count Valid. See Section 11.5.3.                                                                                                                                        | WARL     |
+| CC[15:0]  | Cycle Count, composed of the Cycle Count Exponent (CCE, in CC[15:12]) and Cycle Count Mantissa (CCM, in CC[11:0]). See Section 11.5.3.                                        | WARL     |
+
+Undefined bits  in ctrdata are  WPRI.  Undefined  bits  must  be  implemented  as  read-only  0,  unless  a custom extension is implemented and enabled.
+
+<image>
+
+Like the Transfer Type Filtering bits in mctrctl , the ctrdata .TYPE bits leverage the Etrace itype encodings.

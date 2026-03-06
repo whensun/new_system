@@ -1,0 +1,41 @@
+## 13.3. Eventual Success of Store-Conditional Instructions
+
+The Zalrsc extension defines constrained LR/SC loops , which have the following properties:
+
+- ⚫ The loop comprises only an LR/SC sequence and code to retry the sequence in the case of failure, and must comprise at most 16 instructions placed sequentially in memory.
+- ⚫ An LR/SC sequence begins with an LR instruction and ends with an SC instruction. The dynamic code executed between the LR and SC instructions can only contain instructions from the base ''I'' instruction set, excluding loads, stores, backward jumps, taken backward branches, JALR, FENCE, and SYSTEM instructions. Compressed forms of the aforementioned ''I'' instructions in the Zca and Zcb extensions are also permitted.
+
+- ⚫ The  code  to  retry  a  failing  LR/SC  sequence  can  contain  backwards  jumps  and/or  branches  to repeat the LR/SC sequence, but otherwise has the same constraint as the code between the LR and SC.
+- ⚫ The LR and SC addresses must lie within a memory region with the LR/SC eventuality property. The execution environment is responsible for communicating which regions have this property.
+- ⚫ The SC must be to the same effective address and of the same data size as the latest LR executed by the same hart.
+
+LR/SC sequences that do not lie within  constrained  LR/SC  loops  are unconstrained .  Unconstrained LR/SC  sequences  might  succeed  on  some  attempts  on  some  implementations,  but  might  never succeed on other implementations.
+
+<image>
+
+We restricted the length of LR/SC loops to fit within 64 contiguous instruction bytes in  the  base ISA to avoid undue restrictions on instruction cache and TLB size and associativity. Similarly, we disallowed other loads and stores within the loops to avoid restrictions  on  data-cache  associativity  in  simple  implementations  that  track  the reservation within a private cache. The restrictions on branches and jumps limit the time  that  can  be  spent  in  the  sequence.  Floating-point  operations  and  integer multiply/divide were disallowed to simplify the operating system's emulation of these instructions on implementations lacking appropriate hardware support.
+
+Software is not forbidden from using unconstrained LR/SC sequences, but portable software must detect the case that the sequence repeatedly fails, then fall back to an alternate  code  sequence  that  does  not  rely  on  an  unconstrained  LR/SC  sequence. Implementations  are  permitted  to  unconditionally  fail  any  unconstrained  LR/SC sequence.
+
+If a hart H enters a constrained LR/SC loop, the execution environment must guarantee that one of the following events eventually occurs:
+
+- ⚫ H or some other hart executes a successful SC to the reservation set of the LR instruction in H 's constrained LR/SC loops.
+- ⚫ Some other hart executes an unconditional store or AMO instruction to the reservation set of the LR instruction in H 's  constrained  LR/SC loop, or some other device in the system writes to that reservation set.
+- ⚫ H executes a branch or jump that exits the constrained LR/SC loop.
+- ⚫ H traps.
+
+<image>
+
+Note  that  these  definitions  permit  an  implementation  to  fail  an  SC  instruction occasionally for any reason, provided the aforementioned guarantee is not violated.
+
+As  a  consequence  of  the  eventuality  guarantee,  if  some  harts  in  an  execution environment are executing constrained LR/SC loops, and no other harts or devices in the execution environment execute an unconditional store or AMO to that reservation set, then at least one hart will eventually exit its constrained LR/SC loop. By contrast, if other harts or devices continue to write to that reservation set, it is not guaranteed that any hart will exit its LR/SC loop.
+
+Loads and load-reserved instructions do not by themselves impede the progress of other harts' LR/SC sequences. We note this constraint implies, among other things,
+
+that loads and load-reserved instructions executed by other harts (possibly within the same core) cannot impede LR/SC progress indefinitely. For example, cache evictions caused by another hart sharing the cache cannot impede LR/SC progress indefinitely. Typically,  this  implies  reservations  are  tracked  independently  of  evictions  from  any shared cache. Similarly, cache misses caused by speculative execution within a hart cannot impede LR/SC progress indefinitely.
+
+These  definitions  admit  the  possibility  that  SC  instructions  may  spuriously  fail  for implementation reasons, provided progress is eventually made.
+
+One  advantage  of  CAS  is  that  it  guarantees  that  some  hart  eventually  makes progress,  whereas  an  LR/SC  atomic  sequence  could  livelock  indefinitely  on  some systems.  To  avoid  this  concern,  we  added  an  architectural  guarantee  of  livelock freedom for certain LR/SC sequences.
+
+Earlier versions of this specification imposed a stronger starvation-freedom guarantee. However, the weaker livelock-freedom guarantee is sufficient to implement  the  C11  and  C++11  languages,  and  is  substantially  easier  to  provide  in some microarchitectural styles.

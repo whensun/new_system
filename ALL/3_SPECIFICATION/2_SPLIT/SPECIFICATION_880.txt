@@ -1,0 +1,38 @@
+## 21.2.11. Virtual Supervisor Status ( vsstatus ) Register
+
+The vsstatus register  is  a  VSXLEN-bit  read/write  register  that  is  VS-mode's  version  of  supervisor register sstatus , formatted as shown in Figure 98 when VSXLEN=32 and Figure 99 when VSXLEN=64. When  V=1, vsstatus substitutes  for  the  usual sstatus ,  so  instructions  that  normally  read  or  modify sstatus actually access vsstatus instead.
+
+Figure 98. Virtual supervisor status ( vsstatus ) register when VSXLEN=32.
+
+<image>
+
+Figure 99. Virtual supervisor status ( vsstatus ) register when VSXLEN=64.
+
+<image>
+
+The UXL field controls the effective XLEN for VU-mode, which may differ from the XLEN for VS-mode (VSXLEN). When VSXLEN=32, the UXL field does not exist, and VU-mode XLEN=32. When VSXLEN=64, UXL is a WARL field that is encoded the same as the MXL field of misa , shown in Table 9. In particular, an  implementation  may  make  UXL  be  a  read-only  copy  of  field  VSXL  of hstatus ,  forcing  VU-mode XLEN=VSXLEN.
+
+If VSXLEN is changed from 32 to a wider width, and if field UXL is not restricted to a single value, it gets the value corresponding to the widest supported width not wider than the new VSXLEN.
+
+When V=1, both vsstatus .FS and the HS-level sstatus .FS are in effect. Attempts to execute a floatingpoint  instruction  when  either  field  is  0  (Off)  raise  an  illegal-instruction  exception.  Modifying  the floating-point state when V=1 causes both fields to be set to 3 (Dirty).
+
+<image>
+
+For a hypervisor to benefit from the extension context status, it must have its own
+
+copy in the HS-level sstatus , maintained independently of a guest OS running in VSmode. While a version of the extension context status obviously must exist in vsstatus for  VS-mode,  a  hypervisor  cannot  rely  on  this  version  being  maintained  correctly, given  that  VS-level  software  can  change vsstatus .FS  arbitrarily.  If  the  HS-level sstatus .FS were not independently active and maintained by the hardware in parallel with vsstatus .FS while V=1, hypervisors would always be forced to conservatively swap all floating-point state when context-switching between virtual machines.
+
+Similarly, when V=1, both vsstatus .VS and the HS-level sstatus .VS are in effect. Attempts to execute a vector instruction when either field is 0 (Off) raise an illegal-instruction exception. Modifying the vector state when V=1 causes both fields to be set to 3 (Dirty).
+
+Read-only fields SD and XS summarize the extension context status as it is visible to VS-mode only. For example, the value of the HS-level sstatus .FS does not affect vsstatus .SD.
+
+An implementation may make field UBE be a read-only copy of hstatus .VSBE.
+
+When V=0, vsstatus does  not  directly  affect  the  behavior  of  the  machine,  unless  a  virtual-machine load/store (HLV, HLVX, or HSV) or the MPRV feature in the mstatus register is used to execute a load or store as though V=1.
+
+The Zicfilp extension adds the SPELP field that holds the previous ELP ,  and is updated as specified in Section 22.1.2. The SPELP field is encoded as follows:
+
+- ⚫ 0 -NO\_LP\_EXPECTED - no landing pad instruction expected.
+- ⚫ 1 -LP\_EXPECTED - a landing pad instruction is expected.
+
+The Ssdbltrp adds an S-mode-disable-trap ( SDT )  field  extension to address double trap (See Section 12.1.1.5) in VS-mode.

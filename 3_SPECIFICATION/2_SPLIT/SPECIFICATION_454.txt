@@ -1,0 +1,29 @@
+## 30.19.2. Setting vl
+
+Each  source  and  destination  operand  to  a  vector  instruction  might  be  defined  as  either  a  single element group or a vector of element groups. When an operand is a vector of element groups, the vl setting  must  correspond  to  an  integer  multiple  of  the  element  group  size,  with  other  values  of vl reserved.
+
+<image>
+
+For example, a SHA-256 instruction would require that vl is a multiple of 4.
+
+When element group instructions are present, an additional constraint is placed on the setting of vl based on an AVL value (augmenting Section 30.6.3). EGSMAX is the largest EGS supported by the implementation. When AVL > VLMAX, the value of vl must be set to either VLMAX or a positive integer multiple of EGSMAX.
+
+<image>
+
+As  the  base  vector  extension  only  has  element  group  size  of  1,  this  constraint  is
+
+-  backwards-compatible.
+
+<image>
+
+This constraint prevents element groups being broken across stripmining iterations in vector-length-agnostic code when a VLMAX-size vector would otherwise be able to accommodate a whole number of element groups.
+
+<image>
+
+-  SEW must be chosen for vsetvl instructions.
+
+If  EEW  is  encoded  statically  in  the  instruction,  or  if  an  instruction  has  multiple operands containing  vectors  of  element  groups  with  different  EEW,  an  appropriate
+
+<image>
+
+-  Additional  constraints  may  be  required  for  some  element  group  instructions  to ensure legal length values for all operands.

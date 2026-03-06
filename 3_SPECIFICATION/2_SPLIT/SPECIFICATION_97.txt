@@ -1,0 +1,15 @@
+## 19.6.2. Cache-Block Zero Instructions
+
+Cache-block  zero  instructions  store  zeros  to  the  set  of  bytes  corresponding  to  a  cache  block.  An implementation may update the bytes in any order and with any granularity and atomicity, including individual bytes.
+
+<image>
+
+Cache-block  zero  instructions  store  zeros  independently  of  whether  data  from  the underlying memory locations are cacheable. In addition, this specification does not constrain how the bytes are written.
+
+These instructions operate on the cache block, or the memory locations corresponding to the cache block,  whose  effective  address  is  specified  in rs1 .  The  effective  address  is  translated  into  a corresponding physical address by the appropriate translation mechanisms.
+
+The following instructions comprise the Zicboz extension:
+
+| RV32   | RV64   | Mnemonic      | Instruction      |
+|--------|--------|---------------|------------------|
+| ✓      | ✓      | cbo.zero base | Cache Block Zero |

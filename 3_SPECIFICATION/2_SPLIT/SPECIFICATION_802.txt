@@ -1,0 +1,33 @@
+## 11.1.4. Supervisor Control Transfer Records Depth Register ( sctrdepth )
+
+The 32-bit sctrdepth register specifies the depth of the CTR buffer.
+
+Figure 44. Supervisor Control Transfer Records Depth Register Format
+
+<image>
+
+Table 23. Supervisor Control Transfer Records Depth Register Field Definitions
+
+| Field   | Description                                                                                                                                                                                                                                                                                                                                                                 |
+|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| DEPTH   | WARL field that selects the depth of the CTR buffer. Encodings:                                                                                                                                                                                                                                                                                                             |
+|         | '000 - 16                                                                                                                                                                                                                                                                                                                                                                   |
+|         | '001 - 32                                                                                                                                                                                                                                                                                                                                                                   |
+|         | '010 - 64                                                                                                                                                                                                                                                                                                                                                                   |
+|         | '011 - 128                                                                                                                                                                                                                                                                                                                                                                  |
+|         | '100 - 256                                                                                                                                                                                                                                                                                                                                                                  |
+|         | '11x - reserved                                                                                                                                                                                                                                                                                                                                                             |
+|         | The depth of the CTR buffer dictates the number of entries to which the hardware records transfers. For a depth of N, the hardware records transfers to entries 0..N-1. All Entry Registers read as '0' and are read-only when the selected entry is in the range N to 255. When the depth is increased, the newly accessible entries contain unspecified but legal values. |
+|         | It is implementation-specific which DEPTH value(s) are supported.                                                                                                                                                                                                                                                                                                           |
+
+Attempts to access sctrdepth from VS-mode or VU-mode raise a virtual-instruction exception, unless
+
+CTR state enable access restrictions apply. See Section 11.4.
+
+It  is  expected  that  operating  systems  (OSs)  will  access sctrdepth only  at  boot,  to select  the  maximum supported depth value. More frequent accesses may result in reduced performance in virtualization scenarios, as a result of traps from VS-mode incurred.
+
+<image>
+
+There may be scenarios where software chooses to operate on only a subset of the entries, to reduce overhead. In such cases tools may choose to read only the lower entries, and OSs may choose to save/restore only on the lower entries while using SCTRCLR to clear the others.
+
+The value in configurable depth lies in supporting VM migration. It is expected that a platform spec may specify that one or more CTR depth values must be supported. A hypervisor may wish to restrict guests to using one of these required depths, in order to  ensure  that  such  guests  can  be  migrated  to  any  system  that  complies  with  the platform  spec.  The  trapping  behavior  specified  for  VS-mode  accesses  to sctrdepth ensures that the hypervisor can impose such restrictions.

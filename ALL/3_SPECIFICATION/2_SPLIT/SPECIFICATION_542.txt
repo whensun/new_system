@@ -1,0 +1,22 @@
+## 31.6.5.3. RVC (Compressed)
+
+Same criteria as in RVI. Organised by quadrants.
+
+| RV32   | RV64   | Mnemonic   | Instruction     |
+|--------|--------|------------|-----------------|
+| ✓      | ✓      | c.nop      | [insns-c_nop]   |
+| ✓      | ✓      | c.addi     | [insns-c_addi]  |
+|        | ✓      | c.addiw    | [insns-c_addiw] |
+| ✓      | ✓      | c.lui      | [insns-c_lui]   |
+| ✓      | ✓      | c.srli     | [insns-c_srli]  |
+| ✓      | ✓      | c.srai     | [insns-c_srai]  |
+| ✓      | ✓      | c.andi     | [insns-c_andi]  |
+| ✓      | ✓      | c.sub      | [insns-c_sub]   |
+| ✓      | ✓      | c.xor      | [insns-c_xor]   |
+| ✓      | ✓      | c.or       | [insns-c_or]    |
+| ✓      | ✓      | c.and      | [insns-c_and]   |
+|        | ✓      | c.subw     | [insns-c_subw]  |
+|        | ✓      | c.addw     | [insns-c_addw]  |
+| ✓      | ✓      | c.slli     | [insns-c_slli]  |
+| ✓      | ✓      | c.mv       | [insns-c_mv]    |
+| ✓      | ✓      | c.add      | [insns-c_add]   |

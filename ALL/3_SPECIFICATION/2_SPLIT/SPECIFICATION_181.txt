@@ -1,0 +1,39 @@
+## 27.5.3. Integer Register-Register Operations
+
+<image>
+
+These instructions use the CR format.
+
+C.MV copies the value in register rs2 into register rd . C.MV expands into add rd, x0, rs2 . C.MV is valid only when rs2 ≠ x0 ; the code points with rs2 = x0 correspond to the C.JR instruction. The code points with rs2 ≠ x0 and rd = x0 are HINTs.
+
+<image>
+
+C.MV  expands  to  a  different  instruction  than  the  canonical  MV  pseudoinstruction, which  instead  uses  ADDI.  Implementations  that  handle  MV  specially,  e.g.  using register-renaming  hardware,  may  find  it  more  convenient  to  expand  C.MV  to  MV instead of ADD, at slight additional hardware cost.
+
+C.ADD adds the values in registers rd and rs2 and writes the result to register rd . C.ADD expands into add rd, rd, rs2 . C.ADD is only valid when rs2 ≠ x0 ; the code points with rs2 = x0 correspond to the C.JALR and C.EBREAK instructions. The code points with rs2 ≠ x0 and rd = x0 are HINTs.
+
+<image>
+
+| 15   |        | 10   | 9           | 6      | 4 5          | 2   | 1   |
+|------|--------|------|-------------|--------|--------------|-----|-----|
+|      | funct6 |      | rd ′ /rs1 ′ |        | rs2 ′ funct2 |     | op  |
+|      | 6      |      | 3           |        | 3 2          |     | 2   |
+|      | C.AND  |      | dest        |        | src C.AND    |     | C1  |
+|      | C.OR   |      | dest        |        | src C.OR     |     | C1  |
+|      | C.XOR  |      | dest        |        | C.XOR        |     | C1  |
+|      | C.SUB  |      | dest        | C.SUB  | src src      |     | C1  |
+|      | C.ADDW |      | dest        | C.ADDW | src          |     | C1  |
+|      | C.SUBW |      | dest        | C.SUBW | src          |     | C1  |
+
+These instructions use the CA format.
+
+- C.AND computes the bitwise AND of the values in registers rd ′ and rs2 ′ , then writes the result to register rd ′ . C.AND expands into and rd ′ , rd ′ , rs2 ′ .
+- C.OR computes the bitwise OR of the values in registers rd ′ and rs2 ′ , then writes the result to register rd ′ . C.OR expands into or rd ′ , rd ′ , rs2 ′ .
+- C.XOR computes the bitwise XOR of the values in registers rd ′ and rs2 ′ , then writes the result to register rd ′ . C.XOR expands into xor rd ′ , rd ′ , rs2 ′ .
+- C.SUB subtracts the value in register rs2 ′ from the value in register rd ′ , then writes the result to register rd ′ . C.SUB expands into sub rd ′ , rd ′ , rs2 ′ .
+- C.ADDW is an RV64C-only instruction that adds the values in registers rd ′ and rs2 ′ , then sign-extends the lower 32 bits of the sum before writing the result to register rd ′ . C.ADDW expands into addw rd ′ , rd ′ , rs2 ′ .
+- C.SUBW is an RV64C-only instruction that subtracts the value in register rs2 ′ from the value in register rd ′ , then sign-extends the lower 32 bits of the difference before writing the result to register rd ′ . C.SUBW expands into subw rd ′ , rd ′ , rs2 ′ .
+
+<image>
+
+This  group  of  six  instructions  do  not  provide  large  savings  individually,  but  do  not occupy much encoding space and are straightforward to implement, and as a group provide a worthwhile improvement in static and dynamic compression.

@@ -1,0 +1,18 @@
+## 3.6.3.1. AMO PMA
+
+Within AMOs, there are four levels of support: AMONone , AMOSwap , AMOLogical , and AMOArithmetic . AMONone  indicates  that  no  AMO  operations  are  supported.  AMOSwap  indicates  that  only amoswap
+
+instructions are supported in this address range. AMOLogical indicates that swap instructions plus all the logical AMOs ( amoand , amoor , amoxor ) are supported. AMOArithmetic indicates that all RISC-V AMOs are supported. For each level of support, naturally aligned AMOs of a given width are supported if the underlying memory region supports reads and writes of that width. Main memory and I/O regions may only support a subset or none of the processor-supported atomic operations.
+
+Table 17. Classes of AMOs supported by I/O regions.
+
+| AMO Class     | Supported Operations                                 |
+|---------------|------------------------------------------------------|
+| AMONone       | None                                                 |
+| AMOSwap       | amoswap                                              |
+| AMOLogical    | above + amoand , amoor , amoxor                      |
+| AMOArithmetic | above + amoadd , amomin , amomax , amominu , amomaxu |
+
+<image>
+
+We  recommend  providing  at  least  AMOLogical  support  for  I/O  regions  where possible.

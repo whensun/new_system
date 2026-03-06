@@ -1,0 +1,10 @@
+## 31.6.4. Programming Information
+
+For background information on secure programming "models", see:
+
+- ⚫ Thomas  Pornin: "Why  Constant-Time  Crypto?" (A  great  introduction  to  timing  assumptions.) www.bearssl.org/constanttime.html
+- ⚫ Jean-Philippe Aumasson: "Guidelines for low-level cryptography software." (A list of recommendations.) github.com/veorq/cryptocoding
+- ⚫ Peter Schwabe: "Timing Attacks and Countermeasures." (Lecture slides -nice references.) summerschool-croatia.cs.ru.nl/2016/slides/PeterSchwabe.pdf
+- ⚫ Adam Langley: "ctgrind." (This is from 2010 but is still relevant.) www.imperialviolet.org/2010/04/ 01/ctgrind.html
+- ⚫ Kris Kwiatkowski: "Constant-time code verification with Memory Sanitizer." www.amongbytes.com/ post/20210709-testing-constant-time/
+- ⚫ For early examples of timing attack vulnerabilities, see www.kb.cert.org/vuls/id/997481 and related academic papers.

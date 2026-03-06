@@ -1,0 +1,11 @@
+## 30.3.6. Vector Byte Length ( vlenb ) Register
+
+The XLEN -bit-wide read-only CSR vlenb holds the value VLEN/8, i.e., the vector register length in bytes.
+
+<image>
+
+<image>
+
+The value in vlenb is a design-time constant in any implementation.
+
+Without this CSR, several instructions are needed to calculate VLEN in bytes, and the code has to disturb current vl and vtype settings which require them to be saved and restored.

@@ -1,0 +1,35 @@
+## 30.7.3. Vector Load/Store Width Encoding
+
+Vector loads and stores have an EEW encoded directly in the instruction. The corresponding EMUL is calculated as EMUL = (EEW/SEW)*LMUL. If the EMUL would be out of range (EMUL>8 or EMUL<1/8), the instruction encoding is reserved. The vector register groups must have legal register specifiers for the selected EMUL, otherwise the instruction encoding is reserved.
+
+Vector  unit-stride  and  constant-stride  use  the  EEW/EMUL  encoded  in  the  instruction  for  the  data values, while vector indexed loads and stores use the EEW/EMUL encoded in the instruction for the index values and the SEW/LMUL encoded in vtype for the data values.
+
+Vector loads and stores are encoded using width values that are not claimed by the standard scalar floating-point loads and stores.
+
+Implementations must provide vector loads and stores with EEWs corresponding to all supported SEW settings.  Vector  load/store  encodings  for  unsupported  EEW  widths  must  raise  an  illegal  instruction exception.
+
+Table 55. Width encoding for vector loads and stores.
+
+|                    | me w   | width [2:0]   | width [2:0]   | width [2:0]   | Mem bits   | Data Reg bits   | Index bits   | Opcodes          |
+|--------------------|--------|---------------|---------------|---------------|------------|-----------------|--------------|------------------|
+| Standard scalar FP | x      | 0             | 0             | 1             | 16         | FLEN            | -            | FLH/FSH          |
+| Standard scalar FP | x      | 0             | 1             | 0             | 32         | FLEN            | -            | FLW/FSW          |
+| Standard scalar FP | x      | 0             | 1             | 1             | 64         | FLEN            | -            | FLD/FSD          |
+| Standard scalar FP | x      | 1             | 0             | 0             | 128        | FLEN            | -            | FLQ/FSQ          |
+| Vector 8b element  | 0      | 0             | 0             | 0             | 8          | 8               | -            | VLxE8/VSxE8      |
+| Vector 16b element | 0      | 1             | 0             | 1             | 16         | 16              | -            | VLxE16/VSxE1 6   |
+| Vector 32b element | 0      | 1             | 1             | 0             | 32         | 32              | -            | VLxE32/VSxE3 2   |
+| Vector 64b element | 0      | 1             | 1             | 1             | 64         | 64              | -            | VLxE64/VSxE6 4   |
+| Vector 8b index    | 0      | 0             | 0             | 0             | SEW        | SEW             | 8            | VLxEI8/VSxEI 8   |
+| Vector 16b index   | 0      | 1             | 0             | 1             | SEW        | SEW             | 16           | VLxEI16/VSxEI 16 |
+| Vector 32b index   | 0      | 1             | 1             | 0             | SEW        | SEW             | 32           | VLxEI32/VSxE I32 |
+| Vector 64b index   | 0      | 1             | 1             | 1             | SEW        | SEW             | 64           | VLxEI64/VSxE I64 |
+| Reserved           | 1      | X             | X             | X             | -          | -               | -            |                  |
+
+Mem bits is the size of each element accessed in memory.
+
+Data reg bits is the size of each data element accessed in register.
+
+Index bits is the size of each index accessed in register.
+
+The mew bit ( inst[28] ) when set is expected to be used to encode expanded memory sizes of 128 bits and above, but these encodings are currently reserved.

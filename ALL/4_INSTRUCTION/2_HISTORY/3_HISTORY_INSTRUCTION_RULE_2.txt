@@ -1,0 +1,399 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: FCLASS.D
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for FCLASS.D instruction, rewrite the following description as a list of rules. Each rule must explain about FCLASS.D instruction. Essentially, for each rule, it is about FCLASS.D instruction, not other things.
+
+Do not lose any information about FCLASS.D instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is FCLASS.D."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+Exclude purely structural or descriptive properties (such as register width, naming, or existence) unless they imply observable architectural behavior.
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word FCLASS.D.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+The double‑precision floating‑point classify instruction, **FCLASS.D**, is defined analogously to its single‑precision counterpart, but operates on double‑precision operands.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: FCLASS.D classifies a double‑precision floating‑point value using the same classification categories as the single‑precision floating‑point classify instruction.  
+RULE 2: FCLASS.D operates on double‑precision floating‑point operands.
+======================================================= END - 1 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 2 =======================================================
+GLOBAL NUMBER: 2
+LOCAL NUMBER: 2
+NAME: FCVT.D.H
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for FCVT.D.H instruction, rewrite the following description as a list of rules. Each rule must explain about FCVT.D.H instruction. Essentially, for each rule, it is about FCVT.D.H instruction, not other things.
+
+Do not lose any information about FCVT.D.H instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is FCVT.D.H."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+Exclude purely structural or descriptive properties (such as register width, naming, or existence) unless they imply observable architectural behavior.
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word FCVT.D.H.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+- **Definition**  
+  If the D extension is present, **FCVT.D.H** converts a half‑precision floating‑point number to a double‑precision floating‑point number (the complementary **FCVT.H.D** converts a double‑precision floating‑point number to a half‑precision floating‑point number).
+
+- **Inclusion in the Zfhmin extension**  
+  The Zfhmin standard extension includes the **FCVT.D.H** instruction when the D extension is present.
+
+- **Inclusion in the Zhinxmin extension**  
+  The Zhinxmin extension includes the **FCVT.D.H** instruction when the Zdinx extension is present.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: If the D extension is implemented, the FCVT.D.H instruction converts a half‑precision floating‑point value to a double‑precision floating‑point value.  
+RULE 2: The Zfhmin extension includes the FCVT.D.H instruction when the D extension is present.  
+RULE 3: The Zhinxmin extension includes the FCVT.D.H instruction when the Zdinx extension is present.
+======================================================= END - 2 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 3 =======================================================
+GLOBAL NUMBER: 3
+LOCAL NUMBER: 3
+NAME: VAADD.VV
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for VAADD.VV instruction, rewrite the following description as a list of rules. Each rule must explain about VAADD.VV instruction. Essentially, for each rule, it is about VAADD.VV instruction, not other things.
+
+Do not lose any information about VAADD.VV instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is VAADD.VV."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+Exclude purely structural or descriptive properties (such as register width, naming, or existence) unless they imply observable architectural behavior.
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word VAADD.VV.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+- **Instruction syntax**: `vaadd.vv vd, vs2, vs1, vm`
+
+- **Operation**: For each element *i* of the active vector elements, the instruction computes the sum of the signed integers in the source registers `vs2[i]` and `vs1[i]`, performs an arithmetic right‑shift of the infinite‑precision result by one bit, and then rounds the shifted result according to the current setting of `vxrm`. The architectural effect is described as  
+
+  `roundoff_signed(vs2[i] + vs1[i], 1)`.
+
+- **Rounding and shifting**:  
+  * The averaging add instructions "right shift the result by one bit and round off the result according to the setting in `vxrm`."  
+  * "Computation is performed in infinite precision before rounding and truncating."
+
+- **Overflow behavior**: "For `vaaddu` and `vaadd` there can be no overflow in the result." Thus `vaadd.vv` never raises an overflow condition; the result is always representable after the rounding step.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: VAADD.VV computes for each active element i the sum of the signed integers in vs2[i] and vs1[i].  
+RULE 2: VAADD.VV performs an arithmetic right‑shift of the infinite‑precision sum by one bit for each active element i.  
+RULE 3: VAADD.VV rounds the shifted result for each active element i according to the current setting of vxrm.  
+RULE 4: The architectural effect of VAADD.VV for element i is roundoff_signed(vs2[i] + vs1[i], 1).  
+RULE 5: VAADD.VV performs the right‑shift and rounding on the infinite‑precision result before any truncation.  
+RULE 6: VAADD.VV never raises an overflow condition because the result is always representable after the rounding step.
+======================================================= END - 3 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 4 =======================================================
+GLOBAL NUMBER: 4
+LOCAL NUMBER: 4
+NAME: VADC.VIM
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for VADC.VIM instruction, rewrite the following description as a list of rules. Each rule must explain about VADC.VIM instruction. Essentially, for each rule, it is about VADC.VIM instruction, not other things.
+
+Do not lose any information about VADC.VIM instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is VADC.VIM."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+Exclude purely structural or descriptive properties (such as register width, naming, or existence) unless they imply observable architectural behavior.
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word VADC.VIM.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+- **Mnemonic and Form**  
+  ```
+  # vd[i] = vs2[i] + imm + v0.mask[i]
+  vadc.vim   vd, vs2, imm, v0   # Vector‑immediate
+  ```
+
+- **Operation**  
+  For each element *i* of the active vector length:  
+  ```
+  vd[i] = vs2[i] + imm + v0.mask[i]
+  ```
+  where `imm` is the encoded immediate operand and `v0.mask[i]` supplies the carry‑in bit.
+
+- **Encoding Characteristics**  
+  - The instruction is a *masked* vector instruction: `vm = 0`.  
+  - The unmasked encoding (`vm = 1`) is **reserved**.  
+
+- **Carry Input**  
+  - The carry‑in must come from the implicit vector register **v0** (its mask field).  
+  - Carry inputs and outputs use the mask‑register layout defined in Section 30.4.5.  
+
+- **Destination Register Restrictions**  
+  - The destination vector register **vd** **must not be v0**; the encoding is reserved if `vd = v0`.  
+
+- **Source/Destination Overlap Rules**  
+  - The destination register must respect the source/destination overlap restrictions defined for vector instructions (i.e., it may not overlap a source register in a way that violates the architectural rules).  
+
+- **Element Processing**  
+  - Even though the instruction is masked (`vm = 0`), it **operates on and writes back all body elements** of the vector register group.  
+
+- **Policy Regarding Tail Elements**  
+  - The specification does **not** state a specific tail‑agnostic or tail‑undisturbed policy for `vadc.vim`; only that it writes all body elements.  
+
+- **Other Notes**  
+  - No separate carry‑out is produced by `vadc.vim`; carry‑out is generated by the companion instruction `vmadc.vim`.  
+  - The immediate operand encoding is as defined for vector‑immediate integer instructions (width not specified in the excerpt).
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: VADC.VIM computes for each element i of the active vector length the result vd[i] = vs2[i] + imm + v0.mask[i].  
+RULE 2: VADC.VIM must be encoded with the mask bit vm set to 0.  
+RULE 3: An encoding of VADC.VIM with vm set to 1 is reserved.  
+RULE 4: VADC.VIM must take its carry‑in from the mask field of the implicit vector register v0.  
+RULE 5: VADC.VIM does not produce a separate carry‑out; carry‑out is generated only by the companion instruction vmadc.vim.  
+RULE 6: VADC.VIM must not use v0 as the destination register; encodings with vd = v0 are reserved.  
+RULE 7: VADC.VIM must respect the source/destination overlap restrictions defined for vector instructions.  
+RULE 8: Although VADC.VIM is a masked instruction (vm = 0), it operates on and writes back all body elements of the destination vector register group.  
+RULE 9: The specification does not define a tail‑agnostic or tail‑undisturbed policy for VADC.VIM, so only body elements are written.  
+RULE 10: VADC.VIM uses an immediate operand that is encoded according to the vector‑immediate integer instruction format.
+======================================================= END - 4 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 5 =======================================================
+GLOBAL NUMBER: 5
+LOCAL NUMBER: 5
+NAME: VADD.VI
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for VADD.VI instruction, rewrite the following description as a list of rules. Each rule must explain about VADD.VI instruction. Essentially, for each rule, it is about VADD.VI instruction, not other things.
+
+Do not lose any information about VADD.VI instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is VADD.VI."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+Exclude purely structural or descriptive properties (such as register width, naming, or existence) unless they imply observable architectural behavior.
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word VADD.VI.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+- **Instruction category**: Integer adds.  
+- **Mnemonic and format**: `vadd.vi vd, vs2, imm, vm`  # vector‑immediate.  
+
+(These are the only explicit, normative details about the `vadd.vi` instruction present in the source text.)
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: VADD.VI is an integer addition operation in the RISC‑V vector ISA.  
+RULE 2: VADD.VI uses the vector‑immediate format with operands vd, vs2, imm, and an optional mask vm.
+======================================================= END - 5 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 6 =======================================================
+GLOBAL NUMBER: 6
+LOCAL NUMBER: 6
+NAME: VAND.VI
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for VAND.VI instruction, rewrite the following description as a list of rules. Each rule must explain about VAND.VI instruction. Essentially, for each rule, it is about VAND.VI instruction, not other things.
+
+Do not lose any information about VAND.VI instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is VAND.VI."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+Exclude purely structural or descriptive properties (such as register width, naming, or existence) unless they imply observable architectural behavior.
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word VAND.VI.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+- `vand.vi vd, vs2, imm, vm` is the **vector‑immediate** form of the bitwise logical AND operation.  
+- It is listed under the "Bitwise logical operations" category.  
+- The instruction can be used to invert an immediate value and then AND it with `vs2`; this capability is mentioned as the reason there is **no .vi version of the `vandn` instruction**, because the same functionality can be achieved "by using an inversion of the immediate value with the `vand.vi` instruction."
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: VAND.VI is the vector‑immediate form of the bitwise logical AND operation.  
+RULE 2: VAND.VI is listed under the Bitwise logical operations category.  
+RULE 3: VAND.VI can be used to invert an immediate value and then perform a bitwise AND with the source vector register vs2.  
+RULE 4: Because VAND.VI can invert an immediate value and AND it with vs2, a separate .vi version of the vandn instruction is not provided.  
+RULE 5: The functionality of a hypothetical vandn.vi instruction can be achieved by using an inversion of the immediate value with VAND.VI.
+======================================================= END - 6 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 7 =======================================================
+GLOBAL NUMBER: 7
+LOCAL NUMBER: 7
+NAME: VSUB.VV
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for VSUB.VV instruction, rewrite the following description as a list of rules. Each rule must explain about VSUB.VV instruction. Essentially, for each rule, it is about VSUB.VV instruction, not other things.
+
+Do not lose any information about VSUB.VV instruction from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The instruction being described is VSUB.VV."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome).
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+Exclude purely structural or descriptive properties (such as register width, naming, or existence) unless they imply observable architectural behavior.
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word VSUB.VV.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+- **Instruction name**: `vsub.vv`  
+- **Operation class**: Integer vector‑vector subtract  
+- **Assembly syntax**: `vsub.vv vd, vs2, vs1, vm`  
+- **Operand description**: `vd` is the destination vector register group; `vs2` and `vs1` are source vector register groups; `vm` is the optional vector mask operand.  
+- **Classification**: "Vector‑vector" (as indicated in the source text).
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: VSUB.VV performs element‑wise integer subtraction of the corresponding elements of source vector register groups vs2 and vs1, producing a result element for each position.  
+RULE 2: VSUB.VV stores each result element into the corresponding element of the destination vector register group vd.  
+RULE 3: VSUB.VV may use an optional vector mask vm to control which result elements are written to vd; elements with a disabled mask bit are not written.  
+RULE 4: VSUB.VV is classified as a vector‑vector integer arithmetic operation.  
+RULE 5: VSUB.VV uses the assembly syntax "vsub.vv vd, vs2, vs1, vm".
+======================================================= END - 7 ========================================================

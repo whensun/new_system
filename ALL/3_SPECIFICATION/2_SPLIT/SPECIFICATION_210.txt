@@ -1,0 +1,33 @@
+## 28.12.12. c.mul
+
+Synopsis:
+
+Multiply, 16-bit encoding
+
+Mnemonic:
+
+c.mul rsd' , rs2'
+
+Encoding (RV32, RV64):
+
+<image>
+
+Description:
+
+This instruction multiplies XLEN bits of the source operands from rsd' and rs2' and writes the lowest XLEN bits of the result to rsd' .
+
+<image>
+
+Prerequisites:
+
+M or Zmmul must be configured.
+
+<image>
+
+The SAIL module variable for rd'/rs1' is called rsdc, and for rs2' is called rs2c.
+
+Operation:
+
+let result\_wide = to\_bits(2 * sizeof(xlen), signed(X(rsdc)) * signed(X(rs2c))); X(rsdc) = result\_wide[(sizeof(xlen) - 1) .. 0];
+
+rd'/rs1' and rs2' are from the standard 8-register set x8-x15.

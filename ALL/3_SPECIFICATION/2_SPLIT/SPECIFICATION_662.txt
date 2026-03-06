@@ -1,0 +1,35 @@
+## 33.2.6. Read ssp into a Register
+
+The SSRDP instruction is provided to move the contents of ssp to a destination register.
+
+<image>
+
+Encoding rd as x0 is not supported for SSRDP .
+
+The operation of the SSRDP instructions is as follows:
+
+```
+if (xSSE == 1) X(dst) = ssp else X(dst) = 0 endif
+```
+
+Listing 8. SSRDP operation
+
+The property  of  Zimop  writing  0  to  the rd when  the  extension  using  Zimop  is  not implemented or not active may be used by to determine if Zicfiss extension is active. For example, functions that unwind shadow stacks may skip over the unwind actions by dynamically detecting if the Zicfiss extension is active.
+
+An example sequence such as the following may be used:
+
+```
+ssrdp t0                      # mv ssp to t0 beqz t0, zicfiss_not_active   # zero is not a valid shadow stack # pointer by convention # Zicfiss is active : : zicfiss_not_active:
+```
+
+To assist with the use of such code sequences, operating systems and runtimes must not locate shadow stacks at address 0.
+
+<image>
+
+
+
+A common operation performed on stacks is to unwind them to support constructs like setjmp / longjmp , C++ exception handling, etc. A program that uses shadow stacks must unwind the shadow stack in addition to the stack used to store data. The unwind function  must  verify  that  it  does  not  accidentally  unwind  past  the  bounds  of  the shadow stack. Shadow stacks are expected to be bounded on each end using guard pages. A guard page for a stack is a page that is not accessible by the process that owns the stack. To detect if the unwind occurs past the bounds of the shadow stack, the unwind may be done in maximal increments of 4 KiB, testing whether the ssp is still  pointing  to  a  shadow  stack  page  or  has  unwound  into  the  guard  page.  The following  examples  illustrate  the  use  of  shadow  stack  instructions  to  unwind  a shadow stack. This example assumes that the setjmp function itself does not push on to the shadow stack (being a leaf function, it is not required to).
+
+```
+setjmp() { : : // read and save the shadow stack pointer to jmp_buf asm("ssrdp %0" : "=r"(cur_ssp):); jmp_buf->saved_ssp = cur_ssp; : : } longjmp() { : // Read current shadow stack pointer and // compute number of call frames to unwind asm("ssrdp %0" : "=r"(cur_ssp):); // Skip the unwind if backward-edge CFI not active asm("beqz %0, back_cfi_not_active" : "=r"(cur_ssp):); // Unwind the frames in a loop while ( jmp_buf->saved_ssp > cur_ssp ) { // advance by a maximum of 4K at a time to avoid // unwinding past bounds of the shadow stack cur_ssp = ( (jmp_buf->saved_ssp - cur_ssp) >= 4096 ) ? (cur_ssp + 4096) : jmp_buf->saved_ssp; asm("csrw ssp, %0" : :  "r" (cur_ssp)); // Test if unwound past the shadow stack bounds asm("sspush x5"); asm("sspopchk x5"); } back_cfi_not_active: : }
+```

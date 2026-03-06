@@ -1,0 +1,19 @@
+## 21.1. Privilege Modes
+
+The current virtualization mode , denoted V, indicates whether the hart is currently executing in a guest. When V=1, the hart is either in virtual S-mode (VS-mode), or in virtual U-mode (VU-mode) atop a guest OS running in VS-mode. When V=0, the hart is either in M-mode, in HS-mode, or in U-mode atop an OS running in HS-mode. The virtualization mode also indicates whether two-stage address translation is active (V=1) or inactive (V=0). Table 38 lists the possible privilege modes of a RISC-V hart with the hypervisor extension.
+
+Table 38. Privilege modes with the hypervisor extension.
+
+| Virtualization Mode (V)   | Nominal Privilege   | Abbreviation          | Name                                          | Two-Stage Translation   |
+|---------------------------|---------------------|-----------------------|-----------------------------------------------|-------------------------|
+| 0 0 0                     | U S                 | U-mode HS-mode M-mode | User mode Hypervisor-extended supervisor mode | Off Off                 |
+| 1 1                       | U S                 | VU-mode VS-mode       | Virtual user mode Virtual supervisor mode     | On On                   |
+|                           | M                   |                       | Machine mode                                  | Off                     |
+
+For privilege modes U and VU, the nominal privilege mode is U, and for privilege modes HS and VS, the nominal privilege mode is S.
+
+HS-mode is more privileged than VS-mode, and VS-mode is more privileged than VU-mode. VS-mode interrupts are globally disabled when executing in U-mode.
+
+<image>
+
+This description does not consider the possibility of U-mode or VU-mode interrupts and will be revised if an extension for user-level interrupts is adopted.

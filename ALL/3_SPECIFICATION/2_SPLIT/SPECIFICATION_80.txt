@@ -1,0 +1,3 @@
+## 19.3. Background
+
+This chapter provides information common to all CMO extensions.

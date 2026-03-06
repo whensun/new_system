@@ -1,0 +1,9 @@
+## 37.3. Instruction-Set Extension Names
+
+Standard ISA extensions are given a name consisting of a single letter.  For  example,  the  first  four standard extensions to the integer bases are: "M" for integer multiplication and division, "A" for atomic memory instructions, "F" for single-precision floating-point instructions, and "D" for double-precision floating-point instructions. Any  RISC-V  instruction-set variant can  be succinctly  described  by concatenating the base integer prefix with the names of the included extensions, e.g., "RV64IMAFD".
+
+We have also defined an abbreviation "G" to represent the "IMAFDZicsr\_Zifencei" base and extensions, as this is intended to represent our standard general-purpose ISA.
+
+Standard extensions to the RISC-V ISA are given other reserved letters, e.g., "Q" for quad-precision floating-point, or "C" for the 16-bit compressed instruction format.
+
+Some ISA extensions depend on the presence of other extensions, e.g., "D" depends on "F" and "F" depends  on  "Zicsr".  These  dependencies  may  be  implicit  in  the  ISA  name:  for  example,  RV32IF  is equivalent to RV32IFZicsr, and RV32ID is equivalent to RV32IFD and RV32IFDZicsr.

@@ -1,0 +1,25 @@
+## 30.13.19. Narrowing Floating-Point/Integer Type-Convert Instructions
+
+A set of conversion instructions is provided to convert wider integer and floating-point datatypes to a type of half the width.
+
+| vfncvt.xu.f.w vd, vs2, vm integer.                  | # Convert double-width float to unsigned        |
+|-----------------------------------------------------|-------------------------------------------------|
+| vfncvt.x.f.w vd, vs2, vm                            | # Convert double-width float to signed integer. |
+| vfncvt.rtz.xu.f.w vd, vs2, vm # truncating.         | Convert double-width float to unsigned          |
+| integer, vfncvt.rtz.x.f.w vd, vs2, vm # truncating. | Convert double-width float to signed integer,   |
+| vfncvt.f.xu.w vd, vs2, vm float.                    | # Convert double-width unsigned integer to      |
+| vfncvt.f.x.w vd, vs2, vm #                          | Convert double-width signed integer to float.   |
+| vfncvt.f.f.w vd, vs2, vm # float.                   | Convert double-width float to single-width      |
+| vfncvt.rod.f.f.w vd, vs2, vm # float,               | Convert double-width float to single-width      |
+
+These  instructions have  the same  constraints  on  vector register overlap  as  other  narrowing
+
+instructions (see Section 30.10.3).
+
+<image>
+
+A  full  set  of  floating-point  narrowing  conversions  is  not  supported  as  single instructions.  Conversions  can  be  implemented  in  a  sequence  of  halving  steps. Results are equivalently rounded and the same exception flags are raised if all but the  last  halving  step  use  round-towards-odd  ( vfncvt.rod.f.f.w ).  Only  the  final  step should use the desired rounding mode.
+
+<image>
+
+For vfncvt.rod.f.f.w , a finite value that exceeds the range of the destination format is converted to the destination format's largest finite value with the same sign.

@@ -1,0 +1,37 @@
+## 2.8. Environment Call and Breakpoints
+
+SYSTEM instructions are used to access system functionality that might require privileged access and are encoded using the I-type instruction format. These can be divided into two main classes: those that  atomically  read-modify-write  control  and  status  registers  (CSRs),  and  all  other  potentially privileged  instructions.  CSR  instructions  are  described  in  Chapter  6,  and  the  base  unprivileged instructions are described in the following section.
+
+<image>
+
+The  SYSTEM  instructions  are  defined  to  allow  simpler  implementations  to  always trap  to  a  single  software  trap  handler.  More  sophisticated  implementations  might execute more of each system instruction in hardware.
+
+<image>
+
+These two instructions cause a precise requested trap to the supporting execution environment.
+
+The ECALL instruction  is  used  to  make  a  service  request  to  the  execution  environment.  The EEI will define how parameters for the service request are passed, but usually these will be in defined locations in the integer register file.
+
+The EBREAK instruction is used to return control to a debugging environment.
+
+<image>
+
+<image>
+
+ECALL  and  EBREAK  were  previously  named  SCALL  and  SBREAK.  The  instructions have the same functionality and encoding, but were renamed to reflect that they can be used more generally than to call a supervisor-level operating system or debugger.
+
+EBREAK was primarily designed to be used by a debugger to cause execution to stop and fall back into the debugger. EBREAK is also used by the standard gcc compiler to mark code paths that should not be executed.
+
+Another use of EBREAK is to support "semihosting", where the execution environment includes a debugger that can provide services over an alternate system call interface built around the EBREAK instruction. Because the RISC-V base ISAs do not provide more than one EBREAK instruction, RISC-V semihosting uses a special sequence  of  instructions  to  distinguish  a  semihosting  EBREAK  from  a  debugger inserted EBREAK.
+
+```
+slli x0, x0, 0x1f   # Entry NOP ebreak              # Break to debugger srai x0, x0, 7      # Exit NOP
+```
+
+Note that these three instructions must be 32-bit-wide instructions, i.e., they mustn't be among the compressed 16-bit instructions described in Chapter 27.
+
+The shift NOP instructions are still considered available for use as HINTs.
+
+Semihosting is  a  form  of  service  call  and  would  be  more  naturally  encoded  as  an ECALL  using  an  existing  ABI,  but  this  would  require  the  debugger  to  be  able  to intercept  ECALLs,  which  is  a  newer  addition  to  the  debug  standard.  We  intend  to move  over  to  using  ECALLs  with  a  standard  ABI,  in  which  case,  semihosting  can share a service ABI with an existing standard.
+
+We note that ARM processors have also moved to using SVC instead of BKPT for semihosting calls in newer designs.

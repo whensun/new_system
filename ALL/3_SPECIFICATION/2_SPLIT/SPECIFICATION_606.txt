@@ -1,0 +1,14 @@
+## 32.2.12. Zvks - ShangMi Algorithm Suite
+
+This extension is shorthand for the following set of other extensions:
+
+| Included Extension   | Description   |
+|----------------------|---------------|
+| Zvksed               | Zvksed        |
+| Zvksh                | Zvksh         |
+| Zvkb                 | Zvkb          |
+| Zvkt                 | Zvkt          |
+
+<image>
+
+While Zvkg and Zvbc are not part of this extension, it is recommended that at least one of them is implemented with this extension to enable efficient SM4-GCM.

@@ -1,0 +1,49 @@
+## 28.14.5. cm.jalt
+
+Synopsis:
+
+jump via table with optional link
+
+Mnemonic:
+
+cm.jalt index
+
+Encoding (RV32, RV64):
+
+<image>
+
+FUNCT3
+
+<image>
+
+C2
+
+For this encoding to decode as cm.jalt, index>=32, otherwise it decodes as cm.jt, see Jump via table.
+
+<image>
+
+If  jvt.mode  =  0  (Jump  Table  Mode)  then  cm.jalt  behaves  as  specified  here.  If jvt.mode is a reserved value, then cm.jalt is also reserved. In the future other defined values of jvt.mode may change the behaviour of cm.jalt.
+
+Assembly Syntax:
+
+cm.jalt index
+
+Description:
+
+cm.jalt reads an entry from the jump vector table in memory and jumps to the address that was read, linking to ra .
+
+For further information see Table Jump Overview.
+
+Prerequisites:
+
+None
+
+32-bit equivalent:
+
+No direct equivalent encoding exists.
+
+Operation:
+
+```
+//This is not SAIL, it's pseudocode. The SAIL hasn't been written yet. # target_address is temporary internal state, it doesn't represent a real register # InstMemory is byte indexed switch(XLEN) { 32:  table_address[XLEN-1:0] = jvt.base + (index<<2); 64:  table_address[XLEN-1:0] = jvt.base + (index<<3); } //fetch from the jump table target_address[XLEN-1:0] = InstMemory[table_address][XLEN-1:0]; jal ra, target_address[XLEN-1:0]&~0x1;
+```

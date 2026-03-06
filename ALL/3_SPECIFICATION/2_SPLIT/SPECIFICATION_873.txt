@@ -1,0 +1,30 @@
+## 21.2.4. Hypervisor Guest External Interrupt Registers ( hgeip and hgeie )
+
+The hgeip register is an HSXLEN-bit read-only register, formatted as shown in Figure 89, that indicates pending guest external interrupts for this hart. The hgeie register is an HSXLEN-bit read/write register, formatted as shown in Figure 90, that contains enable bits for the guest external interrupts at this hart. Guest external interrupt number i corresponds with bit i in both hgeip and hgeie .
+
+Figure 90. Hypervisor guest external interrupt-enable register ( hgeie ).
+
+<image>
+
+| HSXLEN-1                         |   1 0 |
+|----------------------------------|-------|
+| Guest External Interrupts (WARL) |     0 |
+| HSXLEN                           |     1 |
+
+Guest external interrupts represent interrupts directed to individual virtual machines at VS-level. If a RISC-V  platform  supports  placing  a  physical  device  under  the  direct  control  of  a  guest  OS  with minimal  hypervisor  intervention  (known  as pass-through or direct  assignment between  a  virtual machine and the physical device), then, in such circumstance, interrupts from the device are intended for  a  specific  virtual  machine.  Each  bit  of hgeip summarizes all pending  interrupts  directed  to  one virtual  hart,  as  collected  and  reported  by  an  interrupt  controller.  To  distinguish  specific  pending interrupts from multiple devices, software must query the interrupt controller.
+
+<image>
+
+Support for guest external interrupts requires an interrupt controller that can collect virtual-machine-directed interrupts separately from other interrupts.
+
+The number of bits implemented in hgeip and hgeie for guest external interrupts is UNSPECIFIED and may be zero. This number is known as GEILEN . The least-significant bits are implemented first, apart from  bit  0.  Hence,  if  GEILEN  is  nonzero,  bits  GEILEN:1  shall  be  writable  in hgeie ,  and  all  other  bit positions shall be read-only zeros in both hgeip and hgeie .
+
+<image>
+
+The set of guest external interrupts received and handled at one physical hart may differ  from  those  received  at  other  harts.  Guest  external  interrupt  number  i  at  one physical hart is typically expected not to be the same as guest external interrupt i at any other hart. For any one physical hart, the maximum number of virtual harts that may directly  receive  guest  external  interrupts  is  limited  by  GEILEN.  The  maximum this  number  can  be  for  any  implementation  is  31  for  RV32  and  63  for  RV64,  per physical hart.
+
+A hypervisor is always free to emulate devices for any number of virtual harts without being limited by GEILEN. Only direct pass-through (direct assignment) of interrupts
+
+is  affected  by  the  GEILEN  limit,  and  the  limit  is  on  the  number  of  virtual  harts receiving such interrupts, not the number of distinct interrupts received. The number of distinct interrupts a single virtual hart may receive is determined by the interrupt controller.
+
+Register hgeie selects the subset of guest external interrupts that cause a supervisor-level (HS-level) guest external interrupt. The enable bits in hgeie do  not  affect  the  VS-level  external  interrupt  signal selected from hgeip by hstatus .VGEIN.

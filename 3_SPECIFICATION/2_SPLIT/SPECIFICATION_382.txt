@@ -1,0 +1,27 @@
+## 30.11.16. Vector Integer Move Instructions
+
+The vector integer move instructions copy a source operand to a vector register group. The vmv.v.v variant copies a vector register group, whereas the vmv.v.x and vmv.v.i variants splat a scalar register or  immediate to all active elements of the destination vector register group. These instructions are encoded as unmasked instructions ( vm=1 ).  The  first  operand  specifier  ( vs2 )  must  contain v0 ,  and  any other vector register number in vs2 is reserved .
+
+```
+vmv.v.v vd, vs1 # vd[i] = vs1[i] vmv.v.x vd, rs1 # vd[i] = x[rs1] vmv.v.i vd, imm # vd[i] = imm
+```
+
+<image>
+
+Mask values can be widened into SEW-width elements using a sequence vmv.v.i vd, 0; vmerge.vim vd, vd, 1, v0 .
+
+<image>
+
+The  vector  integer  move  instructions  share  the  encoding  with  the  vector  merge instructions, but with vm=1 and vs2=v0 .
+
+The  form vmv.v.v  vd,  vd ,  which  leaves  body  elements  unchanged,  can  be  used  to  indicate  that  the register will next be used with an EEW equal to SEW.
+
+<image>
+
+Implementations  that  internally  reorganize  data  according  to  EEW  can  shuffle  the internal  representation  according  to  SEW.  Implementations  that  do  not  internally reorganize data can dynamically elide this instruction, and treat as a NOP.
+
+<image>
+
+The vmv.v.v vd, vd instruction is not a RISC-V HINT as a tail-agnostic setting may
+
+-  cause an architectural state change on some implementations.

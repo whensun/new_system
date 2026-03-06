@@ -1,0 +1,9 @@
+## 28.5. Zca
+
+The Zca extension is added as way to refer to instructions in the C extension that do not include the floating-point loads and stores.
+
+Therefore it excluded all 16-bit floating point loads and stores: c.flw , c.flwsp , c.fsw , c.fswsp , c.fld , c.fldsp , c.fsd , c.fsdsp .
+
+<image>
+
+the C extension only includes F/D instructions when D and F are also specified

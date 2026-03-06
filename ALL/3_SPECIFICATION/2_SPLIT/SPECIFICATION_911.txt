@@ -1,0 +1,36 @@
+## 22.2.2. Shadow-Stack-Enabled (SSE) State
+
+The term xSSE is used to determine if backward-edge CFI using shadow stacks provided by the Zicfiss extension is enabled at a privilege mode.
+
+When S-mode is implemented, it is determined as follows:
+
+Table 53. xSSE determination when S-mode is implemented
+
+| Privilege Mode   | xSSE        |
+|------------------|-------------|
+| M                | 0           |
+| S or HS          | menvcfg.SSE |
+| VS               | henvcfg.SSE |
+| U or VU          | senvcfg.SSE |
+
+When S-mode is not implemented, then xSSE is 0 at both M and U privilege modes.
+
+Activating  Zicfiss  in  U-mode  must  be  done  explicitly  per  process.  Not  activating Zicfiss  at  U-mode for a process when that application is not compiled with Zicfiss allows it to invoke shared libraries that may contain Zicfiss instructions. The Zicfiss instructions  in  the  shared  library  revert  to  their  Zimop/Zcmop-defined  behavior  in this case.
+
+<image>
+
+When Zicfiss is enabled in S-mode it is benign to use an operating system that is not compiled  with  Zicfiss  instructions.  Such  an  operating  system  that  does  not  use backward-edge  CFI  for  S-mode  execution  may  still  activate  Zicfiss  for  U-mode applications.
+
+When  programs  that  use  Zicfiss  instructions  are  installed  on  a  processor  that supports the Zicfiss extension but the extension is not enabled at the privilege mode where the program executes, the program continues to function correctly but without backward-edge  CFI  protection  as  the Zicfiss instructions will revert to their
+
+
+
+Zimop/Zcmop-defined behavior.
+
+When programs that use Zicfiss instructions are installed on a processor that does not support the Zicfiss extension but supports the Zimop and Zcmop extensions, the programs continues to function correctly but without backward-edge CFI protection as the Zicfiss instructions will revert to their Zimop/Zcmop-defined behavior.
+
+On processors that do not support Zimop/Zcmop extensions, all Zimop/Zcmop code points including those used for Zicfiss instructions may cause an illegal-instruction exception. Execution of programs that use these instructions on such machines is not supported.
+
+Activating Zicfiss in M-mode is currently not supported. Additionally, when S-mode is not implemented, activation in U-mode is also not supported. These functionalities may be introduced in a future standard extension.
+
+Changes  to xSSE take  effect  immediately;  address-translation  caches  need  not  be synchronized with SFENCE.VMA, HFENCE.GVMA, or HFENCE.VVMA instructions.

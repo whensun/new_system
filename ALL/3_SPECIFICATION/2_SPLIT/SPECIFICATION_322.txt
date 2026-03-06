@@ -1,0 +1,11 @@
+## 30.3.5. Vector Length ( vl ) Register
+
+The XLEN -bit-wide  read-only vl CSR  can  only  be  updated  by  the vset{i}vl{i} instructions,  and  the fault-only-first vector load instruction variants.
+
+The vl register  holds  an  unsigned  integer  specifying  the  number  of  elements  to  be  updated  with results from a vector instruction, as further detailed in Section 30.5.4.
+
+<image>
+
+The number of bits implemented in vl depends on the implementation's maximum vector  length  of  the  smallest  supported  type.  The  smallest  vector  implementation with VLEN=32 and supporting SEW=8 would need at least six bits in vl to hold the
+
+values 0-32 (VLEN=32, with LMUL=8 and SEW=8, yields VLMAX=32).

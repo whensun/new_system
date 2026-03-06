@@ -1,0 +1,5 @@
+## 30.18. Standard Vector Extensions
+
+This  section  describes  the  standard  vector  extensions.  A  set  of  smaller  extensions  intended  for embedded use are named with a "Zve" prefix, while a larger vector extension designed for application processors is named as a single-letter V extension. A set of vector length extension names with prefix "Zvl" are also provided.
+
+The initial vector extensions are designed to act as a base for additional vector extensions in various domains, including cryptography and machine learning.

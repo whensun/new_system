@@ -1,0 +1,20 @@
+## 20.9. Single-Precision Floating-Point Classify Instruction
+
+The  FCLASS.S  instruction  examines  the  value  in  floating-point  register rs1 and  writes  to  integer register rd a 10-bit mask that indicates the class of the floating-point number. The format of the mask is  described  in  Table  29.  The  corresponding  bit  in rd will  be  set  if  the  property  is  true  and  clear otherwise. All other bits in rd are cleared. Note that exactly one bit in rd will be set. FCLASS.S does not set the floating-point exception flags.
+
+<image>
+
+Table 29. Format of result of FCLASS instruction.
+
+|   rd bit | Meaning                             |
+|----------|-------------------------------------|
+|        0 | rs1 is .                            |
+|        1 | rs1 is a negative normal number.    |
+|        2 | rs1 is a negative subnormal number. |
+|        3 | rs1 is .                            |
+|        4 | rs1 is .                            |
+|        5 | rs1 is a positive subnormal number. |
+|        6 | rs1 is a positive normal number.    |
+|        7 | rs1 is .                            |
+|        8 | rs1 is a signaling NaN.             |
+|        9 | rs1 is a quiet NaN.                 |

@@ -1,0 +1,23 @@
+## 31.8.6. Suggested GetNoise Test Interface
+
+Compliance  testing,  characterization,  and  configuration  of  entropy  sources  require  access  to  raw, unconditioned noise samples. This conceptual test interface is named GetNoise in Section 2.3.2 of NIST SP 800-90B (Turan et al., 2018).
+
+Since  this  type  of  interface  is  both  necessary  for  security  testing  and  also  constitutes  a  potential backdoor  to  the  cryptographic  key  generation  process,  we  define  a  safety  behavior  that  compliant implementations can have for temporarily disabling the entropy source seed CSR interface during test.
+
+In order for shared RISC-V self-certification scripts (and drivers) to accommodate the test interface in a secure fashion, we suggest that it is implemented as a custom, M-mode only CSR, denoted here as
+
+mnoise .
+
+This  non-normative  interface  is  not  intended  to  be  used  as  a  source  of  randomness  or  for  other production use. We define the semantics for single bit for this interface, mnoise[31] ,  which is named NOISE\_TEST , which will affect the behavior of seed if implemented.
+
+When NOISE\_TEST = 1 in mnoise , the seed CSR must not return anything via ES16 ; it should be in BIST state unless the source is DEAD . When NOISE\_TEST is again disabled, the entropy source shall return from BIST via an appropriate zeroization and self-test mechanism.
+
+The  behavior  of  other  input  and  output  bits  is  largely  left  to  the  vendor  (as  they  depend  on  the technical details of the physical entropy source), as is the address of the custom mnoise CSR. Other contents  and  behavior  of  the  CSR  only  can  be  interpreted  in  the  context  of mvendorid , marchid ,  and mimpid CSR identifiers.
+
+When not implemented (e.g., in virtual machines), mnoise can  permanently read zero ( 0x00000000 )  and ignore writes. When available, but NOISE\_TEST = 0 , mnoise can return a nonzero constant (e.g. 0x00000001 ) but no noise samples.
+
+Figure 7. Entropy source can't be read in test mode.
+
+<image>
+
+In NOISE\_TEST mode,  the  WAIT  and  ES16  states  are  unreachable,  and  no  entropy  is  output. Implementation  of  test  interfaces  that  directly  affect  ES16  entropy  output  from  the seed CSR interface is discouraged. Such vendor test interfaces have been exploited in attacks. For example, an  ECDSA  (NIST,  2013)  signature  process  without  sufficient  entropy  will  not  only  create  an insecure signature but can also reveal the secret signing key, that can be used for authentication forgeries by attackers. Hence even a temporary lapse in entropy security may have serious security implications.

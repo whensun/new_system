@@ -1,0 +1,11 @@
+## 30.3.10. Vector Control and Status ( vcsr ) Register
+
+The vxrm and vxsat separate CSRs can also be accessed via fields in the XLEN -bit-wide vector control and status CSR, vcsr .
+
+Table 48. vcsr layout
+
+| Bits     | Name      | Description                         |
+|----------|-----------|-------------------------------------|
+| XLEN-1:3 |           | Reserved                            |
+| 2:1      | vxrm[1:0] | Fixed-point rounding mode           |
+| 0        | vxsat     | Fixed-point accrued saturation flag |

@@ -1,0 +1,5 @@
+## 27.5.6. Breakpoint Instruction
+
+<image>
+
+Debuggers can use the C.EBREAK instruction, which expands to ebreak , to cause control to be transferred back to the debugging environment. C.EBREAK shares the opcode with the C.ADD instruction, but with rd and rs2 both zero, thus can also use the CR format.

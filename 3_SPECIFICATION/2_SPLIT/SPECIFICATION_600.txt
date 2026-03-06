@@ -1,0 +1,32 @@
+## 32.2.6. Zvknh[ab] - NIST Suite: Vector SHA-2 Secure Hash
+
+Instructions for accelerating SHA-2 as defined in FIPS PUB 180-4 Secure Hash Standard (SHS) (NIST, 2015)
+
+SEW differentiates between SHA-256 ( SEW =32) and SHA-512 ( SEW =64).
+
+- ⚫ SHA-256: these instructions work on 128-bit element groups comprised of four 32-bit elements.
+- ⚫ SHA-512: these instructions work on 256-bit element groups comprised of four 64-bit elements.
+- ⚫ Zvknhb supports SHA-256 and SHA-512.
+- ⚫ Zvknha supports only SHA-256.
+
+|   SEW |   EGW | SHA-2   | Extension      |
+|-------|-------|---------|----------------|
+|    32 |   128 | SHA-256 | Zvknha, Zvknhb |
+|    64 |   256 | SHA-512 | Zvknhb         |
+
+SHA-256 implementations with VLEN < 128 require LMUL>1 to combine 32-bit elements from register groups to provide all four elements of the element group.
+
+SHA-512 implementations with VLEN < 256 require LMUL>1 to combine 64-bit elements from register groups to provide all four elements of the element group.
+
+To  help  avoid  side-channel  timing  attacks,  these  instructions  shall  be  implemented  with  dataindependent timing.
+
+The number of element groups to be processed is vl / EGS . vl must be set to the number of SEW elements to be processed and therefore must be a multiple of EGS=4 .
+
+Likewise, vstart must be a multiple of EGS=4
+
+.
+
+| Mnemonic      | Instruction                   |
+|---------------|-------------------------------|
+| vsha2ms.vv    | Vector SHA-2 Message Schedule |
+| vsha2c[hl].vv | Vector SHA-2 Compression      |

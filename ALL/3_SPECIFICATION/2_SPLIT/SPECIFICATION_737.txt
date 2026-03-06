@@ -1,0 +1,11 @@
+## 3.1.13. Machine Scratch ( mscratch ) Register
+
+The mscratch register  is  an  MXLEN-bit  read/write  register  dedicated  for  use  by  machine  mode. Typically, it is used to hold a pointer to a machine-mode hart-local context space and swapped with a user register upon entry to an M-mode trap handler.
+
+Figure 20. Machine-mode scratch register.
+
+<image>
+
+The MIPS ISA allocated two user registers ( k0 / k1 )  for  use  by  the  operating system. Although  the  MIPS  scheme  provides  a  fast  and  simple  implementation,  it  also reduces  available  user  registers,  and  does  not  scale  to  further  privilege  levels,  or nested traps. It can also require both registers are cleared before returning to user level  to  avoid  a  potential  security  hole  and  to  provide  deterministic  debugging behavior.
+
+The  RISC-V  user  ISA  was  designed  to  support  many  possible  privileged  system environments  and  so  we  did  not  want  to  infect  the  user-level  ISA  with  any  OSdependent  features.  The  RISC-V  CSR  swap  instructions  can  quickly  save/restore values to the mscratch register. Unlike the MIPS design, the OS can rely on holding a value in the mscratch register while the user context is running.

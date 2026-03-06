@@ -1,0 +1,51 @@
+## 21.2.5. Hypervisor Environment Configuration Register ( henvcfg )
+
+The henvcfg CSR is a 64-bit read/write register, formatted as shown in Figure 91, that controls certain characteristics of the execution environment when virtualization mode V=1.
+
+Figure 91. Hypervisor environment configuration register ( henvcfg ).
+
+<image>
+
+If bit FIOM (Fence of I/O implies Memory) is set to one in henvcfg , FENCE instructions executed when V=1 are modified so the requirement to order accesses to device I/O implies also the requirement to order main memory accesses. Table 40 details the modified interpretation of FENCE instruction bits PI, PO, SI, and SO when FIOM=1 and V=1.
+
+Similarly, when FIOM=1 and V=1, if an atomic instruction that accesses a region ordered as device I/O has its aq and/or rl bit set, then that instruction is ordered as though it accesses both device I/O and memory.
+
+Table 40. Modified interpretation of FENCE predecessor and successor sets when FIOM=1 and virtualization mode V=1.
+
+| Instruction bit   | Meaning when set                                         |
+|-------------------|----------------------------------------------------------|
+| PI                | Predecessor device input and memory reads (PR implied)   |
+| PO                | Predecessor device output and memory writes (PW implied) |
+| SI                | Successor device input and memory reads (SR implied)     |
+| SO                | Successor device output and memory writes (SW implied)   |
+
+The  PBMTE  bit  controls  whether  the  Svpbmt  extension  is  available  for  use  in  VS-stage  address translation. When PBMTE=1, Svpbmt is available for VS-stage address translation. When PBMTE=0, the implementation behaves as though Svpbmt were not implemented for VS-stage address translation. If Svpbmt is not implemented, PBMTE is read-only zero.
+
+If the Svadu extension is implemented, the ADUE bit controls whether hardware updating of PTE A/D bits is enabled for VS-stage address translation. When ADUE=1, hardware updating of PTE A/D bits is enabled during VS-stage address translation, and the implementation behaves as though the Svade extension were not implemented for VS-mode address translation. When ADUE=0, the implementation behaves  as  though  Svade  were  implemented  for  VS-stage  address  translation.  If  Svadu  is  not
+
+implemented, ADUE is read-only zero.
+
+The definition of the STCE field is furnished by the Sstc extension.
+
+The definition of the CBZE field is furnished by the Zicboz extension.
+
+The definitions of the CBCFE and CBIE fields are furnished by the Zicbom extension.
+
+The definition of the PMM field is furnished by the Ssnpm extension.
+
+The Zicfilp extension adds the LPE field in henvcfg . When the LPE field is set to 1, the Zicfilp extension is enabled in VS-mode. When the LPE field is 0, the Zicfilp extension is not enabled in VS-mode and the following rules apply to VS-mode:
+
+- ⚫ The hart does not update the ELP state; it remains as NO\_LP\_EXPECTED .
+- ⚫ The LPAD instruction operates as a no-op.
+
+The Zicfiss extension adds the SSE field in henvcfg .  If  the SSE field is set to 1, the Zicfiss extension is activated in VS-mode. When the SSE field is 0, the Zicfiss extension remains inactive in VS-mode, and the following rules apply when V=1 :
+
+- ⚫ 32-bit Zicfiss instructions will revert to their behavior as defined by Zimop.
+- ⚫ 16-bit Zicfiss instructions will revert to their behavior as defined by Zcmop.
+- ⚫ The pte.xwr=010b encoding in VS-stage page tables becomes reserved.
+- ⚫ The senvcfg.SSE field will read as zero and is read-only.
+- ⚫ When menvcfg.SSE is one, SSAMOSWAP.W/D raises a virtual-instruction exception.
+
+The Ssdbltrp extension adds the double-trap-enable ( DTE ) field in henvcfg . When henvcfg.DTE is zero, the implementation behaves as though Ssdbltrp is not implemented for VS-mode and the vsstatus.SDT bit is read-only zero.
+
+When  XLEN=32, henvcfgh is  a  32-bit  read/write  register  that  aliases  bits  63:32  of henvcfg .  Register henvcfgh does not exist when XLEN=64.

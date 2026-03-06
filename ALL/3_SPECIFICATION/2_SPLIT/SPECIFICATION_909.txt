@@ -1,0 +1,3 @@
+## 22.2. Shadow Stack (Zicfiss)
+
+This section specifies the Privileged ISA for the Zicfiss extension.

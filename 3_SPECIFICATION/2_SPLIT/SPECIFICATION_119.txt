@@ -1,0 +1,9 @@
+## 21.3. Double-Precision Load and Store Instructions
+
+The  FLD  instruction  loads  a  double-precision  floating-point  value  from  memory  into  floating-point register rd . FSD stores a double-precision value from the floating-point registers to memory.
+
+<image>
+
+FLD and FSD are only guaranteed to execute atomically if the effective address is naturally aligned and XLEN≥64.
+
+FLD and FSD do not modify the bits being transferred; in particular,  the  payloads  of  non-canonical NaNs are preserved.

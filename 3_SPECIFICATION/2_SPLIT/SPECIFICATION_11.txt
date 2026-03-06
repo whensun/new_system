@@ -1,0 +1,31 @@
+## 2.2. Base Instruction Formats
+
+In the base RV32I ISA, there are four core instruction formats (R/I/S/U), as shown in Base instruction formats. All are a fixed 32 bits in length. The base ISA has IALIGN=32 , meaning that instructions must be  aligned  on  a  four-byte  boundary  in  memory.  An  instruction-address-misaligned  exception  is generated on a taken branch or unconditional jump if the target address is not IALIGN-bit aligned. This exception is reported on the branch or jump instruction, not on the target instruction. No instructionaddress-misaligned exception is generated for a conditional branch that is not taken.
+
+The alignment constraint for base ISA instructions is relaxed to a two-byte boundary when  instruction  extensions  with  16-bit  lengths  or  other  odd  multiples  of  16-bit lengths are added (i.e., IALIGN=16).
+
+<image>
+
+Instruction-address-misaligned exceptions are reported on the branch or jump that would cause instruction misalignment to help debugging, and to simplify hardware design  for  systems  with  IALIGN=32,  where  these  are  the  only  places  where misalignment can occur.
+
+The behavior upon decoding a reserved instruction is UNSPECIFIED.
+
+<image>
+
+Some platforms may require that opcodes reserved for standard use raise an illegalinstruction  exception.  Other  platforms  may  permit  reserved  opcode  space  be  used for non-conforming extensions.
+
+The RISC-V ISA keeps the source ( rs1 and rs2 ) and destination ( rd ) registers at the same position in all formats to simplify decoding. Except for the 5-bit immediates used in CSR instructions (Chapter 6), immediates are always sign-extended, and are generally packed towards the leftmost available bits in the instruction and have been allocated to reduce hardware complexity. In particular, the sign bit for all immediates is always in bit 31 of the instruction to speed sign-extension circuitry.
+
+<image>
+
+<image>
+
+RISC-V base instruction formats. Each immediate subfield is labeled with the bit position (imm[x]) in the immediate value being produced, rather than the bit position within the instruction's immediate field as is usually done.
+
+Decoding register specifiers is usually on the critical paths in implementations, and so  the  instruction  format  was  chosen  to  keep  all  register  specifiers  at  the  same position  in  all  formats  at  the  expense  of  having  to  move  immediate  bits  across formats (a property shared with RISC-IV aka. SPUR (Lee et al., 1989)).
+
+<image>
+
+In practice, most immediates are either small or require all XLEN bits. We chose an asymmetric immediate split (12 bits in regular instructions plus a special load-upperimmediate  instruction  with  20  bits)  to  increase  the  opcode  space  available  for regular instructions.
+
+Immediates are sign-extended because we did not observe a benefit to using zero extension for some immediates as in the MIPS ISA and wanted to keep the ISA as simple as possible.

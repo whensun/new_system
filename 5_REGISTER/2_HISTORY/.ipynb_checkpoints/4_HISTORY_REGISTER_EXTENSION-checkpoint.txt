@@ -1,0 +1,44 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: mseccfg
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, based on the rules below, output all extensions (RISC-V extensions) for mseccfg register. Note: registers, CSRs, fields, modes, interrupts, and instructions are not extensions.
+
+Read the rules below carefully and make sure you don't miss any extensions!
+
+HOW TO OUTPUT:
+Enter extensions as a comma-separated list on one line. If there are no extensions for mseccfg register in the rules, output NONE.
+
+The rules below:
+
+REGISTER: mseccfg
+RULE 1: If the entropy‑source extension Zkr is not implemented, the sseed and useed bits in mseccfg are hard‑wired to zero and writes to those bits have no effect.
+RULE 2: mseccfg is readable and writable only in machine mode.
+RULE 3: All undefined bits in mseccfg are reserved and must read as zero; writes to those bits have no defined effect.
+RULE 4: All defined fields in mseccfg are WARL.
+RULE 5: If the sseed bit in mseccfg is 1, accesses to the seed CSR from supervisor mode (S‑mode or HS‑mode) are permitted; if sseed is 0, any such access raises an illegal‑instruction exception.
+RULE 6: If the useed bit in mseccfg is 1, accesses to the seed CSR from user mode are permitted; if useed is 0, any such access raises an illegal‑instruction exception.
+RULE 7: Accesses to the seed CSR from machine mode are always permitted regardless of the values of sseed or useed in mseccfg.
+RULE 8: If the sseed bit in mseccfg is 1, a virtual‑supervisor (VS) or virtual‑user (VU) attempt to read‑write the seed CSR raises a virtual‑instruction exception; if sseed is 0, the same attempt raises an illegal‑instruction exception.
+RULE 9: The useed bit in mseccfg has no effect on the exception type raised for VS/VU accesses to the seed CSR.
+RULE 10: If the MMWP bit in mseccfg is set to 1, the default PMP policy for machine mode on unmapped memory regions changes from ignore to deny, and MMWP cannot be cleared until a PMP reset.
+RULE 11: If the MML bit in mseccfg is set to 1, a pmpcfg.L=1 rule becomes machine‑mode‑only, a pmpcfg.L=0 rule becomes supervisor/user‑mode‑only, the pmpcfg.RW=01 encoding is repurposed for shared‑region rules, and MML cannot be cleared until a PMP reset.
+RULE 12: If the MML bit in mseccfg is 0, the pmpcfg.RW=01 encoding remains reserved for future use.
+RULE 13: If the RLB bit in mseccfg is 1, locked PMP rules may be removed or modified and locked PMP entries may be edited.
+RULE 14: If any PMP entry has pmpcfg.L=1, the RLB bit in mseccfg remains 0 and any write to RLB is ignored until a PMP reset.
+RULE 15: If the PMM field in mseccfg (bits 33‑32) is set to a value defined by the Smmpm extension, pointer masking for machine mode is enabled or disabled according to that encoding.
+RULE 16: If the MLPE bit in mseccfg is 1, the Zicfilp extension is enabled in machine mode.
+RULE 17: If the MLPE bit in mseccfg is 0, the Zicfilp extension is disabled in machine mode, the hart never updates the expected landing‑pad (ELP) state (it remains NO_LP_EXPECTED), and the LPAD instruction executes as a no‑op.
+RULE 18: Software may test whether the sseed or useed bits in mseccfg are writable by writing 1 to the bit and reading it back; a read‑back value of 1 indicates the bit is writable, while a read‑back value of 0 indicates the bit is read‑only zero.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+Zkr, Smmpm, Zicfilp
+======================================================= END - 1 ========================================================

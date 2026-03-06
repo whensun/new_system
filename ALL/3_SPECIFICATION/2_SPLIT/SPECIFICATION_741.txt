@@ -1,0 +1,19 @@
+## 3.1.17. Machine Configuration Pointer ( mconfigptr ) Register
+
+The mconfigptr register is an MXLEN-bit read-only CSR, formatted as shown in Figure 24, that holds the physical address of a configuration data structure. Software can traverse this data structure to discover information about the harts, the platform, and their configuration.
+
+<image>
+
+MXLEN
+
+Figure 24. Machine Configuration Pointer ( mconfigptr ) register.
+
+The pointer alignment in bits must be no smaller than MXLEN: i.e., if MXLEN is , then mconfigptr [ -1:0] must be zero.
+
+The mconfigptr register  must  be  implemented, but it may be zero to indicate the configuration data structure does not exist or that an alternative mechanism must be used to locate it.
+
+The  format  and  schema  of  the  configuration  data  structure have  yet to  be standardized.
+
+<image>
+
+While the mconfigptr register will simply be hardwired in some implementations, other implementations may provide a means to configure the value returned on CSR reads. For example, mconfigptr might present the value of a memory-mapped register that is programmed by the platform or by M-mode software towards the beginning of the boot process.

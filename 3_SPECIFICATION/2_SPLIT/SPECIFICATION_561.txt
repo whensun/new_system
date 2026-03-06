@@ -1,0 +1,5 @@
+## 31.8.2.3. Pseudorandom Number Generator (PRNG)
+
+Pseudorandom  Number  Generators  (PRNGs)  use  deterministic  mathematical  formulas  to  create abundant random numbers from a smaller amount of "seed" randomness. PRNGs are also divided into cryptographic and non-cryptographic ones.
+
+Non-cryptographic  PRNGs,  such  as  LFSRs  and  the  linear-congruential  generators  found  in  many programming libraries, may generate statistically satisfactory random numbers but must never be used for  cryptographic  keying.  This  is  because  they  are  not  designed  to  resist cryptanalysis ;  it  is  usually possible to take some output and mathematically derive the "seed" or the internal state of the PRNG from it. This is a security problem since knowledge of the state allows the attacker to compute future or past outputs.

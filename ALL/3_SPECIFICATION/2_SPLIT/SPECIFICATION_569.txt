@@ -1,0 +1,5 @@
+## 31.8.4.1. T1: On-demand testing
+
+A sequence of simple tests is invoked via resetting, rebooting, or powering up the hardware (not an ISA signal). The implementation will simply return BIST during the initial start-up self-test period; in any case, the driver must wait for them to finish before starting cryptographic operations. Upon failure, the entropy source will enter a no-output DEAD state.
+
+Rationale. Interaction with hardware self-test mechanisms from the software side should be minimal; the  term  "on-demand"  does  not  mean  that  the  end-user  or  application  program  should  be  able  to invoke them in the field (the term is a throwback to an age of discrete, non-autonomous crypto devices with human operators).

@@ -1,0 +1,33 @@
+## 28.12.8. c.zext.h
+
+Synopsis:
+
+Zero extend halfword, 16-bit encoding
+
+Mnemonic:
+
+c.zext.h rd'/rs1'
+
+Encoding (RV32, RV64):
+
+<image>
+
+Description:
+
+This  instruction  takes  a  single  source/destination  operand.  It  zero-extends  the  least-significant halfword of the operand to XLEN bits by inserting zeros into all of the bits more significant than 15.
+
+<image>
+
+rd'/rs1' is from the standard 8-register set x8-x15.
+
+Prerequisites:
+
+Zbb is also required.
+
+<image>
+
+The SAIL module variable for rd'/rs1' is called rsdc.
+
+Operation:
+
+X(rsdc) = EXTZ(X(rsdc)[15..0]);

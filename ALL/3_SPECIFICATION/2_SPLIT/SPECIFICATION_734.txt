@@ -1,0 +1,15 @@
+## 3.1.10. Hardware Performance Monitor
+
+M-mode includes a basic hardware performance-monitoring facility. The mcycle CSR counts the number of clock cycles executed by the processor core on which the hart is running. The minstret CSR counts the number of instructions the hart has retired. The mcycle and minstret registers have 64-bit precision on all RV32 and RV64 harts.
+
+The counter registers have an arbitrary value after the hart is reset, and can be written with a given value. Any CSR write takes effect after the writing instruction has otherwise completed. The mcycle CSR may be shared between harts on the same core, in which case writes to mcycle will be visible to those harts. The platform should provide a mechanism to indicate which harts share an mcycle CSR.
+
+The  hardware  performance  monitor  includes  29  additional  64-bit  event  counters, mhpmcounter3 -mhpmcounter31 .  The event selector CSRs, mhpmevent3 -mhpmevent31 ,  are 64-bit WARL registers that control which event causes the corresponding counter to increment. The meaning of these events is defined by the platform, but event 0 is defined to mean "no event." All counters should be implemented, but a legal implementation is to make both the counter and its corresponding event selector be read-only 0.
+
+Figure 17. Hardware performance monitor counters.
+
+<image>
+
+The mhpmcounters are WARL registers that support up to 64 bits of precision on RV32 and RV64.
+
+When XLEN=32, reads of the mcycle , minstret , mhpmcounter n , and mhpmevent n CSRs return bits 31-0 of the corresponding register, and writes change only bits 31-0; reads of the mcycleh , minstreth , mhpmcounter n h , and mhpmevent n h CSRs return bits 63-32 of the corresponding register, and writes change only bits 6332. The mhpmevent n h CSRs are provided only if the Sscofpmf extension is implemented.

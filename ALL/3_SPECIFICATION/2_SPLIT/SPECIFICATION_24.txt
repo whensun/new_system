@@ -1,0 +1,9 @@
+## Chapter 3. RV32E and RV64E Base Integer Instruction Sets, Version 2.0
+
+This chapter describes a proposal for the RV32E and RV64E base integer instruction sets, designed for microcontrollers in embedded systems. RV32E and RV64E are reduced versions of RV32I and RV64I, respectively:  the  only  change  is  to  reduce  the  number  of  integer  registers  to  16.  This  chapter  only outlines  the  differences  between  RV32E/RV64E  and  RV32I/RV64I,  and  so  should  be  read  after Chapter 2 and Chapter 4.
+
+<image>
+
+RV32E  was  designed to provide an even smaller base core  for  embedded microcontrollers.  There  is  also  interest  in  RV64E  for  microcontrollers  within  large SoC designs, and to reduce context state for highly threaded 64-bit processors.
+
+Unless otherwise stated, standard extensions compatible with RV32I and RV64I are also compatible with RV32E and RV64E, respectively.

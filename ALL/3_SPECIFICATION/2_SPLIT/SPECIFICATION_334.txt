@@ -1,0 +1,5 @@
+## 30.4.5. Mask Register Layout
+
+A vector mask occupies only one vector register regardless of SEW and LMUL.
+
+Each element is allocated a single mask bit in a mask vector register. The mask bit for element i is located in bit i of the mask register, independent of SEW or LMUL.

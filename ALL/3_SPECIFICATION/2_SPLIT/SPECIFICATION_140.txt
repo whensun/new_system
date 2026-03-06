@@ -1,0 +1,3 @@
+## 24.3.2. BF16 Behavior
+
+For these BF16 extensions, instruction behavior on BF16 operands is the same as for other floatingpoint instructions in the RISC-V ISA. For easy reference, some of this behavior is repeated here.

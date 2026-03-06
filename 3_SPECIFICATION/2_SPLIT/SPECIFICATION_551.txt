@@ -1,0 +1,29 @@
+## 31.7.4.2. Bit & Byte Permutations
+
+RV32, RV64:
+
+brev8   rd, rs1
+
+rev8    rd, rs1
+
+See Bit-manipulation for Cryptography for details of these instructions.
+
+Notes to software developers
+
+<image>
+
+Reversing bytes in words is very common in cryptography when setting a standard endianness  for input and  output data. Bit reversal within bytes is used  for implementing  the  GHASH  component  of  Galois/Counter  Mode  (GCM)  (Dworkin, 2007).
+
+RV32:
+
+zip     rd, rs1
+
+unzip   rd, rs1
+
+See Bit-manipulation for Cryptography for details of these instructions.
+
+Notes to software developers
+
+<image>
+
+These  instructions  perform  a  bit-interleave  (or  de-interleave)  operation,  and  are useful for implementing the 64-bit rotations in the SHA3 (NIST, 2015) algorithm on a 32-bit architecture. On RV64, the relevant operations in SHA3 can be done natively using rotation instructions, so zip and unzip are not required.

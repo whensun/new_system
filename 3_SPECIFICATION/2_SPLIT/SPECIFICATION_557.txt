@@ -1,0 +1,20 @@
+## 31.8.1. Checklists for Design and Self-Certification
+
+The security of cryptographic systems is based on secret bits and keys. These bits need to be random and originate from cryptographically secure Random Bit Generators (RBGs). An Entropy Source (ES) is required to construct secure RBGs.
+
+While entropy source implementations do not have to be certified designs, RISC-V expects that they behave in a compatible manner and do not create unnecessary security risks to users. Self-evaluation and testing following appropriate security standards is usually needed to achieve this.
+
+- ⚫ ISA  Architectural  Tests. Verify,  to  the  extent  possible,  that  RISC-V  ISA  requirements  in  this specification  are  correctly  implemented.  This  includes  the  state  transitions  (Section  31.5  and Section 31.8.6), access control (Section 31.5.3), and that seed ES16 entropy words can only be read destructively. The  scope  of RISC-V  ISA  architectural tests are those behaviors that are independent  of  the  physical  entropy  source  details.  A  smoke  test  ES  module  may  be  helpful  in design phase.
+- ⚫ Technical justification for entropy. This may take the form of a stochastic model or a heuristic argument that explains why the noise source output is from a random, rather than pseudorandom (deterministic) process, and is not easily predictable or externally observable. A complete physical model is not necessary; research literature can be cited. For example, one can show that a good ring  oscillator  noise  derives  an  amount  of  physical  entropy  from  local,  spontaneously  occurring Johnson-Nyquist thermal noise (Saarinen, 2021), and is therefore not merely "random-looking".
+- ⚫ Entropy Source Design Review. An entropy source is more than a noise source, and must have features  such  as  health  tests  (Section  31.8.4),  a  conditioner  (Section  31.8.2.2),  and  a  security boundary with clearly defined interfaces. One may tabulate the SHALL statements of SP 800-90B (Turan et al., 2018), FIPS 140-3 Implementation Guidance (NIST & CCCS, 2021), AIS-31 (Killmann &  Schindler,  2011)  or  other  standards  being  used.  Official  and  non-official  checklist  tables  are available: github.com/usnistgov/90B-Shall-Statements
+- ⚫ Experimental Tests. The raw noise source is subjected to entropy estimation as defined in NIST
+
+800-90B, Section 3 (Turan et al., 2018). The interface described in Section 31.8.6 can used be to record datasets for this purpose. One also needs to show experimentally that the conditioner and health  test  components  work  appropriately  to  meet  the  ES16  output  entropy  requirements  of Section 31.5.2. For SP 800-90B, NIST has made a min-entropy estimation package freely available: github.com/usnistgov/SP800-90B\_EntropyAssessment
+
+- ⚫ Resilience. Above physical engineering steps should consider the operational environment of the device,  which  may  be  unexpected  or  hostile  (actively  attempting  to  exploit  vulnerabilities  in  the design).
+
+See Section 31.8.5 for a discussion of various implementation options.
+
+<image>
+
+It is one of the goals of the RISC-V Entropy Source specification that a standard 90B Entropy  Source  Module  or  AIS-31  RNG  IP  may  be  licensed  from  a  third  party  and integrated  with  a  RISC-V  processor  design.  Compared  to  older  (FIPS  140-2)  RNG and DRBG modules, an entropy source module may have a relatively small area (just a  few  thousand  NAND2  gate  equivalent).  CMVP  is  introducing  an  "Entropy  Source Validation Scope" which potentially allows 90B validations to be reused for different (FIPS 140-3) modules.

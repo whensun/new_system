@@ -1,0 +1,9 @@
+## 28.13.6.1. cm.push  {ra, s0-s2}, -64
+
+Encoding: rlist =7, spimm =3
+
+expands to:
+
+```
+sw  s2,  -4(sp); sw  s1,  -8(sp); sw  s0, -12(sp); sw  ra, -16(sp); addi sp, sp, -64;
+```

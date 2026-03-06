@@ -1,0 +1,8 @@
+## 29.4.6. Zbkc: Carry-less multiplication for Cryptography
+
+Carry-less  multiplication  is  the  multiplication  in  the  polynomial  ring  over  GF(2).  This  is  a  critical operation  in  some  cryptographic  workloads,  particularly  the  AES-GCM  authenticated  encryption scheme.  This  extension  provides  only  the  instructions  needed  to  efficiently  implement  the  GHASH operation, which is part of this workload.
+
+| RV32   | RV64   | Mnemonic              | Instruction                     |
+|--------|--------|-----------------------|---------------------------------|
+| ✓      | ✓      | clmul rd , rs1 , rs2  | Carry-less multiply (low-part)  |
+| ✓      | ✓      | clmulh rd , rs1 , rs2 | Carry-less multiply (high-part) |

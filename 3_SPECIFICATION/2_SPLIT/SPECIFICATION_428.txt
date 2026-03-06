@@ -1,0 +1,21 @@
+## 30.16.1. Integer Scalar Move Instructions
+
+The  integer  scalar  read/write  instructions  transfer  a  single  value  between  a  scalar x register  and element 0 of a vector register. The instructions ignore LMUL and vector register groups.
+
+```
+vmv.x.s rd, vs2  # x[rd] = vs2[0] (vs1=0) vmv.s.x vd, rs1  # vd[0] = x[rs1] (vs2=0)
+```
+
+The vmv.x.s instruction copies a single SEW-wide element from index 0 of the source vector register to a destination integer register. If SEW > XLEN, the least-significant XLEN bits are transferred and the upper SEW-XLEN bits are ignored. If SEW < XLEN, the value is sign-extended to XLEN bits.
+
+<image>
+
+vmv.x.s performs its operation even if vstart ≥ vl or vl =0.
+
+The vmv.s.x instruction  copies  the  scalar  integer  register  to  element  0  of  the  destination  vector register.  If  SEW  <  XLEN,  the  least-significant  bits  are  copied  and  the  upper  XLEN-SEW  bits  are ignored. If SEW > XLEN, the value is sign-extended to SEW bits. The other elements in the destination vector  register  (  0  <  index  <  VLEN/SEW)  are  treated  as  tail  elements  using  the  current  tail agnostic/undisturbed policy. If vstart ≥ vl ,  no operation is performed and the destination register is not updated.
+
+<image>
+
+As  a  consequence,  when vl =0,  no  elements  are  updated  in  the  destination  vector register group, regardless of vstart .
+
+The encodings corresponding to the masked versions ( vm=0 ) of vmv.x.s and vmv.s.x are reserved.

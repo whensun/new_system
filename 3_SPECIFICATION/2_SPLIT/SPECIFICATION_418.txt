@@ -1,0 +1,60 @@
+## 30.15.1. Vector Mask-Register Logical Instructions
+
+Vector mask-register logical operations operate on mask registers. Each element in a mask register is a single bit, so these instructions all operate on single vector registers regardless of the setting of the vlmul field in vtype . They do not change the value of vlmul . The destination vector register may be the same as either source vector register.
+
+As with other vector instructions, the elements with indices less than vstart are unchanged, and vstart is reset to zero after execution. Vector mask logical instructions are always unmasked, so there are no inactive elements, and the encodings with vm=0 are reserved. Mask elements past vl , the tail elements, are always updated with a tail-agnostic policy.
+
+```
+vmand.mm vd, vs2, vs1   # vd.mask[i] =   vs2.mask[i] &&  vs1.mask[i] vmnand.mm vd, vs2, vs1  # vd.mask[i] = !(vs2.mask[i] &&  vs1.mask[i]) vmandn.mm vd, vs2, vs1  # vd.mask[i] =   vs2.mask[i] && !vs1.mask[i] vmxor.mm  vd, vs2, vs1  # vd.mask[i] =   vs2.mask[i] ^^  vs1.mask[i] vmor.mm  vd, vs2, vs1   # vd.mask[i] =   vs2.mask[i] ||  vs1.mask[i]
+```
+
+```
+vmnor.mm  vd, vs2, vs1  # vd.mask[i] = !(vs2.mask[i] ||  vs1.mask[i]) vmorn.mm  vd, vs2, vs1  # vd.mask[i] =   vs2.mask[i] || !vs1.mask[i] vmxnor.mm vd, vs2, vs1  # vd.mask[i] = !(vs2.mask[i] ^^  vs1.mask[i])
+```
+
+<image>
+
+The  previous  assembler  mnemonics vmandnot and vmornot have  been  changed  to vmandn and vmorn to  be  consistent  with  the  equivalent  scalar  instructions.  The  old vmandnot and vmornot mnemonics can be retained as assembler aliases for compatibility.
+
+Several  assembler  pseudoinstructions  are  defined  as  shorthand  for  common  uses  of  mask  logical operations:
+
+```
+vmmv.m vd, vs  => vmand.mm vd, vs, vs   # Copy mask register vmclr.m vd     => vmxor.mm vd, vd, vd   # Clear mask register vmset.m vd     => vmxnor.mm vd, vd, vd  # Set mask register vmnot.m vd, vs => vmnand.mm vd, vs, vs  # Invert bits
+```
+
+<image>
+
+The vmmv.m instruction  was  previously  called vmcpy.m ,  but  with  new  layout  it  is  more consistent  to  name  as  a  "mv"  because  bits  are  copied  without  interpretation.  The vmcpy.m assembler pseudoinstruction can be retained for compatibility. For implementations that internally rearrange bits according to EEW, a vmmv.m instruction with same source and destination can be used as idiom to force an internal reformat into a mask vector.
+
+The set of eight mask logical instructions can generate any of the 16 possibly binary logical functions of the two input masks:
+
+|   inputs |   inputs |   inputs |   inputs | inputs   |
+|----------|----------|----------|----------|----------|
+|        0 |        0 |        1 |        1 | src1     |
+|        0 |        1 |        0 |        1 | src2     |
+
+|   output |   output |   output |   output | instruction              | pseudoinstruction   |
+|----------|----------|----------|----------|--------------------------|---------------------|
+|        0 |        0 |        0 |        0 | vmxor.mm vd, vd, vd      | vmclr.m vd          |
+|        1 |        0 |        0 |        0 | vmnor.mm vd, src1, src2  |                     |
+|        0 |        1 |        0 |        0 | vmandn.mm vd, src2, src1 |                     |
+|        1 |        1 |        0 |        0 | vmnand.mm vd, src1, src1 | vmnot.m vd, src1    |
+|        0 |        0 |        1 |        0 | vmandn.mm vd, src1, src2 |                     |
+|        1 |        0 |        1 |        0 | vmnand.mm vd, src2, src2 | vmnot.m vd, src2    |
+|        0 |        1 |        1 |        0 | vmxor.mm vd, src1, src2  |                     |
+|        1 |        1 |        1 |        0 | vmnand.mm vd, src1, src2 |                     |
+|        0 |        0 |        0 |        1 | vmand.mm vd, src1, src2  |                     |
+|        1 |        0 |        0 |        1 | vmxnor.mm vd, src1, src2 |                     |
+|        0 |        1 |        0 |        1 | vmand.mm vd, src2, src2  | vmmv.m vd, src2     |
+
+|   output |   output |   output |   output | instruction             | pseudoinstruction   |
+|----------|----------|----------|----------|-------------------------|---------------------|
+|        1 |        1 |        0 |        1 | vmorn.mm vd, src2, src1 |                     |
+|        0 |        0 |        1 |        1 | vmand.mm vd, src1, src1 | vmmv.m vd, src1     |
+|        1 |        0 |        1 |        1 | vmorn.mm vd, src1, src2 |                     |
+|        0 |        1 |        1 |        1 | vmor.mm vd, src1, src2  |                     |
+|        1 |        1 |        1 |        1 | vmxnor.mm vd, vd, vd    | vmset.m vd          |
+
+<image>
+
+The vector mask logical instructions are designed to be easily fused with a following masked vector operation to effectively expand the number of predicate registers by moving values into v0 before use.

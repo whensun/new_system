@@ -1,0 +1,13 @@
+## 19.4.1.2. Load Values
+
+An invalidate operation may change the set of values that can be returned by a load. In particular, an additional condition is added to the Load Value Axiom:
+
+- ⚫ If an invalidate operation i precedes a load r and operates on a byte x returned by r , and no store to x appears between i and r in program order or in the global memory order, then r returns any of the following values for x :
+1. If no clean or flush operations on x precede i in the global memory order, either the initial value of x or the value of any store to x that precedes i
+2. If no store to x precedes a clean or flush operation on x in the global memory order and if the clean or flush operation on x precedes i in the global memory order, either the initial value of x or the value of any store to x that precedes i
+3. If a store to x precedes a clean or flush operation on x in the global memory order and if the clean or flush operation on x precedes i in  the  global  memory  order,  either  the  value  of  the latest store to x that precedes the latest clean or flush operation on x or the value of any store to x that both precedes i and succeeds the latest clean or flush operation on x that precedes i
+4. The value of any store to x by a non-coherent agent regardless of the above conditions
+
+<image>
+
+The  first  three  bullets  describe  the  possible  load  values  at  different  points  in  the global memory order relative to clean or flush operations. The final bullet implies that the load value may be produced by a non-coherent agent at any time.

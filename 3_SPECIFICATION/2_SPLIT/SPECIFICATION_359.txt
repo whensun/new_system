@@ -1,0 +1,59 @@
+## 30.7.9. Vector Load/Store Whole Register Instructions
+
+Format for Vector Load Whole Register Instructions under LOAD-FP major opcode
+
+<image>
+
+Format for Vector Store Whole Register Instructions under STORE-FP major opcode
+
+<image>
+
+These instructions load and store whole vector register groups.
+
+<image>
+
+These instructions are intended to be used to save and restore vector registers when the  type  or  length  of  the  current  contents  of  the  vector  register  is  not  known,  or where  modifying vl and vtype would  be  costly.  Examples  include  compiler  register spills,  vector  function  calls  where  values  are  passed  in  vector  registers,  interrupt handlers,  and  OS  context  switches.  Software  can  determine  the  number  of  bytes transferred by reading the vlenb register.
+
+The load instructions have an EEW encoded in the mew and width fields following the pattern of regular unit-stride loads.
+
+<image>
+
+Because in-register byte layouts are identical to in-memory byte layouts, the same data is written to the destination register group regardless of EEW. Hence, it would have sufficed to provide only EEW=8 variants. The full set of EEW variants is provided so that the encoded EEW can be used as a hint to indicate the destination register group  will  next  be  accessed  with  this  EEW,  which  aids  implementations  that rearrange data internally.
+
+The  vector  whole  register  store  instructions  are  encoded  similar  to  unmasked  unit-stride  store  of elements with EEW=8.
+
+The nf field encodes how many vector registers to load and store using the NFIELDS encoding (Figure Table 56). The encoded number of registers must be a power of 2 and the vector register numbers must  be  aligned  as  with  a  vector  register  group,  otherwise  the  instruction  encoding  is  reserved. NFIELDS indicates the number of vector registers to transfer, numbered successively after the base. Only NFIELDS values of 1, 2, 4, 8 are supported, with other values reserved. When multiple registers are transferred,  the  lowest-numbered  vector  register  is  held  in  the  lowest-numbered  memory  addresses and successive vector register numbers are placed contiguously in memory.
+
+The  instructions  operate  with  an  effective  vector  length, evl =NFIELDS*VLEN/EEW,  regardless  of current settings in vtype and vl . The usual property that no elements are written if vstart ≥ vl does not apply to these instructions. Instead, no elements are written if vstart ≥ evl .
+
+The instructions operate similarly to unmasked unit-stride load and store instructions, with the base address passed in the scalar x register specified by rs1 .
+
+Implementations  are  allowed  to  raise  a  misaligned  address  exception  on  whole  register  loads  and stores if the base address is not naturally aligned to the larger of the size of the encoded EEW in bytes (EEW/8) or the implementation's smallest supported SEW size in bytes (SEWMIN/8).
+
+<image>
+
+Allowing misaligned exceptions to be raised based on non-alignment to the encoded EEW simplifies the implementation of these instructions. Some subset implementations  might  not  support  smaller  SEW  widths,  so  are  allowed  to  report misaligned exceptions for the smallest supported SEW even if larger than encoded EEW.  An  extreme  non-standard  implementation  might  have  SEWMIN>XLEN  for example. Software environments can mandate the minimum alignment requirements to support an ABI.
+
+```
+# Format of whole register load and store instructions. vl1r.v v3, (a0)       # Pseudoinstruction equal to vl1re8.v vl1re8.v    v3, (a0)  # Load v3 with VLEN/8 bytes held at address in a0 vl1re16.v   v3, (a0)  # Load v3 with VLEN/16 halfwords held at address in a0 vl1re32.v   v3, (a0)  # Load v3 with VLEN/32 words held at address in a0 vl1re64.v   v3, (a0)  # Load v3 with VLEN/64 doublewords held at address in a0 vl2r.v v2, (a0)       # Pseudoinstruction equal to vl2re8.v vl2re8.v    v2, (a0)  # Load v2-v3 with 2*VLEN/8 bytes from address in a0 vl2re16.v   v2, (a0)  # Load v2-v3 with 2*VLEN/16 halfwords held at address in a0 vl2re32.v   v2, (a0)  # Load v2-v3 with 2*VLEN/32 words held at address in a0 vl2re64.v   v2, (a0)  # Load v2-v3 with 2*VLEN/64 doublewords held at address
+```
+
+```
+in a0 vl4re8.v    v4, (a0)  # Load v4-v7 with 4*VLEN/8 bytes from address in a0 vl8re8.v    v8, (a0)  # Load v8-v15 with 8*VLEN/8 bytes from address in a0
+```
+
+```
+vl4r.v v4, (a0)       # Pseudoinstruction equal to vl4re8.v vl4re16.v   v4, (a0) vl4re32.v   v4, (a0) vl4re64.v   v4, (a0) vl8r.v v8, (a0)       # Pseudoinstruction equal to vl8re8.v vl8re16.v   v8, (a0) vl8re32.v   v8, (a0) vl8re64.v   v8, (a0) vs1r.v v3, (a1)      # Store v3 to address in a1 vs2r.v v2, (a1)      # Store v2-v3 to address in a1 vs4r.v v4, (a1)      # Store v4-v7 to address in a1 vs8r.v v8, (a1)      # Store v8-v15 to address in a1
+```
+
+<image>
+
+Implementations  should  raise  illegal-instruction  exceptions  on vl<nf>r instructions for EEW values that are not supported.
+
+<image>
+
+We have considered adding a whole register mask load instruction ( vl1rm.v ) but have decided to omit from initial extension. The primary purpose would be to inform the microarchitecture  that  the  data  will  be  used  as  a  mask.  The  same  effect  can  be achieved with the following code sequence, whose cost is at most four instructions. Of these, the first could likely be removed as vl is often already in a scalar register, and the last might already be present if the following vector instruction needs a new SEW/LMUL. So, in best case only two instructions (of which only one performs vector operations) are needed to synthesize the effect of the dedicated instruction:
+
+```
+csrr t0, vl                        # Save current vl (potentially not needed) vsetvli t1, x0, e8, m8, ta, ma     # Maximum VLMAX vlm.v v0, (a0)                     # Load mask register vsetvli x0, t0, <new type>         # Restore vl (potentially already present)
+```

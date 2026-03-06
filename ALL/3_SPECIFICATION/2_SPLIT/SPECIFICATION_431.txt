@@ -1,0 +1,19 @@
+## 30.16.3.1. Vector Slideup Instructions
+
+```
+vslideup.vx vd, vs2, rs1, vm        # vd[i+x[rs1]] = vs2[i] vslideup.vi vd, vs2, uimm, vm       # vd[i+uimm] = vs2[i]
+```
+
+For vslideup ,  the value in vl specifies the maximum number of destination elements that are written. The start index ( OFFSET ) for the destination can be either specified using an unsigned integer in the x register specified by rs1 , or a 5-bit immediate, zero-extended to XLEN bits. If XLEN > SEW, OFFSET is
+
+not truncated to SEW bits. Destination elements OFFSET through vl -1 are written if unmasked and if OFFSET < vl .
+
+```
+vslideup behavior for destination elements (`vstart` < `vl`) OFFSET is amount to slideup, either from x register or a 5-bit immediate 0 <= i < min(vl, max(vstart, OFFSET))  Unchanged max(vstart, OFFSET) <= i < vl                            vd[i] = vs2[i-OFFSET] if v0.mask[i] enabled vl <= i < VLMAX                         Follow tail policy
+```
+
+The  destination  vector  register  group  for vslideup cannot  overlap  the  source  vector  register  group, otherwise the instruction encoding is reserved.
+
+<image>
+
+The  non-overlap  constraint  avoids  WAR  hazards  on  the  input  vectors  during execution, and enables restart with non-zero vstart .

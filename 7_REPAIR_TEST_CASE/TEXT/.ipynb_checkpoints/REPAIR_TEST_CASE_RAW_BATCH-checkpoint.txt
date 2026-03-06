@@ -1,0 +1,1488 @@
+# 1 # Extension Must Be Active: NONE
+li x10, -1
+addiw x11, x10, 1
+# Result: a1 = 0
+
+# 2 # Extension Must Be Active: NONE
+li x10, 0xffffffff00000001
+addiw x11, x10, -1
+# Result: a1 = 0
+
+# 3 # Extension Must Be Active: NONE
+addi x10, zero, -1
+addiw x11, x10, 1
+# Result: a1 = 0
+
+# 4 # Extension Must Be Active: NONE
+addi x10, zero, -1
+addiw x11, x10, 1
+# Result: a1 = 0
+
+# 5 # Extension Must Be Active: NONE
+lui x11, 0x80000
+addiw x10, x11, 0
+# Result: a0 = 0xffffffff80000000
+
+# 6 # Extension Must Be Active: NONE
+li x10, 0x7fffffff
+addiw x11, x10, 1
+# Result: a1 = 0xffffffff80000000
+
+# 7 # Extension Must Be Active: NONE
+li x10, 0xffffffff80000001
+addiw x11, x10, 0
+# Result: a1 = 0x1
+
+# 8 # Extension Must Be Active: NONE
+csrrwi x10, mstatus, 5
+csrrwi x11, mstatus, 10
+# Result: a1 = 0x5
+
+# 9 # Extension Must Be Active: NONE
+csrrwi x10, mstatus, 1
+csrrs x11, mstatus, x0
+# Result: a1 = 0x1
+
+# 10 # Extension Must Be Active: NONE
+csrrwi x10, fflags, 10
+# Result: a0 = 0x0
+
+# 11 # Extension Must Be Active: NONE
+csrrwi x0, mstatus, 0
+csrrs x10, mstatus, x0
+# Result: a0 = 0x0
+
+# 12 # Extension Must Be Active: NONE
+li x10, 0xdeadbeefdeadbeef
+csrw mstatus, x10
+csrrwi x11, mstatus, 7
+# Result: a1 = 0xdeadbeefdeadbeef
+
+# 13 # Extension Must Be Active: NONE
+csrrwi x0, 0x305, 7
+csrr x10, 0x305
+# Result: a0 = 0x7
+
+# 14 # Extension Must Be Active: NONE
+csrrwi x10, mstatus, 5
+# Result: a0 != 0
+
+# 15 # Extension Must Be Active: NONE
+csrwi 0x340, 10
+csrrs x10, 0x340, x0
+# Result: a0 = 0xa
+
+# 16 # Extension Must Be Active: NONE
+csrrwi x0, 0x300, 10
+csrrwi x10, 0x300, 5
+# Result: a0 = 0xa
+
+# 17 # Extension Must Be Active: NONE
+li x10, 0xdeadbeefdeadbeef
+csrw mstatus, x10
+csrrwi x11, mstatus, 5
+# Result: a1 = 0xdeadbeefdeadbeef
+
+# 18 # Extension Must Be Active: NONE
+csrrwi x0, mstatus, 5
+csrr x10, mstatus
+# Result: a0 = 0x5
+
+# 19 # Extension Must Be Active: NONE
+li x10, 0x200
+csrw 0x747, x10
+csrr x11, 0x747
+srli x11, x11, 9
+andi x11, x11, 1
+# Result: a1 = 1
+
+# 20 # Extension Must Be Active: NONE
+li x10, 0x100
+csrw 0x747, x10
+csrr x11, 0x747
+# Result: a1 = 0x100
+
+# 21 # Extension Must Be Active: NONE
+csrr t0, 0x747
+li t1, -0x200
+and t0, t0, t1
+csrw 0x747, t0
+call machine_to_user
+csrr x10, 0x15
+# Result: mcause = 0x2
+
+# 22 # Extension Must Be Active: NONE
+csrw 0x747, x0
+call machine_to_user
+csrr x10, 0x15
+csrr x10, 0x342
+# Result: a0 = 2
+
+# 23 # Extension Must Be Active: NONE
+li x10, 0x100
+csrw 0x747, x10
+li x11, 0x12345678abcdef00
+csrw 0x15, x11
+call machine_to_user
+csrr x10, 0x15
+# Result: a0 = 0x12345678abcdef00
+
+# 24 # Extension Must Be Active: NONE
+csrw 0x747, x0
+call machine_to_supervisor
+csrr x10, 0x15
+# Result: mcause = 2
+
+# 25 # Extension Must Be Active: NONE
+li x11, 0x200
+csrw 0x747, x11
+call machine_to_supervisor
+csrr x10, 0x15
+# Result: a0 = 0
+
+# 26 # Extension Must Be Active: NONE
+li x11, 0xdeadbeefdeadbeef
+csrw 0x747, x0
+csrrw x10, 0x15, x11
+csrr x11, 0x15
+# Result: a1 = 0xdeadbeefdeadbeef
+
+# 27 # Extension Must Be Active: NONE
+csrr x10, 0x747
+li x11, 0x300
+and x12, x10, x11
+# Result: a2 != 0xffffffffffffffff
+
+# 28 # Extension Must Be Active: NONE
+csrr x10, 0x747
+srli x10, x10, 9
+# Result: a0 = 0
+
+# 29 # Extension Must Be Active: NONE
+li x10, 0x100
+csrw 0x747, x10
+csrr x11, 0x747
+andi x11, x11, 0x100
+# Result: a1 = 0
+
+# 30 # Extension Must Be Active: NONE
+li x10, 0x300
+csrw 0x747, x10
+csrr x11, 0x747
+and x12, x11, x10
+# Result: a2 = 0
+
+# 31 # Extension Must Be Active: Zkr
+csrr x10, 0x747
+# Result: a0 = 0
+
+# 32 # Extension Must Be Active: NONE
+li x10, 0x300
+csrw 0x747, x10
+csrr x11, 0x747
+li x10, 0x300
+and x12, x11, x10
+# Result: a2 = 0
+
+# 33 # Extension Must Be Active: NONE
+li x10, 0x300
+csrw 0x747, x10
+csrr x11, 0x747
+and x12, x11, x10
+# Result: a2 = 0x300
+
+# 34 # Extension Must Be Active: NONE
+li x10, 0x200
+csrw 0x747, x10
+csrr x11, 0x747
+or x12, x11, x10
+# Result: a1 = 0x200
+
+# 35 # Extension Must Be Active: NONE
+li x11, 0
+csrw 0x747, x11
+call machine_to_user
+csrr x10, seed
+# Result: mcause = 2
+
+# 36 # Extension Must Be Active: NONE
+csrrs x10, 0x747, x0
+li x11, 0x300
+and x10, x10, x11
+# Result: a0 = 0x300
+
+# 37 # Extension Must Be Active: NONE
+li x10, 0x7
+csrw 0x747, x10
+csrr x10, 0x747
+# Result: a0 = 0x7
+
+# 38 # Extension Must Be Active: NONE
+li t0, 0x3
+csrw mseccfg, t0
+csrr x10, mseccfg
+# Result: a0 = 0x3
+
+# 39 # Extension Must Be Active: Zkr
+li t0, 0x300
+csrw 0x747, t0
+csrr x10, 0x747
+and x10, x10, t0
+# Result: a0 = 0x300
+
+# 40 # Extension Must Be Active: Smepmp
+li x11, 0x7
+csrrw x10, 0x747, x11
+csrrs x10, 0x747, x0
+and x10, x10, x11
+# Result: a0 = 0x7
+
+# 41 # Extension Must Be Active: Smmpm
+li x10, 0x300000000
+csrw 0x747, x10
+csrr x11, 0x747
+srli x11, x11, 32
+andi x11, x11, 0x3
+# Result: a1 = 0x3
+
+# 42 # Extension Must Be Active: Zicfilp
+li x10, -1
+csrw 0x747, x10
+csrr x11, 0x747
+# Result: a1 != 0
+
+# 43 # Extension Must Be Active: Zicfilp
+li t0, 1
+csrw 0x747, t0
+addi x10, zero, 1
+# Result: a0 = 1
+
+# 44 # Extension Must Be Active: Zicfilp
+li x10, 0
+csrw 0x747, x10
+# Result: mcause = 2
+
+# 45 # Extension Must Be Active: NONE
+csrrw x10, 0x747, x0
+andi x10, x10, 0x1
+# Result: a0 = 0
+
+# 46 # Extension Must Be Active: NONE
+csrw 0x747, x10
+lpad x11, x10, x12
+# Result: a1 = 0
+
+# 47 # Extension Must Be Active: NONE
+li x11, 0xa5a5a5a500000000
+csrw 0x747, x11
+csrr x10, 0x757
+# Result: a0 = 0xa5a5a5a5
+
+# 48 # Extension Must Be Active: NONE
+csrr x10, 0x747
+srli x11, x10, 32
+# Result: a1 = 0
+
+# 49 # Extension Must Be Active: Zicfilp
+li x10, 8
+csrw 0x747, x10
+csrr x11, 0x747
+andi x12, x11, 8
+# Result: a2 = 0
+
+# 50 # Extension Must Be Active: NONE
+csrr x10, 0x747
+call machine_to_supervisor
+csrr x11, 0x747
+# Result: mcause = 0x2
+
+# 51 # Extension Must Be Active: NONE
+csrr x10, 0x747
+li x11, 0x7
+and x10, x10, x11
+# Result: a0 = 0
+
+# 52 # Extension Must Be Active: NONE
+li x10, -1
+csrw 0x747, x10
+csrr x11, 0x747
+li x12, 0xfffffffffcfffffcf8
+and x12, x11, x12
+# Result: a2 = 0
+
+# 53 # Extension Must Be Active: NONE
+csrr x10, 0x747
+# Result: a0 = 0
+
+# 54 # Extension Must Be Active: NONE
+csrr t0, mseccfg
+li t1, 0x4
+or t0, t0, t1
+csrw mseccfg, t0
+li t2, 0x80
+csrw pmpcfg0, t2
+li t3, 0xdeadbeefdeadbeef
+csrw pmpaddr0, t3
+csrr x10, pmpaddr0
+# Result: a0 = 0xdeadbeefdeadbeef
+
+# 55 # Extension Must Be Active: NONE
+csrw 0x747, x0
+li t0, 0x80
+csrw 0x3a0, t0
+li t1, 0x4
+csrw 0x747, t1
+csrr x10, 0x747
+li x11, 0x4
+and x11, x10, x11
+# Result: a1 = 0
+
+# 56 # Extension Must Be Active: NONE
+csrw 0x747, x0
+li x11, 0x2
+csrw 0x747, x11
+csrw 0x747, x0
+csrr x10, 0x747
+srl x10, x10, 1
+# Result: a0 = 0x1
+
+# 57 # Extension Must Be Active: NONE
+li x10, 0x2
+csrw 0x747, x10
+li x11, 0x12345678abcdef00
+li x12, 0x1000
+sd x11, 0(a2)
+csrrwi x10, mcause, 0
+# Result: a0 = 0x3
+
+# 58 # Extension Must Be Active: NONE
+li x10, 1
+csrrs x11, 0x747, x10
+csrrc x12, 0x747, x10
+csrr x12, 0x747
+# Result: a2 = 1
+
+# 59 # Extension Must Be Active: NONE
+li t0, 1
+csrw mseccfg, t0
+li t1, 0x80
+csrw pmpcfg0, t1
+li t2, 0x2000080
+csrw pmpaddr0, t2
+call machine_to_supervisor
+li t3, 0x80002000
+ld x10, 0(t3)
+# Result: a0 = 0x5
+
+# 60 # Extension Must Be Active: NONE
+li t0, 1
+csrw 0x747, t0
+li t0, 0x80001000
+csrw 0x3b0, t0
+li t0, 0x00
+csrw 0x3a0, t0
+li x10, 0x80001000
+ld x11, 0(a0)
+call machine_to_supervisor
+li x10, 0x80001000
+ld x12, 0(a0)
+# Result: mcause = 0x5
+
+# 61 # Extension Must Be Active: NONE
+csrrwi x10, 0x747, 1
+csrrs x11, 0x747, x0
+andi x12, x11, 1
+# Result: a2 = 0x1
+
+# 62 # Extension Must Be Active: NONE
+li x10, 0x80001000
+li x11, 0x1122334455667788
+csrr t0, 0x747
+ori t0, t0, 1
+csrw 0x747, t0
+li t1, 0xff
+csrw 0x3a0, t1
+li t2, 0x80001fff
+csrw 0x3b0, t2
+sd x11, 0(a0)
+call machine_to_supervisor
+sd x11, 0(a0)
+csrr x10, mcause
+# Result: a0 = 7
+
+# 63 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0x80001000
+csrw 0x3b0, x10
+li x10, 0x80002000
+csrw 0x3b1, x10
+li x10, 0x0b
+csrw 0x3a0, x10
+li x11, 0x80001004
+ld x12, 0(a1)
+# Result: mcause = 0x5
+
+# 64 # Extension Must Be Active: NONE
+li t0, 1
+csrw 0x747, t0
+li t0, 0x81
+csrw 0x3a0, t0
+li t0, 0x2000040
+csrw 0x3b0, t0
+li x11, 0x80001000
+li x10, 0xdeadbeefdeadbeef
+sd x10, 0(a1)
+li x10, 0
+# Result: mcause = 7
+
+# 65 # Extension Must Be Active: NONE
+li x10, 0x80020000
+li x11, 0
+sd x11, 0(a0)
+li t0, 0x06
+csrw pmpcfg0, t0
+srli t1, x10, 2
+csrw pmpaddr0, t1
+call machine_to_supervisor
+li x12, 0xdeadbeefdeadbeef
+sd x12, 0(a0)
+ld x11, 0(a0)
+li t0, 0
+beq x11, t0, set_success
+li x10, 0
+j end_label
+set_success:
+li x10, 1
+end_label:
+# Result: a0 = 0
+
+# 66 # Extension Must Be Active: NONE
+li x10, 0
+li x11, 0x84
+csrw pmpcfg0, x11
+li x11, 0xfffffffffffffffe
+csrw pmpaddr0, x11
+and x10, x10, x10
+# Result: a0 = 0x0
+
+# 67 # Extension Must Be Active: NONE
+li x10, 0x20000000
+li x11, 0x12345678
+sd x11, 0(a0)
+# Result: a0 = 0x7
+
+# 68 # Extension Must Be Active: NONE
+csrr x10, 0x747
+ori x10, x10, 1
+csrw 0x747, x10
+li x10, 0x84
+csrw 0x3a0, x10
+csrr x11, 0x3a0
+# Result: a1 = 0
+
+# 69 # Extension Must Be Active: NONE
+li t0, 1
+csrw 0x747, t0
+jal ra, 0x100000
+# Result: mcause = 1
+
+# 70 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x11, 0x90000000
+jalr x0, x11, 0
+csrr x12, mcause
+# Result: a2 = 0x1
+
+# 71 # Extension Must Be Active: NONE
+csrw 0x747, x0
+li x11, 0x2
+csrw 0x3a0, x11
+# Result: mcause = 0x2
+
+# 72 # Extension Must Be Active: NONE
+li x11, 0x5
+csrw 0x747, x11
+csrr x10, 0x747
+and x12, x10, x11
+# Result: a2 = 0x5
+
+# 73 # Extension Must Be Active: NONE
+li x10, 0x1
+csrw 0x747, x10
+li x10, 0x0
+csrw 0x3b0, x10
+li x10, 0x0
+csrw 0x3a0, x10
+li x11, 0x80001000
+lw x12, 0(a1)
+# Result: mcause = 0x5
+
+# 74 # Extension Must Be Active: NONE
+li x10, 0x4
+csrw 0x747, x10
+li x11, 0x80
+csrw 0x3a0, x11
+li x12, 0x12345
+csrw 0x3b0, x12
+li x12, 0x54321
+csrw 0x3b0, x12
+csrr x10, 0x3b0
+# Result: a0 = 0x54321
+
+# 75 # Extension Must Be Active: NONE
+li x11, 0
+csrw 0x747, x11
+li x11, 0x80
+csrw 0x3a0, x11
+li x11, 0x12345
+csrw 0x3b0, x11
+li x11, 0x00
+csrw 0x3a0, x11
+csrr x10, 0x3a0
+li x11, 0x80
+and x10, x10, x11
+# Result: a0 != 0
+
+# 76 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0
+csrw 0x3a0, x10
+li x10, 0x80001000
+csrw 0x3b0, x10
+li x11, 0x80001000
+lw x12, 0(a1)
+# Result: mcause = 0x5
+
+# 77 # Extension Must Be Active: NONE
+li x10, 1
+csrw mseccfg, x10
+csrw pmpcfg0, x0
+csrw pmpaddr0, x0
+call machine_to_supervisor
+ld x11, 0(x0)
+# Result: mcause = 13
+
+# 78 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0x0c
+csrw 0x3a0, x10
+li x10, 0
+csrw 0x3b0, x10
+li x10, -1
+csrw 0x3b1, x10
+lw x11, 0(a0)
+csrr x10, mcause
+# Result: mcause = 5
+
+# 79 # Extension Must Be Active: NONE
+csrw mseccfg, x10
+li x10, 1
+csrw mseccfg, x10
+li x10, 0x1c
+csrw pmpcfg0, x10
+li x11, -1
+csrw pmpaddr0, x11
+call machine_to_supervisor
+jal ra, protected_code
+protected_code:
+li x10, 1
+ret
+# Result: a0 = 0x1
+
+# 80 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0x08
+csrw 0x3a0, x10
+li x10, 0
+csrw 0x3b0, x10
+li x11, 0x80002000
+li x12, 0xdeadbeefdeadbeef
+sd x12, 0(a1)
+call machine_to_supervisor
+li x10, 0x80002000
+ld x12, 0(a0)
+call machine_to_user
+li x10, 0x80002000
+ld x11, 0(a0)
+# Result: a1 = 0xdeadbeefdeadbeef
+
+# 81 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0x0e
+csrw 0x3a0, x10
+li x10, 0x20000400
+csrw 0x3b0, x10
+li x10, 0x80001000
+li x12, 0xdeadbeefdeadbeef
+sd x12, 0(a0)
+call machine_to_supervisor
+li x10, 0x80001000
+ld x11, 0(a0)
+# Result: a1 = 0xdeadbeefdeadbeef
+
+# 82 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0x9
+csrw 0x3a0, x10
+li x10, 0x20000c0
+csrw 0x3b0, x10
+li x12, 0xdeadbeefdeadbeef
+li x10, 0x80002000
+sd x12, 0(a0)
+# Result: mcause = 0x7
+
+# 83 # Extension Must Be Active: NONE
+li t0, 1
+csrw 0x747, t0
+li t0, 0x1
+csrw pmpcfg0, t0
+li t1, 0x80002000
+csrw pmpaddr0, t1
+li t2, 0xdeadbeefdeadbeef
+sd t2, 0(t1)
+call machine_to_supervisor
+li t1, 0x80002000
+ld x10, 0(t1)
+# Result: a0 = 0xdeadbeefdeadbeef
+
+# 84 # Extension Must Be Active: NONE
+li x10, 1
+csrrw x11, 0x747, x10
+li x10, 0x05
+csrw 0x3a0, x10
+li x10, 0
+csrw 0x3b0, x10
+lw x11, 0(a0)
+csrr x10, 0x342
+# Result: a0 = 5
+
+# 85 # Extension Must Be Active: NONE
+li t0, 1
+csrw 0x747, t0
+li t1, 0x1a
+csrw pmpcfg0, t1
+li t2, 0x2000040
+csrw pmpaddr0, t2
+li x10, 0x80001000
+li t3, 0xdeadbeefdeadbeef
+sd t3, 0(a0)
+call machine_to_supervisor
+ld x11, 0(a0)
+mv x10, x11
+# Result: a0 = 0xdeadbeefdeadbeef
+
+# 86 # Extension Must Be Active: NONE
+csrw 0x747, zero
+li t0, 1
+csrw 0x747, t0
+li t0, 0x19
+csrw pmpcfg0, t0
+li t0, 0x200000
+csrw pmpaddr0, t0
+li t1, 0x80001000
+ld x10, 0(t1)
+# Result: mcause = 5
+
+# 87 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0xb
+csrw 0x3a0, x10
+li x10, -1
+csrw 0x3b0, x10
+call machine_to_supervisor
+li x10, 0x80002000
+li x11, 0xdeadbeefdeadbeef
+sd x11, 0(a0)
+ld x12, 0(a0)
+beq x12, x11, 1f
+li x10, 0
+j 2f
+1: li a0, 1
+2:
+# Result: a0 = 0x1
+
+# 88 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0x3b
+csrw 0x3a0, x10
+li x10, -1
+csrw 0x3b0, x10
+li x11, 0x12345678
+li x12, 0x80001000
+sw x11, 0(a2)
+csrr x10, mcause
+# Result: a0 = 0x7
+
+# 89 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0x0f
+csrw 0x3a0, x10
+li x10, 0
+csrw 0x3b0, x10
+li x10, -1
+csrw 0x3b1, x10
+call machine_to_supervisor
+li x11, 0x1000
+li x12, 0xdeadbeef
+sw x12, 0(a1)
+li x10, 0x1
+# Result: a0 = 0x1
+
+# 90 # Extension Must Be Active: NONE
+li x10, 0x98
+csrw pmpcfg0, x10
+li x10, 0x200008
+csrw pmpaddr0, x10
+li x10, 1
+csrw 0x747, x10
+li x11, 0x80002004
+lw x12, 0(a1)
+# Result: mcause = 5
+
+# 91 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0x80002000
+srli x11, x10, 2
+csrw 0x3b0, x11
+li x10, 0x80
+csrw 0x3a0, x10
+call machine_to_supervisor
+lw x12, 0(a0)
+# Result: mcause = 5
+
+# 92 # Extension Must Be Active: NONE
+li t0, 1
+csrw 0x747, t0
+li t0, 0x94
+csrw 0x3a0, t0
+li t1, 0x20000400
+csrw 0x3b0, t1
+csrr x10, 0x747
+andi x10, x10, 1
+# Result: a0 = 0x1
+
+# 93 # Extension Must Be Active: NONE
+li x10, 0x1
+csrw 0x747, x10
+li x10, 0x89
+csrw 0x3a0, x10
+li x10, -1
+csrw 0x3b0, x10
+call machine_to_supervisor
+li x11, 0x1000
+lw x12, 0(a1)
+csrr x10, mcause
+# Result: a0 = 5
+
+# 94 # Extension Must Be Active: NONE
+li t0, 1
+csrw mseccfg, t0
+li t0, 0x8a
+csrw pmpcfg0, t0
+li t1, 0x20000040
+csrw pmpaddr0, t1
+li t2, 0x20000080
+csrw pmpaddr1, t2
+and x10, x10, x10
+call machine_to_supervisor
+and x10, x10, x10
+# Result: a0 = 0
+
+# 95 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li t0, 0x36
+csrw 0x3a0, t0
+li t1, 0x2000080
+csrw 0x3b0, t1
+li t2, 0xdeadbeef
+li t3, 0x80002000
+sw t2, 0(t3)
+lw x10, 0(t3)
+# Result: a0 = 0xdeadbeef
+
+# 96 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0xa2
+csrw 0x3a0, x10
+li x10, 0x2000080
+csrw 0x3b0, x10
+li x11, 0x80002000
+lw x12, 0(a1)
+csrr x10, 0x342
+# Result: a0 = 0x5
+
+# 97 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0xa4
+csrw 0x3a0, x10
+li x10, -1
+csrw 0x3b0, x10
+call machine_to_supervisor
+li x11, 0x80002000
+ld x12, 0(a1)
+# Result: mcause = 6
+
+# 98 # Extension Must Be Active: NONE
+csrrwi t0, 0x747, 0
+ori t0, t0, 1
+csrw 0x747, t0
+li t1, (1 << 7) | (1 << 3) | (1 << 2)
+csrw 0x3a0, t1
+li t2, 0x80002000 >> 2
+csrw 0x3b0, t2
+li x13, 0x80002000
+ld x10, 0(a3)
+csrr x10, mcause
+# Result: a0 = 0x5
+
+# 99 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0x85
+csrw 0x3a0, x10
+li x10, 0x80000000
+csrw 0x3b0, x10
+call machine_to_supervisor
+lw x11, 0(a0)
+csrr x12, 0x342
+# Result: mcause = 13
+
+# 100 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0x8d
+csrw 0x3a0, x10
+li x10, 0xffffffffffffffff
+csrw 0x3b0, x10
+li x11, 0
+lw x12, 0(a1)
+# Result: mcause = 0x5
+
+# 101 # Extension Must Be Active: NONE
+li t0, 1
+csrw 0x747, t0
+li t1, 0b10000101
+csrw 0x3a0, t1
+li t2, 0x80002000 >> 2
+csrw 0x3b0, t2
+li t3, 0x80003000 >> 2
+csrw 0x3b1, t3
+call machine_to_supervisor
+li x10, 0xdeadbeef
+li t4, 0x80002400
+sw x10, 0(t4)
+# Result: a0 = 0xf
+
+# 102 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0xbe
+csrw 0x3a0, x10
+li x10, -1
+csrw 0x3b0, x10
+call machine_to_supervisor
+li x11, 0x80001000
+ld x10, 0(a1)
+# Result: a0 = 0
+
+# 103 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0xff
+csrw 0x3a0, x10
+li x10, 0x90000000 >> 2
+csrw 0x3b0, x10
+li x12, 0x90000000
+li x11, 0xdeadbeefdeadbeef
+sd x11, 0(a2)
+csrr x10, 0x342
+# Result: a0 = 15
+
+# 104 # Extension Must Be Active: NONE
+li x11, 1
+csrw 0x747, x11
+csrr x10, 0x747
+and x10, x10, 1
+# Result: a0 = 0x1
+
+# 105 # Extension Must Be Active: NONE
+li t0, 0
+csrw pmpaddr0, t0
+li t0, 0x80
+csrw pmpcfg0, t0
+li t0, 0x1234
+csrw pmpaddr0, t0
+csrr x10, mcause
+# Result: a0 = 0x2
+
+# 106 # Extension Must Be Active: NONE
+li x10, 0x4
+csrw 0x747, x10
+li x10, 0xff
+csrw 0x3a0, x10
+li x10, 0x7f
+csrw 0x3a0, x10
+csrr x10, 0x3a0
+# Result: a0 = 0x7f
+
+# 107 # Extension Must Be Active: NONE
+li x10, 0
+csrw 0x747, x10
+li x10, 0x80
+csrw 0x3a0, x10
+li x10, 0x20000000
+csrw 0x3b0, x10
+li x10, 0
+csrw 0x3a0, x10
+csrr x10, 0x3a0
+srl x10, x10, 7
+andi x10, x10, 1
+# Result: a0 = 1
+
+# 108 # Extension Must Be Active: NONE
+li x10, 0x7
+csrrw x0, 0x747, x10
+csrr x11, 0x747
+li x12, 0x7
+and x10, x11, x12
+# Result: a0 = 0x7
+
+# 109 # Extension Must Be Active: NONE
+csrrwi x10, 0x747, 2
+csrrwi x11, 0x747, 0
+csrr x12, 0x747
+andi x12, x12, 0x2
+# Result: a2 = 0x2
+
+# 110 # Extension Must Be Active: NONE
+li x10, 1
+csrw mseccfg, x10
+li x11, 0
+csrw mseccfg, x11
+csrr x12, mseccfg
+and x12, x12, x10
+# Result: a2 = 1
+
+# 111 # Extension Must Be Active: NONE
+csrr x10, 0x747
+li x11, 0x4
+csrw 0x747, x11
+li x12, 0
+csrw 0x747, x12
+csrw 0x747, x11
+csrr x10, 0x747
+and x10, x10, x11
+# Result: a0 = 0
+
+# 112 # Extension Must Be Active: NONE
+li x10, 0x3
+csrw 0x747, x10
+li x11, 0x2
+csrw 0x747, x11
+csrr x12, 0x747
+# Result: a2 = 0x3
+
+# 113 # Extension Must Be Active: Smepmp
+li t0, 0x7
+csrrs x10, 0x747, t0
+csrr x11, 0x747
+# Result: a1 = 0
+
+# 114 # Extension Must Be Active: NONE
+csrr x10, 0x747
+and x11, x10, 1
+and x12, x10, 2
+# Result: a1 != 0 & a2 != 0
+
+# 115 # Extension Must Be Active: Smepmp
+csrr x10, 0x747
+and x11, x10, 0x3
+# Result: a1 != 0
+
+# 116 # Extension Must Be Active: NONE
+csrr x10, 0x747
+li x11, 0x7
+and x10, x10, x11
+# Result: a0 = 0x0
+
+# 117 # Extension Must Be Active: NONE
+li t0, 0x5
+csrw 0x747, t0
+li t1, 0x2a
+csrw 0x3a0, t1
+csrr x10, 0x3a0
+# Result: a0 = 0x2a
+
+# 118 # Extension Must Be Active: NONE
+li x10, -5
+csrr x11, 0x747
+and x12, x11, x10
+csrw 0x747, x12
+csrr x10, 0x747
+andi x10, x10, 0x4
+# Result: a0 = 0
+
+# 119 # Extension Must Be Active: NONE
+li x10, 0x4
+csrw 0x747, x10
+csrr x11, 0x747
+and x12, x11, x10
+# Result: a2 = 0
+
+# 120 # Extension Must Be Active: NONE
+li x10, 0
+csrw 0x747, x10
+li x10, 0x80
+csrw 0x3a0, x10
+li x10, 0x4
+csrs 0x747, x10
+csrr x10, 0x747
+srli x10, x10, 2
+andi x10, x10, 1
+# Result: a0 = 0
+
+# 121 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, 0
+csrw 0x3a0, x10
+li x10, 0x80
+csrw 0x3a0, x10
+# Result: mcause = 0x2
+
+# 122 # Extension Must Be Active: NONE
+li t0, 1
+csrw 0x747, t0
+li t1, 0x4
+csrw 0x3a0, t1
+# Result: mcause = 2
+
+# 123 # Extension Must Be Active: NONE
+li x10, 1
+csrrw x0, 0x747, x10
+li x10, 4
+csrrs x0, 0x747, x10
+csrr x10, 0x747
+# Result: a0 = 0x5
+
+# 124 # Extension Must Be Active: NONE
+csrrwi x10, 0x747, 0
+li t0, 0x01
+csrw 0x3a0, t0
+li x10, 0xdeadbeef
+# Result: a0 = 0x2
+
+# 125 # Extension Must Be Active: NONE
+li x10, 1
+csrw 0x747, x10
+li x10, -1
+csrw 0x3f0, x10
+li x10, 0x10
+csrw 0x3a0, x10
+# Result: mcause = 2
+
+# 126 # Extension Must Be Active: NONE
+li x11, 1
+csrw 0x747, x11
+csrr x10, 0x747
+# Result: a0 = 0x1
+
+# 127 # Extension Must Be Active: NONE
+li t0, 0x2
+csrrc x0, 0x747, t0
+li x11, 0x90000000
+ld x10, 0(a1)
+csrrs x0, 0x747, t0
+ld x10, 0(a1)
+# Result: a0 = 5
+
+# 128 # Extension Must Be Active: NONE
+li x10, 1
+csrrs x0, 0x747, x10
+li x11, 0x7
+csrw 0x3a0, x11
+csrr x10, 0x342
+# Result: a0 = 0x2
+
+# 129 # Extension Must Be Active: NONE
+li x10, 0
+csrrw x10, 0x747, x10
+li x11, 0x5
+csrrs x12, 0x747, x11
+csrr x10, 0x747
+# Result: a0 = 0x5
+
+# 130 # Extension Must Be Active: NONE
+li x10, 4
+csrw 0x747, x10
+csrr x11, 0x747
+# Result: a1 = 0x4
+
+# 131 # Extension Must Be Active: NONE
+csrr x10, 0x747
+li x11, 0xfffffffffffffffb
+and x10, x10, x11
+csrw 0x747, x10
+csrr x12, 0x747
+andi x12, x12, 0x4
+# Result: a2 = 0
+
+# 132 # Extension Must Be Active: NONE
+li t0, 1
+csrw 0x747, t0
+csrr x11, 0x747
+# Result: a1 = 0x1
+
+# 133 # Extension Must Be Active: NONE
+li t0, 0x8
+csrw 0x747, t0
+csrr x10, 0x747
+andi x10, x10, 0x8
+# Result: a0 != 0
+
+# 134 # Extension Must Be Active: NONE
+csrr x10, 0x747
+# Result: a0 != 0
+
+# 135 # Extension Must Be Active: NONE
+li x10, 0x300000000
+csrw 0x747, x10
+csrr x11, 0x747
+# Result: a1 = 0x300000000
+
+# 136 # Extension Must Be Active: NONE
+li x11, 0x300000000
+csrw 0x747, x11
+csrr x10, 0x747
+li x12, 0x300000000
+and x10, x10, x12
+# Result: a0 = 0x300000000
+
+# 137 # Extension Must Be Active: NONE
+li x10, 0
+li x11, 0x100000000
+or x10, x10, x11
+csrw 0x747, x10
+csrr x12, 0x747
+# Result: a2 != 0
+
+# 138 # Extension Must Be Active: Smmpm
+csrr x10, 0x747
+# Result: a0 = 0x0
+
+# 139 # Extension Must Be Active: NONE
+li t0, -1
+csrw 0x747, t0
+csrr x10, 0x747
+# Result: a0 = 0x300000000
+
+# 140 # Extension Must Be Active: NONE
+csrr x10, 0x747
+# Result: mcause = 0x0
+
+# 141 # Extension Must Be Active: NONE
+call machine_to_supervisor
+csrr x10, 0x747
+# Result: mcause = 0x2
+
+# 142 # Extension Must Be Active: NONE
+call machine_to_user
+csrr x10, 0x747
+# Result: mcause = 0x2
+
+# 143 # Extension Must Be Active: NONE
+li x10, 0x400000000
+csrs 0x747, x10
+csrr x11, 0x747
+and x12, x10, x11
+# Result: a2 = 0x400000000
+
+# 144 # Extension Must Be Active: NONE
+li x10, 0x100000000
+csrs 0x747, x10
+csrr x11, 0x747
+and x12, x10, x11
+# Result: a2 = 0x100000000
+
+# 145 # Extension Must Be Active: NONE
+li x10, 0x400
+csrs 0x747, x10
+csrr x11, 0x747
+and x12, x10, x11
+# Result: a2 = 0x400
+
+# 146 # Extension Must Be Active: NONE
+li x10, 0x200
+csrs 0x747, x10
+csrr x11, 0x747
+and x12, x10, x11
+# Result: a2 = 0x200
+
+# 147 # Extension Must Be Active: NONE
+li x10, 0x100
+csrs 0x747, x10
+csrr x11, 0x747
+and x12, x10, x11
+# Result: a2 = 0x100
+
+# 148 # Extension Must Be Active: NONE
+li x10, 0x10
+csrs 0x747, x10
+csrr x11, 0x747
+and x12, x10, x11
+# Result: a2 = 0x10
+
+# 149 # Extension Must Be Active: NONE
+li x10, 0x4
+csrs 0x747, x10
+csrr x11, 0x747
+and x12, x10, x11
+# Result: a2 = 0x4
+
+# 150 # Extension Must Be Active: NONE
+li x10, 0x2
+csrs 0x747, x10
+csrr x11, 0x747
+and x12, x10, x11
+# Result: a2 = 0x2
+
+# 151 # Extension Must Be Active: NONE
+li x10, 0x1
+csrs 0x747, x10
+csrr x11, 0x747
+and x12, x10, x11
+# Result: a2 = 0x1
+
+# 152 # Extension Must Be Active: NONE
+li x10, 0xffffffffffffffff
+csrw 0x747, x10
+csrr x11, 0x747
+# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff
+
+# 153 # Extension Must Be Active: Smepmp
+csrr x10, 0x747
+# Result: mcause = 0x0
+
+# 154 # Extension Must Be Active: Smmpm
+csrr x10, 0x747
+# Result: mcause = 0x0
+
+# 155 # Extension Must Be Active: Zicfilp
+csrr x10, 0x747
+# Result: mcause = 0x0
+
+# 156 # Extension Must Be Active: Zkr
+csrr x10, 0x747
+# Result: mcause = 0x0
+
+# 157 # Extension Must Be Active: NONE
+li x10, 0x80001000
+csrw stvec, x10
+call machine_to_supervisor
+li x10, 0x80002000
+csrw stvec, x10
+ecall
+li x10, 0x80003000
+csrw stvec, x10
+unimp
+mret
+li x10, 0x1234abcd
+# Result: a0 = 0x1234abcd
+
+# 158 # Extension Must Be Active: NONE
+csrw stvec, 0x80001003
+csrr x10, stvec
+# Result: a0 = 0x80001000
+
+# 159 # Extension Must Be Active: NONE
+li x10, 0x80002003
+csrw 0x105, x10
+csrr x10, 0x105
+# Result: a0 = 0x80002000
+
+# 160 # Extension Must Be Active: NONE
+li x11, 0x123456789abcdef3
+csrw stvec, x11
+csrr x10, stvec
+andi x10, x10, 3
+# Result: a0 = 0
+
+# 161 # Extension Must Be Active: NONE
+li x10, 0x80001000
+csrw 0x105, x10
+csrr x11, 0x105
+# Result: a1 = 0x80001000
+
+# 162 # Extension Must Be Active: NONE
+li x10, 0xfffffffffffffff3
+csrw 0x105, x10
+csrr x11, 0x105
+# Result: a1 = 0xffffffffffffffF0
+
+# 163 # Extension Must Be Active: NONE
+li x10, 0x80001004
+li x11, 1
+or x10, x10, x11
+csrw 0x105, x10
+csrr x12, 0x105
+# Result: a2 = 0x80001005
+
+# 164 # Extension Must Be Active: NONE
+addi x11, x0, 5
+csrw 0x105, x11
+csrr x10, 0x105
+andi x10, x10, 0x3
+# Result: a0 = 0
+
+# 165 # Extension Must Be Active: NONE
+li x11, 0x80004001
+csrw 0x105, x11
+csrr x10, 0x105
+# Result: a0 = 0x80004001
+
+# 166 # Extension Must Be Active: NONE
+li t0, 0x80001002
+csrw 0x105, t0
+csrr x10, 0x105
+# Result: a0 = 0x80001000
+
+# 167 # Extension Must Be Active: NONE
+li t0, 0x80000128
+csrw 0x105, t0
+li t1, 4
+csrw 0x302, t1
+.word 0xffffffff
+li x10, 1
+ebreak
+# Result: a0 = 1
+
+# 168 # Extension Must Be Active: NONE
+li t0, 0x80001001
+csrw 0x105, t0
+li t0, 1 << 9
+csrw 0x302, t0
+call machine_to_supervisor
+ecall
+# Result: mcause = 9
+
+# 169 # Extension Must Be Active: NONE
+call machine_to_supervisor
+li t0, 0x80001001
+csrw stvec, t0
+li t1, 0x20
+csrs sip, t1
+li t2, 0x2
+csrs sstatus, t2
+wfi
+csrr x10, mcause
+# Result: a0 = 5
+
+# 170 # Extension Must Be Active: NONE
+li x10, 0x80001003
+csrw 0x105, x10
+csrr x11, 0x105
+# Result: a1 != 0x80001003
+
+# 171 # Extension Must Be Active: NONE
+li t0, 0x80000100
+ori t0, t0, 1
+csrw 0x105, t0
+li t1, (1 << 5)
+csrs 0x104, t1
+li t2, (1 << 1)
+csrs 0x100, t2
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+auipc x10, 0
+wfi
+# Result: a0 = 0x80000114
+
+# 172 # Extension Must Be Active: NONE
+li x11, 0xffffffffffffffff
+li x12, 3
+csrw 0x105, x11
+csrrs x10, 0x105, x0
+and x10, x10, x12
+# Result: a0 = 0
+
+# 173 # Extension Must Be Active: NONE
+li x10, 0x12345678abcdef00
+li x12, 0x3
+or x10, x10, x12
+csrw 0x105, x10
+csrr x11, 0x105
+# Result: a1 = 0x12345678abcdef00
+
+# 174 # Extension Must Be Active: NONE
+li x11, 0x80001000
+csrw stvec, x11
+call machine_to_supervisor
+ebreak
+auipc x10, 0
+sret
+# Result: a0 = 0x80001000
+
+# 175 # Extension Must Be Active: NONE
+li x10, 0x80001003
+csrw stvec, x10
+csrw stval, x10
+csrr x10, stvec
+# Result: a0 = 0x80001000
+
+# 176 # Extension Must Be Active: NONE
+csrr x10, 0x105
+# Result: mcause = 0x0
+
+# 177 # Extension Must Be Active: NONE
+call machine_to_supervisor
+csrr x10, 0x105
+# Result: mcause = 0x0
+
+# 178 # Extension Must Be Active: NONE
+call machine_to_user
+csrr x10, 0x105
+# Result: mcause = 0x2
+
+# 179 # Extension Must Be Active: NONE
+li x10, 0x4
+csrs 0x105, x10
+csrr x11, 0x105
+and x12, x10, x11
+# Result: a2 = 0x4
+
+# 180 # Extension Must Be Active: NONE
+li x10, 0x1
+csrs 0x105, x10
+csrr x11, 0x105
+and x12, x10, x11
+# Result: a2 = 0x1
+
+# 181 # Extension Must Be Active: NONE
+li x10, 0xffffffffffffffff
+csrw 0x105, x10
+csrr x11, 0x105
+# Result: a1 != 0xffffffff & a1 != 0xffffffffffffffff
+
+# 182 # Extension Must Be Active: H
+csrr x10, 0x105
+# Result: mcause = 0x0
+
+# 183 # Extension Must Be Active: S
+csrr x10, 0x105
+# Result: mcause = 0x0

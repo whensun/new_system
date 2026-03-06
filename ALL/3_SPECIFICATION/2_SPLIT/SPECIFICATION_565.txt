@@ -1,0 +1,20 @@
+## 31.8.3.3. BSI AIS-31
+
+See Section 31.5.2.2.
+
+PTG.2 is one of the security and functionality classes defined in BSI AIS 20/31 (Killmann & Schindler, 2011). The PTG.2 source requirements work as a building block for other types of BSI generators (e.g., DRBGs, or PTG.3 TRNG with appropriate software post-processing).
+
+For  validation  purposes,  the  PTG.2  requirements  may  be  mapped  to  security  controls  T1-3  (Section 31.8.4) and the interface as follows:
+
+- ⚫ P1 [PTG.2.1] Start-up tests map to T1 and reset-triggered (on-demand) BIST tests.
+- ⚫ P2 [PTG.2.2] Continuous testing total failure maps to T2 and the DEAD state.
+- ⚫ P3 [PTG.2.3] Online  tests  are  continuous  tests  of  T2  -  entropy  output  is  prevented  in  the BIST state.
+- ⚫ P4 [PTG.2.4] Is related to the design of effective entropy source health tests, which we encourage.
+- ⚫ P5 [PTG.2.5] Raw random sequence may be checked via the GetNoise interface (Section 31.8.6).
+- ⚫ P6 [PTG.2.6] Test  Procedure  A  (Killmann  &  Schindler,  2011)  (Sect  2.4.4.1)  is  a  part  of  the
+
+evaluation process, and we suggest self-evaluation using these tests even if AIS-31 certification is not sought.
+
+- ⚫ P7 [PTG.2.7] Average Shannon entropy of "internal random bits" exceeds 0.997.
+
+Note how P7 concerns Shannon entropy, not min-entropy as with NIST sources. Hence the min-entropy requirement needs to be also stated. PTG.2 modules built and certified to the AIS-31 standard can also meet the "full entropy" condition after 2:1 cryptographic conditioning, but not necessarily so. The technical validation process is somewhat different.

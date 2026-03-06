@@ -1,0 +1,41 @@
+## 30.16.6. Whole Vector Register Move
+
+The vmv<nr>r.v instructions copy whole vector registers (i.e., all VLEN bits) and can copy whole vector register groups. The nr value in the opcode is the number of individual vector registers, NREG, to copy. The instructions operate as if EEW=SEW, EMUL = NREG, effective length evl = EMUL * VLEN/SEW.
+
+-  These instructions are intended to aid compilers to shuffle vector registers without
+
+<image>
+
+<image>
+
+needing to know or change vl .
+
+ The usual property that no elements are written if vstart ≥ vl does not apply to these instructions. Instead, no elements are written if vstart ≥ evl .
+
+<image>
+
+If vd is equal to vs2 the instruction is an architectural NOP, but is treated as a hint to implementations that rearrange data internally  that  the  register  group  will  next  be accessed with an EEW equal to SEW.
+
+The instruction is encoded as an OPIVI instruction. The number of vector registers to copy is encoded
+
+in  the  low  three  bits  of  the simm field  ( simm[2:0] )  using  the  same  encoding  as  the nf[2:0] field  for memory instructions (Figure Table 56), i.e., simm[2:0] = NREG-1.
+
+The value of NREG must be 1, 2, 4, or 8, and values of simm[4:0] other than 0, 1, 3, and 7 are reserved.
+
+-  A future extension may support other numbers of registers to be moved.
+
+<image>
+
+<image>
+
+The instruction uses the same funct6 encoding as the vsmul instruction but with an immediate operand, and only the unmasked version ( vm=1 ).  This encoding is chosen as it  is  close  to  the  related vmerge encoding, and it is unlikely the vsmul instruction would benefit from an immediate form.
+
+```
+vmv<nr>r.v vd, vs2  # General form vmv1r.v v1, v2   #  Copy v1=v2 vmv2r.v v10, v12 #  Copy v10=v12; v11=v13 vmv4r.v v4, v8   #  Copy v4=v8; v5=v9; v6=v10; v7=v11 vmv8r.v v0, v8   #  Copy v0=v8; v1=v9; ...;  v7=v15
+```
+
+The  source  and  destination  vector  register  numbers  must  be  aligned  appropriately  for  the  vector register group size, and encodings with other vector register numbers are reserved.
+
+-  A future extension may relax the vector register alignment restrictions.
+
+<image>

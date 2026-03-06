@@ -1,0 +1,25 @@
+## 11.5.1. Privilege Mode Transitions
+
+Transfers that change the privilege mode are a special case. What is recorded, if anything, depends on whether the source privilege mode and/or target privilege mode are enabled for recording, and on the transfer type (trap or trap return).
+
+Traps between enabled privilege modes are recorded as normal. Traps from a disabled privilege mode to  an  enabled  privilege  mode  are  partially  recorded,  such  that  the ctrsource .PC  is  0.  Traps  from  an enabled mode to a disabled mode, known as external traps, are not recorded by default. See Section 11.5.1.2 for how they can be recorded.
+
+Trap returns have similar treatment. Trap returns between enabled privilege modes are recorded as normal. Trap returns from an enabled mode back to a disabled mode are partially recorded, such that ctrtarget .PC is 0. Trap returns from a disabled mode to an enabled mode are not recorded.
+
+<image>
+
+If  privileged  software  is  configuring  CTR  on  behalf  of  less  privileged  software,  it should  ensure  that  its  privilege  mode  enable  bit  (e.g., sctrctl .S  for  Supervisor software) is cleared before a trap return to the less privileged mode. Otherwise the trap return will be recorded, leaking the privileged source pc .
+
+Recording  in  Debug  Mode  is  always  inhibited.  Transfers  into  and  out  of  Debug  Mode  are  never recorded.
+
+The table below provides details on recording of privilege mode transitions. Standard dependencies on FROZEN and transfer type inhibits also apply, but are not covered by the table.
+
+Table 26. Trap and Trap Return Recording
+
+| Transfer Type   | Source Mode   | Target Mode                   | Target Mode                                                       |
+|-----------------|---------------|-------------------------------|-------------------------------------------------------------------|
+|                 |               | Enabled                       | Disabled                                                          |
+| Trap            | Enabled       | Recorded.                     | External trap. Not recorded by default, but see Section 11.5.1.2. |
+|                 | Disabled      | Recorded, ctrsource .PC is 0. | Not recorded.                                                     |
+| Trap Return     | Enabled       | Recorded.                     | Recorded, ctrtarget .PC is 0.                                     |
+|                 | Disabled      | Not recorded.                 | Not recorded.                                                     |

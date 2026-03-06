@@ -1,0 +1,47 @@
+## 3.1.8. Machine Trap Delegation ( medeleg and mideleg ) Registers
+
+By  default,  all  traps  at  any  privilege  level  are  handled  in  machine  mode,  though  a  machine-mode handler can redirect traps back to the appropriate level with the MRET instruction (Section 3.3.2). To increase  performance,  implementations  can  provide  individual  read/write  bits  within medeleg and mideleg to  indicate  that  certain  exceptions  and  interrupts  should  be  processed  directly  by  a  lower privilege level. The machine exception delegation register ( medeleg ) is a 64-bit read/write register. The machine interrupt delegation ( mideleg ) register is an MXLEN-bit read/write register.
+
+In harts with S-mode, the medeleg and mideleg registers must exist, and setting a bit in medeleg or mideleg will  delegate  the  corresponding  trap,  when  occurring  in  S-mode  or  U-mode,  to  the  S-mode  trap handler. In harts without S-mode, the medeleg and mideleg registers should not exist.
+
+<image>
+
+In versions 1.9.1 and earlier , these registers existed but were hardwired to zero in Mmode only, or M/U without N harts. There is no reason to require they return zero in those cases, as the misa register indicates whether they exist.
+
+When a trap is delegated to S-mode, the scause register is written with the trap cause; the sepc register is written with the virtual address of the instruction that took the trap; the stval register is written with an exception-specific datum; the SPP field of mstatus is  written with the active privilege mode at the time of the trap; the SPIE field of mstatus is written with the value of the SIE field at the time of the trap; and the SIE field of mstatus is cleared. The mcause , mepc , and mtval registers and the MPP and MPIE fields of mstatus are not written.
+
+An implementation can choose to subset the delegatable traps, with the supported delegatable bits found  by  writing  one  to  every  bit  location,  then  reading  back  the  value  in medeleg or mideleg to  see which bit positions hold a one.
+
+An implementation shall not have any bits of medeleg be read-only one, i.e., any synchronous trap that can be delegated must support not being delegated. Similarly, an implementation shall not fix as read-
+
+only one any bits of mideleg corresponding to machine-level interrupts (but may do so for lower-level interrupts).
+
+<image>
+
+Version  1.11  and  earlier  prohibited  having  any  bits  of mideleg be  read-only  one. Platform standards may always add such restrictions.
+
+Traps never transition from a more-privileged mode to a less-privileged mode. For example, if M-mode has delegated illegal-instruction exceptions to S-mode, and M-mode software later executes an illegal instruction, the trap is taken in M-mode, rather than being delegated to S-mode. By contrast, traps may be taken horizontally. Using the same example, if M-mode has delegated illegal-instruction exceptions to S-mode, and S-mode software later executes an illegal instruction, the trap is taken in S-mode.
+
+Delegated interrupts result in the interrupt being masked at the delegator privilege level. For example, if  the  supervisor  timer  interrupt  (STI)  is  delegated  to  S-mode  by  setting mideleg [5],  STIs  will  not  be taken when executing in M-mode. By contrast, if mideleg [5] is clear, STIs can be taken in any mode and regardless of current mode will transfer control to M-mode.
+
+<image>
+
+64
+
+Figure 11. Machine Exception Delegation ( medeleg ) register.
+
+medeleg has a bit position allocated for every synchronous exception shown in Table 14, with the index of the bit position equal to the value returned in the mcause register (i.e., setting bit 8 allows user-mode environment calls to be delegated to a lower-privilege trap handler).
+
+When XLEN=32, medelegh is a 32-bit read/write register that aliases bits 63:32 of medeleg . The medelegh register does not exist when XLEN=64.
+
+<image>
+
+MXLEN
+
+Figure 12. Machine Interrupt Delegation ( mideleg ) Register.
+
+mideleg holds trap delegation bits for individual interrupts, with the layout of bits matching those in the mip register (i.e., STIP interrupt delegation control is located in bit 5).
+
+For exceptions that cannot occur in less privileged modes, the corresponding medeleg bits  should be read-only zero. In particular, medeleg [11] is read-only zero.
+
+The medeleg [16] is read-only zero as double trap is not delegatable.

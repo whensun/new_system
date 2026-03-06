@@ -1,0 +1,27 @@
+## 18.1. Supervisor Resource Management Configuration ( srmcfg ) register
+
+The srmcfg register is an SXLEN-bit read/write register used to configure a Resource Control ID ( RCID ) and a Monitoring Counter ID ( MCID ).  Both RCID and MCID are WARL fields. The register is formatted as shown in Figure 77 when SXLEN=64 and Figure 78 when SXLEN=32.
+
+The RCID and MCID accompany each request made by the hart to shared resource controllers. The RCID is used to  determine  the  resource  allocations  (e.g.,  cache  occupancy  limits,  memory  bandwidth  limits, etc.) to enforce. The MCID is used to identify a counter to monitor resource usage.
+
+Figure 77. Supervisor Resource Management Configuration ( srmcfg ) register for SXLEN=64
+
+<image>
+
+Figure 78. Supervisor Resource Management Configuration ( srmcfg ) register for SXLEN=32
+
+<image>
+
+The RCID and MCID configured in the srmcfg CSR apply to all privilege modes of software execution on that hart by default, but this behavior may be overridden by future extensions.
+
+If  extension  Smstateen  is  implemented  together  with  Ssqosid,  then  Ssqosid  also  requires  the SRMCFG bit in mstateen0 to  be implemented. If mstateen0 .SRMCFG is 0, attempts to access srmcfg in privilege modes less privileged than M-mode raise an illegal-instruction exception. If mstateen0 .SRMCFG is 1 or if extension Smstateen is not implemented, attempts to access srmcfg when V=1 raise a virtual-instruction exception.
+
+A  reset  value  of  0  is  suggested  for  the RCID field  matching  resource  controllers' default behavior of associating all capacity with RCID=0 . The MCID reset value does not affect functionality and may be implementation-defined.
+
+Typically, fewer bits are allocated for RCID (e.g., to support tens of RCIDs) than for MCID (e.g., to support hundreds of MCIDs). A common RCID is usually used to group apps or VMs, pooling resource allocations to meet collective SLAs. If an SLA breach occurs, unique MCIDs enable granular monitoring, aiding decisions on resource adjustment, associating a different RCID with a subset of members, or migrating members to other machines. The larger pool of MCIDs speeds up this analysis.
+
+The RCID and MCID in srmcfg apply  across  all  privilege  levels  on  the  hart.  Typically, higher-privilege  modes  don't  modify srmcfg ,  as  they  often  serve  lower-privileged tasks.  If  differentiation  is  needed,  higher  privilege  code  can  update srmcfg and restore it before returning to a lower privilege level.
+
+In  VM environments, hypervisors usually manage resource allocations, keeping the Guest OS out of QoS flows. If needed, the hypervisor can virtualize srmcfg CSR for a VM using the virtual-instruction exceptions triggered upon Guest access. If the direct selection of RCID and MCID by the VM becomes common and emulation overhead is an issue,  future  extensions  may  allow  VS-mode  to  use  a  selector  for  a  hypervisorconfigured set of CSRs holding RCID and MCID values  designated  for  that  Guest  OS use.
+
+During context switches, the supervisor may choose to execute with the srmcfg of the outgoing context to attribute the execution to it. Prior to restoring the new context, it switches to the new  VM's srmcfg . The supervisor can also use a separate configuration for execution not to be attributed to either contexts.

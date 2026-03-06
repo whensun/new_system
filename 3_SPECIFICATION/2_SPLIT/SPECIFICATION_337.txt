@@ -1,0 +1,35 @@
+## 30.5.2. Vector Operands
+
+Each vector operand has an effective element width (EEW) and an effective LMUL (EMUL) that is used to determine the size and location of all the elements within a vector register group. By default, for most operands of most instructions, EEW=SEW and EMUL=LMUL.
+
+Some  vector  instructions  have  source  and  destination  vector  operands  with  the  same  number  of elements  but  different  widths,  so  that  EEW  and  EMUL  differ  from  SEW  and  LMUL  respectively  but EEW/EMUL = SEW/LMUL. For example, most widening arithmetic instructions  have  a  source  group with EEW=SEW and EMUL=LMUL but have a destination group with EEW=2*SEW and EMUL=2*LMUL. Narrowing instructions have a source operand that has EEW=2*SEW and EMUL=2*LMUL but with a destination where EEW=SEW and EMUL=LMUL.
+
+Vector  operands  or  results  may  occupy  one  or  more  vector  registers  depending  on  EMUL,  but  are always specified using the lowest-numbered vector register in the group. Using other than the lowestnumbered vector register to specify a vector register group is a reserved encoding.
+
+A vector register  cannot  be  used  to  provide  source  operands  with  more  than  one  EEW  for  a  single instruction. A mask register source is considered to have EEW=1 for this constraint. An encoding that
+
+would result in the same vector register being read with two or more different EEWs, including when the vector register appears at different positions within two or more vector register groups, is reserved.
+
+<image>
+
+In practice, there is no software benefit to reading the same register with different EEW in the same instruction, and this constraint reduces complexity for implementations that internally rearrange data dependent on EEW.
+
+A  destination  vector  register  group  can  overlap  a  source  vector  register  group  only  if  one  of  the following holds:
+
+- ⚫ The destination EEW equals the source EEW.
+- ⚫ The destination EEW is smaller than the source EEW and the overlap is in the lowest-numbered part of the source register group (e.g., when LMUL=1, vnsrl.wi v0, v0, 3 is legal, but a destination of v1 is not).
+- ⚫ The destination EEW is greater than the source EEW, the source EMUL is at least 1, and the overlap is in the highest-numbered part of the destination register group (e.g., when LMUL=8, vzext.vf4 v0, v6 is legal, but a source of v0 , v2 , or v4 is not).
+
+For the purpose of determining register group overlap constraints, mask elements have EEW=1.
+
+<image>
+
+The overlap constraints are designed to support resumable exceptions in machines without register renaming.
+
+Any instruction encoding that violates the overlap constraints is reserved.
+
+When source and destination registers overlap and have different EEW, the instruction is mask- and tail-agnostic, regardless of the setting of the vta and vma bits in vtype .
+
+The largest vector register group used by an instruction can not be greater than 8 vector registers (i.e., EMUL≤8),  and  if  a  vector  instruction  would  require  greater  than  8  vector  registers  in  a  group,  the instruction encoding is reserved. For example, a widening operation that produces a widened vector register group result when LMUL=8 is reserved as this would imply a result EMUL=16.
+
+Widened scalar values, e.g., input and output to a widening reduction operation, are held in the first element of a vector register and have EMUL=1.

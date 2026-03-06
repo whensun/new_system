@@ -1,0 +1,11 @@
+## 30.18.5. Zvfh: Vector Extension for Half-Precision Floating-Point
+
+The Zvfh  extension  provides  support  for  vectors  of  IEEE  754-2008  binary16  values.  When  the  Zvfh extension is implemented, all instructions in Section 30.13, Section 30.14.3, Section 30.14.4, Section 30.16.2, Section 30.16.3.4, and Section 30.16.3.6 become defined when SEW=16. The EEW=16 floatingpoint operands of these instructions use the binary16 format.
+
+Additionally, conversions between 8-bit integers and binary16 values are provided. The floating-pointto-integer narrowing conversions ( vfncvt[.rtz].x[u].f.w ) and integer-to-floating-point widening conversions ( vfwcvt.f.x[u].v ) become defined when SEW=8.
+
+The Zvfh extension depends on the Zve32f and Zfhmin extensions.
+
+<image>
+
+Requiring basic scalar half-precision support makes Zvfh's vector-scalar instructions substantially  more  useful.  We  considered  requiring  more  complete  scalar  halfprecision  support,  but  we  reasoned  that,  for  many  half-precision  vector  workloads, performing the scalar computation in single-precision will suffice.

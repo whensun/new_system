@@ -1,0 +1,3 @@
+## 31.8.5.2. Shot Noise
+
+A  category  of  random  sources  consisting  of  discrete  events  and  modeled  as  a  Poisson  process  is called  "shot  noise."  There's  a  long-established  precedent  of  certifying  them;  the  AIS  31  document (Killmann & Schindler, 2011) itself offers reference designs based on noisy diodes. Shot noise sources are often more resistant to temperature changes than ring oscillators. Some of these generators can also be fully implemented with standard cells (The Rambus / Inside Secure generic TRNG IP (Rambus, 2020) is described as a Shot Noise generator).

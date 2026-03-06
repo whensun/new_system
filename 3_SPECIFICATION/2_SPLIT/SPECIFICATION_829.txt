@@ -1,0 +1,5 @@
+## 12.1.4. Supervisor Timers and Performance Counters
+
+Supervisor software uses the same hardware performance monitoring facility as user-mode software, including the time , cycle , and instret CSRs. The implementation should provide a mechanism to modify the counter values.
+
+The implementation must provide a facility for scheduling timer interrupts in terms of the real-time counter, time .

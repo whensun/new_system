@@ -1,0 +1,15 @@
+## 25.6. Comparison Instructions
+
+The  FLEQ.S  and  FLTQ.S  instructions  are  defined  like  the  FLE.S  and  FLT.S  instructions,  except  that quiet NaN inputs do not cause the invalid operation exception flag to be set.
+
+If the D extension is implemented, FLEQ.D and FLTQ.D instructions are analogously defined to operate on double-precision numbers.
+
+If  the  Zfh  extension  is  implemented,  FLEQ.H  and  FLTQ.H  instructions  are  analogously  defined  to operate on half-precision numbers.
+
+If  the  Q  extension  is  implemented,  FLEQ.Q  and  FLTQ.Q  instructions  are  analogously  defined  to operate on quad-precision numbers.
+
+These instructions are encoded like their FLE and FLT counterparts, but with instruction bit 14 set to 1.
+
+<image>
+
+We do not expect analogous comparison instructions will be added to the vector ISA, since they can be reasonably efficiently emulated using masking.

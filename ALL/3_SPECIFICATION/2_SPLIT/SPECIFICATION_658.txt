@@ -1,0 +1,16 @@
+## 33.2.1. Zicfiss Instructions Summary
+
+The Zicfiss extension introduces the following instructions:
+
+- ⚫ Push to the shadow stack (See Section 33.2.4)
+- ⚫ SSPUSH x1 and SSPUSH x5 - encoded using MOP.RR.7
+- ⚫ C.SSPUSH x1 - encoded using C.MOP.1
+- ⚫ Pop from the shadow stack (See Section 33.2.5)
+- ⚫ SSPOPCHK x1 and SSPOPCHK x5 - encoded using MOP.R.28
+- ⚫ C.SSPOPCHK x5 - encoded using C.MOP.5
+- ⚫ Read the value of ssp into a register (See Section 33.2.6)
+- ⚫ SSRDP - encoded using MOP.R.28
+- ⚫ Perform an atomic swap from a shadow stack location (See Section 33.2.7)
+- ⚫ SSAMOSWAP.W and SSAMOSWAP.D
+
+Zicfiss does not use all encodings of MOP.RR.7 or MOP.R.28 . When a MOP.RR.7 or MOP.R.28 encoding is not used by the Zicfiss extension, the corresponding instruction adheres to its Zimop-defined behavior, unless redefined by another extension.

@@ -1,0 +1,5 @@
+## 21.4.2. Machine Interrupt Delegation ( mideleg ) Register
+
+When  the  hypervisor  extension  is  implemented,  bits  10,  6,  and  2  of mideleg (corresponding  to  the standard VS-level interrupts) are each read-only one. Furthermore, if any guest external interrupts are implemented (GEILEN is nonzero), bit 12 of mideleg (corresponding to supervisor-level guest external interrupts) is also read-only one. VS-level interrupts and guest external interrupts are always delegated past M-mode to HS-mode.
+
+For bits of mideleg that are zero, the corresponding bits in hideleg , hip , and hie are read-only zeros.

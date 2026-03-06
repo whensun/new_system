@@ -1,0 +1,41 @@
+## 3.7.1.1. Address Matching
+
+The  A  field  in  a  PMP  entry's  configuration  register  encodes  the  address-matching  mode  of  the
+
+associated PMP address register. The encoding of this field is shown in Table 18. When A=0, this PMP entry  is  disabled  and  matches  no  addresses.  Two  other  address-matching  modes  are  supported: naturally aligned power-of-2 regions (NAPOT), including the special case of naturally aligned four-byte regions  (NA4);  and  the  top  boundary  of  an  arbitrary  range  (TOR).  These  modes  support  four-byte granularity.
+
+Table 18. Encoding of A field in PMP configuration registers.
+
+|   A | Name   | Description                                     |
+|-----|--------|-------------------------------------------------|
+|   0 | OFF    | Null region (disabled)                          |
+|   1 | TOR    | Top of range                                    |
+|   2 | NA4    | Naturally aligned four-byte region              |
+|   3 | NAPOT  | Naturally aligned power-of-two region, ≥8 bytes |
+
+NAPOT ranges make use of the low-order bits of the associated address register to encode the size of the range, as shown in Table 19.
+
+Table 19. NAPOT range encoding in PMP address and configuration registers.
+
+| pmpaddr                                                       | pmpcfg .A                                 | Match type and size                                                                                                                  |
+|---------------------------------------------------------------|-------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| yyyy…yyyy yyyy…yyy0 yyyy…yy01 yyyy…y011 … yy01…1111 y011…1111 | NA4 NAPOT NAPOT NAPOT … NAPOT NAPOT NAPOT | 4-byte NAPOT range 8-byte NAPOT range 16-byte NAPOT range 32-byte NAPOT range … 2 XLEN -byte NAPOT range 2 XLEN+1 -byte NAPOT XLEN+2 |
+|                                                               |                                           | range                                                                                                                                |
+| 0111…1111                                                     |                                           | 2 -byte NAPOT range                                                                                                                  |
+| 1111…1111                                                     | NAPOT                                     | 2 XLEN+3 -byte NAPOT range                                                                                                           |
+
+If  TOR  is  selected,  the  associated  address  register  forms  the  top  of  the  address  range,  and  the preceding PMP address register forms the bottom of the address range. If PMP entry i 's A field is set to  TOR,  the  entry  matches  any  address y such  that pmpaddri-1 ≤ y < pmpaddri (irrespective  of  the  value  of pmpcfgi-1 ). If PMP entry 0's A field is set to TOR, zero is used for the lower bound, and so it matches any address y<pmpaddr0 .
+
+<image>
+
+If pmpaddri-1≥pmpaddri and pmpcfgi.A =TOR, then PMP entry i matches no addresses.
+
+Although the PMP mechanism supports regions as small as four bytes, platforms may specify coarser PMP regions. In general, the PMP grain is bytes and must be the same across all PMP regions. When ,  the  NA4  mode is  not  selectable.  When and .A[1]  is  set,  i.e.  the  mode  is NAPOT, then bits [G-2:0] read as all ones. When and .A[1] is clear, i.e. the mode is OFF or TOR, then bits [G-1:0] read as all zeros. Bits [G-1:0] do not affect the  TOR  address-matching  logic.  Although  changing .A[1]  affects  the  value  read  from , it does not affect the underlying value stored in that register-in particular, [G1]  retains  its  original  value  when .A  is  changed  from  NAPOT  to  TOR/OFF  then  back  to NAPOT.
+
+<image>
+
+Software may determine the PMP granularity by writing zero to pmp0cfg ,  then writing all  ones  to pmpaddr0 ,  then  reading  back pmpaddr0 .  If  G  is  the  index  of  the  leastsignificant bit set, the PMP granularity is 2 G+2 bytes.
+
+If the current XLEN is greater than MXLEN, the PMP address registers are zero-extended from MXLEN
+
+to XLEN bits for the purposes of address matching.

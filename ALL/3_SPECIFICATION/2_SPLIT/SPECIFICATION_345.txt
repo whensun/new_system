@@ -1,0 +1,23 @@
+## 30.6.3. Constraints on Setting vl
+
+The vset{i}vl{i} instructions first set VLMAX according to their vtype argument, then set vl obeying the following constraints:
+
+```
+1. vl = AVL if AVL ≤ VLMAX 2. ceil(AVL / 2) ≤ vl ≤ VLMAX if AVL < (2 * VLMAX) 3. vl = VLMAX if AVL ≥ (2 * VLMAX)
+```
+
+4. Deterministic on any given implementation for same input AVL and VLMAX values
+5. These specific properties follow from the prior rules:
+- e. a value read from vl when used as the AVL argument to vset{i}vl{i} results in the same value in vl , provided the resultant VLMAX equals the value of VLMAX at the time that vl was read
+
+```
+a. vl = 0 if AVL = 0 b. vl > 0 if AVL > 0 c. vl ≤ VLMAX d. vl ≤ AVL
+```
+
+<image>
+
+The vl setting  rules  are  designed  to  be  sufficiently  strict  to  preserve vl behavior
+
+across register spills and context swaps for AVL ≤ VLMAX , yet flexible enough to enable implementations to improve vector lane utilization for AVL > VLMAX .
+
+For example, this permits an implementation to set vl = ceil(AVL / 2) for VLMAX < AVL < 2*VLMAX in order to evenly distribute work over the last two iterations of a stripmine loop. Requirement 2 ensures that the first stripmine iteration of reduction loops uses the  largest  vector  length  of  all  iterations,  even  in  the  case  of AVL  <  2*VLMAX .  This allows software to avoid needing to explicitly calculate a running maximum of vector lengths observed during a stripmined loop. Requirement 2 also allows an implementation to set vl to VLMAX for VLMAX < AVL < 2*VLMAX

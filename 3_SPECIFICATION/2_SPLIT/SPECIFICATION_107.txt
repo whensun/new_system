@@ -1,0 +1,52 @@
+## 20.1. F Register State
+
+The F extension adds 32 floating-point registers, f0-f31 , each 32 bits wide, and a floating-point control and status register fcsr , which contains the operating mode and exception status of the floating-point unit. This additional state is shown in Table 24. We use the term FLEN to describe the width of the floating-point  registers  in  the  RISC-V  ISA,  and  FLEN=32  for  the  F  single-precision  floating-point extension.  Most  floating-point  instructions  operate  on  values  in  the  floating-point  register  file. Floating-point load and store instructions transfer floating-point values between registers and memory. Instructions to transfer values to and from the integer register file are also provided.
+
+<image>
+
+We considered a unified register file for both integer and floating-point values as this simplifies software register allocation and calling conventions, and reduces total user state. However, a split organization increases the total number  of registers accessible with a given instruction width, simplifies provision of enough regfile ports for wide superscalar issue, supports decoupled floating-point-unit architectures, and simplifies use of internal floating-point encoding techniques. Compiler support and calling conventions for split register file architectures are well understood, and using dirty bits on floating-point register file state can reduce context-switch overhead.
+
+Table 24. RISC-V standard F extension single-precision floating-point state
+
+| FLEN-1   |     |
+|----------|-----|
+|          | f0  |
+|          | f1  |
+|          | f2  |
+|          | f3  |
+|          | f4  |
+|          | f5  |
+|          | f6  |
+|          | f7  |
+|          | f8  |
+|          | f9  |
+|          | f10 |
+|          | f11 |
+|          | f12 |
+|          | f13 |
+|          | f14 |
+|          | f15 |
+
+<image>
+
+| FLEN-1   | 0    |
+|----------|------|
+|          | f16  |
+|          | f17  |
+|          | f18  |
+|          | f19  |
+|          | f20  |
+|          | f21  |
+|          | f22  |
+|          | f23  |
+|          | f24  |
+|          | f25  |
+|          | f26  |
+|          | f27  |
+|          | f28  |
+|          | f29  |
+|          | f30  |
+|          | f31  |
+|          | 0    |
+| 31       |      |
+|          | fcsr |

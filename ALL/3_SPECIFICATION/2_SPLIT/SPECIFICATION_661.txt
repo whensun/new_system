@@ -1,0 +1,59 @@
+## 33.2.5. Pop from the Shadow Stack
+
+A shadow stack pop operation is defined as an XLEN wide read from the current top of the shadow stack followed by an increment of the ssp by XLEN/8 .
+
+<image>
+
+Only x1 and x5 registers  are  supported  as rs1 for SSPOPCHK .  Zicfiss  provides  a  16-bit  version  of  the SSPOPCHK x5 using the Zcmop defined C.MOP.5 encoding. The C.SSPOPCHK x5 expands to SSPOPCHK x5 .
+
+Programs with a shadow stack push the return address onto the regular stack as well as the shadow stack  in  the  prologue  of  non-leaf  functions.  When  returning  from  these  non-leaf  functions,  such programs pop the link register from the regular stack and pop a shadow copy of the link register from the shadow stack. The two values are then compared. If the values do not match, it is indicative of a corruption of the return address variable on the regular stack.
+
+The SSPOPCHK instruction, and its compressed form C.SSPOPCHK ,  can be used to pop the shadow return address  value  from  the  shadow  stack  and  check  that  the  value  matches  the  contents  of  the  link register, and if not cause a software-check exception with x tval set to "shadow stack fault (code=3)".
+
+While  any  register  may  be  used  as  link  register,  conventionally  the x1 or x5 registers  are  used.  The shadow stack instructions are designed to be most efficient when the x1 and x5 registers are used as the link register.
+
+Return-address prediction stacks  are  a  common  feature  of  high-performance instruction-fetch  units,  but  they  require  accurate  detection  of  instructions  used  for procedure calls and returns to be effective. For RISC-V, hints as to the instructions' usage are encoded implicitly via the register numbers used. The return-address stack (RAS) actions to pop and/or push onto the RAS are specified in Table 3.
+
+<image>
+
+Using x1 or x5 as  the  link  register  allows  a  program  to  benefit  from  the  returnaddress  prediction  stacks.  Additionally,  since  the  shadow  stack  instructions  are designed around the use of x1 or x5 as the link register, using any other register as a link register would incur the cost of additional register movements.
+
+Compilers,  when  generating  code  with  backward-edge  CFI,  must  protect  the  link register,  e.g., x1 and/or x5 ,  from  arbitrary  modification  by  not  emitting  unsafe  code sequences.
+
+<image>
+
+Storing the return address on both stacks preserves the call stack layout and the ABI, while  also  allowing  for  the  detection  of  corruption  of  the  return  address  on  the regular  stack.  The  prologue  and  epilogue  of  a  non-leaf  function  that  uses  shadow stacks is as follows:
+
+```
+function_entry: addi sp,sp,-8  # push link register x1 sd x1,(sp)     # on regular stack sspush x1      # push link register x1 on shadow stack : ld x1,(sp)     # pop link register x1 from regular stack addi sp,sp,8 sspopchk x1    # fault if x1 not equal to shadow # return address ret
+```
+
+This example illustrates the use of x1 register as the link register. Alternatively, the x5 register may also be used as the link register.
+
+A leaf function, a function that does not itself make function calls, does not need to spill the link register. Consequently, the return value may be held in the link register itself for the duration of the leaf function's execution.
+
+The C.SSPOPCHK ,  and SSPOPCHK instructions  perform  a  load  identically  to  the  existing  load  instructions, with the difference that the base is implicitly ssp and the width is implicitly XLEN .
+
+The operation of the SSPOPCHK and C.SSPOPCHK instructions is as follows:
+
+```
+if (xSSE == 1) temp = mem[ssp]            # Load temp from address in ssp and if temp != X(src)          # Compare temp to value in src and # cause an software-check exception # if they are not bitwise equal. # Only x1 and x5 may be used as src raise software-check exception else ssp = ssp + (XLEN/8)    # increment ssp by XLEN/8. endif endif
+```
+
+Listing 7. SSPOPCHK and C.SSPOPCHK operation
+
+If the value loaded from the address in ssp does not match the value in rs1 , a software-check exception (cause=18)  is  raised  with x tval set  to  "shadow  stack  fault  (code=3)".  The  software-check  exception caused by SSPOPCHK / C.SSPOPCHK is lower in priority than a load/store/AMO access-fault exception.
+
+The ssp is  incremented by SSPOPCHK and C.SSPOPCHK only if  the load from the shadow stack completes successfully and no software-check exception is raised.
+
+
+
+
+
+The use of the compressed instruction C.SSPUSH x1 to  push  on  the  shadow stack is most efficient when the ABI uses x1 as the link register, as the link register may then be pushed without needing a register-to-register move in the function prologue. To use  the  compressed  instruction C.SSPOPCHK  x5 ,  the  function  should  pop  the  return address from regular stack into the alternate link register x5 and use the C.SSPOPCHK x5 to  compare the return address to the shadow copy stored on the shadow stack. The function then uses C.JR x5 to jump to the return address.
+
+```
+function_entry: c.addi sp,sp,-8  # push link register x1 c.sd x1,(sp)     # on regular stack c.sspush x1      # push link register x1 on shadow stack : c.ld x5,(sp)     # pop link register x5 from regular stack c.addi sp,sp,8 c.sspopchk x5    # fault if x5 not equal to shadow return address c.jr x5
+```
+
+Store-to-load  forwarding  is  a  common  technique  employed  by  high-performance processor implementations. Zicfiss implementations may prevent forwarding from a non-shadow-stack store to the SSPOPCHK or the C.SSPOPCHK instructions. A non-shadowstack  store  causes  a  fault  if  done  to  a  page  mapped  as  a  shadow  stack.  However, such determination may be delayed till the PTE has been examined and thus may be used to transiently forward the data from such stores to SSPOPCHK or to C.SSPOPCHK .

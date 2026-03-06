@@ -1,0 +1,5 @@
+## 31.7.3. SM3 and SM4 Instructions
+
+The SM4 instructions were derived from work in (Saarinen, 2020), and are hence very similar to the RV32 AES instructions.
+
+The SM3 instructions were inspired by the SHA2 instructions, and based on development work done in (Saarinen, 2020), before being contributed to the RISC-V cryptography extension.

@@ -1,0 +1,19 @@
+## 30.3.2. Vector Context Status in mstatus
+
+A vector context status field, VS , is added to mstatus[10:9] and shadowed in sstatus[10:9] . It is defined analogously to the floating-point context status field, FS .
+
+Attempts to execute any vector instruction, or to access the vector CSRs, raise an illegal-instruction exception when mstatus.VS is set to Off.
+
+When mstatus.VS is set to Initial or Clean, executing any instruction that changes vector state, including the  vector  CSRs,  will  change mstatus.VS to  Dirty.  Implementations  may  also  change mstatus.VS from Initial or Clean to Dirty at any time, even when there is no change in vector state.
+
+<image>
+
+Accurate  setting  of mstatus.VS is  an  optimization.  Software  will  typically  use  VS  to reduce context-swap overhead.
+
+If mstatus.VS is Dirty, mstatus.SD is  1;  otherwise, mstatus.SD is  set  in  accordance  with  existing specifications.
+
+Implementations may have a writable misa.V field. Analogous to the way in which the floating-point unit is handled, the mstatus.VS field may exist even if misa.V is clear.
+
+<image>
+
+Allowing mstatus.VS to  exist  when misa.V is  clear,  enables  vector  emulation  and simplifies handling of mstatus.VS in systems with writable misa.V .

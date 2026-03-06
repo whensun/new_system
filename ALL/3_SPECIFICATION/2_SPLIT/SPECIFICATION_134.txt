@@ -1,0 +1,5 @@
+## 23.4. Half-Precision Floating-Point Compare Instructions
+
+The  half-precision  floating-point  compare  instructions  are  defined  analogously  to  their  singleprecision counterparts, but operate on half-precision operands.
+
+<image>

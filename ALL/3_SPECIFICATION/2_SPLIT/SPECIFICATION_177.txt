@@ -1,0 +1,31 @@
+## 27.4. Control Transfer Instructions
+
+RVC provides unconditional jump instructions and conditional branch instructions. As with base RVI instructions, the offsets of all RVC control transfer instructions are in multiples of 2 bytes.
+
+<image>
+
+These instructions use the CJ format.
+
+C.J performs an unconditional control transfer. The offset is sign-extended and added to the pc to form the jump target address. C.J can therefore target a ±2 KiB range. C.J expands to jal x0, offset .
+
+C.JAL is an RV32C-only instruction that performs the same operation as C.J, but additionally writes the address of the instruction following the jump ( pc+2 )  to  the  link  register, x1 .  C.JAL expands to jal x1, offset .
+
+<image>
+
+These instructions use the CR format.
+
+C.JR  (jump  register)  performs  an  unconditional  control  transfer  to  the  address  in  register rs1 .  C.JR expands to jalr x0, 0(rs1) . C.JR is valid only when rs1 ≠ x0 ; the code point with rs1 = x0 is reserved.
+
+C.JALR  (jump  and  link  register)  performs  the  same  operation  as  C.JR,  but  additionally  writes  the address of the instruction following the jump ( pc +2) to the link register, x1 . C.JALR expands to jalr x1, 0(rs1) .  C.JALR  is  valid  only  when rs1 ≠ x0 ;  the  code  point  with rs1 = x0 corresponds  to  the  C.EBREAK instruction.
+
+<image>
+
+Strictly  speaking, C.JALR does not expand exactly to a base RVI instruction as the value added to the PC to form the link address is 2 rather than 4 as in the base ISA, but supporting both offsets of 2 and 4 bytes is only a very minor change to the base microarchitecture.
+
+<image>
+
+These instructions use the CB format.
+
+C.BEQZ performs conditional control transfers. The offset is sign-extended and added to the pc to form the  branch  target  address.  It  can  therefore  target  a  ±256  B  range.  C.BEQZ  takes  the  branch  if  the value in register rs1 ′ is zero. It expands to beq rs1 ′ , x0, offset .
+
+C.BNEZ is defined analogously, but it takes the branch if rs1 ′ contains a nonzero value. It expands to bne rs1 ′ , x0, offset .

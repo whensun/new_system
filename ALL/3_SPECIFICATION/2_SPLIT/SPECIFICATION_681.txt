@@ -1,0 +1,3 @@
+## 36.1.5. Guaranteed Non-Standard Encoding Space
+
+To  support  development  of  proprietary  custom  extensions,  portions  of  the  encoding  space  are guaranteed to never be used by standard extensions.

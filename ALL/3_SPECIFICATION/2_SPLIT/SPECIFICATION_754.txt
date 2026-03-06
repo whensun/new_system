@@ -1,0 +1,7 @@
+## 3.6.3. Atomicity PMAs
+
+Atomicity PMAs describes which atomic instructions are supported in this address region. Support for atomic instructions is divided into two categories: LR/SC and AMOs .
+
+<image>
+
+Some  platforms  might  mandate  that  all  of  cacheable  main  memory  support  all atomic operations required by the attached processors.

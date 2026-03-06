@@ -1,0 +1,819 @@
+INSTRUCTION: FADD.S
+RULE 1: FADD.S adds the single‑precision floating‑point value in source register rs1 to the single‑precision floating‑point value in source register rs2 and writes the resulting sum to destination register rd.
+RULE 2: FADD.S operates on 32‑bit IEEE‑754 single‑precision floating‑point operands as indicated by its fmt field being set to 00.
+RULE 3: The rounding mode applied by FADD.S is selected by the rm field of the instruction, which may specify any rounding mode defined for floating‑point operations.
+RULE 4: When the exact sum of the two operands cannot be represented in single‑precision, FADD.S rounds the intermediate result according to the rounding mode chosen by the rm field.
+RULE 5: FADD.S is defined as a single‑precision floating‑point computational instruction in the architectural specification.
+
+INSTRUCTION: FCLASS.D
+RULE 1: FCLASS.D classifies a double‑precision floating‑point operand and returns a bit‑mask indicating the operand’s class.
+RULE 2: FCLASS.D is defined analogously to the single‑precision FCLASS.S instruction, using the same set of classification categories.
+RULE 3: FCLASS.D operates exclusively on double‑precision floating‑point operands.
+
+INSTRUCTION: FCLASS.S
+RULE 1: FCLASS.S examines the floating‑point value in source register rs1 and writes a 10‑bit class mask into destination integer register rd.
+RULE 2: FCLASS.S defines the class mask as ten bits numbered 0 through 9, each representing a distinct floating‑point class as listed in Table 29.
+RULE 3: For each class defined for FCLASS.S, the corresponding bit in rd is set to 1 by FCLASS.S if rs1 possesses that class property and is cleared to 0 otherwise.
+RULE 4: FCLASS.S clears all bits of rd that are not part of the ten‑bit class mask, setting them to 0.
+RULE 5: After execution of FCLASS.S exactly one of the ten mask bits in rd is set to 1.
+RULE 6: Execution of FCLASS.S does not modify any floating‑point exception flags.
+RULE 7: For FCLASS.S bit 0 of rd is set to 1 if rs1 is . and cleared to 0 otherwise.
+RULE 8: For FCLASS.S bit 1 of rd is set to 1 if rs1 is a negative normal number and cleared to 0 otherwise.
+RULE 9: For FCLASS.S bit 2 of rd is set to 1 if rs1 is a negative subnormal number and cleared to 0 otherwise.
+RULE 10: For FCLASS.S bit 3 of rd is set to 1 if rs1 is . and cleared to 0 otherwise.
+RULE 11: For FCLASS.S bit 4 of rd is set to 1 if rs1 is . and cleared to 0 otherwise.
+RULE 12: For FCLASS.S bit 5 of rd is set to 1 if rs1 is a positive subnormal number and cleared to 0 otherwise.
+RULE 13: For FCLASS.S bit 6 of rd is set to 1 if rs1 is a positive normal number and cleared to 0 otherwise.
+RULE 14: For FCLASS.S bit 7 of rd is set to 1 if rs1 is . and cleared to 0 otherwise.
+RULE 15: For FCLASS.S bit 8 of rd is set to 1 if rs1 is a signaling NaN and cleared to 0 otherwise.
+RULE 16: For FCLASS.S bit 9 of rd is set to 1 if rs1 is a quiet NaN and cleared to 0 otherwise.
+
+INSTRUCTION: FCVT.D.L
+RULE 1: FCVT.D.L converts a signed 64‑bit integer from integer register rs1 into a double‑precision floating‑point value written to floating‑point register rd.
+RULE 2: FCVT.D.L is defined only for RV64 implementations, i.e., it is available only when the architectural XLEN is at least 64 bits.
+RULE 3: FCVT.D.L resides in the OPFP major opcode space that is shared by other floating‑point‑to‑integer and integer‑to‑floating‑point conversion instructions.
+RULE 4: FCVT.D.L performs its conversion using the rounding mode indicated by the rm field of the instruction, which selects the current floating‑point rounding mode.
+RULE 5: FCVT.D.L is not exempt from rounding; the specified rm field always influences the result, unlike the behavior of FCVT.D.W.
+RULE 6: The unsigned variant FCVT.D.LU performs the same conversion as FCVT.D.L but interprets the 64‑bit integer operand as an unsigned value.
+
+INSTRUCTION: FCVT.D.LU
+RULE 1: FCVT.D.LU converts a 64‑bit unsigned integer in integer register rs1 to a double‑precision floating‑point value placed in floating‑point register rd.
+RULE 2: FCVT.D.LU is defined only for the RV64 architecture and is unavailable in RV32 implementations.
+RULE 3: FCVT.D.LU rounds the conversion result according to the rounding‑mode field rm encoded in the instruction.
+RULE 4: When the input value to FCVT.D.LU is outside the range representable as a double‑precision floating‑point number, the architectural behavior is identical to that defined for the corresponding single‑precision conversion instruction FCVT.LU.S.
+RULE 5: The double‑precision floating‑point result produced by FCVT.D.LU is encoded according to the IEEE 754‑2008 standard.
+RULE 6: Because FCVT.D.LU converts an unsigned integer, no sign‑extension of the result is performed.
+
+INSTRUCTION: FCVT.D.S
+RULE 1: FCVT.D.S reads a single‑precision floating‑point value from a source floating‑point register and writes a double‑precision floating‑point value to a destination floating‑point register.
+RULE 2: FCVT.D.S converts the source single‑precision floating‑point value to a double‑precision floating‑point value that is mathematically exact for the given input.
+RULE 3: FCVT.D.S never applies any rounding during the conversion, so the result is independent of the rounding‑mode (rm) field in the instruction.
+RULE 4: FCVT.D.S does not generate overflow or underflow adjustments; the destination register receives the exact double‑precision representation without exception flags for overflow or underflow.
+RULE 5: FCVT.D.S ignores the rounding‑mode bits of the instruction, treating them as irrelevant to the conversion outcome.
+RULE 6: FCVT.D.S is an instruction encoding that is defined in the RISC‑V ISA.
+RULE 7: If the D extension is implemented, the encoding of FROUND.D is identical to the encoding of FCVT.D.S with the rs2 field set to 4.
+RULE 8: If the D extension is implemented, the encoding of FROUNDNX.D is identical to the encoding of FCVT.D.S with the rs2 field set to 5.
+RULE 9: No other normative architectural behavior of FCVT.D.S is described in the given text.
+
+INSTRUCTION: FCVT.D.W
+RULE 1: FCVT.D.W is an integer‑to‑floating‑point conversion instruction encoded in the OPFP major opcode space.
+RULE 2: FCVT.D.W converts the signed 32‑bit integer value in integer register rs1 to a double‑precision (64‑bit) floating‑point value written to floating‑point register rd.
+RULE 3: FCVT.D.W treats the source integer as a 32‑bit signed value; in RV64 implementations the value is sign‑extended to 64 bits before conversion.
+RULE 4: FCVT.D.W always yields an exact result and its outcome is unaffected by the rounding mode specified in the rm field.
+RULE 5: FCVT.D.W produces the same architectural behavior for out‑of‑range inputs as the single‑precision conversion instruction FCVT.int.D.
+RULE 6: FCVT.D.W is defined for both RV32 and RV64 base ISA variants.
+RULE 7: FCVT.D.W belongs to the OPFP major opcode class, with rs1 encoding the integer source register and rd encoding the floating‑point destination register.
+RULE 8: The rm field is present in the encoding of FCVT.D.W but is ignored by the instruction.
+
+INSTRUCTION: FCVT.D.WU
+RULE 1: FCVT.D.WU reads a 32‑bit unsigned integer value from the integer source register rs1.
+RULE 2: FCVT.D.WU writes the result of the conversion to a floating‑point destination register rd as a 64‑bit double‑precision IEEE 754‑2008 value.
+RULE 3: FCVT.D.WU converts the unsigned integer value in rs1 to its exact double‑precision floating‑point representation.
+RULE 4: FCVT.D.WU always produces an exact result and the rounding‑mode field rm is ignored.
+RULE 5: FCVT.D.WU uses the same valid input range and the same out‑of‑range handling as defined for the generic FCVT.int.D conversions.
+RULE 6: FCVT.D.WU is classified as an unsigned‑integer variant among FCVT.WU.D, FCVT.LU.D, FCVT.D.WU, and FCVT.D.LU.
+RULE 7: FCVT.D.WU is defined in the OPFP major opcode space of the RISC‑V ISA.
+RULE 8: FCVT.D.WU is defined for the base ISA and is available on both RV32 and RV64 implementations unless limited by a specific implementation.
+RULE 9: FCVT.D.WU imposes no special sign‑extension requirements or RV‑mode restrictions beyond the standard definition.
+
+INSTRUCTION: FCVT.L.D
+RULE 1: FCVT.L.D converts the double‑precision floating‑point value held in floating‑point register rs1 to a signed 64‑bit integer and writes the result to integer register rd.
+RULE 2: FCVT.L.D is defined only for RV64 implementations and is not defined for RV32 implementations.
+RULE 3: FCVT.L.D performs the conversion using the rounding mode specified by the rm field of the instruction.
+RULE 4: FCVT.L.D accepts the same set of valid input values as the corresponding single‑precision conversion instruction FCVT.int.S, and it exhibits identical architectural behavior for inputs outside that range.
+RULE 5: FCVT.L.D is classified as a double‑precision floating‑point conversion instruction that operates between floating‑point registers and the integer register file.
+
+INSTRUCTION: FCVT.L.S
+RULE 1: FCVT.L.S converts the single‑precision floating‑point value in floating‑point register rs1 to a signed 64‑bit integer written to integer register rd.
+RULE 2: FCVT.L.S is defined only for the RV64 base ISA and is not available on RV32 implementations.
+RULE 3: FCVT.L.S uses the rounding mode specified in the rm field of the instruction to round the floating‑point operand before conversion.
+RULE 4: FCVT.L.S rounds all floating‑point‑to‑integer conversions according to the rm field of the instruction.
+RULE 5: After rounding, if the integer result of FCVT.L.S is not representable in the signed 64‑bit destination format, FCVT.L.S clips the result to the nearest representable value and sets the invalid exception flag.
+RULE 6: If the rounded integer produced by FCVT.L.S differs from the original floating‑point operand and the invalid flag has not been set, FCVT.L.S sets the inexact exception flag.
+RULE 7: FCVT.L.S does not perform sign‑extension on its 64‑bit result because the destination is already full‑width.
+RULE 8: FCVT.L.S is listed in the float‑to‑integer domain table of the RISC‑V specification.
+RULE 9: FCVT.L.S belongs to the OPFP major opcode space together with its signed‑unsigned and 32‑bit counterparts such as FCVT.W.S and FCVT.LU.S.
+
+INSTRUCTION: FCVT.LU.D
+RULE 1: FCVT.LU.D is defined only for RV64 implementations and is not available on RV32 architectures.
+RULE 2: FCVT.LU.D reads a double‑precision (64‑bit) floating‑point value from floating‑point register rs1.
+RULE 3: FCVT.LU.D writes the conversion result as an unsigned 64‑bit integer into integer register rd.
+RULE 4: FCVT.LU.D performs the conversion using the rounding‑mode field (rm) of the instruction.
+RULE 5: FCVT.LU.D has the same range of valid inputs and the same handling of invalid inputs as the FCVT.int.S family for double‑precision operands.
+RULE 6: If the input to FCVT.LU.D is outside the representable unsigned‑64‑bit range, is a NaN, an infinity, or cannot be represented after rounding, FCVT.LU.D raises the same exception and produces the same result as defined for FCVT.int.S.
+RULE 7: FCVT.LU.D produces a full 64‑bit unsigned result and does not apply any sign‑extension to the output.
+RULE 8: The rounding mode can affect the result of FCVT.LU.D when the source value is not exactly representable as an unsigned 64‑bit integer.
+
+INSTRUCTION: FCVT.LU.S
+RULE 1: FCVT.LU.S converts the single‑precision floating‑point value in source register rs1 to an unsigned 64‑bit integer placed in integer register rd.
+RULE 2: FCVT.LU.S is defined only for RV64 implementations.
+RULE 3: FCVT.LU.S rounds the conversion result according to the rm field of the instruction.
+RULE 4: If the rounded result of FCVT.LU.S is not representable in the unsigned 64‑bit destination format, FCVT.LU.S clips the result to the nearest representable value and sets the invalid exception flag.
+RULE 5: FCVT.LU.S sets the inexact exception flag when the rounded result differs from the original operand value, provided the invalid exception flag is not set.
+RULE 6: For FCVT.LU.S the minimum valid input after rounding is 0.
+RULE 7: For FCVT.LU.S an out‑of‑range negative input produces an output of 0.
+
+INSTRUCTION: FCVT.S.D
+RULE 1: FCVT.S.D converts a double‑precision floating‑point value in a source floating‑point register to a single‑precision floating‑point value and writes the result to a destination floating‑point register.
+RULE 2: FCVT.S.D is encoded in the OP‑FP major opcode space and uses only floating‑point registers for its source and destination operands.
+RULE 3: In FCVT.S.D the rs2 field specifies the datatype of the source operand, which is double‑precision.
+RULE 4: In FCVT.S.D the fmt field specifies the datatype of the destination operand, which is single‑precision.
+RULE 5: FCVT.S.D rounds the conversion result according to the RM (rounding‑mode) field of the instruction.
+RULE 6: FCVT.S.D follows the same rounding‑mode semantics as other floating‑point‑to‑floating‑point conversion instructions.
+RULE 7: FCVT.S.D does not guarantee an exact result; the result may be inexact for any rounding mode.
+RULE 8: FCVT.S.D uses the same binary encoding format as the FROUND.S and FROUNDNX.S instructions, differing only in the value of its rs2 field.
+RULE 9: The opcode, funct, rd, and rs1 fields of FCVT.S.D are identical to the corresponding fields of the FROUND.S and FROUNDNX.S instructions.
+RULE 10: The rs2 field of FCVT.S.D must contain a value other than 4 or 5 (the specific value is not specified in the excerpt).
+
+INSTRUCTION: FCVT.S.L
+RULE 1: The FCVT.S.L instruction is defined only for RV64 implementations where XLEN = 64.
+RULE 2: The FCVT.S.L instruction converts the signed 64‑bit integer contained in integer register rs1 to a single‑precision floating‑point value and writes the result to floating‑point register rd.
+RULE 3: The FCVT.S.L instruction rounds the conversion result according to the rounding mode specified in its rm field, using the same rounding modes defined for other floating‑point conversion instructions.
+RULE 4: If the rounded result of FCVT.S.L cannot be represented in the single‑precision floating‑point format, the result is clipped to the nearest representable value.
+RULE 5: When FCVT.S.L clips a result because it is not representable, the Invalid exception flag is set.
+RULE 6: The FCVT.S.L instruction sets the Inexact exception flag when the rounded result differs from the exact integer value and the Invalid flag is not set.
+RULE 7: The Inexact exception flag for FCVT.S.L is set only when rounding changes the value and the Invalid flag remains clear.
+
+INSTRUCTION: FCVT.S.LU
+RULE 1: FCVT.S.LU is an integer‑to‑floating‑point conversion instruction encoded in the OPFP major opcode space that converts an unsigned integer value to a single‑precision floating‑point value.
+RULE 2: FCVT.S.LU reads a 64‑bit unsigned integer from integer register rs1 as its source operand.
+RULE 3: FCVT.S.LU writes the resulting single‑precision floating‑point value to floating‑point register rd.
+RULE 4: FCVT.S.LU is defined only for RV64 implementations and does not exist in RV32.
+RULE 5: FCVT.S.LU rounds the conversion result according to the rounding‑mode field rm in the instruction, using the same rounding rules as all floating‑point conversion instructions.
+RULE 6: If the rounded result of FCVT.S.LU cannot be represented in the single‑precision format, the result is clipped to the nearest representable value and the invalid exception flag is set.
+RULE 7: The inexact exception flag is set by FCVT.S.LU when the rounded result differs from the original integer operand and the invalid exception flag is not set.
+
+INSTRUCTION: FCVT.S.W
+RULE 1: FCVT.S.W converts the signed 32‑bit integer held in integer register rs1 to a single‑precision (32‑bit) floating‑point value written to floating‑point register rd.
+RULE 2: FCVT.S.W rounds the conversion result according to the rm field of the instruction, using the same rounding rules as all floating‑point conversion instructions.
+RULE 3: If the rounded result of FCVT.S.W cannot be represented in the single‑precision format, FCVT.S.W clips the result to the nearest representable value and sets the invalid exception flag.
+RULE 4: Provided the invalid exception flag is not set, FCVT.S.W sets the inexact exception flag whenever the rounded result differs from the original integer value.
+RULE 5: Executing FCVT.S.W with rs1 equal to x0 produces a positive zero in rd and never raises any exception flags.
+
+INSTRUCTION: FCVT.S.WU
+RULE 1: FCVT.S.WU converts the lower 32 bits of integer register rs1, interpreted as a 32‑bit unsigned integer, into a single‑precision floating‑point value placed in floating‑point register rd.
+RULE 2: FCVT.S.WU receives its rounding mode from the rm field of the instruction and applies that mode exactly as specified for all floating‑point conversion instructions.
+RULE 3: FCVT.S.WU is defined for any XLEN and is not limited to RV64 because it always consumes a 32‑bit unsigned integer.
+RULE 4: FCVT.S.WU produces its result in rd using the IEEE‑754‑2008 single‑precision format.
+RULE 5: If the rounded result of FCVT.S.WU cannot be represented in the single‑precision format, FCVT.S.WU clips the result to the nearest representable value and sets the Invalid exception flag.
+RULE 6: If the exact conversion result of FCVT.S.WU differs from the rounded result and the Invalid flag is not set, FCVT.S.WU sets the Inexact exception flag.
+RULE 7: FCVT.S.WU never raises any exception flags other than Invalid or Inexact.
+RULE 8: FCVT.S.WU follows the general conversion rule that a non‑representable rounded result is clipped to the nearest value and the Invalid flag is set.
+RULE 9: FCVT.S.WU converting an unsigned zero (rs1 = x0) produces positive zero in rd and does not raise any exception flags.
+RULE 10: FCVT.S.WU belongs to the OPFP‑class of conversion instructions.
+
+INSTRUCTION: FCVT.W.D
+RULE 1: FCVT.W.D converts the double‑precision floating‑point value in source register rs1 to a signed 32‑bit integer written to integer destination register rd.
+RULE 2: FCVT.W.D rounds the conversion result according to the rounding‑mode field rm encoded in the instruction.
+RULE 3: On an RV64 implementation, FCVT.W.D sign‑extends the 32‑bit result to 64 bits before writing it to rd.
+RULE 4: FCVT.W.D treats illegal input values (including overflow, NaN, and infinities) and their architectural responses exactly as defined for the FCVT.W.S instruction.
+RULE 5: FCVT.W.D is encoded within the OPFP major opcode space.
+RULE 6: FCVT.W.D defines the set of floating‑point exception flags that are raised for a given double‑precision input operand.
+RULE 7: For any double‑precision input operand, the floating‑point exception flags raised by FCVTMOD.W.D must be exactly the same as those that FCVT.W.D would raise for the same operand.
+RULE 8: The architectural definition of FCVT.W.D serves as the reference specification for the floating‑point exception behavior of FCVTMOD.W.D.
+
+INSTRUCTION: FCVT.W.S
+RULE 1: FCVT.W.S converts the 32‑bit IEEE‑754‑2008 single‑precision value in rs1 to a signed 32‑bit integer using the rounding mode specified by the instruction’s rm field.
+RULE 2: FCVT.W.S writes the 32‑bit integer result to rd and sign‑extends it to the full XLEN of the destination register.
+RULE 3: FCVT.W.S on an RV64 implementation fills the upper 32 bits of rd with copies of the sign bit of the 32‑bit result.
+RULE 4: If the rounded value cannot be represented in a signed 32‑bit integer, FCVT.W.S clips the result to the nearest representable 32‑bit integer and sets the Invalid floating‑point exception flag.
+RULE 5: When FCVT.W.S clips the result, the integer produced is either the most negative or the most positive signed 32‑bit value, whichever is closer to the unrounded value.
+RULE 6: FCVT.W.S sets the Inexact floating‑point exception flag when the rounded integer differs from the original floating‑point operand and the Invalid flag is not set.
+RULE 7: FCVT.W.S does not set any floating‑point exception flags other than Invalid and Inexact.
+RULE 8: The architectural specification for FCVT.W.S does not define explicit numeric limits, NaN handling, or exact output values for out‑of‑range inputs beyond the generic clipping rule.
+
+INSTRUCTION: FCVT.WU.D
+RULE 1: FCVT.WU.D converts the double‑precision floating‑point value held in source register rs1 into an unsigned 32‑bit integer result.
+RULE 2: FCVT.WU.D writes the conversion result to destination integer register rd as an unsigned 32‑bit integer.
+RULE 3: FCVT.WU.D produces a 32‑bit unsigned integer which, on RV64 implementations, is sign‑extended to the full XLEN by replicating bit 31 into the upper XLEN‑32 bits.
+RULE 4: FCVT.WU.D rounds the conversion according to the rounding‑mode field rm encoded in the instruction, following the same rounding rules as all floating‑point‑to‑integer conversions.
+RULE 5: FCVT.WU.D accepts input values whose valid range and out‑of‑range handling are identical to those defined for the single‑precision conversion instruction FCVT.WU.S.
+RULE 6: FCVT.WU.D is not guaranteed to produce an exact integer result even when the source value is mathematically integral; the result follows the rounding mode specified by rm.
+RULE 7: FCVT.WU.D uses the OPFP major opcode space and its encoding includes the opcode, rs1, rd, and rm fields.
+RULE 8: FCVT.WU.D treats the source register rs1 as a double‑precision floating‑point register for the purpose of the conversion.
+RULE 9: FCVT.WU.D treats the destination register rd as a standard integer register that receives the sign‑extended 32‑bit unsigned integer result.
+
+INSTRUCTION: FCVT.WU.S
+RULE 1: FCVT.WU.S converts the single‑precision floating‑point value in source register rs1 to an unsigned 32‑bit integer and writes the result to integer destination register rd.
+RULE 2: FCVT.WU.S produces a 32‑bit integer result that is zero‑extended to the full XLEN width of the destination register.
+RULE 3: FCVT.WU.S rounds the input value according to the rm field of the instruction, using the same rounding behavior as all floating‑point‑to‑integer conversion instructions.
+RULE 4: If the rounded result of FCVT.WU.S is not representable in an unsigned 32‑bit integer, FCVT.WU.S clips the result to the nearest representable unsigned 32‑bit value and sets the Invalid floating‑point exception flag.
+RULE 5: If the rounded result of FCVT.WU.S differs from the original operand value and the Invalid flag is not set, FCVT.WU.S sets the Inexact floating‑point exception flag.
+RULE 6: For FCVT.WU.S the minimum valid input value after rounding is 0.
+RULE 7: When the input to FCVT.WU.S is a negative value that is out of range, FCVT.WU.S returns 0.
+RULE 8: The specification does not define a result for FCVT.WU.S when the input is a positive value that is out of range.
+RULE 9: The specification does not define a result for FCVT.WU.S when the input is NaN or any other non‑numeric floating‑point value.
+
+INSTRUCTION: FDIV.S
+RULE 1: FDIV.S computes the single‑precision (32‑bit) floating‑point division of the value in source register rs1 by the value in source register rs2.
+RULE 2: FDIV.S writes the resulting single‑precision floating‑point quotient into destination register rd.
+RULE 3: FDIV.S uses the rounding‑mode field rm to select one of the IEEE‑754 rounding modes defined in the specification, and the selected mode determines how the infinite‑precision division result is rounded to a representable single‑precision value.
+RULE 4: FDIV.S treats rs1 as the dividend and rs2 as the divisor for the division operation.
+RULE 5: FDIV.S does not specify any architectural side effects beyond writing the result to rd; no exception flags or other state changes are defined in the provided description.
+RULE 6: FDIV.S interprets the 32‑bit contents of rs1 and rs2 as IEEE‑754 single‑precision floating‑point numbers for the division calculation.
+
+INSTRUCTION: FEQ.S
+RULE 1: FEQ.S is defined as a single‑precision floating‑point compare instruction.
+RULE 2: FEQ.S compares the two source floating‑point registers and writes an integer 1 to integer register rd when the operands are equal.
+RULE 3: FEQ.S writes an integer 0 to integer register rd when the equality condition does not hold.
+RULE 4: FEQ.S sets the invalid‑operation exception flag only if at least one source operand is a signaling NaN; otherwise no exception flag is raised.
+RULE 5: FEQ.S writes an integer 0 to integer register rd if either source operand is any NaN, whether quiet or signaling.
+
+INSTRUCTION: FLD
+RULE 1: When XLEN is less than 64 bits, an FLD instruction may generate more than one memory operation, unlike the default behavior of aligned memory instructions which generate exactly one memory operation.
+RULE 2: Each memory operation generated by an FLD instruction when XLEN < 64 is a load operation.
+RULE 3: When XLEN is less than 64 bits, an FLD instruction may be decomposed into a set of component memory operations of any granularity, such as byte‑wise accesses.
+RULE 4: The component memory operations produced by an FLD instruction are not ordered with respect to each other in program order and may complete in any relative order.
+RULE 5: Although its component operations are unordered among themselves, the memory operations generated by an FLD instruction are ordered normally with respect to memory operations from preceding and subsequent instructions in program order.
+RULE 6: All memory operations generated by an FLD instruction are single‑copy atomic and cannot be observed in a partially‑complete state.
+RULE 7: The multiple‑operation behavior of an FLD instruction applies even when the FLD instruction is aligned, provided XLEN < 64.
+RULE 8: If an FLD instruction is misaligned, it may also be decomposed into component memory operations of any granularity and is subject to the same ordering rules as for aligned FLD when XLEN < 64.
+RULE 9: The FLD instruction reads an 8‑byte double‑precision floating‑point value from the memory address computed by its base register plus offset and writes that exact value into the destination floating‑point register rd.
+RULE 10: The FLD instruction is guaranteed to execute atomically only when the effective memory address is naturally aligned to an 8‑byte boundary and the processor’s XLEN is at least 64 bits.
+RULE 11: The FLD instruction must preserve every bit of the loaded double‑precision value, including the payload bits of non‑canonical NaNs, without alteration.
+RULE 12: FLD loads a 64‑bit floating‑point value from memory into a floating‑point register.
+RULE 13: FLD is the standard scalar floating‑point load instruction for a double‑precision (64‑bit) element.
+RULE 14: The width field for FLD in the instruction encoding is bits 2:0 set to the binary pattern 0 1 1.
+RULE 15: In the encoding of FLD, the mew bit (inst[28]) is not used and may be either 0 or 1.
+RULE 16: Each memory access performed by FLD transfers exactly 64 bits.
+RULE 17: The value loaded by FLD is written to a floating‑point register whose width equals FLEN, the implementation‑defined floating‑point register length.
+RULE 18: The store instruction that shares the same encoding fields as FLD is FSD.
+RULE 19: When a synchronous exception is taken for an explicit memory access caused by a standard, non‑compressed FLD instruction, a transformed instruction may be written to the trap‑instruction CSR (mtinst or htinst).
+RULE 20: The transformed instruction for FLD must retain the same opcode, destination register (rd), and funct3 fields as the trapping FLD instruction.
+RULE 21: In the transformed FLD encoding, bits 19‑15 (normally rs1) are replaced by an Addr.Offset field.
+RULE 22: The Addr.Offset field in the transformed FLD encoding equals the positive difference between the faulting virtual address (recorded in mtval or stval) and the original virtual address encoded in the trapping FLD instruction.
+RULE 23: The Addr.Offset field of a transformed FLD is non‑zero only when the exception is caused by a misaligned memory access; otherwise it is zero.
+RULE 24: All immediate offset fields of the original FLD (bits 31‑25, 24‑20, or 11‑7 depending on format) are set to zero in the transformed FLD encoding.
+RULE 25: Because FLD is not a compressed instruction, bits 1‑0 of the transformed FLD encoding are binary 11.
+RULE 26: Software decoding a value in mtinst or htinst that matches the encoding pattern of a basic load class, including FLD, may conclude that the trapping instruction was an FLD of the same kind without checking that the immediate fields are zero.
+RULE 27: The transformation of FLD is defined only for standard, non‑compressed FLD instructions; if an implementation does not support this transformation, the trap‑instruction register shall be written with zero (or a permitted special pseudoinstruction value).
+RULE 28: No special pseudoinstruction values are defined for FLD, and any pseudoinstructions defined for implicit VS‑stage accesses do not apply to explicit FLD loads.
+
+INSTRUCTION: FLE.S
+RULE 1: FLE.S is a single‑precision floating‑point compare instruction defined in the RISC‑V "F" extension.
+RULE 2: FLE.S takes two source single‑precision floating‑point registers named rs1 and rs2.
+RULE 3: FLE.S writes a 32‑bit integer result to integer register rd.
+RULE 4: FLE.S sets rd to 1 if the value in rs1 is less than or equal to the value in rs2 and neither operand is NaN.
+RULE 5: FLE.S sets rd to 0 if the value in rs1 is greater than the value in rs2 and neither operand is NaN.
+RULE 6: FLE.S sets rd to 0 whenever either rs1 or rs2 contains a NaN value.
+RULE 7: FLE.S performs a signaling comparison and sets the invalid‑operation exception flag in the floating‑point status register if any operand is NaN, regardless of NaN type.
+RULE 8: FLE.S does not set any floating‑point exception flags when both rs1 and rs2 are not NaN and the condition rs1 ≤ rs2 holds.
+RULE 9: FLE.S does not set any floating‑point exception flags when both rs1 and rs2 are not NaN and the condition rs1 > rs2 holds.
+RULE 10: FLE.S performs a single‑precision floating‑point less‑or‑equal comparison between its two source operands.
+RULE 11: If either source operand of FLE.S is a quiet NaN, the instruction raises the invalid‑operation exception flag.
+RULE 12: The description provides no further explicit normative details for FLE.S such as result encoding, ordering rules, or opcode encoding.
+
+INSTRUCTION: FLT.S
+RULE 1: FLT.S compares two single‑precision floating‑point registers rs1 and rs2.
+RULE 2: FLT.S writes its comparison result to an integer destination register rd.
+RULE 3: FLT.S writes the integer value 1 to rd when the signed‑less‑than relation rs1 < rs2 holds.
+RULE 4: FLT.S writes the integer value 0 to rd when the signed‑less‑than relation rs1 < rs2 does not hold.
+RULE 5: FLT.S performs a signaling comparison in accordance with the IEEE 754-2008 standard.
+RULE 6: FLT.S raises the invalid‑operation exception flag if either input operand is NaN, whether signaling or quiet.
+RULE 7: FLT.S stores the integer value 0 in rd whenever either operand is NaN, independent of NaN type.
+RULE 8: FLT.S is defined as part of the floating‑point "F" extension of the RISC‑V ISA.
+RULE 9: FLT.S provides functionality that can be synthesized from the base ISA's branch‑type floating‑point comparison without affecting performance.
+RULE 10: FLT.S performs a single‑precision floating‑point less‑than comparison between its two source operands and writes 1 to the destination register if the first operand is less than the second operand, otherwise it writes 0.
+RULE 11: FLT.S raises the invalid operation exception flag whenever either source operand is a NaN, including quiet NaNs.
+
+INSTRUCTION: FLW
+RULE 1: The FLW instruction loads a 32‑bit single‑precision floating‑point value from memory into the floating‑point register rd.
+RULE 2: The FLW effective address is calculated by adding the signed 12‑bit byte offset to the contents of integer register rs1.
+RULE 3: The FLW instruction is guaranteed to be atomic only when the effective address is naturally aligned to a 4‑byte boundary.
+RULE 4: The FLW instruction preserves all bits of the transferred value, including the payload of non‑canonical NaNs, without modification.
+RULE 5: When the FLW effective address is not naturally aligned, the execution environment defines the handling of the misaligned access.
+RULE 6: The execution environment may handle a misaligned FLW invisibly, performing the load without raising any exception.
+RULE 7: The execution environment may raise a contained trap or a fatal trap for a misaligned FLW access.
+RULE 8: FLW loads a 32‑bit floating‑point value from memory into a floating‑point register.
+RULE 9: FLW accesses memory in 32‑bit sized elements.
+RULE 10: FLW writes the loaded 32‑bit value into the low‑order bits of the destination floating‑point register whose width is the configured FLEN, leaving any remaining high‑order bits unchanged.
+RULE 11: FLW is a scalar floating‑point load and does not involve any index register in its address calculation.
+RULE 12: FLW operates as a standard scalar floating‑point load instruction.
+RULE 13: When a synchronous exception occurs on an explicit memory access of the standard (non‑compressed) load instruction FLW, the hardware may write a transformed‑instruction value to the trap‑instruction CSR (mtinst or htinst).
+RULE 14: In the transformed‑instruction value written for a faulting FLW, the fields funct3, rd, and opcode are identical to those of the original FLW that caused the exception.
+RULE 15: In the transformed‑instruction value for a faulting FLW, the bits that normally encode rs1 are replaced by an Addr. Offset field that equals the positive difference between the faulting virtual address (as stored in mtval or stval) and the original base address encoded in the FLW.
+RULE 16: For the transformed‑instruction value generated by a faulting FLW, all immediate‑offset fields (bits 31:25 and the appropriate 24:20 or 11:7 fields) are set to zero.
+RULE 17: The low two bits of the transformed‑instruction value produced for a non‑compressed FLW are `11`, reflecting FLW’s non‑compressed encoding.
+RULE 18: If software reads mtinst or htinst and discovers that the value encodes a basic load, it may conclude that the trapped instruction was an FLW without needing to verify that the immediate fields are zero.
+RULE 19: When a synchronous exception such as load address misaligned, load access fault, load page fault, or load guest‑page fault is taken on an FLW, the hardware may write the transformed‑instruction encoding to mtinst/htinst; otherwise it writes zero (or a special pseudoinstruction value for guest‑page faults).
+RULE 20: The transformed‑instruction encoding written for a faulting FLW supplies the trap handler with the original destination register (rd), the original funct3, the original opcode, and the computed Addr. Offset required to emulate the faulting FLW.
+RULE 21: For a faulting FLW that triggers a guest‑page fault, the hardware writes a special pseudoinstruction value to mtinst/htinst instead of the standard transformed‑instruction encoding.
+
+INSTRUCTION: FMADD.S
+RULE 1: FMADD.S computes the product of the values in rs1 and rs2, adds the value in rs3, and writes the resulting single‑precision floating‑point value to rd.
+RULE 2: FMADD.S is encoded in the R4‑type format, which includes three source floating‑point registers rs1, rs2, rs3 and one destination floating‑point register rd.
+RULE 3: FMADD.S sets the 2‑bit fmt field to S (binary 00) to indicate that all operand and result values are 32‑bit single‑precision floating‑point numbers.
+RULE 4: FMADD.S may select a rounding mode using the rm field, applying that rounding mode to the fused multiply‑add operation.
+RULE 5: FMADD.S must set the invalid‑operation exception flag when both multiplicands (the values in rs1 and rs2) are zero, even if the addend (the value in rs3) is a quiet NaN.
+RULE 6: No architectural behavior other than those described above is specified for FMADD.S.
+
+INSTRUCTION: FMAX.S
+RULE 1: FMAX.S writes to its destination register rd the larger of the two single‑precision floating‑point source operands rs1 and rs2.
+RULE 2: If both source operands of FMAX.S are NaNs, FMAX.S produces the canonical NaN as the result.
+RULE 3: If exactly one source operand of FMAX.S is a NaN, FMAX.S returns the non‑NaN operand as the result.
+RULE 4: If any source operand of FMAX.S is a signaling NaN, the invalid‑operation exception flag is set regardless of the result value.
+RULE 5: Starting with version 2.2 of the floating‑point extension, FMAX.S implements the IEEE 754‑201x maximumNumber operation instead of the earlier maxNum operation.
+RULE 6: The version‑2.2 change to maximumNumber for FMAX.S affects only the handling of signaling NaNs, which continues to raise the invalid‑operation exception as specified.
+RULE 7: The rm field of FMAX.S can select a rounding mode, but rounding does not affect the value selected by the instruction.
+RULE 8: FMAX.S operates on 32‑bit single‑precision floating‑point values as indicated by its fmt field being S.
+RULE 9: FMAX.S computes the floating‑point maximum of two single‑precision operands according to the IEEE 754‑2019 maximum operation.
+RULE 10: When neither operand of FMAX.S is NaN, the result of FMAX.S is the operand that compares greater under the IEEE 754 total ordering for single‑precision numbers.
+RULE 11: If one operand of FMAX.S is a NaN and the other operand is a numeric value, FMAX.S returns the numeric operand, following the default IEEE 754 NaN‑propagation rule.
+RULE 12: If both operands of FMAX.S are NaNs, FMAX.S returns a NaN whose payload is taken from the first source operand, as required by the default IEEE 754 NaN‑propagation semantics.
+RULE 13: When the two operands of FMAX.S are zeros of opposite sign, FMAX.S returns +0.0, complying with the IEEE 754 maximum rule for signed zeros.
+RULE 14: If either operand of FMAX.S is positive or negative infinity, the result of FMAX.S is the infinity with the larger numeric value according to IEEE 754 ordering.
+RULE 15: For two equal non‑NaN operands, FMAX.S returns that same operand, preserving its sign and payload.
+
+INSTRUCTION: FMIN.S
+RULE 1: FMIN.S writes to its destination register the smaller of the two single‑precision floating‑point values held in the source registers.
+RULE 2: For the purpose of FMIN.S, the negative zero value (‑0.0) is treated as less than the positive zero value (+0.0).
+RULE 3: If both source operands of FMIN.S are NaNs, the instruction produces the canonical NaN as its result.
+RULE 4: If exactly one source operand of FMIN.S is a NaN, the result of the instruction is the non‑NaN operand.
+RULE 5: If either source operand of FMIN.S is a signaling NaN, the invalid‑operation exception flag is set, even when the resulting value is not a NaN.
+RULE 6: In the F extension version 2.2, FMIN.S implements the IEEE 754‑201x minimumNumber operation rather than the earlier IEEE 754‑2008 minNum operation.
+RULE 7: The only semantic difference between the IEEE 754‑2008 minNum operation and the IEEE 754‑201x minimumNumber operation, as applied to FMIN.S, is the handling of signaling NaNs.
+RULE 8: FMIN.S implements the IEEE 754‑2019 minimum operation on single‑precision floating‑point numbers.
+RULE 9: FMIN.S propagates a NaN operand unchanged as the result when either source operand is a NaN.
+RULE 10: FMIN.S is a member of the minimum‑maximum family of floating‑point instructions.
+RULE 11: FMIN.S uses the same encoding format as FMINM.S, with instruction bit 13 set to 0 for FMIN.S.
+
+INSTRUCTION: FMSUB.S
+RULE 1: FMSUB.S computes the fused product of the values in registers rs1 and rs2, subtracts the value in rs3, and writes the single‑precision result to rd.
+RULE 2: FMSUB.S performs the multiplication and subtraction with infinite‑precision intermediate results and then applies a single rounding step to produce the final single‑precision result.
+RULE 3: The rounding mode used by FMSUB.S is selected by the rm field of the instruction.
+RULE 4: FMSUB.S operates on 32‑bit single‑precision floating‑point values.
+RULE 5: If both multiplicand registers rs1 and rs2 of FMSUB.S are zero, the invalid‑operation exception flag is set even when the subtrahend rs3 is a quiet NaN.
+RULE 6: If any source operand of FMSUB.S is a signaling NaN, the invalid‑operation exception flag is set regardless of the final numeric result.
+RULE 7: FMSUB.S raises overflow, underflow, inexact, and other IEEE‑754‑2008/201x exceptions according to the selected rounding mode.
+RULE 8: After completing the fused multiply‑subtract and rounding, FMSUB.S stores the final single‑precision result in the destination register rd.
+RULE 9: FMSUB.S belongs to the floating‑point fused‑multiply‑add group and uses the R4‑type format with three source registers and one destination register.
+
+INSTRUCTION: FMUL.S
+RULE 1: FMUL.S multiplies the 32‑bit single‑precision floating‑point value in source register rs1 by the 32‑bit single‑precision floating‑point value in source register rs2 and writes the single‑precision product to destination register rd.
+RULE 2: FMUL.S performs only a floating‑point multiplication and does not perform any addition, subtraction, or other arithmetic operation.
+RULE 3: FMUL.S produces a 32‑bit IEEE‑754‑2008 single‑precision result.
+RULE 4: FMUL.S selects the rounding mode for the multiplication from the rm field of the instruction, allowing any rounding mode defined by the RISC‑V specification.
+RULE 5: FMUL.S follows IEEE‑754‑2008 semantics for single‑precision multiplication, including the defined handling of NaNs, infinities, and signed zeros.
+RULE 6: FMUL.S sets the appropriate floating‑point exception flags (invalid operation, overflow, underflow, inexact) according to the outcome of the multiplication.
+
+INSTRUCTION: FMV.D.X
+RULE 1: FMV.D.X transfers a double‑precision (64‑bit) floating‑point value from a source floating‑point register to a destination integer register.
+RULE 2: FMV.D.X copies only the lower 64 bits of the source floating‑point register into the integer register when the hardware floating‑point register width FLEN exceeds 64 bits.
+RULE 3: FMV.D.X ignores the upper FLEN‑64 bits of the source register, discarding them regardless of their contents.
+RULE 4: FMV.D.X transfers the low‑order 64 bits unchanged even if the source register holds a NaN‑boxed double‑precision value with all 1s in the upper bits.
+RULE 5: FMV.D.X performs no validation of NaN‑boxing; it simply extracts the low‑order 64 bits and writes them to the integer register.
+RULE 6: FMV.D.X is defined as a member of the floating‑point n‑bit transfer operation class (FMV.n.X / FMV.X.n).
+RULE 7: FMV.D.X moves the raw IEEE 754‑2008 double‑precision floating‑point bit pattern from integer source register rs1 into floating‑point destination register rd.
+RULE 8: FMV.D.X is defined only on implementations where XLEN is at least 64 bits and is unavailable on implementations with XLEN less than 64.
+RULE 9: FMV.D.X leaves every bit of the transferred value unchanged, preserving the exact payload of non‑canonical NaNs during the move.
+RULE 10: FMV.D.X is classified as a bit‑pattern‑move instruction that exchanges raw IEEE‑754 encodings between the integer and floating‑point register files.
+RULE 11: FMV.D.X is a transfer instruction defined in the D extension of the RISC‑V ISA.
+RULE 12: FMV.D.X is not added by the Zdinx extension.
+RULE 13: FMV.D.X is explicitly listed among the instructions omitted from Zdinx.
+RULE 14: Consequently, there is no Zdinx variant of FMV.D.X.
+RULE 15: The general rule for Zdinx variants—same semantics as the D‑extension instruction but accessing the integer register (x) with the same number instead of the floating‑point register (f)—does not apply to FMV.D.X because the instruction is excluded.
+
+INSTRUCTION: FMV.W.X
+RULE 1: FMV.W.X moves the lower 32 bits of integer register rs1 into floating‑point register rd as a single‑precision IEEE‑754‑2008 encoded value.
+RULE 2: FMV.W.X transfers the 32‑bit pattern unchanged, performing no interpretation or conversion of the bits.
+RULE 3: FMV.W.X preserves the payloads of non‑canonical NaNs when moving the bits from rs1 to rd.
+RULE 4: FMV.W.X on RV64 leaves the upper bits of rd unspecified, guaranteeing only that the lower 32 bits contain the exact bit pattern from rs1.
+RULE 5: FMV.W.X replaces the older FMV.S.X mnemonic, and both the W‑named and legacy S‑named forms must be supported by tools for backward compatibility.
+RULE 6: FMV.W.X uses the same instruction encoding format as the FLI.S load‑immediate instruction.
+RULE 7: The rs2 field of FMV.W.X is never set to the value 1.
+RULE 8: FMV.W.X is defined as a transfer instruction in the standard floating‑point (F) extension.
+RULE 9: The Zfinx extension does not include FMV.W.X, as it is among the F‑extension transfer instructions omitted in Zfinx.
+
+INSTRUCTION: FMV.X.D
+RULE 1: FMV.X.D belongs to the FMV.n.X class of move instructions that transfer data from a floating‑point register to an integer register.
+RULE 2: FMV.X.D performs an n‑bit transfer where n is the width of the double‑precision floating‑point type, i.e., n = FLEN, the full width of the floating‑point register.
+RULE 3: If the transfer width n used by FMV.X.D were less than FLEN, FMV.X.D would copy only the lower n bits of the source floating‑point register to the destination integer register and ignore the upper FLEN − n bits.
+RULE 4: When the transfer width n equals FLEN, as for FMV.X.D on a platform where FLEN = 64, FMV.X.D copies the entire FLEN‑bit pattern from the source floating‑point register to the destination integer register.
+RULE 5: FMV.X.D does not perform any NaN‑boxing or un‑boxing; the bit pattern is transferred unchanged because the transfer width matches the register size.
+RULE 6: FMV.X.D does not cause any architectural side effects such as setting floating‑point exception flags.
+RULE 7: FMV.X.D is defined only for implementations with XLEN >= 64.
+RULE 8: FMV.X.D copies the 64‑bit bit pattern of the double‑precision floating‑point value from source floating‑point register rs1 into destination integer register rd.
+RULE 9: FMV.X.D interprets the source value as an IEEE‑754‑2008 encoded double‑precision number and moves that exact encoding to rd.
+RULE 10: FMV.X.D preserves every bit of the transferred pattern, including the payloads of noncanonical NaNs, without modification.
+RULE 11: FMV.X.D does not change the contents of the source floating‑point register rs1.
+RULE 12: FMV.X.D moves a quad‑precision floating‑point number to an integer register.
+RULE 13: FMV.X.D is used together with FMVH.X.Q to move a quad‑precision floating‑point number to a pair of integer registers.
+RULE 14: FMV.X.D is a transfer instruction defined in the D extension.
+RULE 15: FMV.X.D is not included in the Zdinx extension and is listed among the D‑extension instructions that are omitted from Zdinx.
+
+INSTRUCTION: FMV.X.W
+RULE 1: FMV.X.W copies the 32‑bit IEEE‑754‑2008 single‑precision value from floating‑point register rs1 into the low 32 bits of integer register rd without any modification.
+RULE 2: FMV.X.W preserves all bit patterns of the source value, including the payload bits of non‑canonical NaNs, when copying to rd.
+RULE 3: On RV64 implementations FMV.X.W sign‑extends the copied 32‑bit value by filling the upper 32 bits of rd with the sign bit of the original floating‑point source.
+RULE 4: On RV32 implementations FMV.X.W writes only the low 32 bits of rd, and no higher‑order bits exist to be affected.
+RULE 5: FMV.X.W may also be invoked using the historic mnemonic FMV.S.X, and both mnemonics are accepted by tooling for backward compatibility.
+RULE 6: The FMV.X.W instruction is an existing RISC‑V instruction that must be implemented in the architecture.
+RULE 7: The FMV.X.W instruction is intended to be used together with the FMVH.X.D instruction.
+RULE 8: When the FMV.X.W and FMVH.X.D instructions are used in conjunction, they move a double‑precision floating‑point number into a pair of integer registers.
+RULE 9: FMV.X.W is classified as a transfer instruction.
+RULE 10: FMV.X.W is omitted from the Zfinx extension.
+
+INSTRUCTION: FNMADD.S
+RULE 1: FNMADD.S is an R4‑type floating‑point instruction that uses the OP‑FP major opcode.
+RULE 2: FNMADD.S operates on single‑precision (32‑bit) floating‑point operands selected by the fmt field equal to S.
+RULE 3: FNMADD.S reads three source registers named rs1, rs2, and rs3 and writes its result to destination register rd.
+RULE 4: The rm field of FNMADD.S selects a static rounding mode using the standard IEEE‑754 rounding‑mode encodings.
+RULE 5: FNMADD.S computes the product of the values in rs1 and rs2, negates that product, subtracts the value in rs3, and writes the fused result to rd without any intermediate rounding of the product.
+RULE 6: The mathematical result of FNMADD.S is rd = -( rs1 * rs2 ) – rs3, performed as a single fused multiply‑add operation.
+RULE 7: FNMADD.S applies the rounding mode indicated by its rm field only once to the final fused result in accordance with IEEE‑754‑2008.
+RULE 8: FNMADD.S must set the invalid‑operation exception flag when both rs1 and rs2 are zero, even if rs3 is a quiet NaN.
+RULE 9: All other IEEE‑754‑2008 NaN propagation and exception rules apply to FNMADD.S as they do for any floating‑point operation.
+
+INSTRUCTION: FNMSUB.S
+RULE 1: FNMSUB.S computes a single‑precision result equal to the negated product of rs1 and rs2 added to rs3, performing the multiplication and addition as a fused operation with only one rounding applied to the final sum.
+RULE 2: In FNMSUB.S the product of rs1 and rs2 is not rounded before the addition to rs3; rounding occurs only after the fused computation according to the rounding mode selected in the rm field.
+RULE 3: FNMSUB.S may select any rounding mode that is encodable in its rm field, and the selected rounding mode is applied to the fused result.
+RULE 4: FNMSUB.S sets the invalid‑operation exception flag when both rs1 and rs2 are zero, even if rs3 is a quiet NaN.
+RULE 5: FNMSUB.S propagates overflow, underflow, inexact, and other floating‑point exceptions in accordance with the IEEE 754‑2008 rules for fused multiply‑add operations.
+RULE 6: FNMSUB.S produces a signed zero result whose sign follows the RISC‑V definition that matches the behavior of x86 and ARM fused multiply‑add instructions for a negated product plus addend.
+RULE 7: When the exact mathematical result of FNMSUB.S is zero, the sign of the zero result is the sign that would be produced by applying IEEE 754 rounding rules to the exact value of –(rs1 × rs2) + rs3.
+
+INSTRUCTION: FSD
+RULE 1: In RV32GC and RV64GC, an aligned FSD instruction normally generates exactly one store memory operation.
+RULE 2: If XLEN is less than 64, an FSD instruction may generate multiple store memory operations.
+RULE 3: When XLEN is less than 64, an FSD instruction may be decomposed into a set of component memory operations of any granularity, such as byte-wise.
+RULE 4: The component memory operations produced by a decomposed FSD are not ordered with respect to each other in program order.
+RULE 5: The component memory operations produced by a decomposed FSD are ordered normally with respect to memory operations generated by preceding or subsequent instructions in program order.
+RULE 6: FSD stores a double‑precision floating‑point value from a floating‑point register to the memory location identified by the instruction’s effective address.
+RULE 7: FSD is guaranteed to execute atomically only if the effective address is naturally aligned.
+RULE 8: FSD is guaranteed to execute atomically only when the processor XLEN is 64 bits or greater.
+RULE 9: FSD does not alter any of the bits of the double‑precision value that it transfers to memory.
+RULE 10: FSD preserves the payload bits of non‑canonical NaNs when storing them to memory.
+RULE 11: The FSD instruction generated by C.FSDSP stores a double-precision floating-point value from floating-point register rs2 into memory.
+RULE 12: The FSD instruction generated by C.FSDSP is defined only when the implementation includes the RV32DC or RV64DC extension.
+RULE 13: The base address used by the FSD instruction generated by C.FSDSP is the stack pointer register x2.
+RULE 14: The FSD instruction generated by C.FSDSP forms its effective memory address by adding to x2 a zero-extended immediate taken from the encoding and scaled by a factor of eight.
+RULE 15: The FSD instruction generated by C.FSDSP writes the double-precision value to the memory location whose address is the sum computed from x2 and the scaled immediate.
+RULE 16: The FSD instruction generated by C.FSDSP has the same architectural effect as the uncompressed instruction fsd rs2, offset(x2) where offset equals the scaled immediate.
+RULE 17: The FSD instruction produced by C.FSDSP is encoded in the 16-bit RVC CSS format but its architectural behavior follows the standard FSD store semantics.
+RULE 18: FSD stores a 64‑bit floating‑point value from a floating‑point register to a memory location.
+RULE 19: The memory element written by FSD is exactly 64 bits wide.
+RULE 20: The source data element for FSD is the implementation‑defined FLEN bits of the floating‑point register, which must be at least 64 bits for double‑precision implementations.
+RULE 21: FSD forms its effective address using only a base register and an immediate offset, with no index register bits involved.
+RULE 22: The hardware distinguishes FSD from the corresponding scalar floating‑point load by the store control signal, even though both share the same opcode encoding.
+RULE 23: The 64‑bit width pattern reserved for scalar floating‑point load and store instructions prevents any vector load or store from being encoded with that width, thereby protecting the architectural behavior of FSD.
+RULE 24: The FSD instruction is a store whose operand size is wider than the processor’s native integer width XLEN.
+RULE 25: In an RV32D implementation, the FSD instruction stores a 64‑bit floating‑point value, which exceeds the 32‑bit XLEN.
+RULE 26: When an FSD instruction is executed, the Physical Memory Protection (PMP) unit performs separate permission checks on each portion of the store.
+RULE 27: If the address used by an FSD store is naturally aligned, PMP may allow one portion of the store to become visible while another portion fails its PMP check, causing a partial store effect.
+RULE 28: The partial‑store behavior of a naturally aligned FSD instruction is analogous to the behavior defined for misaligned stores that are internally decomposed into multiple accesses.
+RULE 29: The FSD instruction raises a store page‑fault exception when its effective address lies within a page that does not have write permission.
+RULE 30: In RV32 implementations, the FSD instruction stores 64 bits, which is wider than the 32‑bit XLEN, and such a store may be decomposed into multiple memory accesses.
+RULE 31: When a wide FSD store is decomposed, a portion of the store may become visible in memory before a page‑fault exception is taken, even if the store address is naturally aligned.
+RULE 32: If an FSD instruction triggers a page‑fault, the architectural effect regarding which bytes become visible prior to the fault is implementation‑defined.
+RULE 33: The FSD instruction is a standard (non‑compressed) store that may have a transformed encoding written to the trap‑instruction CSR (mtinst or htinst) when a synchronous exception caused by an explicit memory access occurs.
+RULE 34: When an FSD traps, hardware creates a transformed instruction whose rs2, funct3, and opcode fields are identical to those of the original FSD.
+RULE 35: In the transformed encoding of a trapping FSD, the bits normally holding the rs1 field (bits 19‑15) are replaced by the Addr. Offset field.
+RULE 36: The Addr. Offset field in a transformed FSD is the positive difference between the faulting virtual address (as written to mtval or stval) and the original virtual address encoded in the original FSD.
+RULE 37: The Addr. Offset difference in a transformed FSD can be non‑zero only when the faulting access was misaligned.
+RULE 38: All immediate offset fields of the original FSD (bits 31‑25, 24‑20, or 11‑7) are set to zero in the transformed encoding.
+RULE 39: The low two bits of a transformed FSD are "11" because FSD is a 32‑bit (non‑compressed) instruction; if the original FSD had been a 16‑bit compressed instruction, the transformed low bits would be "01".
+RULE 40: The transformed encoding of an FSD may be written to mtinst/htinst for any of the following exception types: load address misaligned, load access fault, load page fault, store/AMO address misaligned, store/AMO access fault, store/AMO page fault, load guest‑page fault, or store/AMO guest‑page fault.
+RULE 41: If an exception type does not have a defined transformation for the trapping FSD, the trap‑instruction CSR is written with zero (or, for certain guest‑page‑fault cases, a special pseudoinstruction).
+RULE 42: Software can identify a transformed FSD by checking that the encoding matches a basic store with the same rs2, funct3, and opcode as FSD and that bits 1:0 equal "11".
+RULE 43: When recognizing a transformed FSD, it is not required to verify that the immediate fields are zero; the presence of a basic‑store encoding with bits 1:0 = "11" is sufficient to infer that the trapping instruction was an FSD.
+RULE 44: If an FSD were a compressed instruction, it would first be expanded to its 32‑bit equivalent, transformed as specified for FSD, and then bit 1 would be cleared, producing a transformed encoding with bits 1:0 = "01".
+RULE 45: FSD is an explicit memory‑access instruction and therefore its address is transformed by the architectural pointer‑masking mechanism before the store is performed.
+RULE 46: The pointer‑masking transformation applied to the FSD address follows the pointer‑masking settings of the effective privilege mode in which the instruction executes.
+RULE 47: If the MXR bit is set in the effective privilege mode, the pointer‑masking mechanism does not apply to the address used by FSD.
+RULE 48: When MPRV or SPVP are enabled, the pointer‑masking settings of the effective privilege mode are used for translating the address of the FSD store.
+RULE 49: FSD supports misaligned stores, and the bytes written are equivalent to applying the pointer‑masking transformation separately to each aligned sub‑access that composes the misaligned operation.
+RULE 50: The compressed instruction C.FSDSP, which performs the same store as FSD, is also subject to the same pointer‑masking rules.
+RULE 51: Pointer masking for FSD applies only to addresses generated internally by the CPU (including the FPU) and never to addresses provided by external devices, DMA controllers, or page‑table walks.
+
+INSTRUCTION: FSGNJ.D
+RULE 1: The FSGNJ.D instruction performs a double-precision floating-point-to-floating-point sign-injection operation.
+RULE 2: The FSGNJ.D instruction copies the sign bit from its second source floating-point operand to the result while preserving the exponent and mantissa of its first source operand, analogous to the single-precision sign-injection instruction.
+RULE 3: A register-to-register move of a double‑precision floating‑point value can be performed using a single FSGNJ.D instruction.
+
+INSTRUCTION: FSGNJ.S
+RULE 1: FSGNJ.S reads two single‑precision floating‑point registers rs1 and rs2 and writes to rd a value whose mantissa and exponent bits are copied from rs1 while its sign bit is taken from rs2.
+RULE 2: FSGNJ.S does not set any floating‑point exception flags, including Invalid, Overflow, Underflow, Divide‑by‑Zero, or Inexact.
+RULE 3: FSGNJ.S does not canonicalize NaNs, so when NaN operands are used the NaN payload bits are transferred unchanged according to the sign‑injection rule.
+RULE 4: When the two source registers are identical, FSGNJ.S rd, rs, rs produces the same result as the pseudo‑instruction FMV.S rd, rs, effectively copying rs to rd.
+RULE 5: The FSGNJ.S instruction can be used to move half‑precision values between floating‑point registers.
+RULE 6: Because the FSGNJ.S instruction can move half‑precision values between floating‑point registers, the Zfhmin extension does not include an FSGNJ.H instruction.
+
+INSTRUCTION: FSGNJN.D
+RULE 1: The instruction FSGNJN.D performs a double‑precision floating‑point sign‑injection operation.
+RULE 2: The functional behavior of FSGNJN.D is defined analogously to the single‑precision sign‑injection instruction FSGNJN.S.
+RULE 3: No additional explicit semantics, details, or encoding fields are provided for the instruction FSGNJN.D in the given description.
+
+INSTRUCTION: FSGNJN.S
+RULE 1: FSGNJN.S computes its destination register rd by copying all bits from source register rs1 except the sign bit, which is set to the inverse of the sign bit of source register rs2.
+RULE 2: In the result of FSGNJN.S the sign bit equals NOT rs2.sign while bits 30‑0 are taken directly from rs1 bits 30‑0.
+RULE 3: FSGNJN.S does not set any floating‑point exception flags.
+RULE 4: FSGNJN.S does not canonicalize NaNs; the payload bits of NaNs are passed through unchanged except for the sign‑bit modification.
+RULE 5: FSGNJN.S is a single‑precision floating‑point sign‑injection instruction.
+RULE 6: FSGNJN.S belongs to the floating‑point sign‑injection instruction class together with FSGNJ.S and FSGNJX.S.
+RULE 7: When the two source registers of FSGNJN.S are the same, the instruction provides the functional equivalent of a floating‑point NEG operation.
+RULE 8: The assembler pseudoinstruction "FSGNJN.S rd, rs, rs" is defined as the pseudoinstruction FNEG.S rd, rs.
+RULE 9: FSGNJN.S can be used to implement the IEEE copySign operation and other sign‑manipulation patterns.
+RULE 10: The ".S" suffix in FSGNJN.S indicates that the instruction operates on single‑precision floating‑point values.
+
+INSTRUCTION: FSGNJX.D
+RULE 1: The FSGNJX.D instruction is a double‑precision floating‑point sign‑injection operation.
+RULE 2: The FSGNJX.D instruction performs the same sign‑injection functionality as the single‑precision sign‑injection instruction while using double‑precision operands.
+
+INSTRUCTION: FSGNJX.S
+RULE 1: FSGNJX.S copies bits 31:1 of the first source register rs1 into the corresponding bits of the destination register rd.
+RULE 2: FSGNJX.S sets the sign bit of rd to the exclusive‑OR of the sign bits of rs1 and rs2.
+RULE 3: FSGNJX.S never raises or sets any floating‑point exception flags.
+RULE 4: FSGNJX.S preserves NaN payload bits unchanged and does not canonicalize NaNs.
+RULE 5: When rs1 and rs2 are the same register, the assembler treats FSGNJX.S rd, rs1, rs1 as the pseudo‑instruction FABS.S, which computes the absolute value of rs1.
+RULE 6: FSGNJX.S is one of three sign‑injection floating‑point instructions and differs from FSGNJ.S and FSGNJN.S by using the XOR of the two sign bits.
+RULE 7: FSGNJX.S implements the IEEE copySign operation and can be combined with appropriate register selections to realize move, absolute‑value, and negate operations.
+RULE 8: FSGNJX.S is commonly employed in transcendental‑function libraries for sign manipulation of single‑precision operands.
+
+INSTRUCTION: FSQRT.S
+RULE 1: FSQRT.S computes the square root of the single‑precision floating‑point value in source register rs1 and writes the result to destination register rd.
+RULE 2: FSQRT.S uses the R‑type instruction format with the OP‑FP major opcode.
+RULE 3: In the encoding of FSQRT.S the funct5 field is set to the value that identifies the FSQRT operation.
+RULE 4: In the encoding of FSQRT.S the fmt field is set to S (binary 00) to select a 32‑bit single‑precision operation.
+RULE 5: In the encoding of FSQRT.S the rs2 field is hard‑wired to zero because the instruction has only one source operand.
+RULE 6: In the encoding of FSQRT.S the rm field supplies the rounding mode, which may be any rounding mode defined for the F extension.
+RULE 7: FSQRT.S rounds its result according to the rounding mode specified in the rm field.
+RULE 8: FSQRT.S belongs to the F (floating‑point) extension and follows the same opcode and field conventions as other single‑precision floating‑point arithmetic instructions such as FADD.S and FMUL.S.
+
+INSTRUCTION: FSUB.S
+RULE 1: FSUB.S subtracts the single‑precision floating‑point value in rs2 from the single‑precision floating‑point value in rs1 and writes the rounded result to rd.
+RULE 2: FSUB.S operates on 32‑bit single‑precision floating‑point operands as defined by the fmt field set to S (00).
+RULE 3: FSUB.S includes an rm field and applies the rounding mode specified by this field to the subtraction result.
+
+INSTRUCTION: FSW
+RULE 1: FSW computes its effective memory address by adding the 12‑bit signed byte offset encoded in the instruction to the integer value held in register rs1.
+RULE 2: FSW stores the 32‑bit single‑precision floating‑point value contained in floating‑point register rs2 to the memory location identified by the effective address.
+RULE 3: FSW is guaranteed to execute atomically only when the effective address is naturally aligned to a four‑byte boundary (a multiple of 4).
+RULE 4: FSW preserves the entire bit pattern of the source value, including any payload bits of non‑canonical NaNs, without modification during the store.
+RULE 5: The execution environment determines the behavior of a misaligned FSW access, which may either perform an invisible misaligned store or raise a contained or fatal trap.
+RULE 6: FSW is a standard scalar floating‑point store that writes a floating‑point register value to memory.
+RULE 7: FSW accesses memory elements that are 32 bits wide.
+RULE 8: FSW reads the source data from a floating‑point register whose size is FLEN bits.
+RULE 9: The width‑field bits for FSW are fixed to the binary pattern 010, which defines its 32‑bit store behavior.
+RULE 10: The mew bit (instruction bit 28) is not used by FSW and has no effect on its operation.
+RULE 11: FSW does not use any index bits in its address calculation.
+RULE 12: FSW is defined as a standard, non‑compressed store instruction in the RISC‑V ISA.
+RULE 13: When a synchronous exception such as store/AMO address‑misaligned, store/AMO access‑fault, or store/AMO page‑fault occurs on an executing FSW, the hardware may write a transformed standard instruction encoding into the trap‑instruction CSR (mtinst or htinst).
+RULE 14: In the transformed encoding of an FSW the fields rs2, funct3, and opcode are identical to those of the original FSW.
+RULE 15: In the transformed encoding of an FSW the bits that normally hold the base‑address register rs1 are replaced by an Addr.Offset field that equals the positive difference between the faulting virtual address and the original virtual address and is non‑zero only for misaligned accesses.
+RULE 16: In the transformed encoding of an FSW the immediate fields that normally contain the sign‑extended offset (bits 31‑25 and 11‑7) are set to zero.
+RULE 17: If the trapping FSW was a compressed store instruction (c.sw), the hardware first expands it to its 32‑bit equivalent, applies the transformation, and then forces bit 1 of the final encoding to zero, resulting in low bits 1:0 = 01 for the transformed encoding.
+RULE 18: If the trapping FSW was not compressed, the low two bits of the transformed encoding are 11.
+RULE 19: When software reads mtinst or htinst and the value matches the basic store pattern for an FSW, it need not check that the immediates are zero because the pattern alone guarantees that the trapped instruction was an FSW of the same kind.
+RULE 20: A transformed‑instruction value representing an FSW may be written for the exceptions store/AMO address‑misaligned, store/AMO access‑fault, and store/AMO page‑fault; for any other exception the trap‑instruction register will not contain a transformed FSW encoding.
+RULE 21: The special pseudoinstruction values defined for guest‑page‑fault handling are never used for ordinary FSW traps.
+RULE 22: For a non‑compressed FSW that triggers a synchronous load/store exception, the hardware‑written transformed encoding contains the same rs2, funct3, and opcode as the original FSW, zeroed immediates, and an Addr.Offset field equal to the positive address difference (zero for aligned accesses).
+RULE 23: Software decoding of mtinst/htinst can safely treat any value that matches the basic‑store pattern for an FSW as indicating the trapped instruction was an FSW, without performing additional verification.
+RULE 24: FSW is an explicit floating‑point store instruction that performs a memory store.
+RULE 25: Because FSW is an explicit memory access, pointer masking applies to FSW.
+RULE 26: When pointer masking is enabled for the privilege mode executing FSW, the effective address used by FSW is transformed by the pointer‑masking mechanism before the store occurs.
+RULE 27: The compressed instruction C.FSWSP maps to the same operation as FSW.
+RULE 28: Both the base‑ISA FSW and its compressed form C.FSWSP are subject to the same pointer‑masking semantics.
+
+INSTRUCTION: VLE8.V
+RULE 1: VLE8.V takes a destination vector register vd, a base address register rs1 specified as (rs1), and an optional mask vm.
+RULE 2: VLE8.V computes its effective memory address from the current value in rs1.
+RULE 3: VLE8.V performs a unit‑stride load of 8‑bit (byte) elements from memory beginning at the effective address into vector register vd.
+RULE 4: VLE8.V loads elements sequentially with a stride of one byte between successive elements.
+RULE 5: VLE8.V has an element width EEW of 8 bits.
+RULE 6: When a mask vm is provided, VLE8.V writes only those elements whose corresponding mask bit is true and leaves all other elements of vd unchanged.
+RULE 7: VLE8.V is encoded with width[2:0] = 0 and a unique lumop load‑opcode field that distinguishes it from other vector instructions.
+RULE 8: VLE8.V operates on the current architectural vector length VL without modifying VL.
+RULE 9: VLE8.V follows the default tail‑handling policy defined for vector loads, as no special tail‑agnostic behavior is defined for it.
+
+INSTRUCTION: VLE16.V
+RULE 1: VLE16.V loads a vector of 16‑bit (2‑byte) elements from memory into a destination vector register group.
+RULE 2: VLE16.V specifies the first register of the destination group in its operand and the group width is determined by the current LMUL setting.
+RULE 3: VLE16.V loads exactly the number of elements specified by the current vl that was set by the most recent vsetvli instruction.
+RULE 4: VLE16.V writes only the first vl elements of the destination register group when vl is less than the maximum vector length, leaving the remaining elements unchanged.
+RULE 5: VLE16.V uses the address contained in the base register as the start of the memory load and does not automatically update that base register.
+RULE 6: VLE16.V respects the SEW (e16) and LMUL fields established by the most recent vsetvli, deriving both element width and destination register group size from those settings.
+RULE 7: With LMUL = m4 and SEW = e16, VLE16.V maps the loaded 16‑bit elements into the low half of each 32‑bit lane of four consecutive vector registers (e.g., v4, v5, v6, v7).
+RULE 8: When no mask operand is supplied, VLE16.V performs an unmasked load of all elements up to vl; if a mask were present, the architectural definition would apply element‑wise masking.
+RULE 9: VLE16.V is a vector unit‑stride load instruction that transfers 16‑bit elements from memory into a vector register.
+RULE 10: VLE16.V loads consecutive 16‑bit elements from memory starting at the address held in the integer register rs1.
+RULE 11: VLE16.V accesses memory with a stride of one element (unit‑stride) for each loaded element.
+RULE 12: VLE16.V writes the loaded elements into the destination vector register vd.
+RULE 13: VLE16.V may include an optional mask vm; when present, the mask determines which elements are written to vd.
+RULE 14: VLE16.V updates only those elements of vd for which the corresponding mask bit in vm is true, and elements masked off remain unchanged.
+RULE 15: If the optional mask vm is absent, VLE16.V writes all loaded elements to vd.
+RULE 16: The operand rs1 for VLE16.V provides the base address used for the first 16‑bit load.
+RULE 17: The operand vd for VLE16.V is the destination vector register that receives the loaded 16‑bit elements.
+RULE 18: The optional mask operand vm for VLE16.V is encoded as v0.t when present.
+
+INSTRUCTION: VLE32.V
+RULE 1: VLE32.V loads 32‑bit (4‑byte) elements from memory into the destination vector register vd.
+RULE 2: VLE32.V uses the value in rs1 as the base address for loading the first element.
+RULE 3: VLE32.V reads successive elements with a unit‑stride of one element, advancing the memory address by 4 bytes for each subsequent element.
+RULE 4: VLE32.V applies the vector mask encoded in vm so that elements whose mask bit is false are not written to vd.
+RULE 5: VLE32.V treats an omitted mask operand as using the default‑mask‑missing behavior of v0.t.
+RULE 6: VLE32.V leaves unchanged any element of vd whose corresponding mask bit is false.
+RULE 7: VLE32.V is classified as a vector unit‑stride load instruction in the RISC‑V vector extension.
+RULE 8: VLE32.V operates with an element width (EEW) of 32 bits.
+RULE 9: VLE32.V loads a vector of 32‑bit integer elements from memory.
+RULE 10: VLE32.V uses the address contained in scalar register a1 as the base address for the load.
+RULE 11: VLE32.V writes the loaded 32‑bit integer elements into the destination vector register v8.
+RULE 12: VLE32.V reads consecutive 32‑bit memory locations starting at the address in a1 according to the current vector length.
+RULE 13: VLE32.V performs a memory read operation and does not modify any registers other than a1 and v8.
+
+INSTRUCTION: VLE64.V
+RULE 1: VLE64.V loads 64‑bit (8‑byte) elements from memory into the destination vector register vd.
+RULE 2: VLE64.V uses the scalar register rs1 as the base address and calculates the address of element i as rs1 + i·8.
+RULE 3: VLE64.V accesses successive elements with a constant stride of 8 bytes between consecutive addresses.
+RULE 4: VLE64.V operates on elements that are each 64 bits wide.
+RULE 5: VLE64.V takes three operands: the destination vector register vd, the base address register rs1, and an optional mask vm.
+RULE 6: When the optional mask vm is supplied to VLE64.V, the mask encoding must be v0.t (true‑masked).
+RULE 7: If the mask vm is present, VLE64.V loads only those elements whose corresponding mask bit is true.
+RULE 8: If the mask vm is present, VLE64.V leaves elements whose mask bit is false unchanged, preserving their prior values.
+RULE 9: If the mask vm is omitted, VLE64.V performs an unmasked load, writing all elements to vd.
+RULE 10: The mask vm for VLE64.V may be either v0.t or omitted, with no other mask encodings permitted.
+
+INSTRUCTION: VLM.V
+RULE 1: VLM.V loads a byte‑wide vector from the memory address contained in rs1 into the destination vector register vd.
+RULE 2: VLM.V loads exactly evl elements, where evl is the effective vector length calculated as ceil(vl / 8).
+RULE 3: VLM.V treats the element‑width as 8 bits, causing the vstart register to be interpreted in units of bytes for this instruction.
+RULE 4: VLM.V always writes the destination register with a tail‑agnostic policy, and any elements beyond evl are written with an implementation‑defined value rather than preserving previous contents.
+RULE 5: VLM.V is illegal when the vill (vector illegal) field in vtype is set to 1 because the instruction depends on vtype‑defined vl constraints.
+RULE 6: VLM.V loads packed‑bit mask vectors from memory, allowing mask vectors to be loaded without modifying the current vl.
+RULE 7: VLM.V loads a whole‑register mask from the memory address contained in the scalar source register.
+RULE 8: VLM.V writes the bits read from memory into the destination mask register specified in the instruction.
+RULE 9: VLM.V uses the value in the scalar register as a byte address for the memory load operation.
+RULE 10: VLM.V does not modify the vector length (vl) register.
+RULE 11: VLM.V does not affect the vector start index (vstart).
+RULE 12: VLM.V performs the load without any special element‑size handling, treating the mask register as a single unit.
+RULE 13: VLM.V imposes no alignment requirements beyond those of a normal memory access.
+RULE 14: VLM.V can be executed after a vsetvli instruction to establish a mask register before restoring the original vl value.
+
+INSTRUCTION: VLSE8.V
+RULE 1: VLSE8.V loads 8-bit elements from memory addresses computed as the signed byte-stride in register rs2 added to the base address in rs1 and writes the loaded elements into vector register vd under the control of the vector mask vm.
+RULE 2: VLSE8.V architecturally supports both negative and zero strides supplied in register rs2.
+RULE 3: The element accesses performed by VLSE8.V are unordered with respect to one another.
+RULE 4: If rs2 is the zero register (x0), VLSE8.V is allowed but not required to perform fewer memory operations than the number of active elements.
+RULE 5: The number of memory operations performed by VLSE8.V when rs2 is x0 may vary between different dynamic executions of the same static instruction.
+RULE 6: Compilers must avoid emitting VLSE8.V with rs2 = x0 when the programmer's intent is to require that all memory accesses are performed.
+RULE 7: When rs2 is not x0 and the value held in rs2 is zero, VLSE8.V must perform one memory access for each active element while the accesses remain unordered.
+RULE 8: VLSE8.V must appear to perform each memory access as mandated by the architecture.
+RULE 9: A microarchitecture may optimize away VLSE8.V memory accesses that would not be observed by another agent in idempotent memory regions that obey RVWMO.
+RULE 10: Such optimization is not permitted for VLSE8.V accesses to non-idempotent memory regions where each access can be observed by a device.
+
+INSTRUCTION: VLSE16.V
+RULE 1: VLSE16.V supports negative and zero strides.
+RULE 2: VLSE16.V performs element accesses in an unordered manner, providing no guaranteed ordering among the individual loads for active elements.
+RULE 3: When rs2 = x0, VLSE16.V may perform fewer memory operations than the number of active elements, but it is not required to do so.
+RULE 4: When rs2 = x0, the number of memory operations performed by VLSE16.V may vary across different dynamic executions of the same static instruction.
+RULE 5: Compilers must not rely on the rs2 = x0 form of VLSE16.V when the programmer’s intent is to require that all memory accesses be performed.
+RULE 6: When rs2 ≠ x0 and the stride value held in rs2 is zero, VLSE16.V must perform one memory access for each active element.
+RULE 7: The accesses performed by VLSE16.V when the stride value is zero remain unordered.
+RULE 8: Implementations must appear to perform each memory access of VLSE16.V as specified by the architectural model.
+RULE 9: Microarchitectures may optimize away VLSE16.V accesses that cannot be observed by another agent in idempotent memory regions that obey the RVWMO memory model.
+RULE 10: Such optimizations are not permitted for VLSE16.V accesses to non‑idempotent memory regions where each access is observable by a device.
+RULE 11: If ordered repeated accesses to the same memory address are required, an ordered indexed vector operation must be used instead of VLSE16.V.
+
+INSTRUCTION: VLSE32.V
+RULE 1: VLSE32.V loads 32‑bit elements from memory using a byte stride given by the value in register rs2 into the vector destination vd, with the base address taken from rs1.
+RULE 2: VLSE32.V supports both negative and zero stride values.
+RULE 3: The individual element memory accesses performed by VLSE32.V are unordered with respect to each other.
+RULE 4: When the stride register rs2 of VLSE32.V is x0, an implementation may perform fewer memory operations than the number of active elements, but it is not required to do so.
+RULE 5: Different dynamic executions of the same static VLSE32.V instruction may perform different numbers of memory operations when rs2 is x0.
+RULE 6: Compilers must avoid emitting VLSE32.V with rs2 = x0 when the intended stride is zero and the program requires that all memory accesses actually occur.
+RULE 7: When rs2 is not x0 and the value read from the register specified by rs2 is zero, VLSE32.V must perform one memory access for each active element, still unordered.
+RULE 8: VLSE32.V must appear to perform each memory access; microarchitectures may only optimise away accesses that cannot be observed, such as in idempotent memory regions obeying RVWMO.
+RULE 9: VLSE32.V may not optimise away accesses in non‑idempotent memory regions because each access could be observed by a device.
+RULE 10: When ordered accesses to the same memory address are required, an ordered indexed operation should be used instead of VLSE32.V.
+
+INSTRUCTION: VLSE64.V
+RULE 1: VLSE64.V is a 64‑bit strided load that takes a destination vector register vd, a base address register rs1, a stride register rs2, and a mask register vm.
+RULE 2: VLSE64.V supports negative stride values.
+RULE 3: VLSE64.V supports a zero stride value.
+RULE 4: Element accesses performed by VLSE64.V are unordered with respect to each other.
+RULE 5: If the stride register rs2 of VLSE64.V is x0, an implementation may perform fewer memory operations than the number of active elements.
+RULE 6: When rs2 is x0 in VLSE64.V, an implementation is not required to reduce the number of memory operations.
+RULE 7: A VLSE64.V instruction with rs2 = x0 may perform a different number of memory operations across different dynamic executions of the same static instruction.
+RULE 8: Compilers must avoid using x0 for rs2 in VLSE64.V when the programmer intends a static zero stride that guarantees all memory accesses are performed.
+RULE 9: If rs2 is not x0 in VLSE64.V and the value held in the register indicated by rs2 equals zero, the implementation must perform one memory access for each active element.
+RULE 10: The memory accesses required by VLSE64.V when rs2 is non‑zero but its value is zero remain unordered.
+RULE 11: Implementations of VLSE64.V must appear to perform each memory access required by the instruction.
+RULE 12: A microarchitecture may optimize away VLSE64.V memory accesses that are not observable by another agent if the accessed memory region is idempotent and the optimization obeys the RVWMO memory‑ordering model.
+RULE 13: Optimizations that remove VLSE64.V memory accesses are prohibited for non‑idempotent memory regions such as memory‑mapped I/O because each access must be observable.
+RULE 14: When ordered repeated vector accesses to the same memory address are required, an ordered indexed operation must be used instead of VLSE64.V.
+
+INSTRUCTION: VSE8.V
+RULE 1: VSE8.V stores the 8‑bit elements contained in the source vector register group vs3 to memory.
+RULE 2: VSE8.V uses the integer register rs1 as the base address from which the first byte is stored.
+RULE 3: VSE8.V stores each vector element as a single byte.
+RULE 4: VSE8.V writes the bytes to consecutive memory locations with a stride of one byte between stored elements.
+RULE 5: VSE8.V applies element‑wise masking controlled by the mask operand vm, and elements whose mask bit is false are not written to memory.
+RULE 6: VSE8.V treats the mask operand vm as either a mask register such as v0.t or as omitted, which implies no masking.
+RULE 7: VSE8.V uses the width[2:0] field value 0, the same encoding used by VLE8.V.
+RULE 8: VSE8.V is distinguished from other vector memory instructions by its specific sumop encoding.
+RULE 9: VSE8.V stores 8‑bit elements from the specified source vector register to memory at the address contained in the given scalar register.
+RULE 10: When VSE8.V includes a mask operand written as <mask>.t, only the elements whose corresponding mask bit is 1 are written to memory and elements with mask bit 0 remain unchanged.
+RULE 11: If VSE8.V is issued without an explicit mask operand, it stores all elements of the source vector register to memory (unmasked store).
+RULE 12: The element type processed by VSE8.V is a byte (8‑bit) as indicated by the e8 element width.
+RULE 13: The memory address used by VSE8.V is taken from the scalar register operand enclosed in parentheses and is not altered by the instruction.
+RULE 14: VSE8.V does not modify the scalar register that supplies the base address; any pointer increment must be performed by separate instructions.
+RULE 15: The mask operand syntax for VSE8.V in the given description is limited to the true‑masked form .t; no false‑masked (.f) form is described.
+RULE 16: When VSE8.V is masked, the store operation writes only the masked‑true elements and leaves the contents of unmasked memory locations unchanged.
+RULE 17: No architectural constraints such as alignment requirements, exception behavior, or write‑mask interactions are specified for VSE8.V in the provided text.
+
+INSTRUCTION: VSE16.V
+RULE 1: VSE16.V stores 16‑bit elements from the source vector register group vs3 to memory.
+RULE 2: VSE16.V uses the integer register rs1 as the base address for the first stored element.
+RULE 3: VSE16.V writes each successive 16‑bit element to the next sequential 16‑bit memory address, i.e., with a unit stride of two bytes.
+RULE 4: VSE16.V may include an optional mask vm; when the mask is present, only elements whose corresponding mask bit is 1 are written to memory.
+RULE 5: VSE16.V leaves memory unchanged for any element whose corresponding mask bit is 0 when a mask is present.
+RULE 6: If the mask operand vm is omitted from VSE16.V, the store is performed unmasked, writing all active elements.
+RULE 7: The mask operand vm for VSE16.V is encoded as v0.t when a mask is used.
+RULE 8: VSE16.V is classified as a vector unit‑stride store instruction alongside VSE8.V, VSE32.V, and VSE64.V.
+RULE 9: The source register group vs3 for VSE16.V must contain at least as many elements as the current vector length.
+RULE 10: VSE16.V operates on the active vector elements as defined by the current VL and VLMAX settings.
+
+INSTRUCTION: VSE32.V
+RULE 1: VSE32.V stores a vector register group beginning at vector register vd to memory using the address in integer register rs1 as the base address.
+RULE 2: VSE32.V is defined only when the current selected element width (SEW) is 32 bits; otherwise it raises an illegal‑instruction exception.
+RULE 3: VSE32.V stores exactly the first VL elements of the source vector register group, where VL is the current vector length set by the most recent vsetvli instruction.
+RULE 4: VSE32.V requires that the vector register group width (LMUL) be compatible with the current LMUL setting, and the instruction implicitly operates on the contiguous registers covering that group.
+RULE 5: For each element index i from 0 to VL‑1, VSE32.V computes the effective memory address as rs1 plus i times 4 bytes.
+RULE 6: VSE32.V does not modify the base register rs1; the register retains its original value after the store.
+RULE 7: VSE32.V requires that the base address rs1 be 4‑byte aligned, and a mis‑aligned address causes a mis‑aligned‑access exception.
+RULE 8: If any effective address computed by VSE32.V falls outside the accessible memory region, a page‑fault or access‑fault exception is raised.
+RULE 9: When VSE32.V executes without exception, the memory locations beginning at the address in rs1 contain the first VL 32‑bit elements of the source vector register group in order of increasing element index.
+RULE 10: VSE32.V does not perform any automatic address post‑increment; any increment of rs1 must be done explicitly by the programmer.
+RULE 11: VSE32.V stores each active element of the source vector register group vs3 as a 32‑bit word to memory.
+RULE 12: VSE32.V computes the effective address for element i as the value in rs1 plus i multiplied by 4 bytes.
+RULE 13: VSE32.V uses a unit‑stride of 4 bytes, so successive stored elements are placed at memory addresses separated by exactly 4 bytes.
+RULE 14: VSE32.V includes a mask operand vm that determines element activity; a clear mask bit prevents that element from being written.
+RULE 15: VSE32.V leaves the memory location unchanged for any element whose mask bit is clear.
+RULE 16: VSE32.V writes only those elements whose mask vm bits are set, storing them at consecutive addresses defined by the unit‑stride.
+RULE 17: VSE32.V reads the data to be stored from the vector register group vs3 specified as its source operand.
+
+INSTRUCTION: VSE64.V
+RULE 1: VSE64.V stores 64‑bit elements from the vector register group specified by vs3 to memory.
+RULE 2: VSE64.V uses the integer register rs1 as the base address and writes the first element to the address contained in rs1.
+RULE 3: VSE64.V writes successive elements to memory addresses calculated as rs1 + i*8 for element index i ranging from 0 to VL‑1.
+RULE 4: VSE64.V writes each element as a 64‑bit unit, giving the instruction a unit‑stride of 8 bytes.
+RULE 5: VSE64.V may include an optional mask operand vm that controls which elements are written.
+RULE 6: VSE64.V stores an element only when the corresponding mask bit in vm is true, and it does not store the element when that mask bit is false.
+RULE 7: VSE64.V stores all elements unconditionally when the mask operand vm is omitted.
+RULE 8: VSE64.V encodes the optional mask operand vm as the vector register v0.t when it is present.
+
+INSTRUCTION: VSM.V
+RULE 1: VSM.V stores a byte‑wide vector to memory whose effective length (EVL) equals the ceiling of the architectural vector length divided by eight (⌈VL/8⌉).
+RULE 2: VSM.V writes each stored byte as a packed representation of eight mask bits derived from the source vector register.
+RULE 3: VSM.V performs the store using unit‑stride addressing, writing consecutive memory locations starting at the address in rs1.
+RULE 4: VSM.V operates with an EMUL value of 1, meaning its elements are byte‑wide.
+RULE 5: VSM.V interprets the vstart register in units of bytes, so when vstart = k the store begins at the k‑th byte of the source vector.
+RULE 6: VSM.V respects the vill field of vtype, and any illegal vtype configuration that makes vl illegal also makes the VSM.V instruction illegal.
+RULE 7: The EVL computed for VSM.V depends on vtype‑imposed constraints that affect VL, and VSM.V uses that EVL to determine how many bytes are written.
+RULE 8: VSM.V writes the packed mask vector to memory up to EVL without applying a tail‑agnostic or agnostic policy; the store writes the full set of EVL bytes.
+RULE 9: VSM.V reads its source vector register (vs3) as the source of the mask bits that are packed into the stored bytes.
+
+INSTRUCTION: VSSE8.V
+RULE 1: VSSE8.V is a vector‑strided store that writes 8‑bit elements from a source vector register group to memory.
+RULE 2: VSSE8.V uses the register rs1 as a base address, the register rs2 as a byte‑stride value, and the mask register vm to select active elements for storing.
+RULE 3: VSSE8.V stores one 8‑bit element for each active element in the source vector register group at an address equal to the base address plus the byte‑stride value in rs2 multiplied by the element index.
+RULE 4: VSSE8.V supports negative and zero stride values in rs2.
+RULE 5: VSSE8.V performs the memory writes for the active elements in an unordered fashion, with no defined order among the individual stores.
+RULE 6: When rs2 is the zero register (x0), VSSE8.V may perform fewer memory operations than the number of active elements.
+RULE 7: When rs2 is the zero register (x0), VSSE8.V is not required to perform a fixed number of memory operations, and the actual number may differ between dynamic executions of the same static instruction.
+RULE 8: Compilers must avoid using rs2 = x0 for VSSE8.V when an immediate stride of zero is required and the programmer needs every memory access to be performed.
+RULE 9: When rs2 is not x0 and the memory location addressed by rs2 contains a zero stride value, VSSE8.V must perform one memory access for each active element, though the accesses remain unordered.
+RULE 10: VSSE8.V must ensure that each memory access appears to have been performed, even if the implementation internally optimizes away accesses that cannot be observed.
+RULE 11: VSSE8.V may internally eliminate memory accesses that are unobservable in idempotent memory regions that obey the RVWMO memory model.
+RULE 12: VSSE8.V may not eliminate memory accesses in non‑idempotent memory regions where each access can be observed by a device.
+RULE 13: If ordered repeated accesses to the same memory address are required, VSSE8.V should not be used; instead an ordered indexed operation must be employed.
+
+INSTRUCTION: VSSE16.V
+RULE 1: VSSE16.V stores 16‑bit elements from the source vector register group vs3 to memory addresses computed as the base address in rs1 plus the element index multiplied by the byte stride held in rs2, applying the optional mask vm.
+RULE 2: VSSE16.V permits the stride value held in rs2 to be negative, zero, or positive.
+RULE 3: The memory accesses generated by a single execution of VSSE16.V are unordered with respect to one another.
+RULE 4: When rs2 is register x0, indicating a zero‑stride for VSSE16.V, the implementation may perform fewer memory operations than the number of active elements, but it is not required to do so.
+RULE 5: Dynamic executions of the same static VSSE16.V instruction may perform different numbers of memory operations when rs2 is x0.
+RULE 6: Compilers must avoid encoding VSSE16.V with rs2 = x0 when the programmer’s intent is that all memory accesses be performed for a zero‑stride case.
+RULE 7: When rs2 is not x0 and the stride value read from the register specified by rs2 equals zero, VSSE16.V must perform one memory access for each active element, with the accesses remaining unordered.
+RULE 8: Implementations of VSSE16.V must appear to perform each memory access defined by the architectural specification.
+RULE 9: A microarchitecture may optimise away VSSE16.V memory accesses that cannot be observed by another agent, such as accesses to idempotent memory regions under RVWMO.
+RULE 10: Optimisation that removes VSSE16.V memory accesses is prohibited for non‑idempotent memory regions where each access can be observed by a device.
+RULE 11: If an ordered sequence of repeated vector accesses to the same memory address is required, VSSE16.V must not be used; an ordered indexed operation should be employed instead.
+
+INSTRUCTION: VSSE32.V
+RULE 1: VSSE32.V stores 32‑bit elements from a source vector register group to memory using a base address in a scalar integer register and a signed byte stride from another scalar integer register, optionally masked by a mask register.
+RULE 2: VSSE32.V requires the source vector register group to contain 32‑bit elements.
+RULE 3: VSSE32.V uses rs1 as a scalar integer register that holds the base address for the store.
+RULE 4: VSSE32.V uses rs2 as a scalar integer register that holds the signed byte stride for the store.
+RULE 5: VSSE32.V uses vm as a mask register that determines which vector elements are active for the store.
+RULE 6: VSSE32.V supports positive, negative, and zero byte strides.
+RULE 7: VSSE32.V does not guarantee any ordering between the memory accesses generated for different vector elements; the element accesses are unordered.
+RULE 8: When rs2 is the zero register (x0), VSSE32.V may perform fewer memory operations than the number of active elements, but it is not required to do so.
+RULE 9: When rs2 is the zero register (x0), the number of memory operations performed by VSSE32.V may differ between dynamic executions of the same static instruction.
+RULE 10: Compilers must avoid emitting VSSE32.V with rs2 = x0 when the programmer's intent is to force a store for every active element.
+RULE 11: When rs2 is not the zero register and the runtime value in the indicated scalar register is zero, VSSE32.V must perform one memory access for each active element, although the accesses remain unordered.
+RULE 12: Implementations of VSSE32.V must appear to perform each memory access specified by the instruction.
+RULE 13: Microarchitectures may optimize away VSSE32.V accesses that are not observable by another agent in idempotent memory regions that obey the RVWMO memory model.
+RULE 14: In non‑idempotent memory regions such as memory‑mapped I/O, microarchitectures must not optimize away any VSSE32.V stores; every store must be performed.
+RULE 15: If ordered repeated stores to the same memory address are required, programmers should use an ordered indexed vector operation instead of VSSE32.V.

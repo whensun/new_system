@@ -1,0 +1,16 @@
+## 28.10. Zcmt
+
+Zcmt adds the table jump instructions and also adds the jvt CSR. The jvt CSR requires a state enable if Smstateen is implemented. See jvt CSR, table jump base vector and control register for details.
+
+This extension reuses some encodings from c.fsdsp .  Therefore it  is incompatible with  Zcd,  which  is included when C and D extensions are both present.
+
+<image>
+
+Zcmt  is  primarily  targeted  at  embedded  class  CPUs  due  to  implementation complexity. Additionally, it is not compatible with RVA profiles.
+
+The Zcmt extension depends on the Zca and Zicsr extensions.
+
+| RV32   | RV64   | Mnemonic      | Instruction             |
+|--------|--------|---------------|-------------------------|
+| yes    | yes    | cm.jt index   | Jump via table          |
+| yes    | yes    | cm.jalt index | Jump and link via table |

@@ -1,0 +1,39 @@
+## 3.2.1. Machine Timer ( mtime and mtimecmp ) Registers
+
+Platforms  provide  a  real-time  counter,  exposed  as  a  memory-mapped  machine-mode  read-write register, mtime . mtime must  increment  at  constant  frequency,  and  the  platform  must  provide  a mechanism for determining the period of an mtime tick. The mtime register will wrap around if the count overflows.
+
+The mtime register has a 64-bit precision on all RV32 and RV64 systems. Platforms provide a 64-bit memory-mapped  machine-mode  timer  compare  register  ( mtimecmp ). A machine  timer interrupt becomes pending whenever mtime contains a value greater than or equal to mtimecmp , treating the values as unsigned integers. The interrupt remains posted until mtimecmp becomes greater than mtime (typically as a result of writing mtimecmp ). The interrupt will only be taken if interrupts are enabled and the MTIE bit is set in the mie register.
+
+<image>
+
+64
+
+Figure 28. Machine time compare register (memory-mapped control register).
+
+The  timer  facility  is  defined  to  use  wall-clock  time  rather  than  a  cycle  counter  to support modern processors that run with a highly variable clock frequency to save energy through dynamic voltage and frequency scaling.
+
+Accurate  real-time  clocks  (RTCs)  are  relatively  expensive  to  provide  (requiring  a crystal or MEMS oscillator) and have to run even when the rest of system is powered down,  and  so  there  is usually only one  in a system  located  in a different frequency/voltage domain from the processors. Hence, the RTC must be shared by all the harts in a system and accesses to the RTC will potentially incur the penalty of a voltage-level-shifter  and  clock-domain  crossing.  It  is  thus  more  natural  to  expose mtime as a memory-mapped register than as a CSR.
+
+Lower  privilege  levels  do  not  have  their  own timecmp registers.  Instead,  machinemode software can implement any number of virtual timers on a hart by multiplexing the next timer interrupt into the mtimecmp register.
+
+Simple fixed-frequency systems can use a single clock for both cycle counting and wall-clock time.
+
+If the result of the comparison between mtime and mtimecmp changes, it is guaranteed to be reflected in MTIP eventually, but not necessarily immediately.
+
+<image>
+
+A  spurious  timer  interrupt  might  occur  if  an  interrupt  handler  increments mtimecmp then immediately returns, because MTIP might not yet have fallen in the interim. All software should be written to assume this event is possible, but most software should assume this event is extremely unlikely. It is almost always more performant to incur an occasional spurious timer interrupt than to poll MTIP until it falls.
+
+<image>
+
+In RV32, memory-mapped writes to mtimecmp modify only one 32-bit part of the register. The following code sequence sets a 64-bit mtimecmp value without spuriously generating a timer interrupt due to the intermediate value of the comparand:
+
+For RV64, naturally aligned 64-bit memory accesses to the mtime and mtimecmp registers are additionally supported and are atomic.
+
+```
+# New comparand is in a1:a0. li t0, -1 la t1, mtimecmp sw t0, 0(t1)     # No smaller than old value. sw a1, 4(t1)     # No smaller than new value. sw a0, 0(t1)     # New value.
+```
+
+Sample code for setting the 64-bit time comparand in RV32 assuming a little-endian memory system and that the registers live in a strongly ordered I/O region.  Storing -1 to the low-order bits of mtimecmp prevents mtimecmp from temporarily becoming smaller than the lesser of the old and new values.
+
+The time CSR is a read-only shadow of the memory-mapped mtime register. When XLEN=32, the timeh CSR  is  a  read-only  shadow  of  the  upper  32  bits  of  the  memory-mapped mtime register,  while time shadows only the lower 32 bits of mtime .  When mtime changes, it is guaranteed to be reflected in time and timeh eventually, but not necessarily immediately.

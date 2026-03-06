@@ -1,0 +1,39 @@
+## 31.6.5.1. RVI (Base Instruction Set)
+
+Only  basic  arithmetic  and slt* (for  carry  computations)  are  included.  The  data-independent  timing requirement does not apply to HINT instruction encoding forms of these instructions.
+
+| RV32   | RV64   | Mnemonic             | Instruction   |
+|--------|--------|----------------------|---------------|
+| ✓      | ✓      | lui rd , imm         | [insns-lui]   |
+| ✓      | ✓      | auipc rd , imm       | [insns-auipc] |
+| ✓      | ✓      | addi rd , rs1 , imm  | [insns-addi]  |
+| ✓      | ✓      | slti rd , rs1 , imm  | [insns-slti]  |
+| ✓      | ✓      | sltiu rd , rs1 , imm | [insns-sltiu] |
+| ✓      | ✓      | xori rd , rs1 , imm  | [insns-xori]  |
+| ✓      | ✓      | ori rd , rs1 , imm   | [insns-ori]   |
+| ✓      | ✓      | andi rd , rs1 , imm  | [insns-andi]  |
+| ✓      | ✓      | slli rd , rs1 , imm  | [insns-slli]  |
+| ✓      | ✓      | srli rd , rs1 , imm  | [insns-srli]  |
+| ✓      | ✓      | srai rd , rs1 , imm  | [insns-srai]  |
+| ✓      | ✓      | add rd , rs1 , rs2   | [insns-add]   |
+| ✓      | ✓      | sub rd , rs1 , rs2   | [insns-sub]   |
+| ✓      | ✓      | sll rd , rs1 , rs2   | [insns-sll]   |
+| ✓      | ✓      | slt rd , rs1 , rs2   | [insns-slt]   |
+| ✓      | ✓      | sltu rd , rs1 , rs2  | [insns-sltu]  |
+| ✓      | ✓      | xor rd , rs1 , rs2   | [insns-xor]   |
+| ✓      | ✓      | srl rd , rs1 , rs2   | [insns-srl]   |
+| ✓      | ✓      | sra rd , rs1 , rs2   | [insns-sra]   |
+| ✓      | ✓      | or rd , rs1 , rs2    | [insns-or]    |
+| ✓      | ✓      | and rd , rs1 , rs2   | [insns-and]   |
+|        | ✓      | addiw rd , rs1 , imm | [insns-addiw] |
+|        | ✓      | slliw rd , rs1 , imm | [insns-slliw] |
+|        | ✓      | srliw rd , rs1 , imm | [insns-srliw] |
+|        | ✓      | sraiw rd , rs1 , imm | [insns-sraiw] |
+
+| RV32   | RV64   | Mnemonic            | Instruction   |
+|--------|--------|---------------------|---------------|
+|        | ✓      | addw rd , rs1 , rs2 | [insns-addw]  |
+|        | ✓      | subw rd , rs1 , rs2 | [insns-subw]  |
+|        | ✓      | sllw rd , rs1 , rs2 | [insns-sllw]  |
+|        | ✓      | srlw rd , rs1 , rs2 | [insns-srlw]  |
+|        | ✓      | sraw rd , rs1 , rs2 | [insns-sraw]  |

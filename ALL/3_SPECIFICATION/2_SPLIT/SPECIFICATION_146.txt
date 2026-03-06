@@ -1,0 +1,5 @@
+## 24.3.2.6. Handling exceptions
+
+RISC-V supports IEEE-defined default exception handling. BF16 is no exception.
+
+Default exception handling, as defined by IEEE, is a simple and effective approach to producing results in exceptional cases. For the coder to be able to see what has happened, and take further action if needed, BF16 instructions set floating-point exception flags the same way as all other floating-point instructions in RISC-V.

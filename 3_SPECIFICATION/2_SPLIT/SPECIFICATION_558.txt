@@ -1,0 +1,11 @@
+## 31.8.2. Standards and Terminology
+
+As  a  fundamental  security  function,  the  generation  of  random  numbers  is  governed  by  numerous standards and technical evaluation methods, the main ones being FIPS 140-3 (NIST, 2019; NIST & CCCS, 2021) required for U.S. Federal use, and Common Criteria Methodology (Criteria, 2017) used in high-security evaluations internationally.
+
+Note that FIPS 140-3 is a significantly updated standard compared to its predecessor FIPS 140-2 and is only coming into use in the 2020s.
+
+These standards set many of the technical requirements for the RISC-V entropy source design, and we use their terminology if possible.
+
+<image>
+
+The seed CSR provides an Entropy Source (ES) interface, not a stateful random number generator. As a result, it can support arbitrary security levels. Cryptographic (AES, SHA-2/3) ISA Extensions can be used to construct high-speed DRBGs that are seeded from the entropy source.

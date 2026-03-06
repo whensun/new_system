@@ -1,0 +1,7 @@
+## 31.8.5.7. The Final Random: DRBGs
+
+All random bits reaching end users and applications must come from a cryptographic DRBG. These are generally implemented by the driver component in software. The RISC-V AES and SHA instruction set extensions  should  be  used  if  available  since  they  offer  additional  security  features  such  as  timing attack resistance.
+
+Currently  recommended  DRBGs  are  defined  in  NIST  SP  800-90A  (Rev  1)  (Barker  &  Kelsey,  2015): CTR\_DRBG , Hash\_DRBG ,  and HMAC\_DRBG .  Certification  often  requires  known  answer  tests  (KATs)  for  the symmetric  components  and  the  DRBG  as  a  whole.  These  are  significantly  easier  to  implement  in software  than  in  hardware.  In  addition  to  the  directly  certifiable  SP  800-90A  DRBGs,  a  Linux-style random  pool  construction  based  on  ChaCha20  (Müller,  2020)  can  be  used,  or  an  appropriate construction based on SHAKE256 (NIST, 2015).
+
+These are just recommendations; programmers can adjust the usage of the CPU Entropy Source to meet future requirements.

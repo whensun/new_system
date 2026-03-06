@@ -1,0 +1,9 @@
+## 31.8.4. Security Controls and Health Tests
+
+The primary purpose of a cryptographic entropy source is to produce secret keying material. In almost all  cases,  a  hardware  entropy  source  must  implement  appropriate security  controls to  guarantee unpredictability, prevent leakage, detect attacks, and deny adversarial control over the entropy output or ts generation mechanism.  Explicit security controls are required for security testing  and certification.
+
+Many of the security controls built into the device are called "health checks." Health checks can take the form of integrity checks, start-up tests, and on-demand tests. These tests can be implemented in hardware or firmware, typically both. Several are mandated by standards such as NIST SP 800-90B (NIST,  2019).  The  choice  of  appropriate  health  tests  depends  on  the  certification  target,  system architecture, threat model, entropy source type, and other factors.
+
+Health checks are not intended for hardware diagnostics but for detecting security issues. Hence the default  action  in  case  of  a  failure  should  be  aimed  at  damage  control:  Limiting  further  output  and preventing weak crypto keys from being generated.
+
+We  discuss  three  specific  testing  requirements  T1-T3.  The  testing  requirement  follows  from  the definition of an Entropy Source; without it, the module is simply a noise source and can't be trusted to safely generate keying material.

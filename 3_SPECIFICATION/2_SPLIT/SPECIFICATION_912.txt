@@ -1,0 +1,63 @@
+## 22.2.3. Shadow Stack Memory Protection
+
+To protect shadow stack memory, the memory is associated with a new page type - the Shadow Stack (SS) page - in the single-stage and VS-stage page tables. The encoding R=0 , W=1 , and X=0 , is defined to represent  an  SS  page.  When menvcfg.SSE=0 ,  this  encoding  remains  reserved.  Similarly,  when V=1 and henvcfg.SSE=0 , this encoding remains reserved at VS and VU levels.
+
+If satp.MODE (or vsatp.MODE when V=1 ) is set to Bare and the effective privilege mode is below M, shadow stack memory accesses are prohibited, and shadow stack instructions will raise a store/AMO accessfault  exception.  When  the  effective  privilege  mode  is  M,  any  memory  access  by  an SSAMOSWAP.W/D instruction will result in a store/AMO access-fault exception.
+
+Memory mapped as an SS page cannot be written to by instructions other than SSAMOSWAP.W/D , SSPUSH , and C.SSPUSH .  Attempts  will  raise  a  store/AMO  access-fault  exception.  Access  to  a  SS  page  using cache-block  operation ( CBO.* )  instructions  is  not  permitted.  Such  accesses  will  raise  a  store/AMO access-fault  exception.  Implicit  accesses,  including  instruction  fetches  to  an  SS  page,  are  not permitted. Such accesses will raise an access-fault exception appropriate to the access type. However, the shadow stack is readable by all instructions that only load from memory.
+
+<image>
+
+Stores  to  shadow  stack  pages  by  instructions  other  than SSAMOSWAP , SSPUSH ,  and C.SSPUSH will trigger a store/AMO access-fault exception, not a store/AMO page-fault exception, signaling a fatal error. A store/AMO page-fault suggests that the operating system  could  address  and  rectify  the  fault,  which  is  not  feasible  in  this  scenario. Hence, the page-fault handler must decode the opcode of the faulting instruction to discern whether the fault was caused by a non-shadow-stack instruction writing to an SS page (a fatal condition) or by a shadow stack instruction to a non-resident page (a recoverable  condition).  The  performance-critical  nature  of  operating  system  page fault  handlers  necessitates  triggering  an  access-fault  instead  of  a  page  fault, allowing  for  a  straightforward  distinction  between  fatal  conditions  and  recoverable faults.
+
+Operating  systems  must  ensure  that  no  writable,  non-shadow-stack  alias  virtual address  mappings  exist  for  the  physical  memory  backing  the  shadow  stack.
+
+<image>
+
+Furthermore,  in  systems  where  an  address-misaligned  exception  supersedes  the access-fault  exception,  handlers  emulating  misaligned  stores  must  be  designed  to cause an access-fault exception when the store is directed to a shadow stack page.
+
+All  instructions  that  perform  load  operations  are  allowed  to  read  from  the  shadow stack.  This  feature  facilitates  debugging  and  performance  profiling  by  allowing examination of the link register values backed up in the shadow stack.
+
+As of the drafting of this specification, instruction fetches are the sole type of implicit access subjected to single- or VS-stage address translation.
+
+If a shadow stack (SS) instruction raises an access-fault, page-fault, or guest-page-fault exception that is supposed to indicate the original instruction type (load or store/AMO), then the reported exception cause  is  respectively  a  store/AMO  access  fault  (code  7),  a  store/AMO  page  fault  (code  15),  or  a store/AMO guest-page fault (code 23). For shadow stack instructions, the reported instruction type is always as though it were a store or AMO, even for instructions SSPOPCHK and C.SSPOPCHK that only read from memory and do not write to it.
+
+<image>
+
+When Zicfiss is implemented, the existing "store/AMO" exceptions can be thought of as  "store/AMO/SS"  exceptions,  indicating  that  the  trapping  instruction  is  either  a store, an AMO, or a shadow stack instruction.
+
+Shadow  stack  instructions  are  restricted  to  accessing  shadow  stack  ( pte.xwr=010b )  pages.  Should  a shadow stack instruction  access  a  page  that  is  not  designated  as  a  shadow  stack  page  and  is  not marked as read-only ( pte.xwr=001 ),  a  store/AMO access-fault exception will be invoked. Conversely, if the page being accessed by a shadow stack instruction is a read-only page, a store/AMO page-fault exception will be triggered.
+
+<image>
+
+Shadow stack loads and stores will trigger a store/AMO page-fault if the accessed page  is  read-only,  to  support  copy-on-write  (COW)  of  a  shadow  stack  page.  If  the page has been marked read-only for COW tracking, the page-fault handler responds by creating a copy of the page and updates the pte.xwr to 010b ,  thereby designating each  copy  as  a  shadow  stack  page.  Conversely,  if  the  access  targets  a  genuinely read-only  page,  the  fault  being  reported  as  a  store/AMO  page-fault  signals  to  the operating system that the fault is fatal and non-recoverable. Reporting the fault as a store/AMO  page-fault,  even  for SSPOPCHK initiated  memory  access,  aids  in  the determination of fatality; if these were reported as load page-faults, access to a truly read-only  page  might  be  mistakenly  treated  as  a  recoverable  fault,  leading  to  the faulting instruction being retried indefinitely. The PTE does not provide a read-only shadow stack encoding.
+
+Attempts by shadow stack instructions to access pages marked as read-write, readwrite-execute,  read-execute,  or  execute-only  result  in  a  store/AMO  access-fault exception, similarly indicating a fatal condition.
+
+Shadow stacks should be bounded at each end by guard pages to prevent accidental underflows or overflows from one shadow stack into another. Conventionally, a guard page for a stack is a page that is not accessible by the process that owns the stack.
+
+If the virtual address in ssp is not XLEN aligned, then the SSPUSH / C.SSPUSH / SSPOPCHK / C.SSPOPCHK instructions cause a store/AMO access-fault exception.
+
+<image>
+
+Misaligned  accesses  to  shadow  stack  are  not  required  and  enforcing  alignment  is more  secure  to  detect  errors  in  the  program.  An  access-fault  exception  is  raised instead of address-misaligned exception in such cases to indicate fatality and that the instruction must not be emulated by a trap handler.
+
+Correct execution of shadow stack instructions that access memory requires the the accessed memory to  be  idempotent.  If  the  memory  referenced  by SSPUSH / C.SSPUSH / SSPOPCHK / C.SSPOPCHK / SSAMOSWAP.W/D instructions is not idempotent, then the instructions cause a store/AMO access-fault exception.
+
+<image>
+
+The SSPOPCHK instruction performs a load followed by a check of the loaded data value with the link register as source. If the check against the link register faults, and the instruction is restarted by the trap handler, then the instruction will perform a load again. If the memory from which the load is performed is non-idempotent, then the second  load  may  cause  unexpected  side  effects.  Shadow  stack  instructions  that access the shadow stack require the memory referenced by ssp to be idempotent to avoid  such  concerns.  Locating  shadow  stacks  in  non-idempotent  memory,  such  as non-idempotent  device  memory,  is  not  an  expected  usage,  and  requiring  memory referenced to be idempotent does not pose a significant restriction.
+
+The U and SUM bit  enforcement is performed normally for shadow stack instruction initiated memory accesses. The state of the MXR bit does not affect read access to a shadow stack page as the shadow stack page is always readable by all instructions that load from memory.
+
+The G-stage address translation and protections remain unaffected by the Zicfiss extension. The xwr ==  010b encoding  in  the  G-stage  PTE  remains  reserved.  When  G-stage  page  tables  are  active,  the shadow  stack  instructions  that  access  memory  require  the  G-stage  page  table  to  have  read-write permission for the accessed memory; else a store/AMO guest-page-fault exception is raised.
+
+<image>
+
+A future extension may define a shadow stack encoding in the G-stage page table to support use cases such as a hypervisor enforcing shadow stack protections for its guests.
+
+Svpbmt and Svnapot extensions are supported for shadow stack pages.
+
+The  PMA  checks  are  extended  to  require  memory  referenced  by  shadow  stack  instructions  to  be idempotent. The PMP checks are extended to require read-write permission for memory accessed by shadow  stack  instructions.  If  the  PMP  does  not  provide  read-write  permissions  or  if  the  accessed memory is not idempotent then a store/AMO access-fault exception is raised.
+
+The SSAMOSWAP.W/D instructions require the PMA of the accessed memory range to provide AMOSwap level support.

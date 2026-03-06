@@ -1,0 +1,26 @@
+## 34.1. Load/Store pair instructions (Zilsd)
+
+The Zilsd extension adds the following RV32-only instructions:
+
+| RV32   | RV64   | Mnemonic            | Instruction                                          |
+|--------|--------|---------------------|------------------------------------------------------|
+| yes    | no     | ld rd, offset(rs1)  | Load doubleword to register pair, 32-bit encoding    |
+| yes    | no     | sd rs2, offset(rs1) | Store doubleword from register pair, 32-bit encoding |
+
+As the access size is 64-bit, accesses are only considered naturally aligned for effective addresses that  are  a  multiple  of  8.  In  this  case,  these  instructions  are  guaranteed  to  not  raise  an  addressmisaligned exception. Even if naturally aligned, the memory access might not be performed atomically.
+
+If  the  effective  address  is  a  multiple  of  4,  then  each  word  access  is  required  to  be  performed atomically.
+
+The following table summarizes the required behavior:
+
+| Alignment   | Word accesses guaranteed atomic?   | Can cause misaligned trap?   |
+|-------------|------------------------------------|------------------------------|
+| 8B          | yes                                | no                           |
+| 4B not 8B   | yes                                | yes                          |
+| else        | no                                 | yes                          |
+
+To ensure resumable trap handling is possible for the load instructions, the base register must have its original value if a trap is taken. The other register in the pair can have been updated. This affects x2 for the stack pointer relative instruction and rs1 otherwise.
+
+<image>
+
+If an implementation performs a doubleword load access atomically and the register file  implements  writeback  for  even/odd  register  pairs,  the  mentioned  atomicity requirements are inherently fulfilled. Otherwise, an implementation either needs to delay the writeback until the write can be performed atomically, or order sequential writes to the registers to ensure the requirement above is satisfied.

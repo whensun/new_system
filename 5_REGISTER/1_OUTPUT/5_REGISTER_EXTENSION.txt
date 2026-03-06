@@ -1,0 +1,5 @@
+REGISTER: mseccfg
+EXTENSIONS: Zkr, H, Smepmp, Smmpm, Zicfilp
+
+REGISTER: mstatus
+EXTENSIONS: Zfinx, Zhinx, Zdinx, V, Zicfilp, H, Smdbltrp, Ssdbltrp

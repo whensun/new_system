@@ -1,0 +1,17 @@
+## 19.6.3. Cache-Block Prefetch Instructions
+
+Cache-block  prefetch  instructions  are  HINTs  to  the  hardware  to  indicate  that  software  intends  to perform  a  particular  type  of  memory  access  in  the  near  future.  The  types  of  memory  accesses  are instruction fetch, data read (i.e. load), and data write (i.e. store).
+
+These instructions operate on the cache block whose effective address is the sum of the base address specified  in rs1 and  the  sign-extended  offset  encoded  in imm[11:0] ,  where imm[4:0] shall  equal 0b00000 .  The effective address is translated into a corresponding physical address by the appropriate translation mechanisms.
+
+<image>
+
+Cache-block prefetch instructions are encoded as ORI instructions with rd equal to 0b00000 ;  however, for the purposes of effective address calculation, this field is also interpreted as imm[4:0] like a store instruction.
+
+The following instructions comprise the Zicbop extension:
+
+| RV32   | RV64   | Mnemonic                   | Instruction                                |
+|--------|--------|----------------------------|--------------------------------------------|
+| ✓      | ✓      | prefetch.i offset ( base ) | Cache Block Prefetch for Instruction Fetch |
+| ✓      | ✓      | prefetch.r offset ( base ) | Cache Block Prefetch for Data Read         |
+| ✓      | ✓      | prefetch.w offset ( base ) | Cache Block Prefetch for Data Write        |

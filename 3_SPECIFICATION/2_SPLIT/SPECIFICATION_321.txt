@@ -1,0 +1,15 @@
+## 30.3.4.4. Vector Type Illegal ( vill )
+
+The vill bit  is  used  to  encode  that  a  previous vset{i}vl{i} instruction  attempted  to  write  an unsupported value to vtype .
+
+<image>
+
+The vill bit  is  held  in  bit  XLEN-1  of  the  CSR to support checking for illegal values with a branch on the sign bit.
+
+If the vill bit is set, then any attempt to execute a vector instruction that depends upon vtype will raise an illegal-instruction exception.
+
+<image>
+
+vset{i}vl{i} and whole register loads and stores do not depend upon vtype .
+
+When the vill bit is set, the other XLEN-1 bits in vtype shall be zero.

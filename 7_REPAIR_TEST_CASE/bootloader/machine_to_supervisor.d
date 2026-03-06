@@ -1,0 +1,1 @@
+bootloader/machine_to_supervisor.o: bootloader/machine_to_supervisor.S

@@ -1,0 +1,5 @@
+## 31.8.2.1. Entropy Source (ES)
+
+Entropy sources are built by sampling and processing data from a noise source (Section 31.8.5.1). We will only consider physical sources of true randomness in this work. Since these are directly based on natural  phenomena  and  are  subject  to  environmental  conditions  (which  may  be  adversarial),  they require features that monitor the "health" and quality of those sources.
+
+The requirements for physical entropy sources are specified in NIST SP 800-90B (Turan et al., 2018) (Section 31.5.2.1) for U.S. Federal FIPS 140-3 (NIST, 2019) evaluations and in BSI AIS-31 (Killmann & Schindler,  2001;  Killmann  &  Schindler,  2011)  (Section  31.5.2.2)  for  high-security  Common  Criteria evaluations. There is some divergence in the types of health tests and entropy metrics mandated in these standards, and RISC-V enables support for both alternatives.

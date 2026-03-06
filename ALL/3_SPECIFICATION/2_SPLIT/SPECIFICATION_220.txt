@@ -1,0 +1,3 @@
+## 28.13.6. Example RV32I PUSH/POP sequences
+
+The examples are included show the load/store series expansion and the stack adjustment. Examples of cm.popret and cm.popretz are  not  included,  as  the  difference  in  the  expanded  sequence  from cm.pop is trivial in all cases.

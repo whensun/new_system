@@ -1,0 +1,11 @@
+## 30.19.3. Determining EEW
+
+The vtype SEW can be used to indicate or calculate the effective element size (EEW) of one or more operands of an element group instruction. Where the operand is an element group, SEW and EEW refer to the number of bits in each individual element within a group not the number of bits in the group as a whole.
+
+Alternatively,  the  opcode  might  encode  EEW  of  all  operands  statically  and  ignore  the  value  of  SEW when the operation only makes sense for a single size on each operand.
+
+<image>
+
+Many  operations  are  only  defined  for  one  EEW,  e.g.,  SHA-256  requires  EEW=32. Encoding EEWs statically in the instruction removes a dynamic dependency on the SEW value and the need to check for errors in SEW values. However, ignoring SEW also prevents reuse of the static opcode with a different dynamic SEW, and in many cases, the SEW setting will be needed for regular vector instructions used to process
+
+the individual elements in the vector.

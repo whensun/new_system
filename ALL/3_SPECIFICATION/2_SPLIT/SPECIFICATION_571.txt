@@ -1,0 +1,9 @@
+## 31.8.4.3. T3: Fatal error states
+
+Since the security  of  most  cryptographic  operations  depends  on  the  entropy  source,  a  system-wide "default deny" security policy approach is appropriate for most entropy source failures. A hardware test failure should at least result in the DEAD state and possibly reset/halt. It's a show stopper: The entropy source (or its cryptographic client application) must not be allowed to run if its secure operation can't be guaranteed.
+
+Rationale. These  tests  can  complement  other  integrity  and  tamper  resistance  mechanisms  (See Chapter 18 of (Anderson, 2020) for examples).
+
+Some  hardware  random  generators  are,  by  their  physical  construction,  exposed  to  relatively  nonadversarial environmental and manufacturing issues. However, even such "innocent" failure modes may indicate a fault attack (Karaklajic et al., 2013) and therefore should be addressed as a system integrity failure rather than as a diagnostic issue.
+
+Security architects will understand to use permanent or hard-to-recover "security-fuse" lockdowns only if  the  threshold  of  a  test  is  such  that  the  probability  of  false-positive  is  negligible  over  the  entire device lifetime.

@@ -1,0 +1,3 @@
+## 29.3. Pseudocode for instruction semantics
+
+The semantics of each instruction in Instructions (in alphabetical order) is expressed in a SAIL-like syntax.

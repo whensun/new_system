@@ -1,0 +1,5 @@
+## 22.5. Quad-Precision Floating-Point Classify Instruction
+
+The quad-precision floating-point classify instruction, FCLASS.Q, is defined analogously to its doubleprecision counterpart, but operates on quad-precision operands.
+
+<image>

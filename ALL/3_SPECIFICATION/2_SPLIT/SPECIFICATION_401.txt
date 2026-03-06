@@ -1,0 +1,15 @@
+## 30.13.12. Vector Floating-Point Sign-Injection Instructions
+
+Vector versions of the scalar sign-injection instructions. The result takes all bits except the sign bit from the vector vs2 operands.
+
+```
+vfsgnj.vv vd, vs2, vs1, vm   # Vector-vector vfsgnj.vf vd, vs2, rs1, vm   # vector-scalar vfsgnjn.vv vd, vs2, vs1, vm  # Vector-vector vfsgnjn.vf vd, vs2, rs1, vm  # vector-scalar vfsgnjx.vv vd, vs2, vs1, vm  # Vector-vector vfsgnjx.vf vd, vs2, rs1, vm  # vector-scalar
+```
+
+<image>
+
+<image>
+
+A  vector  of  floating-point  values  can  be  negated  using  a  sign-injection  instruction with both source operands set to the same vector operand. An assembly pseudoinstruction is provided: vfneg.v vd,vs = vfsgnjn.vv vd,vs,vs .
+
+The absolute value of a vector of floating-point elements can be calculated using a sign-injection instruction with both source operands set to the same vector operand. An assembly pseudoinstruction is provided: vfabs.v vd,vs = vfsgnjx.vv vd,vs,vs .

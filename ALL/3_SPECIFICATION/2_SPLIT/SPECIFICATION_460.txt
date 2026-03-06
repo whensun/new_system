@@ -1,0 +1,7 @@
+## 31.2. Introduction
+
+This  document  describes  the scalar cryptography  extension  for  RISC-V.  All  instructions  described herein  use  the  general-purpose X registers,  and  obey  the  2-read-1-write  register  access  constraint. These instructions are designed to be lightweight and suitable for 32 and 64 bit  base  architectures; from embedded IoT class cores to large, application class cores which do not implement a vector unit.
+
+This document also describes the architectural interface to an Entropy Source, which can be used to generate cryptographic secrets. This is found in Section 31.5.
+
+It  also  contains  a  mechanism  allowing  core  implementers  to  provide "Constant  Time  Execution" guarantees in Section 31.6.

@@ -1,0 +1,23 @@
+## 19.3.1. Memory and Caches
+
+A memory location is  a  physical  resource  in  a  system  uniquely  identified  by  a physical address .  An agent is  a  logic  block,  such  as  a  RISC-V  hart,  accelerator,  I/O  device,  etc.,  that  can  access  a  given memory location.
+
+<image>
+
+A given agent may not be able to access all memory locations in a system, and two different agents may or may not be able to access the same set of memory locations.
+
+A load operation (or store operation ) is performed by an agent to consume (or modify) the data at a given  memory  location.  Load  and  store  operations  are  performed  as  a  result  of  explicit  memory accesses to that memory location. Additionally, a read transfer from memory fetches the data at the memory location, while a write transfer to memory updates the data at the memory location.
+
+A cache is  a  structure that buffers copies of data to reduce average memory latency. Any number of caches may be interspersed between an agent and a memory location, and load and store operations from an agent may be satisfied by a cache instead of the memory location.
+
+<image>
+
+Load and store operations are decoupled from read and write transfers by caches. For example, a load operation may be satisfied by a cache without performing a read transfer  from  memory,  or  a  store  operation  may  be  satisfied  by  a  cache  that  first performs a read transfer from memory.
+
+Caches organize copies of data into cache blocks ,  each  of  which  represents  a  contiguous,  naturally aligned power-of-two (or NAPOT ) range of memory locations. A cache block is identified by any of the physical addresses corresponding to the underlying memory locations. The capacity and organization of  a  cache  and  the  size  of  a  cache  block  are  both implementation-specific ,  and  the  execution environment provides software a means to discover information about the caches and cache blocks in a system. In the initial set of CMO extensions, the size of a cache block shall be uniform throughout the system.
+
+<image>
+
+In future CMO extensions, the requirement for a uniform cache block size may be relaxed.
+
+Implementation techniques such as speculative execution or hardware prefetching may cause a given cache  to  allocate  or  deallocate  a  copy  of  a  cache  block  at  any  time,  provided  the  corresponding physical  addresses  are  accessible  according  to  the  supported  access  type  PMA  and  are  cacheable according to the cacheability PMA. Allocating a copy of a cache block results in a read transfer from another  cache  or  from  memory,  while  deallocating  a  copy  of  a  cache  block  may  result  in  a  write transfer to another cache or to memory depending on whether the data in the copy were modified by a store operation. Additional details are discussed in Coherent Agents and Caches.

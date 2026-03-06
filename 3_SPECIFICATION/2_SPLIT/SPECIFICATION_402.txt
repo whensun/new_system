@@ -1,0 +1,41 @@
+## 30.13.13. Vector Floating-Point Compare Instructions
+
+These vector FP compare instructions compare two source operands and write the comparison result to a mask register. The destination mask vector is always held in a single vector register, with a layout of elements as described in Section 30.4.5. The destination mask vector register may be the same as the source vector mask register ( v0 ).  Compares write mask registers, and so always operate under a tail-agnostic policy.
+
+The compare instructions follow the semantics of the scalar floating-point compare instructions. vmfeq and vmfne raise  the  invalid  operation exception only on signaling NaN inputs. vmflt , vmfle , vmfgt ,  and vmfge raise the invalid operation exception on both signaling and quiet NaN inputs. vmfne writes 1 to the destination  element  when  either  operand  is  NaN,  whereas  the  other  compares  write  0  when  either operand is NaN.
+
+```
+# Compare equal vmfeq.vv vd, vs2, vs1, vm  # Vector-vector vmfeq.vf vd, vs2, rs1, vm  # vector-scalar # Compare not equal vmfne.vv vd, vs2, vs1, vm  # Vector-vector vmfne.vf vd, vs2, rs1, vm  # vector-scalar # Compare less than vmflt.vv vd, vs2, vs1, vm  # Vector-vector vmflt.vf vd, vs2, rs1, vm  # vector-scalar # Compare less than or equal vmfle.vv vd, vs2, vs1, vm  # Vector-vector vmfle.vf vd, vs2, rs1, vm  # vector-scalar # Compare greater than vmfgt.vf vd, vs2, rs1, vm  # vector-scalar # Compare greater than or equal vmfge.vf vd, vs2, rs1, vm  # vector-scalar
+```
+
+Comparison      Assembler Mapping             Assembler pseudoinstruction
+
+va < vb         vmflt.vv vd, va, vb, vm
+
+va <= vb        vmfle.vv vd, va, vb, vm
+
+va > vb         vmflt.vv vd, vb, va, vm    vmfgt.vv vd, va, vb, vm
+
+```
+va >= vb        vmfle.vv vd, vb, va, vm    vmfge.vv vd, va, vb, vm va < f          vmflt.vf vd, va, f, vm va <= f         vmfle.vf vd, va, f, vm va > f          vmfgt.vf vd, va, f, vm va >= f         vmfge.vf vd, va, f, vm va, vb vector register groups f      scalar floating-point register
+```
+
+<image>
+
+- Providing all forms is necessary to correctly handle unordered compares for NaNs.
+
+<image>
+
+C99  floating-point  quiet  compares  can  be  implemented  by  masking  the  signaling compares when either input is NaN, as follows. When the comparand is a non-NaN constant, the middle two instructions can be omitted.
+
+```
+# Example of implementing isgreater() vmfeq.vv v0, va, va        # Only set where A is not NaN. vmfeq.vv v1, vb, vb        # Only set where B is not NaN. vmand.mm v0, v0, v1        # Only set where A and B are ordered,
+```
+
+```
+vmfgt.vv v0, va, vb, v0.t  #  so only set flags on ordered values.
+```
+
+<image>
+
+In  the  above  sequence,  it  is  tempting  to  mask  the  second vmfeq instruction  and remove  the vmand instruction,  but  this  more  efficient  sequence  incorrectly  fails  to raise  the  invalid  exception  when  an  element  of va contains  a  quiet  NaN  and  the corresponding element in vb contains a signaling NaN.

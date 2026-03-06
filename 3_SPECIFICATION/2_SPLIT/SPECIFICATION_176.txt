@@ -1,0 +1,27 @@
+## 27.3.2. Register-Based Loads and Stores
+
+<image>
+
+These instructions use the CL format.
+
+C.LW loads a 32-bit value from memory into register rd ′ . It computes an effective address by adding the zero -extended  offset,  scaled  by  4,  to  the  base  address  in  register rs1 ′ .  It  expands  to lw  rd ′ , offset(rs1 ′ ) .
+
+C.LD is an RV64C-only instruction that loads a 64-bit value from memory into register rd ′ . It computes an effective address by adding the zero -extended offset, scaled by 8, to the base address in register
+
+rs1 ′ . It expands to ld rd ′ , offset(rs1 ′ ) .
+
+C.FLW is an RV32FC-only instruction that loads a single-precision floating-point value from memory into floating-point register rd ′ .  It  computes an effective address by adding the zero -extended offset, scaled by 4, to the base address in register rs1 ′ . It expands to flw rd ′ , offset(rs1 ′ ) .
+
+C.FLD is an RV32DC/RV64DC-only instruction that loads a double-precision floating-point value from memory into floating-point register rd ′ . It computes an effective address by adding the zero -extended offset, scaled by 8, to the base address in register rs1 ′ . It expands to fld rd ′ , offset(rs1 ′ ) .
+
+<image>
+
+These instructions use the CS format.
+
+C.SW stores a 32-bit value in register rs2 ′ to memory. It computes an effective address by adding the zero -extended  offset,  scaled  by  4,  to  the  base  address  in  register rs1 ′ .  It  expands  to sw  rs2 ′ , offset(rs1 ′ ) .
+
+C.SD is an RV64C-only instruction that stores a 64-bit value in register rs2 ′ to memory. It computes an effective address by adding the zero -extended offset, scaled by 8, to the base address in register rs1 ′ . It expands to sd rs2 ′ , offset(rs1 ′ ) .
+
+C.FSW  is  an  RV32FC-only  instruction  that  stores  a  single-precision  floating-point  value  in  floatingpoint register rs2 ′ to  memory. It computes an effective address by adding the zero -extended offset, scaled by 4, to the base address in register rs1 ′ . It expands to fsw rs2 ′ , offset(rs1 ′ ) .
+
+C.FSD is  an  RV32DC/RV64DC-only instruction that  stores  a  double-precision  floating-point  value  in floating-point register rs2 ′ to memory. It computes an effective address by adding the zero -extended offset, scaled by 8, to the base address in register rs1 ′ . It expands to fsd rs2 ′ , offset(rs1 ′ ) .

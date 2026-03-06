@@ -1,0 +1,12 @@
+## 32.2.11. Zvkng - NIST Algorithm Suite with GCM
+
+This extension is shorthand for the following set of other extensions:
+
+| Included Extension   | Description   |
+|----------------------|---------------|
+| Zvkn                 | Zvkn          |
+| Zvkg                 | Zvkg          |
+
+<image>
+
+This extension combines the NIST Algorithm Suite with the GCM/GMAC extension to enable high-performance AES-GCM.

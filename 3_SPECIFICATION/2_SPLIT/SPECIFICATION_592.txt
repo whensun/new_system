@@ -1,0 +1,27 @@
+## 32.1.6. Vector-Scalar Instructions
+
+The  RISC-V  Vector  Extension  defines  three  encodings  for  Vector-Scalar  operations  which  get  their scalar operand from a GPR or FP register:
+
+- ⚫ OPIVX: Scalar GPR x register
+- ⚫ OPFVF: Scalar FP f register
+- ⚫ OPMVX: Scalar GPR x register
+
+However, the Vector Extensions include Vector Reduction Operations which can also be considered Vector-Scalar operations because a scalar operand is provided from element 0 of vector register vs1 . The vector operand is provided in vector register group vs2 . These reduction operations all use the .vs suffix in their mnemonics. Additionally, the reduction operations all produce a scalar result in element
+
+0 of the destination register, vd .
+
+The  Vector  Crypto  Extensions  define  Vector-Scalar  instructions  that  are  similar  to  these  Vector Reduction Operations in that they get a scalar operand from a vector register. However, they differ in that they get a scalar element group (see Section 32.1.4) from vs2 and they return vector results to vd , which is also a source vector operand. These Vector-Scalar crypto instructions also use the .vs suffix in their mnemonics.
+
+<image>
+
+We chose to use vs2 as the scalar operand, and vd as the vector operand, so that we could  use  the vs1 specifier  as  additional  encoding  bits  for  these  instructions.  This allows  these  instructions  to  have  a  much  smaller  encoding  footprint,  leaving  more rooms for other instructions in the future.
+
+These instructions enable a single key, specified as a scalar element group in vs2 ,  to  be  applied  to each element group of register group vd .
+
+<image>
+
+Scalar element groups will occupy at most a single register in application processors. However, in implementations where VLEN<128, they will occupy 2 (VLEN=64) or 4 (VLEN=32) registers.
+
+<image>
+
+It  is  common for multiple AES encryption rounds (for example) to be performed in parallel with the same round key (e.g. in counter modes). Rather than having to first splat  the  common  key  across  the  whole  vector  group,  these  vector-scalar  crypto instructions allow the round key to be specified as a scalar element group.

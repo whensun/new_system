@@ -1,0 +1,11 @@
+## 30.11.2. Vector Widening Integer Add/Subtract
+
+The widening add/subtract instructions are provided in both signed and unsigned variants, depending on whether the narrower source operands are first sign- or zero-extended before forming the doublewidth sum.
+
+```
+# Widening unsigned integer add/subtract, 2*SEW = SEW +/- SEW vwaddu.vv  vd, vs2, vs1, vm  # vector-vector vwaddu.vx  vd, vs2, rs1, vm  # vector-scalar vwsubu.vv  vd, vs2, vs1, vm  # vector-vector vwsubu.vx  vd, vs2, rs1, vm  # vector-scalar # Widening signed integer add/subtract, 2*SEW = SEW +/- SEW vwadd.vv  vd, vs2, vs1, vm  # vector-vector vwadd.vx  vd, vs2, rs1, vm  # vector-scalar vwsub.vv  vd, vs2, vs1, vm  # vector-vector vwsub.vx  vd, vs2, rs1, vm  # vector-scalar # Widening unsigned integer add/subtract, 2*SEW = 2*SEW +/- SEW vwaddu.wv  vd, vs2, vs1, vm  # vector-vector vwaddu.wx  vd, vs2, rs1, vm  # vector-scalar vwsubu.wv  vd, vs2, vs1, vm  # vector-vector vwsubu.wx  vd, vs2, rs1, vm  # vector-scalar # Widening signed integer add/subtract, 2*SEW = 2*SEW +/- SEW vwadd.wv  vd, vs2, vs1, vm  # vector-vector vwadd.wx  vd, vs2, rs1, vm  # vector-scalar vwsub.wv  vd, vs2, vs1, vm  # vector-vector vwsub.wx  vd, vs2, rs1, vm  # vector-scalar
+```
+
+<image>
+
+An integer value can be doubled in width using the widening add instructions with a scalar  operand  of x0 .  Assembly  pseudoinstructions vwcvt.x.x.v  vd,vs,vm = vwadd.vx vd,vs,x0,vm and vwcvtu.x.x.v vd,vs,vm = vwaddu.vx vd,vs,x0,vm are provided.

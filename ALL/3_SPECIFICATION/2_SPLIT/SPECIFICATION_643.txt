@@ -1,0 +1,53 @@
+## 32.3.20. vror.[vv,vx,vi]
+
+## Synopsis
+
+Vector rotate right by vector/scalar/immediate.
+
+## Mnemonic
+
+vror.vv vd, vs2, vs1, vm vror.vx vd, vs2, rs1, vm vror.vi vd, vs2, uimm, vm
+
+## Encoding (Vector-Vector)
+
+<image>
+
+## Encoding (Vector-Scalar)
+
+<image>
+
+## Encoding (Vector-Immediate)
+
+<image>
+
+## Vector-Vector Arguments
+
+| Register   | Direction   | Definition    |
+|------------|-------------|---------------|
+| Vs1        | input       | Rotate amount |
+| Vs2        | input       | Data          |
+| Vd         | output      | Rotated data  |
+
+## Vector-Scalar/Immediate Arguments
+
+| Register   | Direction   | Definition    |
+|------------|-------------|---------------|
+| Rs1/imm    | input       | Rotate amount |
+| Vs2        | input       | Data          |
+| Vd         | output      | Rotated data  |
+
+## Description
+
+A bitwise right rotation is performed on each element of vs2 .
+
+The  elements  in vs2 are  rotated  right  by  the  rotate  amount  specified  by  either  the  corresponding elements  of vs1 (vector-vector),  integer  register rs1 (vector-scalar),  or  an  immediate  value  (vectorimmediate). Only the low log2( SEW ) bits of the rotate-amount value are used, all other bits are ignored.
+
+## Operation
+
+```
+function clause execute (VROR_VV(vs2, vs1, vd)) = { foreach (i from vstart to vl - 1) { set_velem(vd, EEW=SEW, i, get_velem(vs2, i) >>> (get_velem(vs1, i) & (SEW-1)) ) } RETIRE_SUCCESS } function clause execute (VROR_VX(vs2, rs1, vd)) = { foreach (i from vstart to vl - 1) { set_velem(vd, EEW=SEW, i, get_velem(vs2, i) >>> (X(rs1) & (SEW-1)) ) } RETIRE_SUCCESS } function clause execute (VROR_VI(vs2, uimm[5:0], vd)) = { foreach (i from vstart to vl - 1) { set_velem(vd, EEW=SEW, i, get_velem(vs2, i) >>> (uimm[5:0] & (SEW-1)) ) } RETIRE_SUCCESS }
+```
+
+## Included in
+
+Zvbb, Zvkb, Zvkn, Zvknc, Zvkng, Zvks Zvksc, Zvksg

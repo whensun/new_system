@@ -1,0 +1,53 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: mseccfg
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, from the description below, extract the fields for mseccfg register. The register of mseccfg is a 64-bit register.
+
+OUTPUT FORMAT:
+FIELDS: <high_bit>..<low_bit>=<FIELD_NAME>, <high_bit>..<low_bit>=<FIELD_NAME>, ...
+
+RULES:
++ Range Delimiter -> Always use two dots (..) for inclusive ranges (e.g., 7..0). Repeat the index for single-bit fields (e.g., 3..3).
++ Coverage -> Define every bit from 63 down to 0, in contiguous, non-overlapping ranges. No gaps.
++ Reserved Bits -> If the description says something like "unused", "future use", or "reserved", then the <FIELD_NAME> must be WPRI.
++ Unknown Positions -> If a field's bit range is not given in the description, append the field at the end. The <high_bit> and the <low_bit> become "UNKNOWN". For example, "UNKNOWN..UNKNOWN=<FIELD_NAME>".
++ Ordering -> Based on the position or the bit range, list fields strictly from high to low, separated by ", " (comma and space).
++ No Overlaps -> Ensure bit ranges don't overlap.
+
+Do not output any introduction.
+
+The description:
+
+**mseccfg – Machine Security Configuration Register (64‑bit)**  
+
+| Bits      | Field   | Source / Extension | Type   | Description                                                                                                                                                                                                                                                  | Reset* |
+|-----------|---------|--------------------|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| 9         | SSEED   | Zkr (entropy‑source) | WARL   | Seed‑access enable for **S‑mode**. When set to 1, the seed CSR becomes readable/writable from S‑mode (subject to the rules in Table 70). If 0, any seed access from S‑mode raises an illegal‑instruction exception.                                            | implementation‑specific (usually 0) |
+| 8         | USEED   | Zkr (entropy‑source) | WARL   | Seed‑access enable for **U‑mode**. When set to 1, the seed CSR becomes readable/writable from U‑mode (subject to the rules in Table 70). If 0, any seed access from U‑mode raises an illegal‑instruction exception.                                    | implementation‑specific (usually 0) |
+| 2         | RLB     | Smepmp (PMP‑enhancement) | WARL   | **Rule Locking Bypass**. 0 = normal PMP‑locking behaviour; 1 = locked PMP rules may be edited/removed and PMP‑locked entries may be modified. Once cleared it becomes locked if any PMP rule has `pmpcfg.L = 1` until a PMP reset.                              | implementation‑specific (usually 0) |
+| 1         | MMWP    | Smepmp (PMP‑enhancement) | WARL (sticky) | **Machine‑Mode Allowlist Policy**. Sticky 1 = after PMP reset the default PMP policy for M‑mode on unmatched addresses changes from "ignore" to "deny". Once set it cannot be cleared until a PMP reset.                                                           | 0 |
+| 0         | MML     | Smepmp (PMP‑enhancement) | WARL (sticky) | **Machine Mode Lockdown**. Sticky 1 = changes the semantics of `pmpcfg.L`: when set a PMP rule is M‑mode‑only; when clear it is S/U‑mode‑only. Also makes the rule locked. Once set it cannot be cleared until a PMP reset.                                 | 0 |
+| 33‑32     | PMM     | Smmpm (pointer‑masking) | WARL (2‑bit) | **Pointer‑Masking Mode**. Controls pointer‑masking enable for M‑mode as defined in the Smmpm extension (Table 2 of that spec).                                                                                                                            | implementation‑specific |
+|  ? (single bit) | MLPE    | Zicfilp (Landing‑Pad‑Enabled) | WARL | **Machine‑mode Landing‑Pad Enable**. When 1, the Zicfilp extension is enabled in M‑mode; when 0, the extension is disabled and the hart does not update the ELP state (remains `NO_LP_EXPECTED`). The exact bit position is defined in the ISA figure (not textual). | 0 if Zicfilp implemented; otherwise hard‑wired 0 |
+|  ?‑?      | **Reserved** | — | — | All bits not assigned to the fields above are *reserved* for future standard use. They read as 0 and must be written with 0.                                                                                                                                 | — |
+
+\* Reset values are taken from the specification: fields are WARL unless otherwise noted; MLPE resets to 0 when Zicfilp is implemented; MML, MMWP, RLB have no mandatory reset value (implementation‑specific), but they are required to be in a defined state after reset (often 0).  
+
+**Notes**  
+
+- When XLEN = 32, the register `mseccfgh` (lower 32 bits) aliases bits 63:32 of `mseccfg`; `mseccfgh` does **not** exist on RV64.  
+- The presence of `mseccfg` is guaranteed when the Zkr, Smepmp, Smmpm, or Zicfilp extensions are implemented; otherwise the register may be hard‑wired to zero.  
+- All fields are WARL (write‑any‑legal‑value) unless indicated as *sticky* (MMWP, MML).
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+FIELDS: 63..34=WPRI, 33..32=PMM, 31..10=WPRI, 9..9=SSEED, 8..8=USEED, 7..3=WPRI, 2..2=RLB, 1..1=MMWP, 0..0=MML, UNKNOWN..UNKNOWN=MLPE
+======================================================= END - 1 ========================================================

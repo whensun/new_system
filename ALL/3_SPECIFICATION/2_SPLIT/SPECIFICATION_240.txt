@@ -1,0 +1,7 @@
+## 29.2. Word Instructions
+
+The  bitmanip  extension  follows  the  convention  in  RV64  that w -suffixed  instructions  (without  a  dot before  the w )  ignore  the  upper  32  bits  of  their  inputs,  operate  on  the  least-significant  32-bits  as signed values and produce a 32-bit signed result that is sign-extended to XLEN.
+
+Bitmanip instructions  with  the  suffix .uw have  one  operand  that  is  an  unsigned  32-bit  value  that  is extracted from the least significant 32 bits of the specified register. Other than that, these perform full XLEN operations.
+
+Bitmanip instructions with the suffix .b , .h and .w only look at the least significant 8-bits, 16-bits and 32-bits  of  the  input  (respectively)  and  produce  an  XLEN-wide  result  that  is  sign-extended  or  zeroextended, based on the specific instruction.

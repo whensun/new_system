@@ -1,0 +1,7 @@
+## 24.3.2. Smnpm
+
+Smnpm adds a new 2-bit WARL field ( PMM ) to bits 33:32 of menvcfg . Setting PMM enables or disables pointer masking  for  the  next  lower  privilege  mode  (S-/HS-mode  if  S-mode  is  implemented,  or  U-mode otherwise), according to the values in Table 2.
+
+<image>
+
+The  type  of  address  determines  which  type  of  pointer  masking  is  applied.  For example,  when  running  with  virtualization  in  VS/VU  mode  with vsatp.MODE =  Bare, physical address pointer masking (zero extension) applies.

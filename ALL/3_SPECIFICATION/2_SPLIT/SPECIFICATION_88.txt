@@ -1,0 +1,41 @@
+## 19.4.2.2. Page-Fault, Guest-Page-Fault, and Access-Fault Exceptions
+
+Similar to load and store instructions, CMO instructions are explicit memory access instructions that compute an effective address. The effective address is ultimately translated into a physical address based  on  the  privilege  mode  and  the  enabled  translation  mechanisms,  and  the  CMO  extensions impose the following constraints on the physical addresses in a given cache block:
+
+- ⚫ The PMP access control bits shall be the same for all physical addresses in the cache block, and if
+
+write permission is granted by the PMP access control bits, read permission shall also be granted
+
+- ⚫ The PMAs shall be the same for all physical addresses in the cache block, and if write permission is granted by the supported access type PMAs, read permission shall also be granted
+
+If the above constraints are not met, the behavior of a CBO instruction is UNSPECIFIED.
+
+<image>
+
+This specification assumes that the above constraints will typically be met for main memory regions and may be met for certain I/O regions.
+
+Additionally, for the purposes of PMP and PMA checks, the access size of a CMO instruction equals the size of the cache block accessed by the instruction.
+
+The  Zicboz  extension  introduces  an  additional  supported  access  type  PMA  for  cache-block  zero instructions. Main memory regions are required to support accesses by cache-block zero instructions; however, I/O regions may specify whether accesses by cache-block zero instructions are supported.
+
+A cache-block management instruction is permitted to access the specified cache block whenever a load instruction or store instruction is permitted to access the corresponding physical addresses. If neither a load instruction nor store instruction is permitted to access the physical addresses, but an instruction fetch is permitted to access the physical addresses, whether a cache-block management instruction is permitted to access the cache block is UNSPECIFIED. If access to the cache block is not permitted, a cache-block management instruction raises a store page-fault or store guest-page-fault exception if address translation does not permit any access or raises a store access-fault exception otherwise.  During  address  translation,  the  instruction  also  checks  the  accessed  bit  and  may  either raise an exception or set the bit as required.
+
+<image>
+
+The  interaction  between  cache-block  management  instructions  and  instruction fetches will be specified in a future extension.
+
+As implied by omission, a cache-block management instruction does not check the dirty bit and neither raises an exception nor sets the bit.
+
+A  cache-block  zero  instruction  is  permitted  to  access  the  specified  cache  block  whenever  a  store instruction is permitted to access the corresponding physical addresses and when the PMAs indicate that  cache-block zero instructions are a supported access type. If access to the cache block is not permitted, a cache-block zero instruction raises a store page-fault or store guest-page-fault exception if address translation does not permit write access or raises a store access-fault exception otherwise. During address translation, the instruction also checks the accessed and dirty bits and may either raise an exception or set the bits as required.
+
+A cache-block prefetch instruction is permitted to access the specified cache block whenever a load instruction,  store  instruction,  or  instruction  fetch  is  permitted  to  access  the  corresponding  physical addresses. If access to the cache block is not permitted, a cache-block prefetch instruction does not raise  any  exceptions  and  shall  not  access  any  caches  or  memory.  During  address  translation,  the instruction does not check the accessed and dirty bits and neither raises an exception nor sets the bits.
+
+When  a  page-fault,  guest-page-fault,  or  access-fault  exception  is  taken,  the  relevant  *tval  CSR  is written with the faulting effective address (i.e. the value of rs1 ).
+
+<image>
+
+Like a load or store instruction, a CMO instruction may or may not be permitted to access a cache block based on the states of the MPRV , MPV , and MPP bits in mstatus and the SUM and MXR bits in mstatus , sstatus , and vsstatus .
+
+
+
+This specification expects that implementations will process cache-block management instructions like store/AMO instructions, so store/AMO exceptions are appropriate for these instructions, regardless of the permissions required.

@@ -1,0 +1,49 @@
+## 12.1.10. Supervisor Environment Configuration ( senvcfg ) Register
+
+The senvcfg CSR is an SXLEN-bit read/write register, formatted as shown in Figure 61, that controls certain characteristics of the U-mode execution environment.
+
+Figure 61. Supervisor environment configuration register ( senvcfg ) for RV64.
+
+<image>
+
+Figure 62. Supervisor environment configuration register ( senvcfg ) for RV32.
+
+<image>
+
+If bit FIOM (Fence of I/O implies Memory) is set to one in senvcfg , FENCE instructions executed in Umode are modified so the requirement to order accesses to device I/O implies also the requirement to order main memory accesses. Table 33 details the modified interpretation of FENCE instruction bits PI, PO, SI, and SO in U-mode when FIOM=1.
+
+Similarly, for U-mode when FIOM=1, if an atomic instruction that accesses a region ordered as device I/O has its aq and/or rl bit set, then that instruction is ordered as though it accesses both device I/O and memory.
+
+If satp .MODE is read-only zero (always Bare), the implementation may make FIOM read-only zero.
+
+Table 33. Modified interpretation of FENCE predecessor and successor sets in U-mode when FIOM=1.
+
+| Instruction bit   | Meaning when set                                         |
+|-------------------|----------------------------------------------------------|
+| PI                | Predecessor device input and memory reads (PR implied)   |
+| PO                | Predecessor device output and memory writes (PW implied) |
+| SI                | Successor device input and memory reads (SR implied)     |
+| SO                | Successor device output and memory writes (SW implied)   |
+
+Bit FIOM exists for a specific circumstance when an I/O device is being emulated for U-mode and both of the following are true: (a) the emulated device has a memory buffer that should be I/O space but is actually mapped to main memory via address translation,  and  (b)  multiple  physical  harts  are  involved  in  accessing  this  emulated device from U-mode.
+
+A  hypervisor  running  in  S-mode  without  the  benefit  of  the  hypervisor  extension  of Chapter 21 may need to emulate a device for U-mode if paravirtualization cannot be employed.  If  the  same  hypervisor  provides  a  virtual  machine  (VM)  with  multiple virtual harts, mapped one-to-one to real harts, then multiple harts may concurrently access  the  emulated  device,  perhaps  because:  (a)  the  guest  OS  within  the  VM assigns device interrupt handling to one hart while the device is also accessed by a different hart outside of an interrupt handler, or (b) control of the device (or partial control)  is  being  migrated  from  one  hart  to  another,  such  as  for  interrupt  load balancing within the VM. For such cases, guest software within the VM is expected to properly  coordinate  access  to  the  (emulated)  device  across  multiple  harts  using mutex locks and/or interprocessor interrupts as usual, which in part entails executing I/O fences. But those I/O fences may not be sufficient if some of the device ``I/O'' is actually main memory, unknown to the guest. Setting FIOM=1 modifies those fences (and all other I/O fences executed in U-mode) to include main memory, too.
+
+Software  can  always  avoid  the  need  to  set  FIOM  by  never  using  main  memory  to emulate  a  device  memory  buffer  that  should  be  I/O  space.  However,  this  choice usually requires trapping all U-mode accesses to the emulated buffer, which might have  a  noticeable  impact  on  performance.  The  alternative  offered  by  FIOM  is sufficiently  inexpensive  to  implement  that  we  consider  it  worth  supporting  even  if only rarely enabled.
+
+The definition of the CBZE field is furnished by the Zicboz extension.
+
+The definitions of the CBCFE and CBIE fields are furnished by the Zicbom extension.
+
+The definition of the PMM field is furnished by the Ssnpm extension.
+
+The Zicfilp extension adds the LPE field in senvcfg . When the LPE field is set to 1, the Zicfilp extension is enabled in VU/U-mode. When the LPE field is 0, the Zicfilp extension is not enabled in VU/U-mode and the following rules apply to VU/U-mode:
+
+- ⚫ The hart does not update the ELP state; it remains as NO\_LP\_EXPECTED .
+- ⚫ The LPAD instruction operates as a no-op.
+
+The Zicfiss extension adds the SSE field in senvcfg . When the SSE field is set to 1, the Zicfiss extension is activated in VU/U-mode. When the SSE field is 0, the Zicfiss extension remains inactive in VU/U-mode, and the following rules apply:
+
+- ⚫ 32-bit Zicfiss instructions will revert to their behavior as defined by Zimop.
+- ⚫ 16-bit Zicfiss instructions will revert to their behavior as defined by Zcmop.
+- ⚫ When menvcfg.SSE is  one, SSAMOSWAP.W/D raises  an  illegal-instruction  exception  in  U-mode  and  a virtual-instruction exception in VU-mode.

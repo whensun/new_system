@@ -1,0 +1,2 @@
+REGISTER: mseccfg
+EXTENSIONS: Smepmp, Smmpm, Zicfilp, Zkr

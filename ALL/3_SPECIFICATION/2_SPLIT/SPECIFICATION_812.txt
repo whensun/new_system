@@ -1,0 +1,15 @@
+## 11.5.1.1. Virtualization Mode Transitions
+
+Transitions  between  VS/VU-mode  and  M/HS-mode  are  unique  in  that  they  effect  a  change  in  the active CTR control register, and hence the CTR configuration. What is recorded, if anything, on these virtualization mode transitions depends upon fields from both [ms]ctrctl and vsctrctl .
+
+- ⚫ mctrctl .M, sctrctl .S, and vsctrctl .{S,U} are used to determine whether the source and target modes are enabled;
+- ⚫ mctrctl .MTE, sctrctl .STE,  and vsctrctl .STE  are  used  to  determine  whether  an  external  trap  is
+
+recorded (see Section 11.5.1.2);
+
+- ⚫ sctrctl .LCOFIFRZ and sctrctl .BPFRZ determine whether CTR becomes frozen (see Section 11.5.5)
+- ⚫ For all other x ctrctl fields, the value in vsctrctl is used.
+
+<image>
+
+Consider an exception that traps from VU-mode to HS-mode, with vsctrctl .U=1 and sctrctl .S=1.  Because  both  the  source  mode  and  target  mode  are  enabled  for recording, whether the trap is recorded then depends on the CTR configuration (e.g., the transfer type filter bits) in vsctrctl , not in sctrctl .

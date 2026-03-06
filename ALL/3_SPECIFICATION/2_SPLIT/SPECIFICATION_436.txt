@@ -1,0 +1,7 @@
+## 30.16.3.6. Vector Floating-Point Slide1down Instruction
+
+```
+vfslide1down.vf vd, vs2, rs1, vm      # vd[i] = vs2[i+1], vd[vl-1]=f[rs1]
+```
+
+The vfslide1down instruction is defined analogously to vslide1down , but sources its scalar argument from an f register.

@@ -1,0 +1,25 @@
+## 11.3.2. czero.nez
+
+## Synopsis
+
+Moves zero to a register rd , if the condition rs2 is nonzero, otherwise moves rs1 to rd .
+
+## Mnemonic
+
+czero.nez rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+If rs2 contains  a  nonzero  value,  this  instruction  writes  the  value  zero  to rd .  Otherwise,  this instruction copies the contents of rs1 to rd .
+
+This instruction carries a syntactic dependency from both rs1 and rs2 to rd .  Furthermore,  if  the  Zkt extension is implemented, this instruction's timing is independent of the data values in rs1 and rs2 .
+
+## SAIL code
+
+```
+let condition = X(rs2); result : xlenbits = if (condition != zeros()) then zeros() else X(rs1); X(rd) = result;
+```

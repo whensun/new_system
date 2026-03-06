@@ -1,0 +1,37 @@
+## 28.12.11. c.not
+
+Synopsis:
+
+Bitwise not, 16-bit encoding
+
+Mnemonic:
+
+c.not rd'/rs1'
+
+Encoding (RV32, RV64):
+
+<image>
+
+Description:
+
+This instruction takes the one's complement of rd'/rs1' and writes the result to the same register.
+
+<image>
+
+Prerequisites:
+
+None
+
+32-bit equivalent:
+
+xori rd'/rs1', rd'/rs1', -1
+
+<image>
+
+The SAIL module variable for rd'/rs1' is called rsdc.
+
+Operation:
+
+X(rsdc) = X(rsdc) XOR -1;
+
+rd'/rs1' is from the standard 8-register set x8-x15.

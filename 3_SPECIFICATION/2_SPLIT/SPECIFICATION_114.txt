@@ -1,0 +1,11 @@
+## 20.8. Single-Precision Floating-Point Compare Instructions
+
+Floating-point compare instructions (FEQ.S, FLT.S, FLE.S) perform the specified comparison between floating-point  registers  ( , , )  writing  1  to  the  integer  register rd if  the  condition  holds,  and  0 otherwise.
+
+FLT.S and FLE.S perform what the IEEE 754-2008 standard refers to as signaling comparisons: that is, they set the invalid operation exception flag if either input is NaN. FEQ.S performs a quiet comparison: it  only  sets  the  invalid  operation  exception  flag  if  either  input  is  a  signaling  NaN.  For  all  three instructions, the result is 0 if either operand is NaN.
+
+<image>
+
+<image>
+
+The F extension provides a comparison, whereas the base ISAs provide a branch comparison. Because can be synthesized from and vice-versa, there is  no  performance  implication  to  this  inconsistency,  but  it  is  nevertheless  an unfortunate incongruity in the ISA.

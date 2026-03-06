@@ -1,0 +1,78 @@
+## 30.7.2. Vector Load/Store Addressing Modes
+
+The  vector  extension  supports  unit-stride,  strided,  and  indexed  (scatter/gather)  addressing  modes. Vector load/store base registers and strides are taken from the GPR x registers.
+
+The base effective address for all vector accesses is given by the contents of the x register named in rs1 .
+
+Vector unit-stride operations access elements stored contiguously in memory starting from the base effective address.
+
+Vector constant-strided operations access the first memory element at the base effective address, and then access subsequent elements at address increments given by the byte offset contained in the x register specified by rs2 .
+
+Vector indexed operations add the contents of each element of the vector offset operand specified by vs2 to  the  base  effective  address  to  give  the  effective  address  of  each  element.  The  data  vector register group has EEW=SEW, EMUL=LMUL, while the offset vector register group has EEW encoded in the instruction and EMUL=(EEW/SEW)*LMUL.
+
+The vector offset operand is treated as a vector of byte-address offsets.
+
+<image>
+
+The indexed operations can also be used to access fields within a vector of objects, where  the vs2 vector  holds  pointers  to  the  base  of  the  objects  and  the  scalar x register holds the offset of the member field in each object. Supporting this case is why the indexed operations were not defined to scale the element indices by the data EEW.
+
+If the vector offset elements are narrower than XLEN, they are zero-extended to XLEN before adding to the  base  effective  address.  If  the  vector  offset  elements  are  wider  than  XLEN,  the  least-significant XLEN bits  are  used  in  the  address  calculation.  An  implementation  must  raise  an  illegal-instruction exception if the EEW is not supported for offset elements.
+
+<image>
+
+A profile may place an upper limit on the maximum supported index EEW (e.g., only up to XLEN) smaller than ELEN.
+
+The vector addressing modes are encoded using the 2-bit mop[1:0] field.
+
+Table 51. encoding for loads
+
+|   mop [1:0] |   mop [1:0] | Description       | Opcodes     |
+|-------------|-------------|-------------------|-------------|
+|           0 |           0 | unit-stride       | VLE<EEW>    |
+|           0 |           1 | indexed-unordered | VLUXEI<EEW> |
+|           1 |           0 | strided           | VLSE<EEW>   |
+|           1 |           1 | indexed-ordered   | VLOXEI<EEW> |
+
+Table 52. encoding for stores
+
+|   mop [1:0] |   mop [1:0] | Description       | Opcodes     |
+|-------------|-------------|-------------------|-------------|
+|           0 |           0 | unit-stride       | VSE<EEW>    |
+|           0 |           1 | indexed-unordered | VSUXEI<EEW> |
+|           1 |           0 | strided           | VSSE<EEW>   |
+|           1 |           1 | indexed-ordered   | VSOXEI<EEW> |
+
+Vector unit-stride and constant-stride memory accesses do not guarantee ordering between individual element accesses. The vector indexed load and store memory operations have two forms, ordered and unordered. The indexed-ordered variants preserve element ordering on memory accesses.
+
+For  unordered  instructions  ( mop[1:0] !=11)  there  is  no  guarantee  on  element  access  order.  If  the accesses are to a strongly ordered IO region, the element accesses can be initiated in any order.
+
+<image>
+
+To  provide  ordered  vector  accesses  to  a  strongly  ordered  IO  region,  the  ordered indexed instructions should be used.
+
+For implementations with precise vector traps, exceptions on indexed-unordered stores must also be precise.
+
+Additional unit-stride vector addressing modes are encoded using the 5-bit lumop and sumop fields in the unit-stride load and store instruction encodings respectively.
+
+Table 53. lumop
+
+| lumop[4:0]   | lumop[4:0]   | lumop[4:0]   | lumop[4:0]   | lumop[4:0]   | Description                      |
+|--------------|--------------|--------------|--------------|--------------|----------------------------------|
+| 0            | 0            | 0            | 0            | 0            | unit-stride load                 |
+| 0            | 1            | 0            | 0            | 0            | unit-stride, whole register load |
+| 0            | 1            | 0            | 1            | 1            | unit-stride, mask load, EEW=8    |
+| 1            | 0            | 0            | 0            | 0            | unit-stride fault-only-first     |
+| x            | x            | x            | x            | x            | other encodings reserved         |
+
+Table 54. sumop
+
+| sumop[4:0]   | sumop[4:0]   | sumop[4:0]   | sumop[4:0]   | sumop[4:0]   | Description                       |
+|--------------|--------------|--------------|--------------|--------------|-----------------------------------|
+| 0            | 0            | 0            | 0            | 0            | unit-stride store                 |
+| 0            | 1            | 0            | 0            | 0            | unit-stride, whole register store |
+| 0            | 1            | 0            | 1            | 1            | unit-stride, mask store, EEW=8    |
+| x            | x            | x            | x            | x            | other encodings reserved          |
+
+The nf[2:0] field encodes the number of fields in each segment. For regular vector loads and stores, nf =0, indicating that a single value is moved between a vector register group and memory at each element position. Larger values in the nf field are used to access multiple contiguous fields within a segment as described below in Section 30.7.8.
+
+The nf[2:0] field  also  encodes the number of whole vector registers to transfer for the whole vector register load/store instructions.

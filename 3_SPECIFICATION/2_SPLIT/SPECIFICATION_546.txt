@@ -1,0 +1,5 @@
+## 31.7.1. AES Instructions
+
+The  32-bit  instructions  were  derived  from  work  in  (Saarinen,  2020)  and  contributed  to  the  RISC-V cryptography extension. The 64-bit instructions were developed collaboratively by task group members on our mailing list.
+
+Supporting material, including rationale and a design space exploration for all of the AES instructions in the specification can be found in the paper "The design of scalar AES Instruction Set Extensions for RISC-V" (Marshall et al., 2020).

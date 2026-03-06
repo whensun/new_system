@@ -1,0 +1,34 @@
+## 32.3.15. vctz.v
+
+## Synopsis
+
+Vector Count Trailing Zeros
+
+## Mnemonic
+
+vctz.v vd, vs2, vm
+
+## Encoding (Vector)
+
+<image>
+
+## Arguments
+
+| Register   | Direction   | Definition                  |
+|------------|-------------|-----------------------------|
+| Vs2        | input       | Input elements              |
+| Vd         | output      | Count of trailing zero bits |
+
+## Description
+
+A trailing zero count is performed on each element.
+
+## Operation
+
+```
+function clause execute (VCTZ(vs2)) = { foreach (i from vstart to vl-1) { let input = get_velem(vs2, SEW, i); for (j = 0; j < SEW;  j++) if [input[j]] == 0b1 then break; set_velem(vd, SEW, i, j) } RETIRE_SUCCESS }
+```
+
+## Included in
+
+Zvbb

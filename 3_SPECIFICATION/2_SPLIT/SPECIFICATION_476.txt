@@ -1,0 +1,11 @@
+## 31.3.12. Zk - Standard scalar cryptography extension
+
+This extension is shorthand for the following set of other extensions:
+
+| Included Extension   | Description                                   |
+|----------------------|-----------------------------------------------|
+| Zkn                  | NIST Algorithm suite extension.               |
+| Zkr                  | Entropy Source extension.                     |
+| Zkt                  | Data independent execution latency extension. |
+
+A core which implements Zk must implement all of the above extensions.

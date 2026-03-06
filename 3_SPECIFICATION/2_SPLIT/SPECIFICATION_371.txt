@@ -1,0 +1,9 @@
+## 30.11.5. Vector Bitwise Logical Instructions
+
+```
+# Bitwise logical operations. vand.vv vd, vs2, vs1, vm   # Vector-vector vand.vx vd, vs2, rs1, vm   # vector-scalar vand.vi vd, vs2, imm, vm   # vector-immediate vor.vv vd, vs2, vs1, vm    # Vector-vector vor.vx vd, vs2, rs1, vm    # vector-scalar vor.vi vd, vs2, imm, vm    # vector-immediate vxor.vv vd, vs2, vs1, vm    # Vector-vector vxor.vx vd, vs2, rs1, vm    # vector-scalar vxor.vi vd, vs2, imm, vm    # vector-immediate
+```
+
+<image>
+
+With  an  immediate  of  -1,  scalar-immediate  forms  of  the vxor instruction  provide  a bitwise  NOT  operation.  This  is  provided  as  an  assembler  pseudoinstruction vnot.v vd,vs,vm = vxor.vi vd,vs,-1,vm .

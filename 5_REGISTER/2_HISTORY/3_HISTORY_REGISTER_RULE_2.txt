@@ -1,0 +1,358 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: mseccfg
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for mseccfg register, rewrite the following description as a list of rules. Each rule must explain about mseccfg register. Essentially, for each rule, it is about mseccfg register, not other things.
+
+Do not lose any information about mseccfg register from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The register being described is mseccfg."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome) rather than decoding the meaning of an already-set register value.
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+Do not write rules in the form "mseccfg has <bit pattern> means/represents/indicates <cause>"; instead, write them as "If <cause/event> occurs, mseccfg becomes/contains <bit pattern>".
+
+Exclude purely structural or descriptive properties (such as register width, naming, or existence) unless they imply observable architectural behavior.
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+Ignore any statements that describe reset values, power-on defaults, or initial state after reset; do not generate rules from reset-related information.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word mseccfg.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+**Definition and existence**
+
+- *mseccfg* is an **optional 64‑bit read/write CSR** that controls security features.  
+- *mseccfg* **exists if Zkr is implemented, or if it is required by other processor features**.  
+- If Zkr is **not implemented**, the [s,u]seed bits of *mseccfg* **must be hardwired to zero**.  
+- When **S‑mode or U‑mode is not implemented**, the corresponding [s,u]seed bits **must be hardwired to zero**.  
+- The **[s,u]seed bits must have a defined reset value**. The system **must not allow them to be in an undefined state after a reset**.  
+
+**Address and size**
+
+- *mseccfg* is a **Machine‑mode CSR only accessible to Machine mode**.  
+- It is **64 bits wide**.  
+- Address: **0x747** on RV64; on RV32 the low 32 bits are at **0x747** and the high 32 bits at **0x757**.  
+
+**Aliasing in RV32**
+
+- When **XLEN=32 only**, *mseccfgh* is a **32‑bit read/write register** that **aliases bits 63:32 of *mseccfg***.  
+- *mseccfgh* **does not exist when XLEN=64**.  
+
+**Field definitions (provided by extensions)**  
+
+| Field | Bit position(s) | Providing extension | Description (normative) |
+|-------|----------------|---------------------|--------------------------|
+| **SSEED** | bit 9 | Zkr (entropy‑source) | Controls access to the seed CSR from U, S, HS modes (see "Access Control to seed"). |
+| **USEED** | bit 8 | Zkr (entropy‑source) | Controls access to the seed CSR from U, S, HS modes (see "Access Control to seed"). |
+| **RLB** | bit 2 | Smepmp (PMP‑enhancement) | - When *mseccfg.RLB* **is 1** locked PMP rules **may be removed/modified** and locked PMP entries **may be edited**.<br>- When *mseccfg.RLB* **is 0** and **pmpcfg.L = 1** in any rule or entry, then *mseccfg.RLB* **remains 0** and **any further modifications to *mseccfg.RLB* are ignored until a PMP reset**. |
+| **MMWP** | bit 1 | Smepmp (PMP‑enhancement) | **Sticky bit**: once set it **cannot be unset until a PMP reset**. When set it **changes the default PMP policy for M‑mode when accessing memory regions that don’t have a matching PMP rule, to denied instead of ignored**. |
+| **MML** | bit 0 | Smepmp (PMP‑enhancement) | **Sticky bit**: once set it **cannot be unset until a PMP reset**. When set the **meaning of *pmpcfg.L* changes** (see "Machine‑Mode Lockdown" below). |
+| **MLPE** | – (single‑bit field) | Zicfilp | When *mseccfg.MLPE* **is 1**, the Zicfilp extension **is enabled in M‑mode**. When *mseccfg.MLPE* **is 0**, the Zicfilp extension **is not enabled in M‑mode** and:<br>‑ The hart **does not update the ELP state**; it remains **NO_LP_EXPECTED**.<br>‑ The **LPAD instruction operates as a no‑op**. |
+| **PMM** | bits 33:32 | Smmpm | Adds a 2‑bit WARL field; setting PMM **enables or disables pointer masking for M‑mode** (Table 2). |
+
+**Reset behavior**
+
+- The **reset value of *mseccfg* is implementation‑specific**.  
+- **If backwards compatibility is a requirement**, the reset value **should reset to zero on hard reset**.  
+- When the **Zicfilp extension is implemented**, the *mseccfg.MLPE* field **is reset to 0**.  
+
+**Field properties**
+
+- All *mseccfg* fields defined in the proposal **are WARL**.  
+- The **remaining bits are reserved for future standard use and should always read zero**.  
+
+**Access control to the seed CSR (normative effect of SSEED and USEED)**  
+
+- **sseed** (bit 9) and **useed** (bit 8) are the **access‑control bits for the seed CSR**.  
+- **Without the corresponding access‑control bit set to 1**, any attempted access to the seed CSR from **U, S, or HS modes raises an illegal‑instruction exception**.  
+- For **VS and VU modes** (present when the Hypervisor extension is implemented):  
+  - A **read‑only instruction** causes an **illegal‑instruction exception**.  
+  - A **read‑write instruction** (that can potentially be emulated) causes a **virtual‑instruction exception only if *mseccfg.sseed* = 1**.  
+  - **mseccfg.useed has no effect on the exception type for either VS or VU modes**.  
+
+**Implementation flexibility**
+
+- **Implementations may implement *mseccfg* such that [s,u]seed is a read‑only constant value 0**.  
+- **Software may discover if access to the seed CSR can be enabled in U and S mode by writing a 1 to [s,u]seed and reading back the result**.  
+
+**Machine‑Mode Lockdown (effect of MML)**  
+
+- When *mseccfg.MML* **is set**, the **meaning of *pmpcfg.L* changes**:  
+  - *pmpcfg.L* = 1 now **marks a rule as M‑mode‑only** (enforced on Machine mode and denied in S/U mode).  
+  - *pmpcfg.L* = 0 marks a rule as S/U‑mode‑only (enforced on Supervisor/User mode and denied in Machine mode).  
+  - Additional encodings define **Shared‑Region** rules (see the "Truth table when mseccfg.MML is set").  
+
+**Machine‑Mode Allowlist Policy (effect of MMWP)**  
+
+- When *mseccfg.MMWP* **is set**, the **default PMP policy for M‑mode when accessing memory regions without a matching PMP rule is "denied"** instead of "ignored".  
+
+**Rule Locking Bypass (effect of RLB)**  
+
+- When *mseccfg.RLB* **is 1**, **locked PMP rules may be removed/modified** and **locked PMP entries may be edited**.  
+- When *mseccfg.RLB* **is 0** and **any pmpcfg.L = 1**, then *mseccfg.RLB* **remains 0** and **further modifications to *mseccfg.RLB* are ignored until a PMP reset**.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: If Zkr is not implemented, then the sseed and useed bits of mseccfg are hardwired to zero.  
+RULE 2: If S-mode is not implemented, then the sseed bit of mseccfg is hardwired to zero.  
+RULE 3: If U-mode is not implemented, then the useed bit of mseccfg is hardwired to zero.  
+RULE 4: When XLEN=32, accesses to mseccfgh read and write bits 63:32 of mseccfg.  
+RULE 5: If the sseed bit in mseccfg is 0, then any attempted access to the seed CSR from U, S, or HS mode raises an illegal‑instruction exception.  
+RULE 6: If the useed bit in mseccfg is 0, then any attempted access to the seed CSR from U, S, or HS mode raises an illegal‑instruction exception.  
+RULE 7: If execution is in VS or VU mode and a read‑only instruction attempts to access the seed CSR, then an illegal‑instruction exception is raised.  
+RULE 8: If execution is in VS or VU mode and a read‑write instruction attempts to access the seed CSR while mseccfg.sseed is 1, then a virtual‑instruction exception is raised.  
+RULE 9: In VS or VU mode, the value of mseccfg.useed must not influence the type of exception generated by a seed CSR access.  
+RULE 10: Implementations may make the sseed and useed bits of mseccfg read‑only constant zero.  
+RULE 11: Software may determine whether seed CSR access can be enabled in U and S mode by writing 1 to the sseed and useed bits of mseccfg and then reading back the values.  
+RULE 12: If mseccfg.RLB is 1, then locked PMP rules may be removed or modified and locked PMP entries may be edited.  
+RULE 13: If mseccfg.RLB is 0 and any pmpcfg.L field equals 1, then mseccfg.RLB remains 0 and any attempted modification of the RLB field is ignored until a PMP reset.  
+RULE 14: If mseccfg.MMWP is set to 1, then it cannot be cleared until a PMP reset.  
+RULE 15: If mseccfg.MMWP is set to 1, then the default PMP policy for M-mode for memory regions without a matching PMP rule becomes denied rather than ignored.  
+RULE 16: If mseccfg.MML is set to 1, then it cannot be cleared until a PMP reset.  
+RULE 17: If mseccfg.MML is 1, then a pmpcfg.L value of 1 marks the rule as M‑mode‑only (enforced on Machine mode and denied in S/U mode).  
+RULE 18: If mseccfg.MML is 1, then a pmpcfg.L value of 0 marks the rule as S/U‑mode‑only (enforced on Supervisor/User mode and denied in Machine mode).  
+RULE 19: If mseccfg.MLPE is 1, then the Zicfilp extension is enabled in M-mode.  
+RULE 20: If mseccfg.MLPE is 0, then the Zicfilp extension is not enabled in M-mode.  
+RULE 21: If mseccfg.MLPE is 0, then the hart does not update the ELP state (it remains NO_LP_EXPECTED) and the LPAD instruction operates as a no‑op.  
+RULE 22: If the PMM field of mseccfg is written with a value that enables pointer masking, then pointer masking for M-mode is enabled; if the PMM field is written with a value that disables pointer masking, then pointer masking for M-mode is disabled.  
+RULE 23: Reserved bits of mseccfg should always read as zero.  
+RULE 24: If software writes a value to any defined field of mseccfg, then the final stored value must be a legal value for that field (WARL).
+======================================================= END - 1 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 2 =======================================================
+GLOBAL NUMBER: 2
+LOCAL NUMBER: 1
+NAME: mstatus
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, for mstatus register, rewrite the following description as a list of rules. Each rule must explain about mstatus register. Essentially, for each rule, it is about mstatus register, not other things.
+
+Do not lose any information about mstatus register from the description. Read the text or the description carefully. Understand the context and the sentences. Do not lose any important information.
+
+For each rule, do not use any internal references like "According to Table 7," or "see Figure 3." Each rule must be one sentence only. Each rule must stand fully on its own without cross-references. Do not quote or refer to other rules. Essentially, each rule is one idea. Avoid a rule like this: "The register being described is mstatus."
+
+Each rule should become a single testable statement. Each rule should be a separate atomic rule, each expressing only one fact. Each rule needs to be clear and detailed. Extract ONLY explicit, testable, normative rules about architectural behavior. A rule MUST describe behavioral semantics, not naming, encoding, or syntax.
+
+Remember, rules must describe architectural cause -> effect semantics (event -> architectural outcome) rather than decoding the meaning of an already-set register value.
+
+Remember, if a sentence contains multiple distinct behaviors or enumerated cases, split them into multiple rules so each rule expresses only one case.
+
+Do not write rules in the form "mstatus has <bit pattern> means/represents/indicates <cause>"; instead, write them as "If <cause/event> occurs, mstatus becomes/contains <bit pattern>".
+
+Exclude purely structural or descriptive properties (such as register width, naming, or existence) unless they imply observable architectural behavior.
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+Ignore any statements that describe reset values, power-on defaults, or initial state after reset; do not generate rules from reset-related information.
+
+OUTPUT FORMAT:
++ Each rule must begin with the word "RULE", followed by its number (e.g., "RULE 1: ", "RULE 2: ", "RULE 3: ", ...).
++ Do not give me any introduction.
++ Each rule must contain the word mstatus.
+
+Remember, output must be ASCII-only text.
+
+The following description:
+
+**Machine‑status register (mstatus)**  
+
+*General definition*  
+- **mstatus** is an MXLEN‑bit read/write CSR that holds the hart’s architectural state.  The register layout is defined in Figure 7 (RV32) and Figure 8 (RV64).  The fields and their bit positions are listed in those figures; fields may be read‑only, WARL (write‑any‑legal‑value), or WPRI (reserved, must be written with zero).  
+
+*Global interrupt‑enable bits*  
+- **MIE** and **SIE** are the global interrupt‑enable bits for M‑mode and S‑mode respectively.  They are located in the low‑order bits of mstatus so that they can be atomically set or cleared with a single CSR instruction.  
+- When the hart is executing in privilege mode x, interrupts are globally enabled when **xIE = 1** and globally disabled when **xIE = 0**.  Interrupts for lower‑privilege modes (w < x) are always globally disabled regardless of any **wIE** setting; interrupts for higher‑privilege modes (y > x) are always globally enabled regardless of **yIE**.  
+
+*Privilege‑stack fields* (Section 3.1.6.1)  
+- Each privilege mode x that can respond to interrupts has a two‑level stack: **xIE**, **xPIE**, and **xPP**.  
+- On a trap from privilege mode y into privilege mode x, **xPIE** is set to the previous value of **xIE**, **xIE** is cleared to 0, and **xPP** is set to y.  
+- On execution of an **xRET** instruction (MRET or SRET), **xIE** is restored from **xPIE**, privilege mode is changed to the value in **xPP**, **xPIE** is set to 1, and **xPP** is set to the least‑privileged supported mode (U if U‑mode is implemented, else M).  If the new mode ≠ M, **xRET** also clears **MPRV**.  
+
+*Double‑trap‑control (Section 3.1.6.2)*  
+- The **MDT** (M‑mode‑disable‑trap) bit is a WARL field introduced by the Smdbltrp extension; it is reset to 1.  
+- When **MDT = 1**, an explicit write to **MIE** clears **MIE** to 0.  For RV64 the clearing occurs regardless of the value written to **MIE** by the same CSR write.  
+- **MIE** may be set to 1 only by an explicit CSR write when **MDT = 0** (or, for RV64, when the same write also sets **MDT = 0**).  
+- When a trap is taken into M‑mode and **MDT = 0**, the hardware sets **MDT = 1** before delivering the trap.  If **MDT** is already 1, the trap is classified as an *unexpected trap*.  An **MRET** or **SRET** instruction clears **MDT** to 0.  
+
+*Base‑ISA control (Section 3.1.6.3)*  
+- **SXL** and **UXL** are WARL fields that control the XLEN for S‑mode and U‑mode respectively.  Their encoding matches the **MXL** field of **misa** (Table 9).  
+- When **MXLEN = 32**, the **SXL** and **UXL** fields do not exist and XLEN for S‑mode and U‑mode is 32.  
+- When **MXLEN = 64** and a mode is not implemented, the corresponding field is read‑only 0; otherwise it is WARL and may be hard‑wired to a value that ensures **SXLEN = MXLEN** (or **UXLEN = SXLEN**).  
+
+*Memory‑privilege fields (Section 3.1.6.4)*  
+- **MPRV** (Modify PRiVilege) modifies the effective privilege level for explicit loads and stores:  
+
+| MPRV | MPV | MPP | Effect |
+|------|-----|-----|--------|
+| 0    | –   | –   | Normal access; current privilege mode applies. |
+| 1    | 0   | 0   | U‑level access with HS‑level translation and protection only. |
+| 1    | 0   | 1   | HS‑level access with HS‑level translation and protection only. |
+| 1    | –   | 3   | M‑level access with no translation. |
+| 1    | 1   | 0   | VU‑level access with two‑stage translation; HS‑level **MXR** makes any executable page readable; VS‑level **MXR** makes executable pages readable only if also readable at the guest‑physical stage. |
+| 1    | 1   | 1   | VS‑level access with two‑stage translation; HS‑level **MXR** makes any executable page readable; VS‑level **MXR** makes executable pages readable only if also readable at the guest‑physical stage; VS‑level **SUM** applies instead of HS‑level **SUM**. |
+
+- **MXR** (Make eXecutable Readable) modifies load permissions: when **MXR = 0**, loads succeed only from pages with the read bit set; when **MXR = 1**, loads succeed from pages with either the read or execute bit set.  **MXR** has no effect when page‑based virtual memory is not in effect and is read‑only 0 if S‑mode is not supported.  
+
+- **SUM** (permit Supervisor User Memory access) modifies S‑mode load/store permissions: when **SUM = 0**, S‑mode accesses to pages accessible by U‑mode fault; when **SUM = 1**, such accesses are permitted.  **SUM** has no effect when page‑based virtual memory is not in effect; it is read‑only 0 if S‑mode is not supported or if **satp.MODE** is read‑only 0.  
+
+*Endianness‑control fields (Section 3.1.6.5)*  
+- **MBE**, **SBE**, and **UBE** are WARL fields that control the endianness of non‑instruction‑fetch memory accesses made from M‑mode, S‑mode, and U‑mode respectively (assuming **MPRV = 0** for M‑mode accesses).  **MBE = 0** selects little‑endian, **MBE = 1** selects big‑endian; analogous meanings hold for **SBE** and **UBE**.  If a mode is not implemented, the corresponding field is read‑only 0.  Implementations may make **SBE** a read‑only copy of **MBE**, and **UBE** a read‑only copy of either **MBE** or **SBE**.  
+
+*Virtualization‑support fields (Section 3.1.6.6)*  
+- **TVM** (Trap Virtual Memory) is a WARL field; when **TVM = 1**, attempts to read or write **satp**, or to execute **SFENCE.VMA**, **SINVAL.VMA**, or any instruction that accesses **satp** while executing in S‑mode raise an illegal‑instruction exception.  **TVM** is read‑only 0 when S‑mode is not implemented.  **TVM** affects only HS‑mode, not VS‑mode.  
+
+- **TW** (Timeout Wait) is a WARL field; when **TW = 0**, the **WFI** instruction may execute in lower‑privilege modes (subject to other restrictions).  When **TW = 1**, execution of **WFI** in any less‑privileged mode that does not complete within an implementation‑specific bounded time limit causes an illegal‑instruction exception.  **TW** is read‑only 0 when there are no modes less privileged than M.  
+
+- **TSR** (Trap SRET) is a WARL field; when **TSR = 1**, attempts to execute **SRET** while executing in S‑mode raise an illegal‑instruction exception.  **TSR** is read‑only 0 when S‑mode is not implemented.  
+
+*Extension‑context‑status fields (Section 3.1.6.7)*  
+
+| Status value | Meaning (FS/VS) | Meaning (XS) |
+|--------------|-----------------|--------------|
+| 0            | Off             | All off |
+| 1            | Initial         | None dirty or clean, some on |
+| 2            | Clean           | None dirty, some clean |
+| 3            | Dirty           | Some dirty |
+
+- **FS[1:0]** encodes the status of the floating‑point unit (and its CSRs **fcsr**, **frm**, **fflags**).  If the **F** extension is implemented, **FS** shall not be read‑only 0.  If neither **F** nor S‑mode is implemented, **FS** is read‑only 0; if S‑mode is implemented but **F** is not, **FS** may optionally be read‑only 0.  
+
+- **VS[1:0]** encodes the status of the vector extension (registers **v0‑v31**, CSRs **vcsr**, **vxrm**, **vxsat**, **vstart**, **vl**, **vtype**, **vlenb**).  If the **v** registers are implemented, **VS** shall not be read‑only 0.  If neither **v** registers nor S‑mode are implemented, **VS** is read‑only 0; if S‑mode is implemented but **v** registers are not, **VS** may optionally be read‑only 0.  
+
+- **XS[1:0]** encodes the status of any additional user‑mode extensions that have architectural state.  In harts without such extensions, **XS** is read‑only 0.  **XS** reports the maximum status value across all extension‑specific status fields.  
+
+- **SD** is a read‑only bit that summarizes whether any of **FS**, **VS**, or **XS** are **Dirty**.  If **FS**, **VS**, and **XS** are all read‑only 0, **SD** is always 0.  When **VS** is **Dirty**, **SD = 1**; otherwise **SD** is set according to the existing specification (i.e., reflects **FS** or **XS** dirty bits).  
+
+- When **FS**, **VS**, or **XS** are set to **Off**, any instruction that attempts to read or write the corresponding state causes an illegal‑instruction exception.  
+
+- Executing an instruction that changes floating‑point or vector state (including the corresponding CSRs) changes the respective field from **Initial** or **Clean** to **Dirty**.  Implementations may also change **VS** from **Initial** or **Clean** to **Dirty** at any time even when there is no change in vector state.  
+
+- The **Zfinx** extension hard‑wires **FS** to 0 and removes its effect on the trapping behavior of floating‑point instructions or **fcsr** accesses.  
+
+*Vector‑context‑status in mstatus (Section 30.3.2)*  
+- The **VS** field is added to **mstatus[10:9]** (and shadowed in **sstatus[10:9]**) and is defined analogously to **FS**.  
+- When **mstatus.VS = Off**, attempts to execute any vector instruction or to access vector CSRs raise an illegal‑instruction exception.  
+- When **mstatus.VS = Initial** or **Clean**, executing any instruction that changes vector state (including vector CSRs) sets **mstatus.VS** to **Dirty**.  Implementations may also set **VS** to **Dirty** at any time even when there is no change in vector state.  
+- If **mstatus.VS = Dirty**, then **mstatus.SD = 1**; otherwise **mstatus.SD** is set according to the existing specifications.  
+
+*Timeout‑Wait bit usage (Section 14.1)*  
+- The **TW** bit in **mstatus** is consulted by the **WRS.NTO** instruction: when **TW = 1** and **WRS.NTO** is executed in any privilege mode other than M‑mode, and the instruction does not complete within an implementation‑specific bounded time limit, **WRS.NTO** raises an illegal‑instruction exception.  
+- When executing in VS or VU mode, if **hstatus.VTW** is set, **mstatus.TW** is clear, and **WRS.NTO** does not complete within the bounded limit, a virtual‑instruction exception is raised.  
+
+*Interaction with CMO instructions (Section 19.4.2.2)*  
+- The behavior of CMO (Cache‑Management Operations) instructions is affected by the **MPRV**, **MPV**, **MPP** bits in **mstatus**, and by **SUM** and **MXR** bits in **mstatus**, **sstatus**, and **vsstatus**.  (The text states "may or may not be permitted… based on the states of the **MPRV**, **MPV**, and **MPP** bits in **mstatus** and the **SUM** and **MXR** bits in **mstatus**, **sstatus**, and **vsstatus**.")  
+
+*Reset state (Section 3.4)*  
+- Upon reset, **mstatus.MIE** and **mstatus.MPRV** are reset to 0.  If little‑endian memory accesses are supported, **mstatus.MBE** is reset to 0.  All other fields are UNSPECIFIED unless otherwise noted (e.g., **FS** may be hard‑wired by extensions).  
+
+*Additional fields introduced by the hypervisor extension (Section 21.4.1)*  
+- When the hypervisor extension is implemented, **MPV** (Machine Previous Virtualization mode) and **GVA** (Guest Virtual Address) bits are added (to **mstatus** for RV64, to **mstatush** for RV32).  **MPV** records the virtualization mode (V) at trap entry; **GVA** records whether the trap’s **mtval** contains a guest virtual address.  
+- The hypervisor extension modifies the behavior of **TSR**, **TVM**, and **TW**: they affect only HS‑mode, not VS‑mode; **TW** affects all modes except M‑mode.  
+
+*Summary of key mstatus fields and their architectural effects*  
+
+| Field | Type | Effect (when set) |
+|-------|------|-------------------|
+| **MIE** | RW | Enables machine‑mode interrupts. |
+| **SIE** | RW | Enables supervisor‑mode interrupts. |
+| **MPIE / SPIE** | RW | Holds previous values of **MIE / SIE** for trap return. |
+| **MPP / SPP** | WARL | Holds previous privilege mode for trap return. |
+| **MPRV** | RW | Causes explicit loads/stores to use the privilege mode in **MPP** for address translation and protection. |
+| **MXR** | RW | Makes executable pages readable for loads. |
+| **SUM** | RW | Allows supervisor accesses to user‑mode pages when set. |
+| **TSR** | WARL | When 1, **SRET** in S‑mode traps (illegal‑instruction). |
+| **TVM** | WARL | When 1, **satp** and **SFENCE.VMA** in S‑mode trap (illegal‑instruction). |
+| **TW** | WARL | When 1, **WFI** in lower‑privilege modes may trap if it does not complete within a bounded time. |
+| **MBE / SBE / UBE** | WARL | Selects big‑endian (1) or little‑endian (0) for non‑fetch memory accesses in the corresponding mode. |
+| **SXL / UXL** | WARL | Controls XLEN for S‑mode and U‑mode. |
+| **FS / VS / XS** | WARL (2‑bit) | Encode the status (Off/Initial/Clean/Dirty) of floating‑point, vector, and other user extensions. |
+| **SD** | RO | Set to 1 if any of **FS**, **VS**, or **XS** are **Dirty**. |
+| **MDT** | WARL (Smdbltrp) | When 1, forces **MIE = 0**; cleared by **MRET / SRET**. |
+| **MPV** | WARL (hypervisor) | Records virtualization mode at trap entry; restored by **MRET**. |
+| **GVA** | WARL (hypervisor) | Indicates whether **mtval** on trap contains a guest virtual address. |
+| **SDT / SPELP** | (Zicfilp) | Used for preserving expected landing‑pad state on traps. |
+
+These are all the explicit, normative architectural descriptions of the **mstatus** CSR found in the provided text.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+RULE 1: If the hart is executing in privilege mode x, then when mstatus.xIE = 1 interrupts are globally enabled for that mode and when mstatus.xIE = 0 interrupts are globally disabled for that mode.  
+RULE 2: If the current privilege mode is x, then interrupts for any lower‑privilege mode w < x are globally disabled regardless of the value of mstatus.wIE.  
+RULE 3: If the current privilege mode is x, then interrupts for any higher‑privilege mode y > x are globally enabled regardless of the value of mstatus.yIE.  
+RULE 4: When a trap is taken from privilege mode y into privilege mode x, mstatus.xPIE is set to the previous value of mstatus.xIE, mstatus.xIE is cleared to 0, and mstatus.xPP is set to y.  
+RULE 5: When an xRET instruction (MRET or SRET) is executed, mstatus.xIE is restored from mstatus.xPIE, the hart’s privilege mode is changed to the value in mstatus.xPP, mstatus.xPIE is set to 1, and mstatus.xPP is set to the least‑privileged supported mode (U if implemented, otherwise M).  
+RULE 6: If the new privilege mode after an xRET instruction is not M, then the xRET instruction also clears mstatus.MPRV to 0.  
+RULE 7: If mstatus.MDT = 1, then any explicit CSR write that targets mstatus.MIE forces mstatus.MIE to be cleared to 0, regardless of the written value (for RV64 the clearing occurs even if the same write also attempts to set MIE).  
+RULE 8: mstatus.MIE may be set to 1 only by an explicit CSR write when mstatus.MDT = 0 (for RV64 the same write must also set mstatus.MDT = 0).  
+RULE 9: When a trap is taken into M‑mode and mstatus.MDT = 0, the hardware sets mstatus.MDT to 1 before delivering the trap.  
+RULE 10: If a trap is taken into M‑mode while mstatus.MDT is already 1, the trap is classified as an unexpected trap.  
+RULE 11: Execution of an MRET or SRET instruction clears mstatus.MDT to 0.  
+RULE 12: If mstatus.MPRV = 0, then explicit loads and stores use the current privilege mode for address translation and protection checks.  
+RULE 13: If mstatus.MPRV = 1 and mstatus.MPV = 0 and mstatus.MPP = 0, then explicit memory accesses are performed with U‑level privilege using HS‑level translation and protection only.  
+RULE 14: If mstatus.MPRV = 1 and mstatus.MPV = 0 and mstatus.MPP = 1, then explicit memory accesses are performed with HS‑level privilege using HS‑level translation and protection only.  
+RULE 15: If mstatus.MPRV = 1 and mstatus.MPP = 3, then explicit memory accesses are performed with M‑level privilege with no address translation.  
+RULE 16: If mstatus.MPRV = 1, mstatus.MPV = 1 and mstatus.MPP = 0, then explicit memory accesses are performed with VU‑level privilege using two‑stage translation, and HS‑level MXR makes any executable page readable while VS‑level MXR permits readability only if the page is also readable at the guest‑physical stage.  
+RULE 17: If mstatus.MPRV = 1, mstatus.MPV = 1 and mstatus.MPP = 1, then explicit memory accesses are performed with VS‑level privilege using two‑stage translation, and HS‑level MXR makes any executable page readable while VS‑level MXR permits readability only if the page is also readable at the guest‑physical stage; VS‑level SUM applies instead of HS‑level SUM.  
+RULE 18: If mstatus.MXR = 0, then a load succeeds only from a page whose read permission bit is set.  
+RULE 19: If mstatus.MXR = 1, then a load succeeds from a page that has either the read or the execute permission bit set.  
+RULE 20: mstatus.MXR has no effect when page‑based virtual memory is not in effect, and mstatus.MXR is read‑only 0 if S‑mode is not implemented.  
+RULE 21: If mstatus.SUM = 0, then a supervisor‑mode access to a page that is accessible by user mode faults.  
+RULE 22: If mstatus.SUM = 1, then supervisor‑mode accesses to pages that are accessible by user mode are permitted.  
+RULE 23: mstatus.SUM has no effect when page‑based virtual memory is not in effect, and mstatus.SUM is read‑only 0 if S‑mode is not implemented or if satp.MODE is read‑only 0.  
+RULE 24: If mstatus.MBE = 0, then non‑instruction‑fetch memory accesses made from M‑mode use little‑endian byte ordering (assuming mstatus.MPRV = 0).  
+RULE 25: If mstatus.MBE = 1, then non‑instruction‑fetch memory accesses made from M‑mode use big‑endian byte ordering (assuming mstatus.MPRV = 0).  
+RULE 26: If mstatus.SBE = 0, then non‑instruction‑fetch memory accesses made from S‑mode use little‑endian ordering (assuming mstatus.MPRV = 0).  
+RULE 27: If mstatus.SBE = 1, then non‑instruction‑fetch memory accesses made from S‑mode use big‑endian ordering (assuming mstatus.MPRV = 0).  
+RULE 28: If mstatus.UBE = 0, then non‑instruction‑fetch memory accesses made from U‑mode use little‑endian ordering (assuming mstatus.MPRV = 0).  
+RULE 29: If mstatus.UBE = 1, then non‑instruction‑fetch memory accesses made from U‑mode use big‑endian ordering (assuming mstatus.MPRV = 0).  
+RULE 30: If the hypervisor extension is implemented, then writes to mstatus.MPV record the virtualization mode (V) at trap entry.  
+RULE 31: If the hypervisor extension is implemented, then writes to mstatus.GVA indicate whether the trap’s mtval contains a guest virtual address.  
+RULE 32: If the hypervisor extension is implemented, then the behavior of mstatus.TSR, mstatus.TVM, and mstatus.TW is limited to affecting only HS‑mode (they do not affect VS‑mode), and mstatus.TW affects all modes except M‑mode.  
+RULE 33: If mstatus.TVM = 1, then any attempt in S‑mode to read or write the satp CSR or to execute SFENCE.VMA, SINVAL.VMA, or any instruction that accesses satp raises an illegal‑instruction exception; mstatus.TVM is read‑only 0 when S‑mode is not implemented.  
+RULE 34: If mstatus.TW = 0, then the WFI instruction may execute in lower‑privilege modes subject to other restrictions.  
+RULE 35: If mstatus.TW = 1 and the WFI instruction is executed in any privilege mode other than M‑mode and does not complete within an implementation‑specific bounded time limit, then an illegal‑instruction exception is raised.  
+RULE 36: If mstatus.TW = 1 and the WRS.NTO instruction is executed in any privilege mode other than M‑mode and does not complete within an implementation‑specific bounded time limit, then an illegal‑instruction exception is raised.  
+RULE 37: When executing in VS or VU mode, if hstatus.VTW = 1, mstatus.TW is cleared, and WRS.NTO does not complete within the bounded limit, then a virtual‑instruction exception is raised.  
+RULE 38: If mstatus.TSR = 1, then attempts to execute the SRET instruction while executing in S‑mode raise an illegal‑instruction exception; mstatus.TSR is read‑only 0 when S‑mode is not implemented.  
+RULE 39: If the F extension is implemented, then mstatus.FS shall not be read‑only 0.  
+RULE 40: If neither the F extension nor S‑mode is implemented, then mstatus.FS is read‑only 0.  
+RULE 41: If S‑mode is implemented but the F extension is not, then mstatus.FS may optionally be read‑only 0.  
+RULE 42: Executing an instruction that changes floating‑point state (including accesses to floating‑point CSRs) changes mstatus.FS from Initial or Clean to Dirty.  
+RULE 43: If mstatus.FS = Off, then any instruction that attempts to read or write floating‑point state causes an illegal‑instruction exception.  
+RULE 44: If the vector extension is implemented, then mstatus.VS shall not be read‑only 0.  
+RULE 45: If neither the vector extension nor S‑mode is implemented, then mstatus.VS is read‑only 0.  
+RULE 46: If S‑mode is implemented but the vector extension is not, then mstatus.VS may optionally be read‑only 0.  
+RULE 47: Executing an instruction that changes vector state (including accesses to vector CSRs) changes mstatus.VS from Initial or Clean to Dirty.  
+RULE 48: Implementations may also change mstatus.VS from Initial or Clean to Dirty at any time even when no vector‑state change occurs.  
+RULE 49: If mstatus.VS = Off, then attempts to execute any vector instruction or to access vector CSRs raise an illegal‑instruction exception.  
+RULE 50: If mstatus.VS = Dirty, then mstatus.SD = 1; otherwise mstatus.SD reflects the Dirty status of mstatus.FS and mstatus.XS according to the existing specification.  
+RULE 51: If the Zfinx extension is implemented, then mstatus.FS is hard‑wired to 0 and has no effect on the trapping behavior of floating‑point instructions or fcsr accesses.  
+RULE 52: The permission to execute CMO (Cache‑Management Operations) instructions may be affected by the values of mstatus.MPRV, mstatus.MPV, mstatus.MPP, mstatus.SUM, and mstatus.MXR.  
+RULE 53: If the hypervisor extension is implemented, then mstatus.MPV records the virtualization mode at trap entry and is restored by MRET.  
+RULE 54: If the hypervisor extension is implemented, then mstatus.GVA indicates whether mtval on a trap contains a guest virtual address.
+======================================================= END - 2 ========================================================

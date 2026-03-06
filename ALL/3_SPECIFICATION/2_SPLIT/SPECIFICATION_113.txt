@@ -1,0 +1,42 @@
+## 20.7. Single-Precision Floating-Point Conversion and Move Instructions
+
+Floating-point-to-integer and integer-to-floating-point conversion instructions are encoded in the OPFP  major  opcode  space.  FCVT.W.S  or  FCVT.L.S  converts  a  floating-point  number  in  floating-point register rs1 to  a  signed  32-bit  or  64-bit  integer,  respectively,  in  integer  register rd .  FCVT.S.W  or FCVT.S.L converts a 32-bit or 64-bit signed integer, respectively, in integer register rs1 into a floatingpoint number in floating-point register rd . FCVT.WU.S, FCVT.LU.S, FCVT.S.WU, and FCVT.S.LU variants convert to or from unsigned integer values. For XLEN ,  FCVT.W[U].S sign-extends the 32-bit result to  the  destination  register  width.  FCVT.L[U].S  and  FCVT.S.L[U]  are  RV64-only  instructions.  If  the rounded result is not representable in the destination format, it is clipped to the nearest value and the invalid flag is set. Table 28 gives the range of valid inputs for FCVT. int .S and the behavior for invalid inputs.
+
+All  floating-point  to  integer  and  integer  to  floating-point  conversion  instructions  round  according  to the rm field. A floating-point register can be initialized to floating-point positive zero using FCVT.S.W rd , x0 , which will never set any exception flags.
+
+Table 28. Domains of float-to-integer conversions and behavior for invalid inputs
+
+|                                        | FCVT.W.S   | FCVT.WU.S   | FCVT.L.S   | FCVT.LU.S   |
+|----------------------------------------|------------|-------------|------------|-------------|
+| Minimum valid input (after rounding)   |            | 0           |            | 0           |
+| Maximum valid input (after rounding)   |            |             |            |             |
+| Output for out-of-range negative input |            | 0           |            | 0           |
+| Output for                             |            | 0           |            | 0           |
+| Output for out-of-range positive input |            |             |            |             |
+| Output for or NaN                      |            |             |            |             |
+
+All  floating-point  conversion  instructions  set  the  Inexact  exception  flag  if  the  rounded  result  differs from the operand value and the Invalid exception flag is not set.
+
+<image>
+
+Floating-point  to  floating-point  sign-injection  instructions,  FSGNJ.S,  FSGNJN.S,  and  FSGNJX.S, produce a result that takes all bits except the sign bit from rs1 . For FSGNJ, the result's sign bit is rs2 's sign bit; for FSGNJN, the result's sign bit is the opposite of rs2 's sign bit; and for FSGNJX, the sign bit is  the  XOR  of  the  sign  bits  of rs1 and rs2 .  Sign-injection  instructions  do  not  set  floating-point exception  flags,  nor  do  they  canonicalize  NaNs.  Note,  FSGNJ.S rx,  ry,  ry moves ry to rx (assembler pseudoinstruction  FMV.S rx,  ry );  FSGNJN.S rx,  ry,  ry moves  the  negation  of ry to rx (assembler pseudoinstruction  FNEG.S rx,  ry );  and  FSGNJX.S rx,  ry,  ry moves  the  absolute  value  of ry to rx (assembler pseudoinstruction FABS.S rx, ry ).
+
+<image>
+
+<image>
+
+The sign-injection instructions provide floating-point MV, ABS, and NEG, as well as supporting a few other operations, including the IEEE copySign operation and sign manipulation in transcendental math function libraries. Although MV, ABS, and NEG only  need  a  single  register  operand,  whereas  FSGNJ  instructions  need  two,  it  is unlikely  most  microarchitectures  would  add  optimizations  to  benefit  from  the reduced number of register reads for these relatively infrequent instructions. Even in this case, a microarchitecture can simply detect when both source registers are the same for FSGNJ instructions and only read a single copy.
+
+Instructions  are  provided  to  move  bit  patterns  between  the  floating-point  and  integer  registers. FMV.X.W moves the single-precision value in floating-point register rs1 represented in IEEE 754-2008 encoding to the lower 32 bits of integer register rd .  The bits are not modified in the transfer, and in particular,  the  payloads  of  non-canonical  NaNs  are  preserved.  For  RV64,  the  higher  32  bits  of  the destination register are filled with copies of the floating-point number's sign bit.
+
+FMV.W.X moves the single-precision value encoded in IEEE 754-2008 standard encoding from the lower 32 bits of integer register rs1 to the floating-point register rd .  The bits are not modified in the transfer, and in particular, the payloads of non-canonical NaNs are preserved.
+
+<image>
+
+The FMV.W.X and FMV.X.W instructions were previously called FMV.S.X and FMV.X.S. The use of W is more consistent with their semantics as an instruction that moves 32 bits  without  interpreting  them.  This  became  clearer  after  defining  NaN-boxing.  To avoid disturbing existing code, both the W and S versions will be supported by tools.
+
+<image>
+
+<image>
+
+The base floating-point ISA was defined so as to allow implementations to employ an internal  recoding  of  the  floating-point  format  in  registers  to  simplify  handling  of subnormal values and possibly to reduce functional unit latency. To this end, the F extension  avoids  representing  integer  values  in  the  floating-point  registers  by defining  conversion  and  comparison  operations  that  read  and  write  the  integer register  file  directly.  This  also  removes  many  of  the  common  cases  where  explicit moves between integer and floating-point registers are required, reducing instruction count and critical paths for common mixed-format code sequences.

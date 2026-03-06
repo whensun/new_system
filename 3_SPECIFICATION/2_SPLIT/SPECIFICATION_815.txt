@@ -1,0 +1,37 @@
+## 11.5.3. Cycle Counting
+
+The ctrdata register may optionally include a count of CPU cycles elapsed since the prior CTR record. The elapsed cycle count value is represented by the CC field, which has a 12-bit mantissa component (Cycle Count Mantissa, or CCM) and a 4-bit exponent component (Cycle Count Exponent, or CCE).
+
+The elapsed cycle counter (CtrCycleCounter) increments at the same rate as the mcycle counter. Only cycles while CTR is active are counted, where active implies that the current privilege mode is enabled for  recording  and  CTR  is  not  frozen.  The  CC  field  is  encoded  such  that  CCE  holds  0  if  the CtrCycleCounter value is less than 4096, otherwise it holds the index of the most significant one bit in the CtrCycleCounter value, minus 11. CCM holds CtrCycleCounter bits CCE+10:CCE-1.
+
+The elapsed cycle count can then be calculated by software using the following formula:
+
+```
+if (CCE==0): return CCM else: return (2 12  + CCM) << CCE-1 endif
+```
+
+The CtrCycleCounter is reset on writes to x ctrctl ,  and on execution of SCTRCLR, to ensure that any accumulated cycle counts do not persist across a context switch.
+
+An  implementation  that  supports  cycle  counting  must  implement  CCV  and  all  CCM  bits,  but  may implement 0..4 exponent bits in CCE. Unimplemented CCE bits are read-only 0. For implementations that  support  transfer  type  filtering,  it  is  recommended  to  implement  at  least  3  exponent  bits.  This allows capturing the full latency of most functions, when recording only calls and returns.
+
+The size of the CtrCycleCounter required to support each CCE width is given in the table below.
+
+Table 30. Cycle Counter Size Options
+
+|   CCE bits |   CtrCycleCounter bits |   Max elapsed cycle value |
+|------------|------------------------|---------------------------|
+|          0 |                     12 |                      4095 |
+|          1 |                     13 |                      8191 |
+|          2 |                     15 |                     32764 |
+|          3 |                     19 |                    524224 |
+|          4 |                     27 |                 134201344 |
+
+<image>
+
+When CCE>1, the granularity  of  the  reported  cycle  count  is  reduced.  For  example, when CCE=3, the bottom 2 bits of the cycle counter are not reported, and thus the reported  value  increments  only  every  4  cycles.  As  a  result,  the  reported  value represents an undercount of elapsed cycles for most cases (when the unreported bits are non-zero). On average, the undercount will be (2 CCE-1 -1)/2. Software can reduce the average undercount to 0 by adding (2 CCE-1 -1)/2  to  each  computed cycle count value when CCE>1.
+
+Though this compressed method of representation results in some imprecision for larger cycle count values, it produces meaningful area savings, reducing storage per entry from 27 bits to 16.
+
+The CC value saturates when all implemented bits in CCM and CCE are 1.
+
+The CC value is valid only when the Cycle Count Valid (CCV) bit is set. If CCV=0, the CC value might not hold the correct count of elapsed active cycles since the last recorded transfer. The next record will have CCV=0 after a write to x ctrctl ,  or  execution  of  SCTRCLR,  since  CtrCycleCounter is reset. CCV should additionally be cleared after any other implementation-specific scenarios where active cycles might not be counted in CtrCycleCounter.

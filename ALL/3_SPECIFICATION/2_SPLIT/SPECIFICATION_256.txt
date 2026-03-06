@@ -1,0 +1,10 @@
+## 29.4.7. Zbkx: Crossbar permutations
+
+These instructions implement a "lookup table" for 4 and 8 bit elements inside the general purpose registers. rs1 is used as a vector of N-bit words, and rs2 as a vector of N-bit indices into rs1 . Elements in rs1 are replaced by the indexed element in rs2 , or zero if the index into rs2 is out of bounds.
+
+These  instructions  are  useful  for  expressing  N-bit  to  N-bit  boolean  operations,  and  implementing cryptographic  code  with  secret  dependent  memory  accesses  (particularly  SBoxes)  such  that  the execution latency does not depend on the (secret) data being operated on.
+
+| RV32   | RV64   | Mnemonic              | Instruction                    |
+|--------|--------|-----------------------|--------------------------------|
+| ✓      | ✓      | xperm4 rd , rs1 , rs2 | Crossbar permutation (nibbles) |
+| ✓      | ✓      | xperm8 rd , rs1 , rs2 | Crossbar permutation (bytes)   |

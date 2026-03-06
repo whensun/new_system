@@ -1,0 +1,43 @@
+## 31.4.36. sha512sum1r
+
+## Synopsis
+
+Implements the Sum1 transformation, as used in the SHA2-512 hash function (NIST, 2015).
+
+## Mnemonic
+
+sha512sum1r rd, rs1, rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction is implemented on RV32 only. Used to compute the Sum1 transform of the SHA2512  hash  function.  The  transform  is  a  64-bit  to  64-bit  function,  so  the  input  and  output  is represented  by  two  32-bit  registers.  This  instruction  must always be  implemented  such  that  its execution latency does not depend on the data being operated on.
+
+Note to software developers
+
+The  entire  Sum1  transform  for  SHA2-512  may  be  computed  on  RV32  using  the following instruction sequence:
+
+```
+sha512sum1r    t0, a0, a1 sha512sum1r    t1, a1, a0
+```
+
+Note the reversed source register ordering.
+
+<image>
+
+## Operation
+
+```
+function clause execute (SHA512SUM1R(rs2, rs1, rd)) = { X(rd) = EXTS((X(rs1) << 23) ^ (X(rs1) >> 14) ^ (X(rs1) >> 18) ^ (X(rs2) >>  9) ^ (X(rs2) << 18) ^ (X(rs2) << 14) ); RETIRE_SUCCESS }
+```
+
+## Included in
+
+| Extension   | Minimum version   | Lifecycle state   |
+|-------------|-------------------|-------------------|
+| Zknh (RV32) | v1.0.0            | Ratified          |
+| Zkn (RV32)  | v1.0.0            | Ratified          |
+| Zk (RV32)   | v1.0.0            | Ratified          |

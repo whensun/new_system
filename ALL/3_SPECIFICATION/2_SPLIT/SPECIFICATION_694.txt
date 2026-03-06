@@ -1,0 +1,7 @@
+## 37.5. Additional Standard Unprivileged Extension Names
+
+Standard unprivileged extensions can also be named by using a single "Z" followed by an alphanumeric name. The name must end with an alphabetical character. The second letter from the end cannot be numeric if the last letter  is  "p".  For  example,  "Zifencei"  names  the  instruction-fetch  fence  extension described in Chapter 5.
+
+The  first  letter  following  the  "Z"  conventionally  indicates  the  most  closely  related  alphabetical extension category, IMAFDQLCBKJTPVH.  For  the  "Zfa"  extension for additional floating-point instructions, for example, the letter "f" indicates the extension is related to the "F" standard extension. If  multiple  "Z"  extensions  are  named,  they  should  be  ordered  first  by  category,  then  alphabetically within a category-for example, "Zicsr\_Zifencei\_Ztso".
+
+All  multi-letter  extensions,  including  those  with  the  "Z"  prefix,  must  be  separated  from  other  multiletter extensions by an underscore, e.g., "RV32IMACZicsr\_Zifencei".

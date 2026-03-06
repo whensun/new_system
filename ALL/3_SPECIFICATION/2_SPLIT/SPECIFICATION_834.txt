@@ -1,0 +1,29 @@
+## 12.1.9. Supervisor Trap Value ( stval ) Register
+
+The stval CSR is an SXLEN-bit read-write register formatted as shown in Figure 60. When a trap is taken into S-mode, stval is  written with exception-specific information to assist software in handling the trap. Otherwise, stval is never written by the implementation, though it may be explicitly written by software. The hardware platform will specify which exceptions must set stval informatively, which may unconditionally  set  it  to  zero,  and  which  may  exhibit  either  behavior,  depending  on  the  underlying event that caused the exception.
+
+If stval is written with a nonzero value when a breakpoint, address-misaligned, access-fault, or pagefault exception occurs on an instruction fetch, load, or store, then stval will contain the faulting virtual address.
+
+<image>
+
+If stval is  written  with  a  nonzero  value  when  a  misaligned  load  or  store  causes  an  access-fault  or page-fault  exception,  then stval will  contain  the  virtual  address  of  the  portion  of  the  access  that caused the fault.
+
+If stval is written with a nonzero value when an instruction access-fault or page-fault exception occurs on a system with variable-length instructions, then stval will contain the virtual address of the portion of the instruction that caused the fault, while sepc will point to the beginning of the instruction.
+
+The stval register  can  optionally  also  be  used  to  return  the  faulting  instruction  bits  on  an  illegalinstruction  exception  ( sepc points  to  the  faulting  instruction  in  memory).  If stval is  written  with  a nonzero value when an illegal-instruction exception occurs, then stval will contain the shortest of:
+
+- ⚫ the actual faulting instruction
+- ⚫ the first ILEN bits of the faulting instruction
+- ⚫ the first SXLEN bits of the faulting instruction
+
+The value loaded into stval on an illegal-instruction exception is right-justified and all unused upper bits are cleared to zero.
+
+On a trap caused by a software-check exception, the stval register holds the cause for the exception. The following encodings are defined:
+
+- ⚫ 0 - No information provided.
+- ⚫ 2 - Landing Pad Fault. Defined by the Zicfilp extension (Section 22.1).
+- ⚫ 3 - Shadow Stack Fault. Defined by the Zicfiss extension (Section 22.2).
+
+For other traps, stval is set to zero, but a future standard may redefine stval 's setting for other traps.
+
+stval is a WARL register that must be able to hold all valid virtual addresses and the value 0. It need not be capable of holding all possible invalid addresses. Prior to writing stval ,  implementations may convert  an  invalid  address  into  some  other  invalid  address  that stval is  capable  of  holding.  If  the feature to return the faulting instruction bits is implemented, stval must also be able to hold all values less than , where is the smaller of SXLEN and ILEN.

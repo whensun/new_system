@@ -1,0 +1,17 @@
+## 30.15.9. Vector Element Index Instruction
+
+The vid.v instruction writes each element's index to the destination vector register group, from 0 to vl -1.
+
+```
+vid.v vd, vm  # Write element ID to destination.
+```
+
+The instruction can be masked. Masking does not change the index value written to active elements.
+
+The vs2 field of the instruction must be set to v0 , otherwise the encoding is reserved .
+
+The result value is zero-extended to fill the destination element if SEW is wider than the result. If the result value would overflow the destination SEW, the least-significant SEW bits are retained.
+
+<image>
+
+Microarchitectures  can  implement vid.v instruction  using  the  same  datapath  as viota.m but with an implicit set mask source.

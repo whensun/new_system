@@ -1,0 +1,5 @@
+## 30.19. Vector Element Groups
+
+Some  vector  instructions  treat  operands  as  a  vector  of  one  or  more element groups ,  where  each element group is a fixed number of elements. For example, complex numbers can be viewed as a twoelement  group  (one  real  element  and  one  imaginary  element).  As  another  example,  the  SHA-256 cryptographic  instructions  in  the  Zvknha  extension  operate  on  128-bit  values  represented  as  a  4element group of 32-bit elements.
+
+This section describes recommendations and terminology for generic instruction set design for vector instructions that operate on element groups.

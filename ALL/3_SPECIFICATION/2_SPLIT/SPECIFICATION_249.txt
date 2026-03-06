@@ -1,0 +1,18 @@
+## 29.4.2.6. Bitwise rotation
+
+Bitwise rotation instructions are similar to the shift-logical operations from the base spec. However, where  the  shift-logical  instructions  shift  in  zeros,  the  rotate  instructions  shift  in  the  bits  that  were shifted out of the other side of the value. Such operations are also referred to as 'circular shifts'.
+
+| RV32   | RV64   | Mnemonic               | Instruction                   |
+|--------|--------|------------------------|-------------------------------|
+| ✓      | ✓      | rol rd , rs1 , rs2     | Rotate left (Register)        |
+|        | ✓      | rolw rd , rs1 , rs2    | Rotate Left Word (Register)   |
+| ✓      | ✓      | ror rd , rs1 , rs2     | Rotate right (Register)       |
+| ✓      | ✓      | rori rd , rs1 , shamt  | Rotate right (Immediate)      |
+|        | ✓      | roriw rd , rs1 , shamt | Rotate right Word (Immediate) |
+|        | ✓      | rorw rd , rs1 , rs2    | Rotate right Word (Register)  |
+
+<image>
+
+Architecture Explanation
+
+The rotate instructions were included to replace a common four-instruction sequence to achieve the same effect (neg; sll/srl; srl/sll; or)

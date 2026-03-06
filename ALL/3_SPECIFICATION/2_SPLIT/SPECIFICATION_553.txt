@@ -1,0 +1,21 @@
+## 31.7.4.4. Logic With Negate
+
+```
+RV32, RV64:
+```
+
+```
+andn rd, rs1, rs2
+```
+
+```
+orn rd, rs1, rs2 xnor rd, rs1, rs2
+```
+
+See Bit-manipulation for Cryptography for details of these instructions. These instructions are useful inside hash functions, block ciphers and for implementing software based side-channel countermeasures  like  masking.  The andn instruction  is  also  useful  for  constant  time  word-select  in systems without the ternary Bitmanip cmov instruction.
+
+Notes to software developers
+
+<image>
+
+In the context of Cryptography, these instructions are useful for: SHA3/Keccak Chi step,  Bit-sliced  function  implementations,  Software  based  power/EM  side-channel countermeasures based on masking.

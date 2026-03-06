@@ -1,0 +1,29 @@
+## 22.1.1. Landing-Pad-Enabled (LPE) State
+
+The term xLPE is  used  to  determine  if  forward-edge  CFI  using  landing  pads  provided  by  the  Zicfilp extension is enabled at a privilege mode.
+
+When S-mode is implemented, it is determined as follows:
+
+Table 51. xLPE determination when S-mode is implemented
+
+| Privilege Mode   | xLPE         |
+|------------------|--------------|
+| M                | mseccfg.MLPE |
+| S or HS          | menvcfg.LPE  |
+| VS               | henvcfg.LPE  |
+| U or VU          | senvcfg.LPE  |
+
+When S-mode is not implemented, it is determined as follows:
+
+Table 52. xLPE determination when S-mode is not implemented
+
+| Privilege Mode   | xLPE         |
+|------------------|--------------|
+| M                | mseccfg.MLPE |
+| U                | menvcfg.LPE  |
+
+The Zicfilp must be explicitly enabled for use at each privilege mode.
+
+Programs  compiled  with  the LPAD instruction  continue  to  function  correctly,  but without forward-edge CFI protection, when the Zicfilp extension is not implemented or is not enabled.
+
+<image>

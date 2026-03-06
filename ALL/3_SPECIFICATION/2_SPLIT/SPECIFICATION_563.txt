@@ -1,0 +1,17 @@
+## 31.8.3.1. The seed CSR
+
+See Section 31.5.1.
+
+The interface was designed to be simple so that a vendor- and device-independent driver component (e.g.,  in  Linux  kernel,  embedded  firmware,  or  a  cryptographic  library)  may  use seed to  generate  truly random bits.
+
+An entropy source does not require a high-bandwidth interface; a single DRBG source initialization only requires 512 bits (256 bits of entropy), and DRBG output can be shared by any number of callers. Once initiated, a DRBG requires new entropy only to mitigate the risk of state compromise.
+
+From  a  security  perspective,  it  is  essential  that  the  side  effect  of  flushing  the  secret  entropy  bits occurs upon reading. Hence we mandate a write operation on this particular CSR.
+
+A  blocking  instruction  may  have  been  easier  to  use,  but  most  users  should  be  querying  a  (D)RBG instead of an entropy source. Without a polling-style mechanism, the entropy source could hang for thousands of cycles under some circumstances. A wfi or pause mechanism (at least potentially) allows energy-saving sleep on MCUs and context switching on higher-end CPUs.
+
+The reason for the particular OPST = seed[31:0] two-bit mechanism is to provide redundancy. The "fault" bit combinations 11 ( DEAD ) and 00 ( BIST ) are more likely for electrical reasons if feature discovery fails
+
+and the entropy source is actually not available.
+
+The 16-bit bandwidth was a compromise motivated by the desire to provide redundancy in the return value, some protection against potential Power/EM leakage (further alleviated by the 2:1 cryptographic conditioning discussed in Section 31.8.5.6), and the desire to have all of the bits "in the same place" on both RV32 and RV64 architectures for programming convenience.

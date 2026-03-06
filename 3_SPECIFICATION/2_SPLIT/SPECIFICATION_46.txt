@@ -1,0 +1,35 @@
+## 11.2. Zicond specification
+
+The "Conditional" operations extension provides a simple solution that provides most of the benefit and all of the flexibility one would desire to support conditional arithmetic and conditional-select/move operations, while remaining true to the RISC-V design philosophy. The instructions follow the format for R-type instructions with 3 operands (i.e., 2 source operands and 1 destination operand). Using these instructions,  branchless  sequences  can  be  implemented  (typically  in  two-instruction  sequences) without  the  need  for  instruction  fusion,  special  provisions  during  the  decoding  of  architectural instructions, or other microarchitectural provisions.
+
+The following instructions comprise the Zicond extension:
+
+| RV32   | RV64   | Mnemonic                 | Instruction                                     |
+|--------|--------|--------------------------|-------------------------------------------------|
+| ✓      | ✓      | czero.eqz rd , rs1 , rs2 | Conditional zero, if condition is equal to zero |
+| ✓      | ✓      | czero.nez rd , rs1 , rs2 | Conditional zero, if condition is nonzero       |
+
+<image>
+
+Architecture Comment: defining additional comparisons, in addition to equal-to-zero and not-equal-to-zero, does not offer a benefit due to the lack of immediates or an additional register operand that the comparison takes place against.
+
+Based  on  these  two  instructions,  synthetic  instructions  (i.e.,  short  instruction  sequences)  for  the following conditional arithmetic operations are supported:
+
+- ⚫ conditional add, if zero
+- ⚫ conditional add, if non-zero
+
+- ⚫ conditional subtract, if zero
+- ⚫ conditional subtract, if non-zero
+- ⚫ conditional bitwise-and, if zero
+- ⚫ conditional bitwise-and, if non-zero
+- ⚫ conditional bitwise-or, if zero
+- ⚫ conditional bitwise-or, if non-zero
+- ⚫ conditional bitwise-xor, if zero
+- ⚫ conditional bitwise-xor, if non-zero
+
+Additionally, the following conditional select instructions are supported:
+
+- ⚫ conditional-select, if zero
+- ⚫ conditional-select, if non-zero
+
+More  complex  conditions,  such  as  comparisons  against  immediates,  registers,  single-bit  tests, comparisons against ranges, etc. can be realized by composing these new instructions with existing instructions.

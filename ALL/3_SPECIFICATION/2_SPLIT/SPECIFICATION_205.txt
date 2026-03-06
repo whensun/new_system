@@ -1,0 +1,33 @@
+## 28.12.7. c.sext.b
+
+Synopsis:
+
+Sign extend byte, 16-bit encoding
+
+Mnemonic:
+
+c.sext.b rd'/rs1'
+
+Encoding (RV32, RV64):
+
+<image>
+
+Description:
+
+This instruction takes a single source/destination operand. It sign-extends the least-significant byte in the operand to XLEN bits by copying the most-significant bit in the byte (i.e., bit 7) to all of the moresignificant bits.
+
+<image>
+
+rd'/rs1' is from the standard 8-register set x8-x15.
+
+Prerequisites:
+
+Zbb is also required.
+
+<image>
+
+The SAIL module variable for rd'/rs1' is called rsdc.
+
+Operation:
+
+X(rsdc) = EXTS(X(rsdc)[7..0]);

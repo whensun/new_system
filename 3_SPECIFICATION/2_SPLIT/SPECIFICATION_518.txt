@@ -1,0 +1,36 @@
+## 31.4.41. sm3p0
+
+## Synopsis
+
+Implements the P0 transformation function as used in the SM3 hash function ( GB/T 32905-2016: SM3 Cryptographic Hash Algorithm , 2016; ISO/IEC, 2018).
+
+## Mnemonic
+
+sm3p0 rd, rs1
+
+## Encoding
+
+<image>
+
+## Description
+
+This  instruction  is  supported  for  the  RV32  and  RV64  base  architectures.  It  implements  the P0 transform of the SM3 hash function ( GB/T 32905-2016: SM3 Cryptographic Hash Algorithm , 2016; ISO/IEC, 2018). This instruction must always be implemented such that its execution latency does not depend on the data being operated on.
+
+<image>
+
+## Operation
+
+```
+function clause execute (SM3P0(rs1, rd)) = { let r1     : bits(32) = X(rs1)[31..0]; let result : bits(32) =  r1 ^ rol32(r1,  9) ^ rol32(r1, 17); X(rd) = EXTS(result); RETIRE_SUCCESS }
+```
+
+## Included in
+
+| Extension   | Minimum version   | Lifecycle state   |
+|-------------|-------------------|-------------------|
+| Zksh        | v1.0.0            | Ratified          |
+| Zks         | v1.0.0            | Ratified          |
+
+Supporting Material
+
+This instruction is based on work done in (Saarinen, 2020).

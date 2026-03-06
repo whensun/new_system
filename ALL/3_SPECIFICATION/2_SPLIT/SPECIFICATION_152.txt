@@ -1,0 +1,31 @@
+## 24.5.1. fcvt.bf16.s
+
+## Synopsis
+
+Convert FP32 value to a BF16 value
+
+## Mnemonic
+
+fcvt.bf16.s rd, rs1
+
+## Encoding
+
+<image>
+
+## Encoding
+
+While the mnemonic of this instruction is consistent with that of the other RISC-V floating-point convert instructions, a new encoding is used in bits 24:20.
+
+BF16.S and H are used to signify that the source is FP32 and the destination is BF16.
+
+<image>
+
+## Description
+
+Narrowing convert FP32 value to a BF16 value. Round according to the RM field.
+
+This instruction is similar to other narrowing floating-point-to-floating-point conversion instructions.
+
+Exceptions: Overflow, Underflow, Inexact, Invalid
+
+Included in: Zfbfmin

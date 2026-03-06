@@ -1,0 +1,48 @@
+# 28 # Extension Must Be Active: NONE
+li t0, 0x4000000000          # set bit 42 (MDT) in t0
+csrrc x0, mstatus, t0           # clear MDT if already set (avoid illegal write)
+csrs mstatus, t0                # set MDT bit
+li t0, 0x1800                   # set MPP = M‑mode (bits 12:11 = 11)
+csrs mstatus, t0
+la t1, trap_handler             # load address of trap handler
+csrw mtvec, t1                  # set mtvec to handler
+ecall                           # cause a trap to M‑mode
+j after_handler                 # skip over the handler on normal return
+trap_handler:
+csrr t2, mstatus            # read mstatus
+li t0, 0x4000000000
+and t2, t2, t0              # isolate MDT bit
+srli t2, t2, 42             # shift to LSB
+mv a0, t2                   # store result in a0 (0 or 1)
+mret                        # return from trap
+after_handler:
+j test_done                 # continue after handler
+test_done:
+nop                         # placeholder – execution ends here
+# Result: a0 = 1
+
+# 48 # Extension Must Be Active: NONE
+la   t0, trap_handler
+csrw mtvec, t0
+call machine_to_virtual
+ecall
+csrr a0, mstatus
+srli a0, a0, 39
+andi a0, a0, 1
+j    after_trap
+trap_handler:
+csrr a1, mstatus
+srli a1, a1, 39
+andi a1, a1, 1
+mv   a0, a1
+csrr t0, mepc
+addi t0, t0, 4
+csrw mepc, t0
+mret
+after_trap:
+ebreak
+csrw mtvec, x0
+ret
+machine_to_virtual:
+ret
+# Result: a0 = 1

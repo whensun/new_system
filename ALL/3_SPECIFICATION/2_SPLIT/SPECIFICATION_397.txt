@@ -1,0 +1,11 @@
+## 30.13.8. Vector Floating-Point Square-Root Instruction
+
+This is a unary vector-vector instruction.
+
+```
+# Floating-point square root
+```
+
+```
+vfsqrt.v vd, vs2, vm   # Vector-vector square root
+```

@@ -1,0 +1,3 @@
+## 11.4. Usage examples
+
+The instructions  from  this  extension  can  be  used  to  construct  sequences  that  perform  conditionalarithmetic, conditional-bitwise-logical, and conditional-select operations.

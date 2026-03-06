@@ -1,0 +1,3 @@
+## 24.3.4. Interaction with SFENCE.VMA
+
+Since  pointer  masking  applies  to  the  effective  address  only  and  does  not  affect  any  memorymanagement data structures, no SFENCE.VMA is required after enabling/disabling pointer masking.

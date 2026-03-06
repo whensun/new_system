@@ -1,0 +1,27 @@
+## 21.2.8. Hypervisor Trap Value ( htval ) Register
+
+The htval register is an HSXLEN-bit read/write register formatted as shown in Figure 94. When a trap is taken into HS-mode, htval is written with additional exception-specific information, alongside stval , to assist software in handling the trap.
+
+Figure 94. Hypervisor trap value register ( htval ).
+
+<image>
+
+When a guest-page-fault  trap  is  taken  into  HS-mode, htval is  written  with  either  zero  or  the  guest physical address that faulted, shifted right by 2 bits. For other traps, htval is set to zero, but a future standard or extension may redefine htval's setting for other traps.
+
+A guest-page fault may arise due to an implicit memory access during first-stage (VS-stage) address translation,  in  which  case  a  guest  physical  address  written  to htval is  that  of  the  implicit  memory access that faulted-for example, the address of a VS-level page table entry that could not be read. (The guest physical address corresponding to the original virtual address is unknown when VS-stage translation fails to complete.) Additional information is provided in CSR htinst to disambiguate such situations.
+
+Otherwise,  for  misaligned  loads  and  stores  that  cause  guest-page  faults,  a  nonzero  guest  physical address in htval corresponds to the faulting portion of the access as indicated by the virtual address in stval .  For  instruction guest-page faults on systems with variable-length instructions, a nonzero htval corresponds to the faulting portion of the instruction as indicated by the virtual address in stval .
+
+<image>
+
+A guest physical address written to htval is  shifted right by 2 bits to accommodate addresses wider than the current XLEN. For RV32, the hypervisor extension permits guest  physical  addresses  as  wide  as  34  bits,  and htval reports  bits  33:2  of  the
+
+address. This shift-by-2 encoding of guest physical addresses matches the encoding of  physical  addresses  in  PMP  address  registers  (Section  3.7)  and  in  page  table entries (Section 12.3, Section 12.4, Section 12.5, and Section 12.6).
+
+If the least-significant two bits of a faulting guest physical address are needed, these bits  are  ordinarily  the  same  as  the  least-significant  two  bits  of  the  faulting  virtual address in stval .  For  faults  due  to  implicit  memory  accesses  for  VS-stage  address translation,  the  least-significant  two  bits  are  instead  zeros.  These  cases  can  be distinguished using the value provided in register htinst .
+
+htval is  a WARL register  that  must  be  able  to  hold  zero  and  may  be  capable  of  holding  only  an arbitrary subset of other 2-bit-shifted guest physical addresses, if any.
+
+<image>
+
+ Unless  it  has  reason  to  assume  otherwise  (such  as  a  platform  standard),  software that writes a value to htval should read back from htval to confirm the stored value.

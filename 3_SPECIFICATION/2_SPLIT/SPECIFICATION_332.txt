@@ -1,0 +1,11 @@
+## 30.4.3. Mapping for LMUL > 1
+
+When vector registers are grouped, the elements of the vector register group are packed contiguously in element order beginning with the lowest-numbered vector register and moving to the next-highestnumbered vector register in the group once each vector register is filled.
+
+```
+LMUL > 1 examples VLEN=32b, SEW=8b, LMUL=2 Byte         3 2 1 0 v2*n         3 2 1 0 v2*n+1       7 6 5 4 VLEN=32b, SEW=16b, LMUL=2 Byte         3 2 1 0 v2*n           1   0 v2*n+1         3   2 VLEN=32b, SEW=16b, LMUL=4 Byte         3 2 1 0 v4*n           1   0 v4*n+1         3   2 v4*n+2         5   4 v4*n+3         7   6 VLEN=32b, SEW=32b, LMUL=4 Byte         3 2 1 0 v4*n               0 v4*n+1             1 v4*n+2             2 v4*n+3             3 VLEN=64b, SEW=32b, LMUL=2
+```
+
+```
+Byte         7 6 5 4 3 2 1 0 v2*n               1       0 v2*n+1             3       2 VLEN=64b, SEW=32b, LMUL=4 Byte         7 6 5 4 3 2 1 0 v4*n               1       0 v4*n+1             3       2 v4*n+2             5       4 v4*n+3             7       6 VLEN=128b, SEW=32b, LMUL=2 Byte        F E D C B A 9 8 7 6 5 4 3 2 1 0 v2*n              3       2       1       0 v2*n+1            7       6       5       4 VLEN=128b, SEW=32b, LMUL=4 Byte          F E D C B A 9 8 7 6 5 4 3 2 1 0 v4*n                3       2       1       0 v4*n+1              7       6       5       4 v4*n+2              B       A       9       8 v4*n+3              F       E       D       C
+```

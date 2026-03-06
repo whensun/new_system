@@ -1,0 +1,3 @@
+## 2.5. Implicit Reads of CSRs
+
+Implementations  sometimes  perform implicit reads  of  CSRs.  (For  example,  all  S-mode  instruction fetches implicitly read the satp CSR.) Unless otherwise specified, the value returned by an implicit read of a CSR is the same value that would have been returned by an explicit read of the CSR, using a CSRaccess instruction in a sufficient privilege mode.

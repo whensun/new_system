@@ -1,0 +1,4 @@
+## 32.2.15.7. extend
+
+- ⚫ vsext.vf[248]
+- ⚫ vzext.vf[248]

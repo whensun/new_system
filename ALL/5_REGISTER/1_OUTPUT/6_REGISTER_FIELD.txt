@@ -1,0 +1,2 @@
+REGISTER: scountinhibit
+FIELDS: 63..3=HPM, 2..2=IR, 1..1=TM, 0..0=CY

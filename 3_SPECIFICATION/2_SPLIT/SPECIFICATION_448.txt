@@ -1,0 +1,49 @@
+## 30.18.2. Zve*: Vector Extensions for Embedded Processors
+
+The following five standard extensions are defined to provide varying degrees of vector support and are intended for use with embedded processors. Any of these extensions can be added to base ISAs with XLEN=32 or XLEN=64. The table lists the minimum VLEN and supported EEWs for each extension as well as what floating-point types are supported.
+
+Table 61. Embedded vector extensions
+
+| Extension   |   Minimum VLEN | Supported EEW   | FP32   | FP64   |
+|-------------|----------------|-----------------|--------|--------|
+| Zve32x      |             32 | 8, 16, 32       | N      | N      |
+| Zve32f      |             32 | 8, 16, 32       | Y      | N      |
+| Zve64x      |             64 | 8, 16, 32, 64   | N      | N      |
+| Zve64f      |             64 | 8, 16, 32, 64   | Y      | N      |
+| Zve64d      |             64 | 8, 16, 32, 64   | Y      | Y      |
+
+The Zve32f and Zve64x extensions depend on the Zve32x extension. The Zve64f extension depends on the Zve32f and Zve64x extensions. The Zve64d extension depends on the Zve64f extension.
+
+All Zve* extensions have precise traps.
+
+<image>
+
+There  is  currently  no  standard  support  for  handling  imprecise  traps,  so  standard extensions have to provide precise traps.
+
+All Zve* extensions provide support for EEW of 8, 16, and 32, and Zve64* extensions also support EEW of 64.
+
+All Zve* extensions support the vector configuration instructions (Section 30.6).
+
+All  Zve*  extensions  support  all  vector  load  and  store  instructions  (Section  30.7),  except  Zve64* extensions do not support EEW=64 for index values when XLEN=32.
+
+All Zve* extensions support all vector integer instructions (Section 30.11), except that the vmulh integer multiply  variants  that  return  the  high  word  of  the  product  ( vmulh.vv , vmulh.vx , vmulhu.vv , vmulhu.vx , vmulhsu.vv , vmulhsu.vx ) are not included for EEW=64 in Zve64*.
+
+<image>
+
+Producing the high-word of a product can take substantial additional gates for large EEW.
+
+All  Zve* extensions support all vector fixed-point arithmetic instructions (Section 30.12), except that vsmul.vv and vsmul.vx are not included in EEW=64 in Zve64*.
+
+<image>
+
+As with vmulh , vsmul requires a large amount of additional logic, and 64-bit fixed-point multiplies are relatively rare.
+
+All Zve* extensions support all vector integer single-width and widening reduction operations (Section 30.14.1, Section 30.14.2).
+
+All Zve* extensions support all vector mask instructions (Section 30.15).
+
+All Zve* extensions support all vector permutation instructions (Section 30.16), except that Zve32x and Zve64x do not include those with floating-point  operands,  and  Zve64f  does  not  include  those  with EEW=64 floating-point operands.
+
+The  Zve32x  extension  depends  on  the  Zicsr  extension.  The  Zve32f  and  Zve64f  extensions  depend upon the F extension, and implement all vector floating-point instructions (Section 30.13) for floatingpoint operands with EEW=32. Vector single-width floating-point reduction operations (Section 30.14.3) for EEW=32 are supported.
+
+The  Zve64d  extension  depends  upon  the  D  extension,  and  implements  all  vector  floating-point instructions (Section 30.13) for floating-point operands with EEW=32 or EEW=64 (including widening instructions and conversions between FP32 and FP64). Vector single-width floating-point reductions (Section 30.14.3) for EEW=32 and EEW=64 are supported as well as widening reductions from FP32 to FP64.

@@ -1,0 +1,5 @@
+## 21.7. Double-Precision Floating-Point Classify Instruction
+
+The double-precision floating-point classify instruction, FCLASS.D, is defined analogously to its singleprecision counterpart, but operates on double-precision operands.
+
+<image>

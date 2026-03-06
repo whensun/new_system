@@ -1,0 +1,7 @@
+INSTRUCTION: ADD
+FORMAT: add rd, rs1, rs2
+RULE 1: ADD must compute the sum of the architectural values read from registers rs1 and rs2.
+RULE 2: ADD must ignore any overflow and write only the low XLEN bits of the sum to register rd.
+RULE 3: ADD must read the current values of registers rs1 and rs2 as its source operands.
+RULE 4: ADD must write the computed result into the architectural destination register rd.
+RULE 5: ADD must never raise an arithmetic exception.

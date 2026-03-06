@@ -1,0 +1,528 @@
+====================================================== START - 1 =======================================================
+GLOBAL NUMBER: 1
+LOCAL NUMBER: 1
+NAME: FCLASS.D
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, please extract all possible information about FCLASS.D instruction from the text below. The information must be only about FCLASS.D instruction, not other things. Extract ONLY explicit, testable, normative description about architectural behavior.
+
+Please output in paragraphs. If you want, you can include bullet or numbered points in your output. You can also include tables. However, do not give me any introduction in your output. You just need to output the information that you extract.
+
+If your output includes some sentences that refer to some tables or figures, include those tables or figures too.
+
+Remember, output must be ASCII-only text.
+
+If it happens to be there is no information about FCLASS.D instruction from the text below, output NONE
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+Your description must be very clear and unambiguous. If you want, you can output in bullet points also.
+
+Use the exact terminology and wording used in the text below; do not substitute synonyms or paraphrase architectural terms.
+
+The text below:
+
+## 21.7. Double-Precision Floating-Point Classify Instruction
+
+The double-precision floating-point classify instruction, FCLASS.D, is defined analogously to its singleprecision counterpart, but operates on double-precision operands.
+
+<image>
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+The double‑precision floating‑point classify instruction, **FCLASS.D**, is defined analogously to its single‑precision counterpart, but operates on double‑precision operands.
+======================================================= END - 1 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 2 =======================================================
+GLOBAL NUMBER: 2
+LOCAL NUMBER: 2
+NAME: FCVT.D.H
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, please extract all possible information about FCVT.D.H instruction from the text below. The information must be only about FCVT.D.H instruction, not other things. Extract ONLY explicit, testable, normative description about architectural behavior.
+
+Please output in paragraphs. If you want, you can include bullet or numbered points in your output. You can also include tables. However, do not give me any introduction in your output. You just need to output the information that you extract.
+
+If your output includes some sentences that refer to some tables or figures, include those tables or figures too.
+
+Remember, output must be ASCII-only text.
+
+If it happens to be there is no information about FCVT.D.H instruction from the text below, output NONE
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+Your description must be very clear and unambiguous. If you want, you can output in bullet points also.
+
+Use the exact terminology and wording used in the text below; do not substitute synonyms or paraphrase architectural terms.
+
+The text below:
+
+## 23.3. Half-Precision Conversion and Move Instructions
+
+New floating-point-to-integer  and  integer-to-floating-point  conversion  instructions  are  added.  These instructions are defined analogously to the single-precision-to-integer and integer-to-single-precision conversion  instructions.  FCVT.W.H  or  FCVT.L.H  converts  a  half-precision  floating-point  number  to  a signed 32-bit or 64-bit integer, respectively. FCVT.H.W or FCVT.H.L converts a 32-bit or 64-bit signed integer, respectively, into a half-precision floating-point number. FCVT.WU.H, FCVT.LU.H, FCVT.H.WU, and FCVT.H.LU variants convert to or from unsigned integer values. FCVT.L[U].H and FCVT.H.L[U] are RV64-only instructions.
+
+<image>
+
+New floating-point-to-floating-point conversion instructions are added. These instructions are defined analogously to the double-precision floating-point-to-floating-point conversion instructions. FCVT.S.H or  FCVT.H.S  converts  a  half-precision  floating-point  number  to  a  single-precision  floating-point number, or  vice-versa,  respectively.  If  the  D  extension  is  present,  FCVT.D.H  or  FCVT.H.D  converts  a half-precision  floating-point  number  to  a  double-precision  floating-point  number,  or  vice-versa, respectively. If the Q extension is present, FCVT.Q.H or FCVT.H.Q converts a half-precision floatingpoint number to a quad-precision floating-point number, or vice-versa, respectively.
+
+<image>
+
+Floating-point  to  floating-point  sign-injection  instructions,  FSGNJ.H,  FSGNJN.H,  and  FSGNJX.H  are defined analogously to the single-precision sign-injection instruction.
+
+<image>
+
+Instructions  are  provided  to  move  bit  patterns  between  the  floating-point  and  integer  registers. FMV.X.H moves the half-precision value in floating-point register rs1 to a representation in IEEE 7542008  standard  encoding  in  integer  register rd ,  filling  the  upper  XLEN-16  bits  with  copies  of  the floating-point number's sign bit.
+
+FMV.H.X moves the half-precision value encoded in IEEE 754-2008 standard encoding from the lower 16 bits of integer register rs1 to the floating-point register rd , NaN-boxing the result.
+
+FMV.X.H  and  FMV.H.X  do  not  modify  the  bits  being  transferred;  in  particular,  the  payloads  of  noncanonical NaNs are preserved.
+
+<image>
+
+###
+
+## 23.6. "Zfhmin" Standard Extension for Minimal Half-Precision Floating-Point
+
+This section describes the Zfhmin standard extension, which provides minimal support for 16-bit halfprecision  binary  floating-point  instructions.  The  Zfhmin  extension  is  a  subset  of  the  Zfh  extension, consisting only of data transfer and conversion instructions. Like Zfh, the Zfhmin extension depends on the single-precision floating-point extension, F. The expectation is that Zfhmin software primarily uses the half-precision format for storage, performing most computation in higher precision.
+
+The Zfhmin extension includes the following instructions from the Zfh extension: FLH, FSH, FMV.X.H, FMV.H.X,  FCVT.S.H,  and  FCVT.H.S.  If  the  D  extension  is  present,  the  FCVT.D.H  and  FCVT.H.D instructions are also included. If the Q extension is present, the FCVT.Q.H and FCVT.H.Q instructions are additionally included.
+
+<image>
+
+Zfhmin does not include the FSGNJ.H instruction, because it suffices to instead use the FSGNJ.S  instruction to move  half-precision values between  floating-point registers.
+
+Half-precision addition, subtraction, multiplication, division, and square-root operations  can  be  faithfully  emulated  by  converting  the  half-precision  operands  to single-precision,  performing  the  operation  using  single-precision  arithmetic,  then converting  back  to  half-precision.  (Roux,  2014)  Performing  half-precision  fused multiply-addition using this method incurs a 1-ulp error on some inputs for the RNE and RMM rounding modes.
+
+Conversion  from  8-  or  16-bit  integers  to  half-precision  can  be  emulated  by  first converting to single-precision, then converting to half-precision. Conversion from 32bit integer can be emulated by first converting to double-precision. If the D extension is not present and a 1-ulp error under RNE or RMM is tolerable, 32-bit integers can be first converted to single-precision instead. The same  remark applies to conversions from 64-bit integers without the Q extension.
+
+###
+
+## 26.5. Zhinxmin
+
+The Zhinxmin extension provides minimal support for 16-bit half-precision floating-point instructions that operate on the x registers. The Zhinxmin extension depends upon the Zfinx extension.
+
+The Zhinxmin extension includes the following instructions from the Zhinx extension: FCVT.S.H and FCVT.H.S. If the Zdinx extension is present, the FCVT.D.H and FCVT.H.D instructions are also included.
+
+<image>
+
+In the future, an RV64Zqinx quad-precision extension could be defined analogously to  RV32Zdinx.  An  RV32Zqinx  extension  could  also  be  defined  but  would  require quad-register groups.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+- **Definition**  
+  If the D extension is present, **FCVT.D.H** converts a half‑precision floating‑point number to a double‑precision floating‑point number (the complementary **FCVT.H.D** converts a double‑precision floating‑point number to a half‑precision floating‑point number).
+
+- **Inclusion in the Zfhmin extension**  
+  The Zfhmin standard extension includes the **FCVT.D.H** instruction when the D extension is present.
+
+- **Inclusion in the Zhinxmin extension**  
+  The Zhinxmin extension includes the **FCVT.D.H** instruction when the Zdinx extension is present.
+======================================================= END - 2 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 3 =======================================================
+GLOBAL NUMBER: 3
+LOCAL NUMBER: 3
+NAME: VAADD.VV
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, please extract all possible information about VAADD.VV instruction from the text below. The information must be only about VAADD.VV instruction, not other things. Extract ONLY explicit, testable, normative description about architectural behavior.
+
+Please output in paragraphs. If you want, you can include bullet or numbered points in your output. You can also include tables. However, do not give me any introduction in your output. You just need to output the information that you extract.
+
+If your output includes some sentences that refer to some tables or figures, include those tables or figures too.
+
+Remember, output must be ASCII-only text.
+
+If it happens to be there is no information about VAADD.VV instruction from the text below, output NONE
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+Your description must be very clear and unambiguous. If you want, you can output in bullet points also.
+
+Use the exact terminology and wording used in the text below; do not substitute synonyms or paraphrase architectural terms.
+
+The text below:
+
+## 30.12.2. Vector Single-Width Averaging Add and Subtract
+
+The averaging add and subtract instructions right shift the result by one bit and round off the result according to the setting in vxrm .  Computation is performed in infinite precision before rounding and truncating.  Both  unsigned  and  signed  versions  are  provided.  For vaaddu and vaadd there  can  be  no overflow in the result. For vasub and vasubu , overflow is ignored and the result wraps around.
+
+<image>
+
+For vasub ,  overflow  occurs  only  when  subtracting  the  smallest  number  from  the largest number under rnu or rne rounding.
+
+```
+# Averaging add # Averaging adds of unsigned integers. vaaddu.vv vd, vs2, vs1, vm   # roundoff_unsigned(vs2[i] + vs1[i], 1) vaaddu.vx vd, vs2, rs1, vm   # roundoff_unsigned(vs2[i] + x[rs1], 1) # Averaging adds of signed integers. vaadd.vv vd, vs2, vs1, vm   # roundoff_signed(vs2[i] + vs1[i], 1) vaadd.vx vd, vs2, rs1, vm   # roundoff_signed(vs2[i] + x[rs1], 1) # Averaging subtract
+```
+
+```
+# Averaging subtract of unsigned integers. vasubu.vv vd, vs2, vs1, vm   # roundoff_unsigned(vs2[i] - vs1[i], 1) vasubu.vx vd, vs2, rs1, vm   # roundoff_unsigned(vs2[i] - x[rs1], 1) # Averaging subtract of signed integers. vasub.vv vd, vs2, vs1, vm   # roundoff_signed(vs2[i] - vs1[i], 1) vasub.vx vd, vs2, rs1, vm   # roundoff_signed(vs2[i] - x[rs1], 1)
+```
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+- **Instruction syntax**: `vaadd.vv vd, vs2, vs1, vm`
+
+- **Operation**: For each element *i* of the active vector elements, the instruction computes the sum of the signed integers in the source registers `vs2[i]` and `vs1[i]`, performs an arithmetic right‑shift of the infinite‑precision result by one bit, and then rounds the shifted result according to the current setting of `vxrm`. The architectural effect is described as  
+
+  `roundoff_signed(vs2[i] + vs1[i], 1)`.
+
+- **Rounding and shifting**:  
+  * The averaging add instructions "right shift the result by one bit and round off the result according to the setting in `vxrm`."  
+  * "Computation is performed in infinite precision before rounding and truncating."
+
+- **Overflow behavior**: "For `vaaddu` and `vaadd` there can be no overflow in the result." Thus `vaadd.vv` never raises an overflow condition; the result is always representable after the rounding step.
+======================================================= END - 3 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 4 =======================================================
+GLOBAL NUMBER: 4
+LOCAL NUMBER: 4
+NAME: VADC.VIM
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, please extract all possible information about VADC.VIM instruction from the text below. The information must be only about VADC.VIM instruction, not other things. Extract ONLY explicit, testable, normative description about architectural behavior.
+
+Please output in paragraphs. If you want, you can include bullet or numbered points in your output. You can also include tables. However, do not give me any introduction in your output. You just need to output the information that you extract.
+
+If your output includes some sentences that refer to some tables or figures, include those tables or figures too.
+
+Remember, output must be ASCII-only text.
+
+If it happens to be there is no information about VADC.VIM instruction from the text below, output NONE
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+Your description must be very clear and unambiguous. If you want, you can output in bullet points also.
+
+Use the exact terminology and wording used in the text below; do not substitute synonyms or paraphrase architectural terms.
+
+The text below:
+
+## 30.11.4. Vector Integer Add-with-Carry / Subtract-with-Borrow Instructions
+
+To  support  multi-word  integer  arithmetic,  instructions  that  operate  on  a  carry  bit  are  provided.  For each operation (add or subtract), two instructions are provided: one to provide the result (SEW width), and the second to generate the carry output (single bit encoded as a mask boolean).
+
+The carry inputs and outputs are represented using the mask register layout as described in Section 30.4.5. Due to encoding constraints, the carry input must come from the implicit v0 register, but carry outputs can be written to any vector register that respects the source/destination overlap restrictions.
+
+vadc and vsbc add or subtract the source operands and the carry-in or borrow-in, and write the result to vector register vd .  These instructions are encoded as masked instructions ( vm=0 ),  but they operate on and  write  back  all  body  elements.  Encodings  corresponding  to  the  unmasked  versions  ( vm=1 )  are reserved.
+
+vmadc and vmsbc add or subtract the source operands, optionally add the carry-in or subtract the borrowin  if  masked  ( vm=0 ),  and  write  the  resulting  carry-out  or  borrow-out  back  to  mask  register vd .  If unmasked ( vm=1 ),  there  is  no  carry-in  or  borrow-in.  These  instructions  operate  on  and  write  back  all body elements, even if masked. Because these instructions produce a mask value, they always operate with a tail-agnostic policy.
+
+```
+# Produce sum with carry. # vd[i] = vs2[i] + vs1[i] + v0.mask[i] vadc.vvm   vd, vs2, vs1, v0  # Vector-vector
+```
+
+```
+# vd[i] = vs2[i] + x[rs1] + v0.mask[i] vadc.vxm   vd, vs2, rs1, v0  # Vector-scalar # vd[i] = vs2[i] + imm + v0.mask[i] vadc.vim   vd, vs2, imm, v0  # Vector-immediate # Produce carry out in mask register format # vd.mask[i] = carry_out(vs2[i] + vs1[i] + v0.mask[i]) vmadc.vvm   vd, vs2, vs1, v0  # Vector-vector # vd.mask[i] = carry_out(vs2[i] + x[rs1] + v0.mask[i]) vmadc.vxm   vd, vs2, rs1, v0  # Vector-scalar # vd.mask[i] = carry_out(vs2[i] + imm + v0.mask[i]) vmadc.vim   vd, vs2, imm, v0  # Vector-immediate # vd.mask[i] = carry_out(vs2[i] + vs1[i]) vmadc.vv    vd, vs2, vs1      # Vector-vector, no carry-in # vd.mask[i] = carry_out(vs2[i] + x[rs1]) vmadc.vx    vd, vs2, rs1      # Vector-scalar, no carry-in # vd.mask[i] = carry_out(vs2[i] + imm) vmadc.vi    vd, vs2, imm      # Vector-immediate, no carry-in
+```
+
+Because implementing a carry propagation requires executing two instructions with unchanged inputs, destructive accumulations will require an additional move to obtain correct results.
+
+```
+# Example multi-word arithmetic sequence, accumulating into v4 vmadc.vvm v1, v4, v8, v0  # Get carry into temp register v1 vadc.vvm v4, v4, v8, v0   # Calc new sum vmmv.m v0, v1             # Move temp carry into v0 for next word
+```
+
+The  subtract  with  borrow  instruction vsbc performs  the  equivalent  function  to  support  long  word arithmetic for subtraction. There are no subtract with immediate instructions.
+
+```
+# Produce difference with borrow. # vd[i] = vs2[i] - vs1[i] - v0.mask[i] vsbc.vvm   vd, vs2, vs1, v0  # Vector-vector # vd[i] = vs2[i] - x[rs1] - v0.mask[i] vsbc.vxm   vd, vs2, rs1, v0  # Vector-scalar # Produce borrow out in mask register format
+```
+
+```
+# vd.mask[i] = borrow_out(vs2[i] - vs1[i] - v0.mask[i]) vmsbc.vvm   vd, vs2, vs1, v0  # Vector-vector # vd.mask[i] = borrow_out(vs2[i] - x[rs1] - v0.mask[i]) vmsbc.vxm   vd, vs2, rs1, v0  # Vector-scalar # vd.mask[i] = borrow_out(vs2[i] - vs1[i]) vmsbc.vv    vd, vs2, vs1      # Vector-vector, no borrow-in # vd.mask[i] = borrow_out(vs2[i] - x[rs1]) vmsbc.vx    vd, vs2, rs1      # Vector-scalar, no borrow-in
+```
+
+For vmsbc , the borrow is defined to be 1 iff the difference, prior to truncation, is negative.
+
+For vadc and vsbc , the instruction encoding is reserved if the destination vector register is v0 .
+
+<image>
+
+This  constraint  corresponds  to  the  constraint  on  masked  vector  operations  that overwrite the mask register.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+- **Mnemonic and Form**  
+  ```
+  # vd[i] = vs2[i] + imm + v0.mask[i]
+  vadc.vim   vd, vs2, imm, v0   # Vector‑immediate
+  ```
+
+- **Operation**  
+  For each element *i* of the active vector length:  
+  ```
+  vd[i] = vs2[i] + imm + v0.mask[i]
+  ```
+  where `imm` is the encoded immediate operand and `v0.mask[i]` supplies the carry‑in bit.
+
+- **Encoding Characteristics**  
+  - The instruction is a *masked* vector instruction: `vm = 0`.  
+  - The unmasked encoding (`vm = 1`) is **reserved**.  
+
+- **Carry Input**  
+  - The carry‑in must come from the implicit vector register **v0** (its mask field).  
+  - Carry inputs and outputs use the mask‑register layout defined in Section 30.4.5.  
+
+- **Destination Register Restrictions**  
+  - The destination vector register **vd** **must not be v0**; the encoding is reserved if `vd = v0`.  
+
+- **Source/Destination Overlap Rules**  
+  - The destination register must respect the source/destination overlap restrictions defined for vector instructions (i.e., it may not overlap a source register in a way that violates the architectural rules).  
+
+- **Element Processing**  
+  - Even though the instruction is masked (`vm = 0`), it **operates on and writes back all body elements** of the vector register group.  
+
+- **Policy Regarding Tail Elements**  
+  - The specification does **not** state a specific tail‑agnostic or tail‑undisturbed policy for `vadc.vim`; only that it writes all body elements.  
+
+- **Other Notes**  
+  - No separate carry‑out is produced by `vadc.vim`; carry‑out is generated by the companion instruction `vmadc.vim`.  
+  - The immediate operand encoding is as defined for vector‑immediate integer instructions (width not specified in the excerpt).
+======================================================= END - 4 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 5 =======================================================
+GLOBAL NUMBER: 5
+LOCAL NUMBER: 5
+NAME: VADD.VI
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, please extract all possible information about VADD.VI instruction from the text below. The information must be only about VADD.VI instruction, not other things. Extract ONLY explicit, testable, normative description about architectural behavior.
+
+Please output in paragraphs. If you want, you can include bullet or numbered points in your output. You can also include tables. However, do not give me any introduction in your output. You just need to output the information that you extract.
+
+If your output includes some sentences that refer to some tables or figures, include those tables or figures too.
+
+Remember, output must be ASCII-only text.
+
+If it happens to be there is no information about VADD.VI instruction from the text below, output NONE
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+Your description must be very clear and unambiguous. If you want, you can output in bullet points also.
+
+Use the exact terminology and wording used in the text below; do not substitute synonyms or paraphrase architectural terms.
+
+The text below:
+
+## 30.11.1. Vector Single-Width Integer Add and Subtract
+
+Vector integer add and subtract are provided. Reverse-subtract instructions are also provided for the vector-scalar forms.
+
+```
+# Integer adds. vadd.vv vd, vs2, vs1, vm   # Vector-vector vadd.vx vd, vs2, rs1, vm   # vector-scalar vadd.vi vd, vs2, imm, vm   # vector-immediate
+```
+
+```
+# Integer subtract vsub.vv vd, vs2, vs1, vm   # Vector-vector vsub.vx vd, vs2, rs1, vm   # vector-scalar # Integer reverse subtract vrsub.vx vd, vs2, rs1, vm   # vd[i] = x[rs1] - vs2[i] vrsub.vi vd, vs2, imm, vm   # vd[i] = imm - vs2[i]
+```
+
+<image>
+
+A vector of integer values can be negated using a reverse-subtract instruction with a scalar operand of x0 . An assembly pseudoinstruction vneg.v vd,vs = vrsub.vx vd,vs,x0 is provided.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+- **Instruction category**: Integer adds.  
+- **Mnemonic and format**: `vadd.vi vd, vs2, imm, vm`  # vector‑immediate.  
+
+(These are the only explicit, normative details about the `vadd.vi` instruction present in the source text.)
+======================================================= END - 5 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 6 =======================================================
+GLOBAL NUMBER: 6
+LOCAL NUMBER: 6
+NAME: VAND.VI
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, please extract all possible information about VAND.VI instruction from the text below. The information must be only about VAND.VI instruction, not other things. Extract ONLY explicit, testable, normative description about architectural behavior.
+
+Please output in paragraphs. If you want, you can include bullet or numbered points in your output. You can also include tables. However, do not give me any introduction in your output. You just need to output the information that you extract.
+
+If your output includes some sentences that refer to some tables or figures, include those tables or figures too.
+
+Remember, output must be ASCII-only text.
+
+If it happens to be there is no information about VAND.VI instruction from the text below, output NONE
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+Your description must be very clear and unambiguous. If you want, you can output in bullet points also.
+
+Use the exact terminology and wording used in the text below; do not substitute synonyms or paraphrase architectural terms.
+
+The text below:
+
+## 30.11.5. Vector Bitwise Logical Instructions
+
+```
+# Bitwise logical operations. vand.vv vd, vs2, vs1, vm   # Vector-vector vand.vx vd, vs2, rs1, vm   # vector-scalar vand.vi vd, vs2, imm, vm   # vector-immediate vor.vv vd, vs2, vs1, vm    # Vector-vector vor.vx vd, vs2, rs1, vm    # vector-scalar vor.vi vd, vs2, imm, vm    # vector-immediate vxor.vv vd, vs2, vs1, vm    # Vector-vector vxor.vx vd, vs2, rs1, vm    # vector-scalar vxor.vi vd, vs2, imm, vm    # vector-immediate
+```
+
+<image>
+
+With  an  immediate  of  -1,  scalar-immediate  forms  of  the vxor instruction  provide  a bitwise  NOT  operation.  This  is  provided  as  an  assembler  pseudoinstruction vnot.v vd,vs,vm = vxor.vi vd,vs,-1,vm .
+
+###
+
+## 32.3.8. vandn.[vv,vx]
+
+## Synopsis
+
+Bitwise And-Not
+
+## Mnemonic
+
+vandn.vv vd, vs2, vs1, vm vandn.vx vd, vs2, rs1, vm
+
+## Encoding (Vector-Vector)
+
+<image>
+
+## Encoding (Vector-Scalar)
+
+<image>
+
+## Vector-Vector Arguments
+
+| Register   | Direction   | Definition           |
+|------------|-------------|----------------------|
+| Vs1        | input       | Op1 (to be inverted) |
+| Vs2        | input       | Op2                  |
+| Vd         | output      | Result               |
+
+## Vector-Scalar Arguments
+
+| Register   | Direction   | Definition           |
+|------------|-------------|----------------------|
+| Rs1        | input       | Op1 (to be inverted) |
+| Vs2        | input       | Op2                  |
+| Vd         | output      | Result               |
+
+## Description
+
+A bitwise and-not operation is performed.
+
+Each bit of Op1 is inverted and logically ANDed with the corresponding bits in vs2 . In the vector-scalar version, Op1 is the sign-extended or truncated value in scalar register rs1 . In the vector-vector version, Op1 is vs1 .
+
+Note on necessity of instruction
+
+This  instruction  is  performance-critical  to  SHA3.  Specifically,  the  Chi  step  of  the FIPS 202 Keccak Permutation. Emulating it  via  2  instructions  is  expected  to  have significant performance impact. The .vv form of the instruction is what is needed for SHA3; the .vx form was added for completeness.
+
+There  is  no  .vi  version  of  this  instruction  because  the  same  functionality  can  be achieved by using an inversion of the immediate value with the vand.vi instruction.
+
+<image>
+
+<image>
+
+## Operation
+
+```
+function clause execute (VANDN(vs2, vs1, vd, suffix)) = { foreach (i from vstart to vl-1) { let op1 = match suffix { "vv" => get_velem(vs1, SEW, i), "vx" => sext_or_truncate_to_sew(X(vs1)) }; let op2 = get_velem(vs2, SEW, i); set_velem(vd, EEW=SEW, i, ~op1 & op2); } RETIRE_SUCCESS }
+```
+
+## Included in
+
+Zvbb, Zvkb, Zvkn, Zvknc, Zvkng, Zvks Zvksc, Zvksg
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+- `vand.vi vd, vs2, imm, vm` is the **vector‑immediate** form of the bitwise logical AND operation.  
+- It is listed under the "Bitwise logical operations" category.  
+- The instruction can be used to invert an immediate value and then AND it with `vs2`; this capability is mentioned as the reason there is **no .vi version of the `vandn` instruction**, because the same functionality can be achieved "by using an inversion of the immediate value with the `vand.vi` instruction."
+======================================================= END - 6 ========================================================
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+====================================================== START - 7 =======================================================
+GLOBAL NUMBER: 7
+LOCAL NUMBER: 7
+NAME: VSUB.VV
+============================================================
+=======
+PROMPT:
+=======
+============================================================
+For RISC-V, please extract all possible information about VSUB.VV instruction from the text below. The information must be only about VSUB.VV instruction, not other things. Extract ONLY explicit, testable, normative description about architectural behavior.
+
+Please output in paragraphs. If you want, you can include bullet or numbered points in your output. You can also include tables. However, do not give me any introduction in your output. You just need to output the information that you extract.
+
+If your output includes some sentences that refer to some tables or figures, include those tables or figures too.
+
+Remember, output must be ASCII-only text.
+
+If it happens to be there is no information about VSUB.VV instruction from the text below, output NONE
+
+Preserve the original normative strength exactly: use MUST/MUST NOT only when the source uses MUST/MUST NOT, and use SHOULD/SHOULD NOT only when the source uses SHOULD/SHOULD NOT; never upgrade or downgrade normative keywords.
+
+Your description must be very clear and unambiguous. If you want, you can output in bullet points also.
+
+Use the exact terminology and wording used in the text below; do not substitute synonyms or paraphrase architectural terms.
+
+The text below:
+
+## 30.11.1. Vector Single-Width Integer Add and Subtract
+
+Vector integer add and subtract are provided. Reverse-subtract instructions are also provided for the vector-scalar forms.
+
+```
+# Integer adds. vadd.vv vd, vs2, vs1, vm   # Vector-vector vadd.vx vd, vs2, rs1, vm   # vector-scalar vadd.vi vd, vs2, imm, vm   # vector-immediate
+```
+
+```
+# Integer subtract vsub.vv vd, vs2, vs1, vm   # Vector-vector vsub.vx vd, vs2, rs1, vm   # vector-scalar # Integer reverse subtract vrsub.vx vd, vs2, rs1, vm   # vd[i] = x[rs1] - vs2[i] vrsub.vi vd, vs2, imm, vm   # vd[i] = imm - vs2[i]
+```
+
+<image>
+
+A vector of integer values can be negated using a reverse-subtract instruction with a scalar operand of x0 . An assembly pseudoinstruction vneg.v vd,vs = vrsub.vx vd,vs,x0 is provided.
+============================================================
+=========
+RESPONSE:
+=========
+============================================================
+- **Instruction name**: `vsub.vv`  
+- **Operation class**: Integer vector‑vector subtract  
+- **Assembly syntax**: `vsub.vv vd, vs2, vs1, vm`  
+- **Operand description**: `vd` is the destination vector register group; `vs2` and `vs1` are source vector register groups; `vm` is the optional vector mask operand.  
+- **Classification**: "Vector‑vector" (as indicated in the source text).
+======================================================= END - 7 ========================================================

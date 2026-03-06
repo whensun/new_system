@@ -1,0 +1,46 @@
+INSTRUCTION: FCLASS.D
+RULE 1: FCLASS.D classifies a double‑precision floating‑point value using the same classification categories as the single‑precision floating‑point classify instruction.
+RULE 2: FCLASS.D operates on double‑precision floating‑point operands.
+
+INSTRUCTION: FCVT.D.H
+RULE 1: If the D extension is implemented, the FCVT.D.H instruction converts a half‑precision floating‑point value to a double‑precision floating‑point value.
+RULE 2: The Zfhmin extension includes the FCVT.D.H instruction when the D extension is present.
+RULE 3: The Zhinxmin extension includes the FCVT.D.H instruction when the Zdinx extension is present.
+
+INSTRUCTION: VAADD.VV
+RULE 1: VAADD.VV computes for each active element i the sum of the signed integers in vs2[i] and vs1[i].
+RULE 2: VAADD.VV performs an arithmetic right‑shift of the infinite‑precision sum by one bit for each active element i.
+RULE 3: VAADD.VV rounds the shifted result for each active element i according to the current setting of vxrm.
+RULE 4: The architectural effect of VAADD.VV for element i is roundoff_signed(vs2[i] + vs1[i], 1).
+RULE 5: VAADD.VV performs the right‑shift and rounding on the infinite‑precision result before any truncation.
+RULE 6: VAADD.VV never raises an overflow condition because the result is always representable after the rounding step.
+
+INSTRUCTION: VADC.VIM
+RULE 1: VADC.VIM computes for each element i of the active vector length the result vd[i] = vs2[i] + imm + v0.mask[i].
+RULE 2: VADC.VIM must be encoded with the mask bit vm set to 0.
+RULE 3: An encoding of VADC.VIM with vm set to 1 is reserved.
+RULE 4: VADC.VIM must take its carry‑in from the mask field of the implicit vector register v0.
+RULE 5: VADC.VIM does not produce a separate carry‑out; carry‑out is generated only by the companion instruction vmadc.vim.
+RULE 6: VADC.VIM must not use v0 as the destination register; encodings with vd = v0 are reserved.
+RULE 7: VADC.VIM must respect the source/destination overlap restrictions defined for vector instructions.
+RULE 8: Although VADC.VIM is a masked instruction (vm = 0), it operates on and writes back all body elements of the destination vector register group.
+RULE 9: The specification does not define a tail‑agnostic or tail‑undisturbed policy for VADC.VIM, so only body elements are written.
+RULE 10: VADC.VIM uses an immediate operand that is encoded according to the vector‑immediate integer instruction format.
+
+INSTRUCTION: VADD.VI
+RULE 1: VADD.VI is an integer addition operation in the RISC‑V vector ISA.
+RULE 2: VADD.VI uses the vector‑immediate format with operands vd, vs2, imm, and an optional mask vm.
+
+INSTRUCTION: VAND.VI
+RULE 1: VAND.VI is the vector‑immediate form of the bitwise logical AND operation.
+RULE 2: VAND.VI is listed under the Bitwise logical operations category.
+RULE 3: VAND.VI can be used to invert an immediate value and then perform a bitwise AND with the source vector register vs2.
+RULE 4: Because VAND.VI can invert an immediate value and AND it with vs2, a separate .vi version of the vandn instruction is not provided.
+RULE 5: The functionality of a hypothetical vandn.vi instruction can be achieved by using an inversion of the immediate value with VAND.VI.
+
+INSTRUCTION: VSUB.VV
+RULE 1: VSUB.VV performs element‑wise integer subtraction of the corresponding elements of source vector register groups vs2 and vs1, producing a result element for each position.
+RULE 2: VSUB.VV stores each result element into the corresponding element of the destination vector register group vd.
+RULE 3: VSUB.VV may use an optional vector mask vm to control which result elements are written to vd; elements with a disabled mask bit are not written.
+RULE 4: VSUB.VV is classified as a vector‑vector integer arithmetic operation.
+RULE 5: VSUB.VV uses the assembly syntax "vsub.vv vd, vs2, vs1, vm".

@@ -1,0 +1,15 @@
+## 28.13.1. PUSH/POP functional overview
+
+PUSH, POP, POPRET are used to reduce the size of function prologues and epilogues.
+
+1. The PUSH instruction
+2. ⚫ adjusts the stack pointer to create the stack frame
+3. ⚫ pushes (stores) the registers specified in the register list to the stack frame
+2. The POP instruction
+5. ⚫ pops (loads) the registers in the register list from the stack frame
+6. ⚫ adjusts the stack pointer to destroy the stack frame
+3. The POPRET instructions
+8. ⚫ pop (load) the registers in the register list from the stack frame
+9. ⚫ cm.popretz also moves zero into a0 as the return value
+10. ⚫ adjust the stack pointer to destroy the stack frame
+11. ⚫ execute a ret instruction to return from the function

@@ -1,0 +1,7 @@
+REGISTER: mseccfg
+NUMBER: 0x747
+MODE: M-mode
+WIDTH: 64
+FIELDS: 63..34=IMPLEMENTATION_DEFINED, 33..32=PMM, 31..10=WPRI, 9..9=SSEED, 8..8=USEED, 7..3=WPRI, 2..2=RLB, 1..1=MMWP, 0..0=MML, UNKNOWN..UNKNOWN=MLPE
+EXTENSIONS: Smepmp, Smmpm, Zicfilp, Zkr
+RULE 1: If the Zkr extension is implemented, the mseccfg CSR MUST exist.

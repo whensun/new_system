@@ -1,0 +1,37 @@
+## 28.12.6. c.zext.b
+
+Synopsis:
+
+Zero extend byte, 16-bit encoding
+
+Mnemonic:
+
+c.zext.b rd'/rs1'
+
+Encoding (RV32, RV64):
+
+<image>
+
+Description:
+
+This instruction takes a single source/destination operand. It zero-extends the least-significant byte of the operand to XLEN bits by inserting zeros into all of the bits more significant than 7.
+
+<image>
+
+Prerequisites:
+
+None
+
+32-bit equivalent:
+
+andi rd'/rs1', rd'/rs1', 0xff
+
+<image>
+
+The SAIL module variable for rd'/rs1' is called rsdc.
+
+Operation:
+
+X(rsdc) = EXTZ(X(rsdc)[7..0]);
+
+rd'/rs1' is from the standard 8-register set x8-x15.

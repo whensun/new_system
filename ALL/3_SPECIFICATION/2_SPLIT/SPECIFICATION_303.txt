@@ -1,0 +1,28 @@
+## 29.5.47. xnor
+
+## Synopsis
+
+Exclusive NOR
+
+## Mnemonic
+
+xnor rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction performs the bit-wise exclusive-NOR operation on rs1 and rs2 .
+
+## Operation
+
+<formula>
+
+## Included in
+
+| Extension                                | Minimum version   | Lifecycle state   |
+|------------------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation)             | 0.93              | Ratified          |
+| Zbkb (Bit-manipulation for Cryptography) | v1.0              | Ratified          |

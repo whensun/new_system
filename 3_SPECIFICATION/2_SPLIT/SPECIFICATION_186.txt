@@ -1,0 +1,37 @@
+## 27.7. HINT Instructions
+
+A portion of the RVC encoding space is reserved for microarchitectural HINTs. Like the HINTs in the RV32I  base  ISA  (see  HINT  Instructions),  these  instructions  do  not  modify  any  architectural  state, except for advancing the pc and any applicable performance counters. HINTs are executed as no-ops on implementations that ignore them.
+
+RVC  HINTs  are  encoded  as  computational  instructions  that  do  not  modify  the  architectural  state, either because rd = x0 (e.g. C.ADD x0 , t0 ), or because rd is overwritten with a copy of itself (e.g. C.ADDI t0 , 0 ).
+
+<image>
+
+This  HINT  encoding  has  been  chosen  so  that  simple  implementations  can  ignore HINTs altogether, and instead execute a HINT as a regular computational instruction that happens not to mutate the architectural state.
+
+RVC HINTs do not necessarily expand to their RVI HINT counterparts. For example, C.ADD x0 , a0 might not encode the same HINT as ADD x0 , x0 , a0 .
+
+<image>
+
+The primary reason to not require an RVC HINT to expand to an RVI HINT is that HINTs  are  unlikely  to  be  compressible  in  the  same  manner  as  the  underlying computational instruction. Also, decoupling the RVC and RVI HINT mappings allows the  scarce  RVC  HINT  space  to  be  allocated  to  the  most  popular  HINTs,  and  in particular, to HINTs that are amenable to macro-op fusion.
+
+Table 32 lists all RVC HINT code points. For RV32C, 78% of the HINT space is reserved for standard HINTs. The remainder of the HINT space is designated for custom HINTs; no standard HINTs will ever be defined in this subspace.
+
+Table 39. RVC HINT instructions.
+
+| Instruction   | Constraints                      |   Code Points | Purpose                                                                    |
+|---------------|----------------------------------|---------------|----------------------------------------------------------------------------|
+| C.NOP         | imm ≠0                           |            63 | Designated for future standard use                                         |
+| C.ADDI        | rd ≠ x0 , imm =0                 |            31 | Designated for future standard use                                         |
+| C.LI          | rd = x0                          |            64 | Designated for future standard use                                         |
+| C.LUI         | rd = x0 , imm ≠0                 |            63 | Designated for future standard use                                         |
+| C.MV          | rd = x0 , rs2 ≠ x0               |            31 | Designated for future standard use                                         |
+| C.ADD         | rd = x0 , rs2 ≠ x0 , rs2 ≠ x2-x5 |            27 | Designated for future standard use                                         |
+| C.ADD         | rd = x0 , rs2 ≠ x2-x5            |             4 | (rs2=x2) C.NTL.P1 (rs2=x3) C.NTL.PALL (rs2=x4) C.NTL.S1 (rs2=x5) C.NTL.ALL |
+
+| Instruction   | Constraints                  | Code Points          | Purpose                   |
+|---------------|------------------------------|----------------------|---------------------------|
+| C.SLLI        | rd = x0 , imm ≠0             | 31 (RV32), 63 (RV64) |                           |
+| C.SLLI64      | rd = x0                      | 1                    |                           |
+| C.SLLI64      | rd ≠ x0 , RV32 and RV64 only | 31                   | Designated for custom use |
+| C.SRLI64      | RV32 and RV64 only           | 8                    |                           |
+| C.SRAI64      | RV32 and RV64 only           | 8                    |                           |

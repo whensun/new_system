@@ -1,0 +1,29 @@
+## 29.5.27. packh
+
+## Synopsis
+
+Pack the low bytes of rs1 and rs2 into rd .
+
+## Mnemonic
+
+packh rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+The packh instruction packs the least-significant bytes of rs1 and rs2 into the 16 least-significant bits of rd , zero extending the rest of rd .
+
+## Operation
+
+```
+let lo_half : bits(8) = X(rs1)[7..0]; let hi_half : bits(8) = X(rs2)[7..0]; X(rd) = EXTZ(hi_half @ lo_half);
+```
+
+## Included in
+
+| Extension                                | Minimum version   | Lifecycle state   |
+|------------------------------------------|-------------------|-------------------|
+| Zbkb (Bit-manipulation for Cryptography) | v1.0              | Ratified          |

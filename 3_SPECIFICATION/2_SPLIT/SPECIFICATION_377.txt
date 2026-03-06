@@ -1,0 +1,23 @@
+## 30.11.11. Vector Integer Divide Instructions
+
+The  divide  and  remainder  instructions  are  equivalent  to  the  RISC-V  standard  scalar  integer multiply/divides, with the same results for extreme inputs.
+
+```
+# Unsigned divide. vdivu.vv vd, vs2, vs1, vm   # Vector-vector
+```
+
+```
+vdivu.vx vd, vs2, rs1, vm   # vector-scalar vremu.vv vd, vs2, vs1, vm   # Vector-vector vremu.vx vd, vs2, rs1, vm   # vector-scalar
+```
+
+```
+# Signed divide vdiv.vv vd, vs2, vs1, vm   # Vector-vector vdiv.vx vd, vs2, rs1, vm   # vector-scalar # Unsigned remainder # Signed remainder vrem.vv vd, vs2, vs1, vm   # Vector-vector vrem.vx vd, vs2, rs1, vm   # vector-scalar
+```
+
+<image>
+
+The decision to include integer divide and remainder was contentious. The argument in  favor  is  that  without  a  standard  instruction,  software  would  have  to  pick  some algorithm  to  perform  the  operation,  which  would  likely  perform  poorly  on  some microarchitectures versus others.
+
+-  There is no instruction to perform a "scalar divide by vector" operation.
+
+<image>

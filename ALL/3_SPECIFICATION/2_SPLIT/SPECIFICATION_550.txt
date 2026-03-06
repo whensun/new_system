@@ -1,0 +1,16 @@
+## 31.7.4.1. Rotations
+
+```
+RV32, RV64:                         RV64 only: ror    rd, rs1, rs2                 rorw   rd, rs1, rs2 rol    rd, rs1, rs2                 rolw   rd, rs1, rs2 rori   rd, rs1, imm                 roriw  rd, rs1, imm
+```
+
+See Bit-manipulation for Cryptography for details of these instructions.
+
+Notes to software developers
+
+Standard  bitwise  rotation  is  a  primitive  operation  in  many  block  ciphers  and  hash functions; it features particularly in the ARX (Add, Rotate, Xor) class of block ciphers and stream ciphers.
+
+- ⚫ Algorithms making use of 32-bit rotations: SHA256, AES (Shift Rows), ChaCha20, SM3.
+- ⚫ Algorithms making use of 64-bit rotations: SHA512, SHA3.
+
+<image>

@@ -1,0 +1,9 @@
+## 31.7.4. Bitmanip Instructions for Cryptography
+
+Many of the primitive operations used in symmetric key cryptography and cryptographic hash functions are well supported by the RISC-V Bitmanip extensions (see Chapter 29).
+
+<image>
+
+This section repeats much of the information in Zbkb-sc, Zbkc-sc and Zbkx-sc, but includes more rationale.
+
+We  proposed  that  the  scalar  cryptographic  extension reuse a  subset  of  the  instructions  from  the Bitmanip extensions Zb[abc] directly. Specifically, this would mean that a core implementing either the scalar  cryptographic  extensions, or the Zb[abc] , or both,  would  be  required  to  implement  these instructions.

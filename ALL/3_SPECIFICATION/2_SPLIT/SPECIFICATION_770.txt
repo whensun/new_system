@@ -1,0 +1,31 @@
+## 4.3. Usage
+
+After the writable bits of the machine-level mstateen CSRs are initialized to zeros on reset, machinelevel software can set bits in these registers to enable less-privileged access to the controlled state. This  may  be  either  because  machine-level  software  knows  how  to  swap  the  state  or,  more  likely, because  machine-level  software  isn't  swapping  supervisor-level  environments.  (Recall  that  the  main reason the mstateen CSRs must exist is so machine level can emulate the hypervisor extension. When machine level isn't emulating the hypervisor extension, it is likely there will be no need to keep any implemented mstateen bits zero.)
+
+If  machine  level  sets  any  writable mstateen bits  to  nonzero,  it  must  initialize  the  matching hstateen CSRs, if they exist, by writing zeros to them. And if any mstateen bits that are set to one have matching bits in the sstateen CSRs, machine-level software must also initialize those sstateen CSRs by writing zeros  to  them.  Ordinarily,  machine-level  software  will  want  to  set  bit  63  of  all mstateen CSRs, necessitating that it write zero to all hstateen CSRs.
+
+Software should ensure that all writable bits of sstateen CSRs are initialized to zeros when an OS at supervisor level is first entered. The OS can then set bits in these registers to enable user-level access to the controlled state, presumably because it knows how to context-swap the state.
+
+For the sstateen CSRs whose access by a guest OS is permitted by bit 63 of the corresponding hstateen CSRs, a hypervisor must include the sstateen CSRs  in  the  context  it  swaps  for  a  guest  OS.  When  it starts a new guest OS, it must ensure the writable bits of those sstateen CSRs are initialized to zeros, and it must emulate accesses to any other sstateen CSRs.
+
+If software at any privilege level does not support multiple contexts for less-privilege levels, then it may choose to maximize less-privileged access to all state by writing a value of all ones to the stateen CSRs at its level (the mstateen CSRs for machine level, the sstateen CSRs for an OS, and the hstateen CSRs for a  hypervisor),  without  knowing  all  the  state  to  which  it  is  granting  access.  This  is  justified  because there is no risk of a covert channel between execution contexts at the less-privileged level when only one context  exists  at  that  level.  This  situation  is  expected  to  be  common  for  machine  level,  and  it might also arise, for example, for a type-1 hypervisor that hosts only a single guest virtual machine.
+
+<image>
+
+If  a  need is anticipated, the set of stateen CSRs could in the future be doubled by adding these:
+
+- ⚫ 0x38C mstateen4 , 0x39C mstateen4h
+- ⚫ 0x38D mstateen5 , 0x39D mstateen5h
+
+- ⚫ 0x38E mstateen6 , 0x39E mstateen6h
+- ⚫ 0x38F mstateen7 , 0x39F mstateen7h
+- ⚫ 0x18C sstateen4
+- ⚫ 0x18D sstateen5
+- ⚫ 0x18E sstateen6
+- ⚫ 0x18F sstateen7
+- ⚫ 0x68C hstateen4 , 0x69C hstateen4h
+- ⚫ 0x68D hstateen5 , 0x69D hstateen5h
+- ⚫ 0x68E hstateen6 , 0x69E hstateen6h
+- ⚫ 0x68F hstateen7 , 0x69F hstateen7h
+
+These additional CSRs are not a definite part of the original proposal because it is unclear whether they will ever be needed, and it is believed the rate of consumption of  bits  in  the  first  group,  registers  numbered  0-3,  will  be  slow  enough  that  any looming shortage will be perceptible many years in advance. At the moment, it is not known  even  how  many  years  it  may  take  to  exhaust  just mstateen0 , sstateen0 ,  and hstateen0 .

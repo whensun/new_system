@@ -1,0 +1,13 @@
+## 30.16.3.2. Vector Slidedown Instructions
+
+```
+vslidedown.vx vd, vs2, rs1, vm       # vd[i] = vs2[i+x[rs1]] vslidedown.vi vd, vs2, uimm, vm      # vd[i] = vs2[i+uimm]
+```
+
+For vslidedown , the value in vl specifies the maximum number of destination elements that are written. The remaining elements past vl are handled according to the current tail policy (Section 30.3.4.3).
+
+The start index ( OFFSET )  for  the  source  can  be  either  specified  using  an  unsigned  integer  in  the x register specified by rs1 , or a 5-bit immediate, zero-extended to XLEN bits. If XLEN > SEW, OFFSET is not truncated to SEW bits.
+
+```
+vslidedown behavior for source elements for element i in slide (`vstart` < `vl`) 0 <= i+OFFSET < VLMAX   src[i] = vs2[i+OFFSET] VLMAX <= i+OFFSET           src[i] = 0 vslidedown behavior for destination element i in slide (`vstart` < `vl`) 0 <= i < vstart         Unchanged vstart <= i < vl             vd[i] = src[i] if v0.mask[i] enabled vl <= i < VLMAX          Follow tail policy
+```

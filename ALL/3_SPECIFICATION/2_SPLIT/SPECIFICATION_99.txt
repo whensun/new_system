@@ -1,0 +1,25 @@
+## 19.7.1. cbo.clean
+
+## Synopsis
+
+Perform a clean operation on a cache block
+
+## Mnemonic
+
+cbo.clean offset ( base )
+
+## Encoding
+
+<image>
+
+## Description
+
+A cbo.clean instruction performs a clean operation on the cache block whose effective address is the base address specified in rs1 .  The  offset  operand may be omitted; otherwise, any expression that  computes  the  offset  shall  evaluate  to  zero.  The  instruction  operates  on  the  set  of  coherent caches accessed by the agent executing the instruction.
+
+<image>
+
+When executing a cbo.clean instruction, an implementation may instead perform a
+
+## Operation
+
+TODO

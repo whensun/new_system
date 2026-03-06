@@ -1,0 +1,3 @@
+## 12.1.1.4. Previous Expected Landing Pad (ELP) State in sstatus Register
+
+Access to the SPELP field, added by Zicfilp, accesses the homonymous fields of mstatus when V=0 ,  and the homonymous fields of vsstatus when V=1 .

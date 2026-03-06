@@ -1,0 +1,27 @@
+## 3.1.6.5. Endianness Control in mstatus and mstatush Registers
+
+The MBE, SBE, and UBE bits in mstatus and mstatush are WARL fields  that  control the endianness of memory accesses other than instruction fetches. Instruction fetches are always little-endian.
+
+MBE  controls  whether  non-instruction-fetch  memory  accesses  made  from  M-mode  (assuming mstatus .MPRV=0) are little-endian (MBE=0) or big-endian (MBE=1).
+
+If S-mode is not supported, SBE is read-only 0. Otherwise, SBE controls whether explicit load and store memory accesses made from S-mode are little-endian (SBE=0) or big-endian (SBE=1).
+
+If  U-mode is  not  supported,  UBE  is  read-only  0.  Otherwise,  UBE  controls  whether  explicit  load  and store memory accesses made from U-mode are little-endian (UBE=0) or big-endian (UBE=1).
+
+For implicit accesses to supervisor-level memory management data structures, such as page tables, endianness is always controlled by SBE. Since changing SBE alters the implementation's interpretation of these data structures, if any such data structures remain in use across a change to SBE, M-mode software must follow such a change to SBE by executing an SFENCE.VMA instruction with rs1 = x0 and rs2 = x0 .
+
+<image>
+
+Only  in  contrived  scenarios  will  a  given  memory-management  data  structure  be interpreted  as  both  little-endian  and  big-endian.  In  practice,  SBE  will  only  be changed  at  runtime  on  world  switches,  in  which  case  neither  the  old  nor  new memory-management data structure will be reinterpreted in a different endianness. In this case, no additional SFENCE.VMA is necessary, beyond what would ordinarily be required for a world switch.
+
+If S-mode is supported, an implementation may make SBE be a read-only copy of MBE. If U-mode is supported, an implementation may make UBE be a read-only copy of either MBE or SBE.
+
+An implementation supports only little-endian memory accesses if fields MBE, SBE, and UBE are all read-only 0. An implementation supports only big-endian memory accesses (aside from instruction fetches) if MBE is read-only 1 and SBE and UBE are each read-only 1 when S-mode and U-mode are supported.
+
+Volume  I  defines  a  hart's  address  space  as  a  circular  sequence  of  2 XLEN bytes  at consecutive addresses. The correspondence between addresses and byte locations is fixed  and  not  affected  by  any  endianness  mode.  Rather,  the  applicable  endianness mode  determines  the  order  of  mapping  between  memory  bytes  and  a  multibyte quantity (halfword, word, etc.).
+
+Standard  RISC-V  ABIs  are  expected  to  be  purely  little-endian-only  or  big-endianonly,  with  no  accommodation  for  mixing  endianness.  Nevertheless,  endianness control has been defined so as to permit, for instance, an OS of one endianness to execute  user-mode  programs  of  the  opposite  endianness.  Consideration  has  been given  also  to  the  possibility  of  non-standard  usages  whereby  software  flips  the endianness of memory accesses as needed.
+
+RISC-V instructions are uniformly little-endian to decouple instruction encoding from the  current  endianness  settings,  for  the  benefit  of  both  hardware  and  software. Otherwise, for instance, a RISC-V assembler or disassembler would always need to know  the  intended  active  endianness,  despite  that  the  endianness  mode  might change  dynamically  during  execution.  In  contrast,  by  giving  instructions  a  fixed endianness, it is sometimes possible for carefully written software to be endiannessagnostic even in binary form, much like position-independent code.
+
+The  choice  to  have  instructions  be  only  little-endian  does  have  consequences, however, for RISC-V software that encodes or decodes machine instructions. In bigendian mode, such software must account for the fact that explicit loads and stores have endianness opposite that of instructions, for example by swapping byte order after loads and before stores.

@@ -1,0 +1,25 @@
+## 3.6.6. Coherence and Cacheability PMAs
+
+Coherence is a property defined for a single physical address, and indicates that writes to that address by one agent will eventually be made visible to other coherent agents in the system. Coherence is not to be confused with the memory consistency model of a system, which defines what values a memory read can return given the previous history of reads and writes to the entire memory system. In RISC-V platforms,  the  use  of  hardware-incoherent  regions  is  discouraged  due  to  software  complexity, performance, and energy impacts.
+
+The  cacheability  of  a  memory  region  should  not  affect  the  software  view  of  the  region  except  for differences reflected in other PMAs, such as main memory versus I/O classification, memory ordering, supported accesses and atomic operations, and coherence. For this reason, we treat cacheability as a platform-level setting managed by machine-mode software only.
+
+Where a platform supports configurable cacheability settings for a memory region, a platform-specific machine-mode routine will change the settings and flush caches if necessary, so the system is only incoherent  during  the  transition  between  cacheability  settings.  This  transitory  state  should  not  be visible to lower privilege levels.
+
+Coherence  is  straightforward  to  provide  for  a  shared  memory  region  that  is  not cached by any agent. The PMA for such a region would simply indicate it should not be cached in a private or shared cache.
+
+Coherence is also straightforward for read-only regions, which can be safely cached by  multiple  agents  without  requiring  a  cache-coherence  scheme.  The  PMA  for  this region would indicate that it can be cached, but that writes are not supported.
+
+Some read-write regions might only be accessed by a single agent, in which case they  can  be  cached  privately  by  that  agent  without  requiring  a  coherence  scheme. The PMA for such regions would indicate they can be cached. The data can also be cached in a shared cache, as other agents should not access the region.
+
+If an agent can cache a read-write region that is accessible by other agents, whether caching or non-caching, a cache-coherence scheme is required to avoid use of stale values. In regions lacking hardware cache coherence (hardware-incoherent regions), cache coherence can be implemented entirely in software, but software coherence schemes  are  notoriously  difficult  to  implement  correctly  and  often  have  severe performance  impacts  due  to  the  need  for  conservative  software-directed  cacheflushing.  Hardware  cache-coherence  schemes  require  more  complex  hardware  and can  impact  performance  due  to  the  cache-coherence  probes,  but  are  otherwise invisible to software.
+
+For each hardware cache-coherent region, the PMA would indicate that the region is coherent and which hardware coherence controller to use if the system has multiple coherence  controllers.  For  some  systems,  the  coherence  controller  might  be  an outer-level  shared  cache,  which  might  itself  access  further  outer-level  cachecoherence controllers hierarchically.
+
+Most memory regions within a platform will be coherent to software, because they will  be  fixed  as  either  uncached,  read-only,  hardware  cache-coherent,  or  only accessed by one agent.
+
+If  a  PMA  indicates non-cacheability, then accesses to that region must be satisfied by the memory itself, not by any caches.
+
+<image>
+
+For implementations with a cacheability-control mechanism, the situation may arise that  a  program  uncacheably  accesses  a  memory  location  that  is  currently  cacheresident.  In  this  situation,  the  cached  copy  must  be  ignored.  This  constraint  is necessary to prevent more-privileged modes' speculative cache refills from affecting the behavior of less-privileged modes' uncacheable accesses.

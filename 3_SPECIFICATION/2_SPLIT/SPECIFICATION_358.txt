@@ -1,0 +1,15 @@
+## 30.7.8.3. Vector Indexed Segment Loads and Stores
+
+Vector indexed segment loads and stores move contiguous segments where each segment is located at an address given by adding the scalar base address in the rs1 field to byte offsets in vector register vs2 .  Both  ordered  and  unordered  forms  are  provided,  where  the  ordered  forms  access  segments  in element order. However, even for the ordered form, accesses to the fields within an individual segment are not ordered with respect to each other.
+
+The data vector register group has EEW=SEW, EMUL=LMUL, while the index vector register group has EEW encoded in the instruction with EMUL=(EEW/SEW)*LMUL. The EMUL * NFIELDS ≤ 8 constraint applies to the data vector register group.
+
+```
+# Format vluxseg<nf>ei<eew>.v vd, (rs1), vs2, vm   # Indexed-unordered segment loads vloxseg<nf>ei<eew>.v vd, (rs1), vs2, vm   # Indexed-ordered segment loads vsuxseg<nf>ei<eew>.v vs3, (rs1), vs2, vm  # Indexed-unordered segment stores vsoxseg<nf>ei<eew>.v vs3, (rs1), vs2, vm  # Indexed-ordered segment stores # Examples vsetvli a1, t0, e8, m1, ta, ma vluxseg3ei8.v v4, (x5), v3   # Load bytes at addresses x5+v3[i]   into v4[i], #  and bytes at addresses x5+v3[i]+1 into v5[i], #  and bytes at addresses x5+v3[i]+2 into v6[i]. # Examples vsetvli a1, t0, e32, m1, ta, ma vsuxseg2ei32.v v2, (x5), v5   # Store words from v2[i] to address x5+v5[i] #   and words from v3[i] to address x5+v5[i]+4
+```
+
+For vector indexed segment loads, the destination vector register groups cannot overlap the source vector register group (specified by vs2 ), else the instruction encoding is reserved.
+
+<image>
+
+This  constraint  supports  restart  of  indexed  segment  loads  that  raise  exceptions partway through loading a structure.

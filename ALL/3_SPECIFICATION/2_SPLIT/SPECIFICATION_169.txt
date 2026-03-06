@@ -1,0 +1,9 @@
+## 26.5. Zhinxmin
+
+The Zhinxmin extension provides minimal support for 16-bit half-precision floating-point instructions that operate on the x registers. The Zhinxmin extension depends upon the Zfinx extension.
+
+The Zhinxmin extension includes the following instructions from the Zhinx extension: FCVT.S.H and FCVT.H.S. If the Zdinx extension is present, the FCVT.D.H and FCVT.H.D instructions are also included.
+
+<image>
+
+In the future, an RV64Zqinx quad-precision extension could be defined analogously to  RV32Zdinx.  An  RV32Zqinx  extension  could  also  be  defined  but  would  require quad-register groups.

@@ -1,0 +1,3 @@
+## 31.8. Entropy Source Rationale and Recommendations
+
+This non-normative appendix focuses on the rationale, security, self-certification, and implementation aspects of entropy sources. Hence we also discuss non-ISA system features that may be needed for cryptographic standards compliance and security testing.

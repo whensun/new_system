@@ -1,0 +1,9 @@
+## 8.2. RNMI Handler Addresses
+
+The RNMI interrupt trap handler address is implementation-defined.
+
+RNMI also has an associated exception trap handler address, which is implementation defined.
+
+<image>
+
+For example, some implementations might use the address specified in mtvec as the RNMI exception trap handler.

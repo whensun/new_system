@@ -1,0 +1,7 @@
+## 24.3.6. Number of Masked Bits
+
+As described in Section 24.2.4, the supported values of PMLEN may depend on the effective privilege mode. The current standard only defines PMLEN=XLEN-48 and PMLEN=XLEN-57, but this assumption may be relaxed in future extensions and profiles. Trying to enable pointer masking in an unsupported scenario represents an illegal write to the corresponding pointer masking enable bit and follows WARL semantics.  Future  profiles  may  choose  to  define  certain  combinations  of  privilege  modes  and supported values of PMLEN as mandatory.
+
+<image>
+
+An  option  that  was  considered  but  discarded  was  to  allow  implementations  to  set PMLEN depending on the active addressing mode. For example, PMLEN could be set to  16  for  Sv48  and  to  25  for  Sv39.  However, having a single value of PMLEN (e.g., setting  PMLEN  to  16  for  both  Sv39  and  Sv48  rather  than  25)  facilitates  TLB implementations in designs that support Sv39 and Sv48 but not Sv57. 16 bits are sufficient for current pointer masking use cases but allow for a TLB implementation that matches against the same number of virtual tag bits independently of whether it is running with Sv39 or Sv48. However, if Sv57 is supported, tag matching may need to be conditional on the current address translation mode.

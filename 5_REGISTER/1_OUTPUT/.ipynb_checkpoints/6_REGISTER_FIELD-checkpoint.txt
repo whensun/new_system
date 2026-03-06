@@ -1,0 +1,2 @@
+REGISTER: mseccfg
+FIELDS: 63..56=WPRI, 55..55=MLPE, 54..34=WPRI, 33..32=PMM, 31..5=WPRI, 4..4=RLB, 3..3=MML, 2..2=MMWP, 1..1=useed, 0..0=sseed

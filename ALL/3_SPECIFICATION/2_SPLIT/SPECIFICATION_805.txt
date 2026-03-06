@@ -1,0 +1,15 @@
+## 11.2.1. Control Transfer Record Source Register ( ctrsource )
+
+The ctrsource register  contains  the  source  program counter, which is the pc of  the  recorded  control transfer instruction, or the epc of the recorded trap. The valid (V) bit is set by the hardware when a transfer is recorded in the selected CTR buffer entry, and implies that data in ctrsource , ctrtarget , and ctrdata is valid for this entry.
+
+ctrsource is  an  MXLEN-bit  WARL  register  that  must  be  able  to  hold  all  valid  virtual  or  physical addresses that can serve as a pc . It need not be able to hold any invalid addresses; implementations may convert an invalid address into a valid address that the register is capable of holding. When XLEN
+
+<  MXLEN, both explicit writes (by software) and implicit writes (for recorded transfers) will be zeroextended.
+
+<image>
+
+Figure 46. Control Transfer Record Source Register Format for MXLEN=64
+
+<image>
+
+CTR entry registers are defined as MXLEN, despite the x ireg* CSRs used to access them being XLEN, to ensure that entries recorded in RV64 are not truncated, as a result of CSR Width Modulation, on a transition to RV32.

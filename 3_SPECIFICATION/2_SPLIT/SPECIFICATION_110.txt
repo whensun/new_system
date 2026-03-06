@@ -1,0 +1,9 @@
+## 20.4. Subnormal Arithmetic
+
+Operations on subnormal numbers are handled in accordance with the IEEE 754-2008 standard.
+
+In the parlance of the IEEE standard, tininess is detected after rounding.
+
+<image>
+
+Detecting tininess after rounding results in fewer spurious underflow signals.

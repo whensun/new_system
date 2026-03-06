@@ -1,0 +1,7 @@
+## 12.4. Sv39: Page-Based 39-bit Virtual-Memory System
+
+This section describes a simple paged virtual-memory system for SXLEN=64, which supports 39-bit virtual address spaces. The design of Sv39 follows the overall scheme of Sv32, and this section details only the differences between the schemes.
+
+<image>
+
+We  specified  multiple  virtual  memory  systems  for  RV64  to  relieve  the  tension between providing  a  large  address  space  and  minimizing  address-translation  cost. For many systems, 39 bits of virtual-address space is ample, and so Sv39 suffices. Sv48  increases  the  virtual  address  space  to  48  bits,  but  increases  the  physical memory capacity dedicated to page tables, the latency of page-table traversals, and the  size  of  hardware  structures  that  store  virtual  addresses.  Sv57  increases  the virtual address space, page table capacity requirement, and translation latency even further.

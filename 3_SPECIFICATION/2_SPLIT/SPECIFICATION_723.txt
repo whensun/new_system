@@ -1,0 +1,37 @@
+## 3.1.6.1. Privilege and Global Interrupt-Enable Stack in mstatus register
+
+Global interrupt-enable bits, MIE and SIE, are provided for M-mode and S-mode respectively. These bits are primarily used to guarantee atomicity with respect to interrupt handlers in the current privilege mode.
+
+<image>
+
+The global xIE bits are located in the low-order bits of mstatus ,  allowing them to be atomically set or cleared with a single CSR instruction.
+
+When a hart is executing in privilege mode x , interrupts are globally enabled when x IE=1 and globally disabled  when x IE=0.  Interrupts for  lower-privilege  modes, w < x , are always  globally  disabled regardless  of  the  setting  of  any  global w IE  bit  for  the  lower-privilege  mode.  Interrupts  for  higherprivilege modes, y > x , are always globally enabled regardless of the setting of the global y IE bit for the higher-privilege  mode.  Higher-privilege-level  code  can  use  separate  per-interrupt  enable  bits  to disable selected higher-privilege-mode interrupts before ceding control to a lower-privilege mode. If supervisor mode is not implemented, then SIE and SPIE are read-only 0.
+
+<image>
+
+A higher-privilege mode y could disable all of its interrupts before ceding control to a lower-privilege mode but this would be unusual as it would leave only a synchronous trap, non-maskable interrupt, or reset as means to regain control of the hart.
+
+To support nested traps, each privilege mode x that can respond to interrupts has a two-level stack of interrupt-enable bits and privilege modes. x PIE holds the value of the interrupt-enable bit active prior to the trap, and x PP holds the previous privilege mode. The x PP fields can only hold privilege modes up to x , so MPP is two bits wide and SPP is one bit wide. When a trap is taken from privilege mode y into privilege mode x , x PIE is set to the value of x IE; x IE is set to 0; and x PP is set to y .
+
+<image>
+
+For lower privilege modes, any trap (synchronous or asynchronous) is usually taken at a  higher  privilege  mode  with  interrupts  disabled  upon  entry.  The  higher-level  trap handler will either service the trap and return using the stacked information, or, if not returning immediately to the interrupted context, will save the privilege stack before re-enabling interrupts, so only one entry per stack is required.
+
+An MRET or SRET instruction is used to return from a trap in M-mode or S-mode respectively. When executing an x RET instruction, supposing x PP holds the value y , x IE is set to x PIE; the privilege mode is changed to y ; x PIE is set to 1; and x PP is set to the least-privileged supported mode (U if U-mode is implemented, else M). If y ≠M, x RET also sets MPRV=0.
+
+<image>
+
+Setting  xPP  to  the  least-privileged  supported  mode  on  an  xRET  helps  identify software bugs in the management of the two-level privilege-mode stack.
+
+<image>
+
+Trap handlers must be designed to neither enable interrupts nor cause exceptions during  the  phase  of  handling  where  the  trap  handler  preserves  the  critical  state information required to handle and resume from the trap. An exception or interrupt in this critical phase of trap handling may lead to a trap that can overwrite such critical state.  This  could  result  in  the  loss  of  data  needed  to  recover  from  the  initial  trap. Further, if an exception occurs in the code path needed to handle traps, then such a situation may lead to an infinite loop of traps. To prevent this, trap handlers must be meticulously designed to identify and safely manage  exceptions  within their operational flow.
+
+x PP fields are WARL fields that can hold only privilege mode x and any implemented privilege mode lower than x . If privilege mode x is not implemented, then x PP must be read-only 0.
+
+<image>
+
+M-mode software can determine whether a privilege mode is implemented by writing that mode to MPP then reading it back.
+
+If the machine provides only U and M modes, then only a single hardware storage bit is required to represent either 00 or 11 in MPP.

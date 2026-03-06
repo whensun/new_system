@@ -1,0 +1,43 @@
+## 5.2. Machine-level CSRs
+
+| Number   | Privilege   | Width   | Name     | Description                       |
+|----------|-------------|---------|----------|-----------------------------------|
+| 0x350    | MRW         | XLEN    | miselect | Machine indirect register select  |
+| 0x351    | MRW         | XLEN    | mireg    | Machine indirect register alias   |
+| 0x352    | MRW         | XLEN    | mireg2   | Machine indirect register alias 2 |
+| 0x353    | MRW         | XLEN    | mireg3   | Machine indirect register alias 3 |
+| 0x355    | MRW         | XLEN    | mireg4   | Machine indirect register alias 4 |
+| 0x356    | MRW         | XLEN    | mireg5   | Machine indirect register alias 5 |
+| 0x357    | MRW         | XLEN    | mireg6   | Machine indirect register alias 6 |
+
+<image>
+
+The mireg* CSR numbers are not consecutive because miph is CSR number 0x354.
+
+The CSRs listed in the table above provide a window for accessing register state indirectly. The value of miselect determines which register is accessed upon read or write of each of the machine indirect alias  CSRs  ( mireg* ). miselect value  ranges  are  allocated  to  dependent  extensions,  which  specify  the register state accessible via each mireg i register, for each miselect value. miselect is a WARL register.
+
+The miselect register  implements  at  least  enough  bits  to  support  all  implemented miselect values (corresponding to the implemented extensions that utilize miselect / mireg* to indirectly access register state). The miselect register may be read-only zero if there are no extensions implemented that utilize it.
+
+Values of miselect with the most-significant bit set (bit XLEN - 1 = 1) are designated only for custom use,  presumably  for  accessing  custom  registers  through  the  alias  CSRs.  Values  of miselect with  the most-significant bit clear are designated only for standard use and are reserved until allocated to a standard architecture extension. If XLEN is changed, the most-significant bit of miselect moves to the new position, retaining its value from before.
+
+<image>
+
+An implementation is not required to support any custom values for miselect .
+
+The  behavior  upon  accessing mireg* from  M-mode,  while miselect holds  a  value that is  not implemented, is UNSPECIFIED.
+
+<image>
+
+It is expected that implementations will typically raise an illegal instruction exception for  such  accesses,  so  that,  for  example,  they  can  be  identified  as  software  bugs. Platform  specs,  profile  specs,  and/or  the  Privileged  ISA  spec  may  place  more restrictions on behavior for such accesses.
+
+Attempts  to  access mireg* while miselect holds  a  number  in  an  allocated  and  implemented  range results  in  a  specific  behavior  that,  for  each  combination  of miselect and mireg i ,  is  defined  by  the extension to which the miselect value is allocated.
+
+Ordinarily, each mireg i will access register state, access read-only 0 state, or raise an illegal-instruction exception.
+
+<image>
+
+<image>
+
+For RV32, if an extension defines an indirectly accessed register as 64 bits wide, it is recommended that  the  lower  32  bits  of  the  register  are  accessed  through  one  of mireg , mireg2 , or mireg3 , while the upper 32 bits are accessed through mireg4 , mireg5 , or mireg6 , respectively.
+
+Six *ireg* registers  are  defined  in  order  to  ensure  that  the  needs  of  extensions  in development are covered, with some room for growth. For example, for an siselect value  associated  with  counter  X, sireg / sireg2 could  be  used  to  access mhpmcounterX / mhpmeventX ,  while sireg4 / sireg5 could  access mhpmcounterXh / mhpmeventXh .  Six *ireg* registers allows for accessing up to 3 CSR arrays per index ( *iselect ) with RV32-only CSRs, or up to 6 CSR arrays per index value without RV32-only CSRs.

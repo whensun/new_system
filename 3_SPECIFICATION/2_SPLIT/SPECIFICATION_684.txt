@@ -1,0 +1,3 @@
+## 36.3.1. Available 30-bit instruction encoding spaces
+
+In the standard encoding, three of the available 30-bit instruction encoding spaces (those with 2-bit prefixes 00 , 01 ,  and 10 ) are used to enable the optional compressed instruction extension. However, if the  compressed  instruction-set  extension  is  not  required,  then  these  three  further  30-bit  encoding spaces become available. This quadruples the available encoding space within the 32-bit format.

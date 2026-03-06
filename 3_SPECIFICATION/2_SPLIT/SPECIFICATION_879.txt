@@ -1,0 +1,56 @@
+## 21.2.10. Hypervisor Guest Address Translation and Protection ( hgatp ) Register
+
+The hgatp register  is  an  HSXLEN-bit  read/write  register,  formatted  as  shown  in  Figure  96  for HSXLEN=32 and Figure 97 for HSXLEN=64, which controls G-stage address translation and protection, the second stage of two-stage translation for guest virtual addresses (see Section 21.5). Similar to CSR satp , this register holds the physical page number (PPN) of the guest-physical root page table; a virtual machine identifier (VMID), which facilitates address-translation fences on a per-virtual-machine basis; and the MODE field, which selects the address-translation scheme for guest physical addresses. When mstatus .TVM=1,  attempts  to  read  or  write hgatp while  executing  in  HS-mode  will  raise  an  illegalinstruction exception.
+
+Figure 96. Hypervisor guest address translation and protection register hgatp when HSXLEN=32.
+
+<image>
+
+Figure 97. Hypervisor guest address translation and protection register hgatp when HSXLEN=64 for MODE values Bare, Sv39x4, Sv48x4, and Sv57x4.
+
+<image>
+
+| 63          | 60 59 58 57   | 60 59 58 57   | 44 43    | 44 43       | 0          |
+|-------------|---------------|---------------|----------|-------------|------------|
+| MODE (WARL) | MODE (WARL)   | 0 (WARL)      | 0 (WARL) | VMID (WARL) | PPN (WARL) |
+| 4           | 4             | 2             | 2        | 14          | 44         |
+
+Table  41  shows  the  encodings  of  the  MODE  field  when  HSXLEN=32  and  HSXLEN=64.  When MODE=Bare,  guest  physical  addresses  are  equal  to  supervisor  physical  addresses,  and  there  is  no further memory protection for a guest virtual machine beyond the physical memory protection scheme described  in  Section  3.7.  In  this  case,  software  must  write  zero  to  the  remaining  fields  in hgatp . Attempting to select MODE=Bare with a nonzero pattern in the remaining fields has an UNSPECIFIED effect on the value that the remaining fields assume and an UNSPECIFIED effect on G-stage address translation and protection behavior.
+
+When HSXLEN=32, the only other valid setting for MODE is Sv32x4, which is a modification of the usual Sv32 paged virtual-memory scheme, extended to support 34-bit guest physical addresses. When HSXLEN=64, modes Sv39x4, Sv48x4, and Sv57x4 are defined as modifications of the Sv39, Sv48, and Sv57  paged  virtual-memory  schemes.  All  of  these  paged  virtual-memory  schemes  are  described  in Section 21.5.1.
+
+The remaining MODE settings when HSXLEN=64 are reserved for future use and may define different interpretations of the other fields in hgatp .
+
+Table 41. Encoding of hgatp MODE field.
+
+| HSXLEN=32   | HSXLEN=32   | HSXLEN=32                                                       |
+|-------------|-------------|-----------------------------------------------------------------|
+| Value       | Name        | Description                                                     |
+| 0           | Bare        | No translation or protection.                                   |
+| 1           | Sv32x4      | Page-based 34-bit virtual addressing (2-bit extension of Sv32). |
+| HSXLEN=64   | HSXLEN=64   | HSXLEN=64                                                       |
+| Value       | Name        | Description                                                     |
+| 0           | Bare        | No translation or protection.                                   |
+| 1-7         | -           | Reserved                                                        |
+| 8           | Sv39x4      | Page-based 41-bit virtual addressing (2-bit extension of Sv39). |
+| 9           | Sv48x4      | Page-based 50-bit virtual addressing (2-bit extension of Sv48). |
+| 10          | Sv57x4      | Page-based 59-bit virtual addressing (2-bit extension of Sv57). |
+| 11-15       | -           | Reserved                                                        |
+
+Implementations are not required to support all defined MODE settings when HSXLEN=64.
+
+A write to hgatp with an unsupported MODE value is not ignored as it is for satp . Instead, the fields of hgatp are WARL in the normal way, when so indicated.
+
+As explained in Section 21.5.1, for the paged virtual-memory schemes (Sv32x4, Sv39x4, Sv48x4, and Sv57x4), the root page table is 16 KiB and must be aligned to a 16-KiB boundary. In these modes, the lowest two bits of the physical page number (PPN) in hgatp always read as zeros. An implementation that supports only the defined paged virtual-memory schemes and/or Bare may make PPN[1:0] readonly zero.
+
+The number of VMID bits is UNSPECIFIED and may be zero. The number of implemented VMID bits, termed VMIDLEN ,  may  be  determined  by  writing  one  to  every  bit  position  in  the  VMID  field,  then
+
+reading back the value in hgatp to  see  which  bit  positions  in  the  VMID  field  hold  a  one.  The  leastsignificant  bits  of  VMID  are  implemented  first:  that  is,  if  VMIDLEN  >  0,  VMID[VMIDLEN-1:0]  is writable. The maximal value of VMIDLEN, termed VMIDMAX, is 7 for Sv32x4 or 14 for Sv39x4, Sv48x4, and Sv57x4.
+
+The hgatp register is considered active for the purposes of the address-translation algorithm unless the effective privilege mode is U and hstatus .HU=0.
+
+<image>
+
+This definition simplifies the implementation of speculative execution of HLV, HLVX, and HSV instructions.
+
+Note  that  writing hgatp does  not  imply  any  ordering  constraints  between  page-table  updates  and subsequent G-stage address translations. If the new virtual machine's guest physical page tables have been modified, or if a VMID is reused, it may be necessary to execute an HFENCE.GVMA instruction (see Section 21.3.2) before or after writing hgatp .

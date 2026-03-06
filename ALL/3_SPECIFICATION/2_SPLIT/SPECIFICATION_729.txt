@@ -1,0 +1,111 @@
+## 3.1.6.7. Extension Context Status in mstatus Register
+
+Supporting  substantial  extensions  is  one  of  the  primary  goals  of  RISC-V,  and  hence  we  define  a standard  interface  to  allow  unchanged  privileged-mode  code,  particularly  a  supervisor-level  OS,  to support arbitrary user-mode state extensions.
+
+<image>
+
+To date, the V extension is the only standard extension that defines additional state beyond the floating-point CSR and data registers.
+
+The FS[1:0] and VS[1:0] WARL fields  and  the  XS[1:0]  read-only  field  are  used  to  reduce  the  cost  of context save and restore by setting and tracking the current state of the floating-point unit and any other  user-mode  extensions  respectively.  The  FS  field  encodes  the  status  of  the  floating-point  unit state,  including  the  floating-point  registers f0 -f31 and  the  CSRs fcsr , frm ,  and fflags .  The  VS  field encodes the status of the vector extension state, including the vector registers v0 -v31 and the CSRs vcsr , vxrm , vxsat , vstart , vl , vtype ,  and vlenb .  The XS field encodes the status of additional user-mode extensions and associated state. These fields can be checked by a context switch routine to quickly determine  whether  a  state  save  or  restore  is  required.  If  a  save  or  restore  is  required,  additional instructions and CSRs are typically required to effect and optimize the process.
+
+<image>
+
+The design anticipates that most context switches will not need to save/restore state in  either  or  both  of  the  floating-point  unit  or  other  extensions,  so  provides  a  fast check via the SD bit.
+
+The FS, VS, and XS fields use the same status encoding as shown in Table 11, with the four possible status values being Off, Initial, Clean, and Dirty.
+
+Table 11. Encoding of FS[1:0], VS[1:0], and XS[1:0] status fields
+
+|   Status | FS and VS Meaning   | XS Meaning                   |
+|----------|---------------------|------------------------------|
+|        0 | Off                 | All off                      |
+|        1 | Initial             | None dirty or clean, some on |
+|        2 | Clean               | None dirty, some clean       |
+|        3 | Dirty               | Some dirty                   |
+
+If the F extension is implemented, the FS field shall not be read-only zero.
+
+If  neither  the  F  extension  nor  S-mode  is  implemented,  then  FS  is  read-only  zero.  If  S-mode  is implemented but the F extension is not, FS may optionally be read-only zero.
+
+<image>
+
+Implementations  with  S-mode  but  without  the  F  extension  are  permitted,  but  not required,  to  make  the  FS  field  be  read-only  zero.  Some  such  implementations  will choose not to have the FS field be read-only zero, so as to enable emulation of the F extension for both S-mode and U-mode via invisible traps into M-mode.
+
+If the v registers are implemented, the VS field shall not be read-only zero.
+
+If  neither  the v registers  nor  S-mode  is  implemented,  then  VS  is  read-only  zero.  If  S-mode  is implemented but the v registers are not, VS may optionally be read-only zero.
+
+In harts without additional user extensions requiring new state, the XS field is read-only zero. Every additional extension with state provides a CSR field that encodes the equivalent of the XS states. The XS field represents a summary of all extensions' status as shown in Table 11.
+
+<image>
+
+The XS field effectively reports the maximum status value across all user-extension status fields, though individual extensions can use a different encoding than XS.
+
+The  SD  bit  is  a  read-only  bit  that  summarizes  whether  either  the  FS,  VS,  or  XS  fields  signal  the presence of some dirty state that will require saving extended user context to memory. If FS, XS, and VS are all read-only zero, then SD is also always zero.
+
+When  an  extension's  status  is  set  to  Off,  any  instruction  that  attempts  to  read  or  write  the corresponding  state  will  cause  an  illegal-instruction  exception.  When  the  status  is  Initial,  the corresponding state should have an initial constant value. When the status is Clean, the corresponding state is potentially different from the initial value, but matches the last value stored on a context swap. When the status is Dirty, the corresponding state has potentially been modified since the last context save.
+
+During a context save, the responsible privileged code need only write out the corresponding state if its  status  is  Dirty,  and  can  then  reset  the  extension's  status  to  Clean.  During  a  context  restore,  the context need only be loaded from memory if the status is Clean (it should never be Dirty at restore). If the status is Initial, the context must be set to an initial constant value on context restore to avoid a security hole, but this can be done without accessing memory. For example, the floating-point registers
+
+can all be initialized to the immediate value 0.
+
+The FS and XS fields are read by the privileged code before saving the context. The FS field is set directly by privileged code when resuming a user context, while the XS field is set indirectly by writing to  the  status  register  of  the  individual  extensions.  The  status  fields  will  also  be  updated  during execution of instructions, regardless of privilege mode.
+
+Extensions  to  the  user-mode  ISA  often  include  additional  user-mode  state,  and  this  state  can  be considerably  larger  than  the  base  integer  registers.  The  extensions  might  only  be  used  for  some applications,  or  might  only  be  needed  for  short  phases  within  a  single  application.  To  improve performance, the user-mode extension can define additional instructions to allow user-mode software to return the unit to an initial state or even to turn off the unit.
+
+For example, a coprocessor might require to be configured before use and can be "unconfigured" after use.  The  unconfigured state would be represented as the Initial state for context save. If the same application remains running between the unconfigure and the next configure (which would set status to Dirty), there is no need to actually reinitialize the state at the unconfigure instruction, as all state is local to the user process, i.e., the Initial state may only cause the coprocessor state to be initialized to a constant value at context restore, not at every unconfigure.
+
+Executing a user-mode instruction to disable a unit and place it into the Off state will cause an illegalinstruction exception to be raised if any subsequent instruction tries to use the unit before it is turned back  on.  A  user-mode  instruction  to  turn  a  unit  on  must  also  ensure  the  unit's  state  is  properly initialized, as the unit might have been used by another context meantime.
+
+Changing  the  setting  of  FS  has  no  effect  on  the  contents  of  the  floating-point  register  state.  In particular,  setting  FS=Off does not destroy the state, nor does setting FS=Initial clear the contents. Similarly, the setting of VS has no effect on the contents of the vector register state. Other extensions, however, might not preserve state when set to Off.
+
+Implementations may choose to track the dirtiness of the floating-point register state imprecisely by reporting the state to be dirty even when it has not been modified. On some implementations, some instructions that do not mutate the floating-point state may cause the state to transition from Initial or Clean to Dirty. On other implementations, dirtiness might not be tracked at all, in which case the valid FS states are Off and Dirty, and an attempt to set FS to Initial or Clean causes it to be set to Dirty.
+
+<image>
+
+This  definition  of  FS  does  not  disallow  setting  FS  to  Dirty  as  a  result  of  errant speculation. Some platforms may choose to disallow speculatively writing FS to close a potential side channel.
+
+If an instruction explicitly or implicitly writes a floating-point register or the fcsr but does not alter its contents, and FS=Initial or FS=Clean, it is implementation-defined whether FS transitions to Dirty.
+
+Implementations  may  choose  to  track  the  dirtiness  of  the  vector  register  state  in  an  analogous imprecise fashion, including possibly setting VS to Dirty when software attempts to set VS=Initial or VS=Clean.  When  VS=Initial  or  VS=Clean,  it  is  implementation-defined  whether  an  instruction  that writes a vector register or vector CSR but does not alter its contents causes VS to transition to Dirty.
+
+Table  12  shows  all  the  possible  state  transitions  for  the  FS,  VS,  or  XS  status  bits.  Note  that  the standard floating-point and vector extensions do not support user-mode unconfigure or disable/enable instructions.
+
+## Table 12. FS, VS, and XS state transitions.
+
+| Current State Action                                                      | Off                                                                       | Initial                                                                   | Clean                                                                     | Dirty                                                                     |
+|---------------------------------------------------------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| At context save in privileged code                                        | At context save in privileged code                                        | At context save in privileged code                                        | At context save in privileged code                                        | At context save in privileged code                                        |
+| Save state? Next state                                                    | No Off                                                                    | No Initial                                                                | No Clean                                                                  | Yes Clean                                                                 |
+| At context restore in privileged code                                     | At context restore in privileged code                                     | At context restore in privileged code                                     | At context restore in privileged code                                     | At context restore in privileged code                                     |
+| Restore state? Next state                                                 | No Off                                                                    | Yes, to initial Initial                                                   | Yes, from memory Clean                                                    | N/A N/A                                                                   |
+| Execute instruction to read state                                         | Execute instruction to read state                                         | Execute instruction to read state                                         | Execute instruction to read state                                         | Execute instruction to read state                                         |
+| Action? Next state                                                        | Exception Off                                                             | Execute Initial                                                           | Execute Clean                                                             | Execute Dirty                                                             |
+| Execute instruction that possibly modifies state, including configuration | Execute instruction that possibly modifies state, including configuration | Execute instruction that possibly modifies state, including configuration | Execute instruction that possibly modifies state, including configuration | Execute instruction that possibly modifies state, including configuration |
+| Action? Next state                                                        | Exception Off                                                             | Execute Dirty                                                             | Execute Dirty                                                             | Execute Dirty                                                             |
+| Execute instruction to unconfigure unit                                   | Execute instruction to unconfigure unit                                   | Execute instruction to unconfigure unit                                   | Execute instruction to unconfigure unit                                   | Execute instruction to unconfigure unit                                   |
+| Action? Next state                                                        | Exception Off                                                             | Execute Initial                                                           | Execute Initial                                                           | Execute Initial                                                           |
+| Execute instruction to disable unit                                       | Execute instruction to disable unit                                       | Execute instruction to disable unit                                       | Execute instruction to disable unit                                       | Execute instruction to disable unit                                       |
+| Action? Next state                                                        | Execute Off                                                               | Execute Off                                                               | Execute Off                                                               | Execute Off                                                               |
+| Execute instruction to enable unit                                        | Execute instruction to enable unit                                        | Execute instruction to enable unit                                        | Execute instruction to enable unit                                        | Execute instruction to enable unit                                        |
+| Action? Next state                                                        | Execute Initial                                                           | Execute Initial                                                           | Execute Initial                                                           | Execute Initial                                                           |
+
+Standard privileged instructions to initialize, save, and restore extension state are provided to insulate privileged code from details of the added extension state by treating the state as an opaque object.
+
+Many coprocessor extensions are only used in limited contexts that allows software to  safely  unconfigure  or  even  disable  units  when  done.  This  reduces  the  contextswitch overhead of large stateful coprocessors.
+
+<image>
+
+We separate out floating-point state from other extension state, as when a floatingpoint  unit  is  present  the  floating-point  registers  are  part  of  the  standard  calling convention, and so user-mode software cannot know when it is safe to disable the floating-point unit.
+
+The XS field provides a summary of all added extension state, but additional microarchitectural bits might be maintained in the extension to further reduce context save and restore overhead.
+
+The  SD  bit  is  read-only  and  is  set  when  either  the  FS,  VS,  or  XS  bits  encode  a  Dirty  state  (i.e., SD=(FS==0b11  OR  XS==0b11  OR  VS==0b11) ).  This  allows  privileged  code  to  quickly  determine  when  no additional context save is required beyond the integer register set and pc .
+
+The floating-point unit state is always initialized, saved, and restored using standard instructions (F, D, and/or Q), and privileged code must be aware of FLEN to determine the appropriate space to reserve for each f register.
+
+Machine  and  Supervisor  modes  share  a  single  copy  of  the  FS,  VS,  and  XS  bits.  Supervisor-level software  normally  uses  the  FS,  VS,  and  XS  bits  directly  to  record  the  status  with  respect  to  the supervisor-level  saved  context.  Machine-level  software  must  be  more  conservative  in  saving  and restoring the extension state in their corresponding version of the context.
+
+<image>
+
+In  any  reasonable  use  case,  the  number  of  context  switches  between  user  and supervisor  level  should  far  outweigh  the  number  of  context  switches  to  other privilege levels. Note that coprocessors should not require their context to be saved and  restored  to  service  asynchronous  interrupts,  unless  the  interrupt  results  in  a user-level context swap.

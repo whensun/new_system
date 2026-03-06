@@ -1,0 +1,61 @@
+## 27.2. Compressed Instruction Formats
+
+Table 37 shows the nine compressed instruction formats. CR, CI, and CSS can use any of the 32 RVI registers,  but  CIW,  CL,  CS,  CA,  and  CB  are  limited  to  just  8  of  them.  Table  38  lists  these  popular registers,  which correspond to registers x8 to x15 .  Note  that  there  is  a  separate  version  of  load  and store instructions that use the stack pointer as the base address register, since saving to and restoring from the stack are so prevalent, and that they use the CI and CSS formats to allow access to all 32 data registers. CIW supplies an 8-bit immediate for the ADDI4SPN instruction.
+
+<image>
+
+The RISC-V ABI was changed to make the frequently used registers map to registers 'x8-x15'. This simplifies the decompression decoder by having a contiguous naturally aligned set of register numbers, and is also compatible with the RV32E and RV64E base ISAs, which only have 16 integer registers.
+
+Compressed  register-based  floating-point  loads  and  stores  also  use  the  CL  and  CS  formats respectively, with the eight registers mapping to f8 to f15 .
+
+<image>
+
+The  standard  RISC-V  calling  convention  maps  the  most  frequently  used  floatingpoint registers to registers f8 to f15 , which allows the same register decompression
+
+## decoding as for integer register numbers.
+
+The formats were designed to keep bits for the two register source specifiers in the same place in all instructions,  while  the  destination  register  field  can  move.  When  the  full  5-bit  destination  register specifier is present, it is in the same place as in the 32-bit RISC-V encoding. Where immediates are sign-extended, the sign extension is always from bit 12. Immediate fields have been scrambled, as in the base specification, to reduce the number of immediate muxes required.
+
+<image>
+
+The  immediate  fields  are  scrambled  in  the  instruction  formats  instead  of  in sequential order so that as many bits as possible are in the same position in every instruction, thereby simplifying implementations.
+
+For many RVC instructions, zero-valued immediates are disallowed and x0 is not a valid 5-bit register specifier. These restrictions free up encoding space for other instructions requiring fewer operand bits.
+
+Table 37. Compressed 16-bit RVC instruction formats
+
+| Format   | Meaning              |
+|----------|----------------------|
+| CR       | Register             |
+| CI       | Immediate            |
+| CSS      | Stack-relative Store |
+| CIW      | Wide Immediate       |
+| CL       | Load                 |
+| CS       | Store                |
+| CA       | Arithmetic           |
+| CB       | Branch/Arithmetic    |
+| CJ       | Jump                 |
+
+Table 38. Registers specified by the three-bit rs1 ′ , rs2 ′ , and rd ′ fields of the CIW, CL, CS, CA, and CB formats.
+
+| 15 14 13   | 12          | 11 10       | 9 8 7       | 6 5         | 4 3 2       | 1 0   |
+|------------|-------------|-------------|-------------|-------------|-------------|-------|
+| funct4     | funct4      | rd/rs1      | rd/rs1      | rs2         | rs2         | op    |
+| funct3     | imm         | rd/rs1      | rd/rs1      | imm         | imm         | op    |
+| funct3     | imm         | imm         | imm         | rs2         | rs2         | op    |
+| funct3     | imm         | imm         | imm         | imm         | rd ′        | op    |
+| funct3     | imm         | imm         | rs1 ′       | imm         | rd ′        | op    |
+| funct3     | imm         | imm         | rs1 ′       | imm         | rs2 ′       | op    |
+| funct6     | funct6      | funct6      | rd ′ /rs1 ′ | funct2      | rs2 ′       | op    |
+| funct3     | offset      | offset      | rd ′ /rs1 ′ | offset      | offset      | op    |
+| funct3     | jump target | jump target | jump target | jump target | jump target | op    |
+
+RVC Register Number
+
+Integer Register Number
+
+Integer Register ABI Name
+
+Floating-Point Register Number
+
+Floating-Point Register ABI Name

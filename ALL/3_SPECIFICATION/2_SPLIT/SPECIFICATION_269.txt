@@ -1,0 +1,35 @@
+## 29.5.13. clmulr
+
+## Synopsis
+
+Carry-less multiply (reversed)
+
+## Mnemonic
+
+clmulr rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+clmulr produces bits 2·XLEN -2:XLEN-1 of the 2·XLEN carry-less product.
+
+## Operation
+
+```
+let rs1_val = X(rs1); let rs2_val = X(rs2); let output : xlenbits = 0; foreach (i from 0 to (xlen - 1) by 1) { output = if   ((rs2_val >> i) & 1) then output ^ (rs1_val >> (xlen - i - 1)); else output; } X[rd] = output
+```
+
+Note
+
+The clmulr instruction  is  used  to  accelerate  CRC  calculations.  The r in  the instruction's  mnemonic  stands  for  reversed,  as  the  instruction  is  equivalent  to  bitreversing the inputs, performing a clmul , then bit-reversing the output.
+
+<image>
+
+## Included in
+
+| Extension                       | Minimum version   | Lifecycle state   |
+|---------------------------------|-------------------|-------------------|
+| Zbc (Carry-less multiplication) | v1.0              | Ratified          |

@@ -1,0 +1,11 @@
+## 30.11.9. Vector Integer Min/Max Instructions
+
+Signed and unsigned integer minimum and maximum instructions are supported.
+
+```
+# Unsigned minimum vminu.vv vd, vs2, vs1, vm   # Vector-vector vminu.vx vd, vs2, rs1, vm   # vector-scalar # Signed minimum vmin.vv vd, vs2, vs1, vm   # Vector-vector vmin.vx vd, vs2, rs1, vm   # vector-scalar
+```
+
+```
+# Unsigned maximum vmaxu.vv vd, vs2, vs1, vm   # Vector-vector vmaxu.vx vd, vs2, rs1, vm   # vector-scalar # Signed maximum vmax.vv vd, vs2, vs1, vm   # Vector-vector vmax.vx vd, vs2, rs1, vm   # vector-scalar
+```

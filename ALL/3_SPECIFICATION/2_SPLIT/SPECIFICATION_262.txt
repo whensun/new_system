@@ -1,0 +1,33 @@
+## 29.5.6. bexti
+
+## Synopsis
+
+Single-Bit Extract (Immediate)
+
+## Mnemonic
+
+bexti rd , rs1 , shamt
+
+## Encoding (RV32)
+
+<image>
+
+## Encoding (RV64)
+
+<image>
+
+## Description
+
+This instruction returns a single bit extracted from rs1 at the index specified in shamt . The index is read  from  the  lower  log2(XLEN)  bits  of shamt .  For  RV32,  the  encodings  corresponding  to shamt[5]=1 are reserved.
+
+## Operation
+
+```
+let index = shamt & (XLEN - 1); X(rd) = (X(rs1) >> index) & 1;
+```
+
+## Included in
+
+| Extension                     | Minimum version   | Lifecycle state   |
+|-------------------------------|-------------------|-------------------|
+| Zbs (Single-bit instructions) | v1.0              | Ratified          |

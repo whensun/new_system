@@ -1,0 +1,19 @@
+## 34.5.2. sd
+
+## Synopsis
+
+Store doubleword from even/odd register pair, 32-bit encoding
+
+## Mnemonic
+
+sd rs2, offset(rs1)
+
+## Encoding (RV32)
+
+<image>
+
+## Description
+
+Stores  a  64-bit  value  from  registers rs2 and rs2+1 .  The  effective  address  is  obtained  by  adding register rs1 to the sign-extended 12-bit offset.
+
+Included in: Zilsd

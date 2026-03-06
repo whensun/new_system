@@ -1,0 +1,11 @@
+## 34.4. Exception Handling
+
+For  the  purposes  of  RVWMO  and  exception  handling,  LD  and  SD  instructions  are  considered  to  be misaligned loads and stores, with one additional constraint: an LD or SD instruction whose effective address is a multiple of 4 gives rise to two 4-byte memory operations.
+
+<image>
+
+This  definition  permits  LD  and  SD  instructions  giving  rise  to  exactly  one  memory access, regardless of alignment. If instructions with 4-byte-aligned effective address are decomposed into two 32b operations, there is no constraint on the order in which the operations are performed and each operation is guaranteed to be atomic. These decomposed  sequences  are  interruptible.  Exceptions  might  occur  on  subsequent operations,  making  the  effects  of  previous  operations  within  the  same  instruction visible.
+
+<image>
+
+Software should make no assumptions about the number or order of accesses these instructions might give rise to, beyond the 4-byte constraint mentioned above. For example, an interrupted store might overwrite the same bytes upon return from the interrupt handler.

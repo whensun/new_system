@@ -1,0 +1,36 @@
+## 37.11. Subset Naming Convention
+
+Table 78 summarizes the standardized extension names. The table also defines the canonical order in which extension names must appear in the name string, with top-to-bottom in table indicating first-tolast in the name string, e.g., RV32IMACV is legal, whereas RV32IMAVC is not.
+
+Table 78. Standard ISA extension names.
+
+| Subset                              | Name   | Implies             |
+|-------------------------------------|--------|---------------------|
+| Base ISA                            |        |                     |
+| Integer                             | I      |                     |
+| Reduced Integer                     | E      |                     |
+| Standard Unprivileged Extensions    |        |                     |
+| Integer Multiplication and Division | M      | Zmmul               |
+| Atomics                             | A      |                     |
+| Single-Precision Floating-Point     | F      | Zicsr               |
+| Double-Precision Floating-Point     | D      | F                   |
+| General                             | G      | IMAFDZicsr_Zifencei |
+| Quad-Precision Floating-Point       | Q      | D                   |
+| 16-bit Compressed Instructions      | C      |                     |
+
+| Subset                                            | Name   | Implies   |
+|---------------------------------------------------|--------|-----------|
+| B Extension                                       | B      |           |
+| Packed-SIMD Extensions                            | P      |           |
+| Vector Extension                                  | V      | D         |
+| Hypervisor Extension                              | H      |           |
+| Additional Standard Unprivileged Extensions       |        |           |
+| Additional Standard unprivileged extensions "abc" | Zabc   |           |
+| Standard Supervisor-Level Extensions              |        |           |
+| Supervisor-level extension "def"                  | Ssdef  |           |
+| Standard Hypervisor-Level Extensions              |        |           |
+| Hypervisor-level extension "ghi"                  | Shghi  |           |
+| Standard Machine-Level Extensions                 |        |           |
+| Machine-level extension "jkl"                     | Smjkl  |           |
+| Non-Standard Extensions                           |        |           |
+| Non-standard extension "mno"                      | Xmno   |           |

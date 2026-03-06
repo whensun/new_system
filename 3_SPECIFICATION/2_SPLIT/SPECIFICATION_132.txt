@@ -1,0 +1,16 @@
+## 23.2. Half-Precision Computational Instructions
+
+A new supported format is added to the format field of most instructions, as shown in Table 31.
+
+Table 31. Format field encoding.
+
+|   fmt field | Mnemonic   | Meaning                 |
+|-------------|------------|-------------------------|
+|          00 | S          | 32-bit single-precision |
+|          01 | D          | 64-bit double-precision |
+|          10 | H          | 16-bit half-precision   |
+|          11 | Q          | 128-bit quad-precision  |
+
+The half-precision  floating-point  computational  instructions  are  defined  analogously  to  their  singleprecision counterparts, but operate on half-precision operands and produce half-precision results.
+
+<image>

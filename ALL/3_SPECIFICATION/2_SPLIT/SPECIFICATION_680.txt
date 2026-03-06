@@ -1,0 +1,5 @@
+## 36.1.4. Standard-Compatible Global Encodings
+
+A complete or global encoding of an ISA for an actual RISC-V implementation must allocate a unique non-conflicting  prefix  for  every  included  instruction  encoding  space.  The  bases  and  every  standard extension  have  each  had  a  standard  prefix  allocated  to  ensure  they  can  all  coexist  in  a  global encoding.
+
+A standard-compatible global encoding is one where the base and every included standard extension have  their  standard  prefixes.  A  standard-compatible  global  encoding  can  include  non-standard extensions that do not conflict with the included standard extensions. A standard-compatible global encoding  can  also  use  standard  prefixes  for  non-standard  extensions  if  the  associated  standard extensions are not included in the global encoding. In other words, a standard extension must use its standard prefix if included in a standard-compatible global encoding, but otherwise its prefix is free to be reallocated. These constraints allow a common toolchain to target the standard subset of any RISCV standard-compatible global encoding.

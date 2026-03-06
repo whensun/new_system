@@ -1,0 +1,31 @@
+## 31.4.38. sha512sig1
+
+## Synopsis
+
+Implements  the  Sigma1  transformation  function  as  used  in  the  SHA2-512  hash  function  (NIST, 2015).
+
+## Mnemonic
+
+sha512sig1 rd, rs1
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction is supported for the RV64 base architecture. It implements the Sigma1 transform of the SHA2-512 hash function. (NIST, 2015). This instruction must always be implemented such that its execution latency does not depend on the data being operated on.
+
+## Operation
+
+```
+function clause execute (SHA512SIG1(rs1, rd)) = { X(rd) = ror64(X(rs1), 19) ^ ror64(X(rs1), 61) ^ (X(rs1) >> 6); RETIRE_SUCCESS }
+```
+
+## Included in
+
+| Extension   | Minimum version   | Lifecycle state   |
+|-------------|-------------------|-------------------|
+| Zknh (RV64) | v1.0.0            | Ratified          |
+| Zkn (RV64)  | v1.0.0            | Ratified          |
+| Zk (RV64)   | v1.0.0            | Ratified          |

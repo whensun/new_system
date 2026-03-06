@@ -1,0 +1,21 @@
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "--host=x86_64-pc-linux-gnu --target=riscv64-unknown-elf".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+The target architecture is set to "riscv:rv64".
+warning: while parsing target description: parsing aborted
+warning: Could not load XML target description; ignoring
+.gdbinit:3: Error in sourced command file:
+Remote communication error.  Target disconnected: error while writing: Broken pipe.
+(gdb) No symbol table is loaded.  Use the "file" command.
+(gdb) No symbol table is loaded.  Use the "file" command.
+(gdb) The program is not being run.
+(gdb) The program has no registers now.

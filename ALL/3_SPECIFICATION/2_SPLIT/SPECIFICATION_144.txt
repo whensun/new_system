@@ -1,0 +1,7 @@
+## 24.3.2.4. Scalar NaN Boxing
+
+RISC-V  applies  NaN  boxing  to  scalar  results  and  checks  for  NaN  boxing  when  a  floating-point operation --- even a vector-scalar operation --- consumes a value from a scalar floating-point register. If  the value is properly NaN-boxed, its least significant bits are used as the operand, otherwise it is treated as if it were the canonical QNaN.
+
+NaN boxing is nothing more than putting the smaller encoding in the least significant bits of a register and setting all of the more significant bits to '1'. This matches the encoding of a qNaN (although not the canonical NaN) in the larger precision.
+
+Nan-boxing never affects the value of the operand itself, it just changes the bits of the register that are more significant than the operand's most significant bit.

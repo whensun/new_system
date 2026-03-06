@@ -1,0 +1,8 @@
+# 2 # Extension Must Be Active: Zkr
+li t0, 3
+csrw mseccfg, t0
+csrr a0, mseccfg
+andi a0, a0, 0x3
+addi a1, a1, 2047
+addi a1, a1, 953
+# Result: a0 = 0

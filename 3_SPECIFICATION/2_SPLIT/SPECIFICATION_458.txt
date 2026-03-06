@@ -1,0 +1,3 @@
+## 30.19.6. Masking
+
+No ratified extensions include masked element-group instructions. Future extensions might extend the element-group  scheme  to  support  element-level  masking,  or  might  define  the  concept  of  a mask element group (which might, e.g., update the destination element group if any mask bit in the mask element group is set).

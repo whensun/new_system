@@ -1,0 +1,17 @@
+## 30.16.3. Vector Slide Instructions
+
+The slide instructions move elements up and down a vector register group.
+
+<image>
+
+The  slide  operations  can  be  implemented  much  more  efficiently  than  using  the arbitrary register gather instruction. Implementations may optimize certain OFFSET values  for vslideup and vslidedown .  In  particular,  power-of-2  offsets  may  operate substantially faster than other offsets.
+
+For  all  of  the vslideup , vslidedown , v[f]slide1up ,  and v[f]slide1down instructions,  if vstart ≥ vl ,  the instruction performs no operation and leaves the destination vector register unchanged.
+
+<image>
+
+As  a  consequence,  when vl =0,  no  elements  are  updated  in  the  destination  vector register group, regardless of vstart .
+
+The tail agnostic/undisturbed policy is followed for tail elements.
+
+The slide instructions may be masked, with mask element i controlling whether destination element i is written. The mask undisturbed/agnostic policy is followed for inactive elements.

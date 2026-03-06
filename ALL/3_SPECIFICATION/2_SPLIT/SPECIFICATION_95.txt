@@ -1,0 +1,7 @@
+## 19.6. Extensions
+
+CMO instructions are defined in the following extensions:
+
+- ⚫ Cache-Block Management Instructions
+- ⚫ Cache-Block Zero Instructions
+- ⚫ Cache-Block Prefetch Instructions

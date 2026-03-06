@@ -1,0 +1,23 @@
+## 3.1.6. Machine Status ( mstatus and mstatush ) Registers
+
+The mstatus register is an MXLEN-bit read/write register formatted as shown in Figure 7 for RV32 and Figure 8 for RV64. The mstatus register keeps track of and controls the hart's current operating state. A restricted view of mstatus appears as the sstatus register in the S-level ISA.
+
+Figure 7. Machine-mode status ( mstatus ) register for RV32
+
+<image>
+
+| 31      | 30      |         |          |         | 25      | 24   | 23    | 22   | 21   | 20   | 19   | 18   | 17   | 16      |
+|---------|---------|---------|----------|---------|---------|------|-------|------|------|------|------|------|------|---------|
+| SD      | WPRI    | WPRI    | WPRI     | WPRI    | WPRI    | SDT  | SPELP | TSR  | TW   | TVM  | MXR  | SUM  | MPRV | XS[1:0] |
+| 15      | 14      | 13      | 11 12    | 10      | 9       | 8    | 7     | 6    | 5    | 4    | 3    | 2    | 1    | 0       |
+| XS[1:0] | FS[1:0] | FS[1:0] | MPP[1:0] | VS[1:0] | VS[1:0] | SPP  | MPIE  | UBE  | SPIE | WPRI | MIE  | WPRI | SIE  | WPRI    |
+
+Figure 8. Machine-mode status ( mstatus ) register for RV64
+
+<image>
+
+For  RV32 only, mstatush is  a  32-bit  read/write  register  formatted  as  shown  in  Figure  9.  Bits  30:4  of mstatush generally contain the same fields found in bits 62:36 of mstatus for RV64. Fields SD, SXL, and UXL do not exist in mstatush .
+
+Figure 9. Additional machine-mode status ( mstatush ) register  for RV32.
+
+<image>

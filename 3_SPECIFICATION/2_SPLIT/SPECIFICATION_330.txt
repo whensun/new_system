@@ -1,0 +1,9 @@
+## 30.4.1. Mapping for LMUL = 1
+
+When LMUL=1, elements are simply packed in order from the least-significant to most-significant bits of the vector register.
+
+<image>
+
+To  increase  readability,  vector  register  layouts  are  drawn  with  bytes  ordered  from right to left with increasing byte address. Bits within an element are numbered in a little-endian  format  with  increasing  bit  index  from  right  to  left  corresponding  to increasing magnitude.
+
+LMUL=1 examples. The element index is given in hexadecimal and is shown placed at the least-significant byte of the stored element. VLEN=32b Byte         3 2 1 0 SEW=8b       3 2 1 0 SEW=16b        1   0 SEW=32b            0 VLEN=64b Byte        7 6 5 4 3 2 1 0 SEW=8b      7 6 5 4 3 2 1 0 SEW=16b       3   2   1   0 SEW=32b           1       0 SEW=64b                   0 VLEN=128b Byte        F E D C B A 9 8 7 6 5 4 3 2 1 0 SEW=8b      F E D C B A 9 8 7 6 5 4 3 2 1 0 SEW=16b       7   6   5   4   3   2   1   0 SEW=32b           3       2       1       0 SEW=64b                   1               0 VLEN=256b Byte     1F1E1D1C1B1A19181716151413121110 F E D C B A 9 8 7 6 5 4 3 2 1 0 SEW=8b   1F1E1D1C1B1A19181716151413121110 F E D C B A 9 8 7 6 5 4 3 2 1 0 SEW=16b     F   E   D   C   B   A   9   8   7   6   5   4   3   2   1   0 SEW=32b         7       6       5       4       3       2       1       0 SEW=64b                 3               2               1               0

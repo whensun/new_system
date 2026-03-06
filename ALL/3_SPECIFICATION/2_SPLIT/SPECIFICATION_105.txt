@@ -1,0 +1,25 @@
+## 19.7.7. prefetch.w
+
+## Synopsis
+
+Provide a HINT to hardware that a cache block is likely to be accessed by a data write in the near future
+
+## Mnemonic
+
+prefetch.w offset ( base )
+
+## Encoding
+
+<image>
+
+## Description
+
+A prefetch.w instruction indicates to hardware that the cache block whose effective address is the sum of the base address specified in rs1 and the sign-extended offset encoded in imm[11:0] , where imm[4:0] equals 0b00000 , is likely to be accessed by a data write (i.e. store) in the near future.
+
+<image>
+
+An implementation may opt to cache a copy of the cache block in a cache accessed by a data write in order to improve memory access latency, but this behavior is not required.
+
+## Operation
+
+TODO

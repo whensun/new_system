@@ -1,0 +1,29 @@
+## 28.13.4.1. Software view of the PUSH sequence
+
+From a software perspective the PUSH sequence appears as:
+
+- ⚫ A sequence of stores writing the bytes required by the pseudocode
+- ⚫ The bytes may be written in any order.
+- ⚫ The bytes may be grouped into larger accesses.
+- ⚫ Any of the bytes may be written multiple times.
+- ⚫ A stack pointer adjustment
+
+<image>
+
+If an implementation allows interrupts during the sequence, and the interrupt handler uses sp to allocate stack memory, then any stores which were executed before the interrupt  may  be  overwritten  by  the  handler.  This  is  safe  because  the  memory  is idempotent and the stores will be re-executed when execution resumes.
+
+The stack pointer adjustment must only be committed only when it is certain that the entire PUSH instruction will commit.
+
+Stores  may  also  return  imprecise  faults  from  the  bus.  It  is  platform  defined  whether  the  core implementation waits for the bus responses before continuing to the final stage of the sequence, or handles errors responses after completing the PUSH instruction.
+
+For example:
+
+```
+cm.push  {ra, s0-s5}, -64
+```
+
+Appears to software as:
+
+```
+# any bytes from sp-1 to sp-28 may be written multiple times before # the instruction completes therefore these updates may be visible in # the interrupt/exception handler below the stack pointer sw  s5, -4(sp) sw  s4, -8(sp) sw  s3,-12(sp) sw  s2,-16(sp) sw  s1,-20(sp) sw  s0,-24(sp) sw  ra,-28(sp) # this must only execute once, and will only execute after all stores # completed without any precise faults, therefore this update is only # visible in the interrupt/exception handler if cm.push has completed addi sp, sp, -64
+```

@@ -1,0 +1,7 @@
+## 30.11.12. Vector Widening Integer Multiply Instructions
+
+The widening integer multiply instructions return the full 2*SEW-bit product from an SEW-bit*SEW-bit multiply.
+
+```
+# Widening signed-integer multiply vwmul.vv  vd, vs2, vs1, vm # vector-vector vwmul.vx  vd, vs2, rs1, vm # vector-scalar # Widening unsigned-integer multiply vwmulu.vv vd, vs2, vs1, vm # vector-vector vwmulu.vx vd, vs2, rs1, vm # vector-scalar # Widening signed(vs2)-unsigned integer multiply vwmulsu.vv vd, vs2, vs1, vm # vector-vector vwmulsu.vx vd, vs2, rs1, vm # vector-scalar
+```

@@ -1,0 +1,11 @@
+## 31.5.2.1. NIST SP 800-90B / FIPS 140-3 Requirements
+
+All NIST SP 800-90B (Turan et al., 2018) required components and health test mechanisms must be implemented.
+
+The  entropy  requirement  is  satisfied  if  128  bits  of full  entropy can  be  obtained  from  each  256-bit (16*16  -bit)  successful,  but  possibly  non-consecutive entropy (ES16)  output  sequence  using  a  vetted conditioning algorithm such as a cryptographic hash (See Section 3.1.5.1.1, SP 800-90B (Turan et al., 2018)). In practice, a min-entropy rate of 0.75 or larger is required for this.
+
+Note that 128 bits of estimated input min-entropy does not yield 128 bits of conditioned, full entropy in SP 800-90B/C evaluation. Instead, the implication is that every 256-bit sequence should have minentropy of at least 128+64 = 192 bits, as discussed in SP 800-90C (Barker et al., 2021); the likelihood of successfully "guessing" an individual 256-bit output sequence should not be higher than 2 -192  even with (almost) unconstrained amount of entropy source data and computational power.
+
+Rather than attempting to define all the mathematical and architectural properties that the entropy source must satisfy, we define that the physical entropy source be strong and robust enough to pass the  equivalent  of  NIST  SP  800-90  evaluation  and  certification  for  full  entropy  when  conditioned cryptographically in ratio 2:1 with 128-bit output blocks.
+
+Even though the requirement is defined in terms of 128-bit full entropy blocks, we recommend 256-bit security. This can be accomplished by using at least 512 entropy bits to initialize a DRBG that has 256bit security.

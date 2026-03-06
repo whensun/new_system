@@ -1,0 +1,11 @@
+## 30.17.2. Imprecise vector traps
+
+Imprecise vector traps are traps that are not precise. In particular, instructions newer than *epc may have committed results, and instructions older than *epc may have not completed execution. Imprecise traps  are  primarily  intended  to  be  used  in  situations  where  reporting  an  error  and  terminating execution is the appropriate response.
+
+<image>
+
+A profile might specify that interrupts are precise while other traps are imprecise. We assume  many  embedded  implementations  will  generate  only  imprecise  traps  for vector instructions on fatal errors, as they will not require resumable traps.
+
+Imprecise  traps  shall  report  the  faulting  element  in vstart for  traps  caused  by  synchronous  vector exceptions.
+
+There is no support for imprecise traps in the current standard extensions.

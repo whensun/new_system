@@ -1,0 +1,42 @@
+## 30.7.8. Vector Load/Store Segment Instructions
+
+The vector load/store segment instructions move multiple contiguous fields in memory to and from consecutively numbered vector registers.
+
+<image>
+
+The name "segment" reflects that the items moved are subarrays with homogeneous elements. These operations can be used to transpose arrays between memory and registers, and can support operations on "array-of-structures" datatypes by unpacking each field in a structure into a separate vector register.
+
+The three-bit nf field in the vector instruction encoding is an unsigned integer that contains one less than the number of fields per segment, NFIELDS .
+
+Table 56. NFIELDS Encoding
+
+|   nf[2:0] |   nf[2:0] |   nf[2:0] |   NFIELDS |
+|-----------|-----------|-----------|-----------|
+|         0 |         0 |         0 |         1 |
+|         0 |         0 |         1 |         2 |
+|         0 |         1 |         0 |         3 |
+|         0 |         1 |         1 |         4 |
+|         1 |         0 |         0 |         5 |
+|         1 |         0 |         1 |         6 |
+|         1 |         1 |         0 |         7 |
+|         1 |         1 |         1 |         8 |
+
+The  EMUL  setting  must  be  such  that  EMUL  *  NFIELDS  ≤  8,  otherwise  the  instruction  encoding  is reserved.
+
+<image>
+
+The  product  ceil(EMUL)  *  NFIELDS  represents  the  number  of  underlying  vector registers  that  will  be  touched  by  a  segmented  load  or  store  instruction.  This constraint makes this total no larger than 1/4 of the architectural register file, and the same as for regular operations with EMUL=8.
+
+Each field will be held in successively numbered vector register groups. When EMUL>1, each field will occupy a vector register group held in multiple successively numbered vector registers, and the vector register  group  for  each  field  must  follow  the  usual  vector  register  alignment  constraints  (e.g.,  when EMUL=2 and NFIELDS=4, each field's vector register group must start at an even vector register, but does not have to start at a multiple of 8 vector register number).
+
+If the vector register numbers accessed by the segment load or store would increment past 31, then the instruction encoding is reserved.
+
+<image>
+
+This constraint is to help allow for forward-compatibility with a possible future longer instruction encoding that has more addressable vector registers.
+
+The vl register  gives  the  number  of  segments  to  move,  which  is  equal  to  the  number  of  elements transferred to each vector register group. Masking is also applied at the level of whole segments.
+
+For  segment  loads  and  stores,  the  individual  memory  accesses  used  to  access  fields  within  each segment are unordered with respect to each other even for ordered indexed segment loads and stores.
+
+The vstart value  is  in  units  of  whole  segments.  If  a  trap  occurs  during  access  to  a  segment,  it  is implementation-defined whether a subset of the faulting segment's accesses are performed before the trap is taken.

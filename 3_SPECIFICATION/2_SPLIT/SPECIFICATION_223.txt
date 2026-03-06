@@ -1,0 +1,9 @@
+## 28.13.6.3. cm.pop   {ra}, 16
+
+Encoding: rlist =4, spimm =0
+
+expands to:
+
+```
+lw   ra, 12(sp); addi sp, sp, 16;
+```

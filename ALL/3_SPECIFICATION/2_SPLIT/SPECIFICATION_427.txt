@@ -1,0 +1,3 @@
+## 30.16. Vector Permutation Instructions
+
+A range of permutation instructions are provided to move elements around within the vector registers.

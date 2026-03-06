@@ -1,0 +1,58 @@
+## 32.3.16. vghsh.vv
+
+## Synopsis
+
+Vector Add-Multiply over GHASH Galois-Field
+
+## Mnemonic
+
+vghsh.vv vd, vs2, vs1
+
+## Encoding
+
+<image>
+
+## Reserved Encodings
+
+- ⚫ SEW is any value other than 32
+
+## Arguments
+
+| Register   | Direction   |   EGW |   EGS |   SEW | Definition            |
+|------------|-------------|-------|-------|-------|-----------------------|
+| Vd         | input       |   128 |     4 |    32 | Partial hash (Y i )   |
+| Vs1        | input       |   128 |     4 |    32 | Cipher text (X i )    |
+| Vs2        | input       |   128 |     4 |    32 | Hash Subkey (H)       |
+| Vd         | output      |   128 |     4 |    32 | Partial-hash (Y i+1 ) |
+
+## Description
+
+A single "iteration" of the GHASHH algorithm is performed.
+
+This instruction treats all of the inputs and outputs as 128-bit polynomials and performs operations over GF[2]. It produces the next partial hash (Yi+1) by adding the current partial hash (Yi) to the cipher text block (Xi) and then multiplying (over GF(2 128 )) this sum by the Hash Subkey (H).
+
+The  multiplication  over  GF(2 128 )  is  a  carryless  multiply  of  two  128-bit  polynomials  modulo  GHASH's irreducible polynomial (x 128 + x 7 + x 2 + x + 1).
+
+The operation can be compactly defined as Yi+1 = ((Yi ^ Xi) · H)
+
+The NIST specification (see Zvkg) orders the coefficients from left to right x0x1x2…x127 for a polynomial x0 + x1u +x2 u 2 + … + x127 u 127 .  This can be viewed as a collection of byte elements in memory with the byte  containing  the  lowest  coefficients  (i.e.,  0,1,2,3,4,5,6,7)  residing  at  the  lowest  memory  address. Since the bits in the bytes are reversed, this instruction internally performs bit swaps within bytes to put the bits in the standard ordering (e.g., 7,6,5,4,3,2,1,0).
+
+This instruction must always be implemented such that its execution latency does not depend on the data being operated upon.
+
+<image>
+
+We are bit-reversing the bytes of inputs and outputs so that the intermediate values are  consistent  with  the  NIST  specification.  These  reversals  are  inexpensive  to implement as they unconditionally swap bit positions and therefore do not require any logic.
+
+<image>
+
+Since the same hash subkey H will typically be used repeatedly on a given message, a
+
+## Operation
+
+```
+function clause execute (VGHSH(vs2, vs1, vd)) = { // operands are input with bits reversed in each byte if(LMUL*VLEN < EGW)  then { handle_illegal();  // illegal-instruction exception RETIRE_FAIL } else { eg_len = (vl/EGS) eg_start = (vstart/EGS) foreach (i from eg_start to eg_len-1) { let Y = (get_velem(vd,EGW=128,i));  // current partial-hash let X = get_velem(vs1,EGW=128,i);  // block cipher output let H = brev8(get_velem(vs2,EGW=128,i)); // Hash subkey let Z : bits(128) = 0; let S = brev8(Y ^ X); for (int bit = 0; bit < 128; bit++) { if bit_to_bool(S[bit]) Z ^= H bool reduce = bit_to_bool(H[127]); H = H << 1; // left shift H by 1 if (reduce) H ^= 0x87; // Reduce using x^7 + x^2 + x^1 + 1 polynomial } let result = brev8(Z); // bit reverse bytes to get back to GCM standard ordering set_velem(vd, EGW=128, i, result); } RETIRE_SUCCESS } }
+```
+
+## Included in
+
+Zvkg, Zvkng, Zvksg future extension might define a vector-scalar version of this instruction where vs2 is the scalar element group. This would help reduce register pressure when LMUL > 1.

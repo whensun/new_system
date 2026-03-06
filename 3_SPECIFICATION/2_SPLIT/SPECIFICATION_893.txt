@@ -1,0 +1,9 @@
+## 21.4.3. Machine Interrupt ( mip and mie ) Registers
+
+The hypervisor  extension  gives  registers mip and mie additional  active  bits  for  the  hypervisor-added interrupts.  Figure  113  and  Figure  114  show  the  standard  portions  (bits  15:0)  of  registers mip and mie when the hypervisor extension is implemented.
+
+Figure 114. Standard portion (bits 15:0) of mie .
+
+<image>
+
+Bits SGEIP, VSEIP, VSTIP, and VSSIP in mip are aliases for the same bits in hypervisor CSR hip , while SGEIE, VSEIE, VSTIE, and VSSIE in mie are aliases for the same bits in hie .

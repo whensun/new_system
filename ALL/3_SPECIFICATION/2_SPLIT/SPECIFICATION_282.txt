@@ -1,0 +1,33 @@
+## 29.5.26. pack
+
+## Synopsis
+
+Pack the low halves of rs1 and rs2 into rd .
+
+## Mnemonic
+
+pack rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+The pack instruction packs the XLEN/2-bit lower halves of rs1 and rs2 into rd , with rs1 in the lower half and rs2 in the upper half.
+
+## Operation
+
+```
+let lo_half : bits(xlen/2) = X(rs1)[xlen/2-1..0]; let hi_half : bits(xlen/2) = X(rs2)[xlen/2-1..0]; X(rd) = EXTZ(hi_half @ lo_half);
+```
+
+## Included in
+
+| Extension                                | Minimum version   | Lifecycle state   |
+|------------------------------------------|-------------------|-------------------|
+| Zbkb (Bit-manipulation for Cryptography) | v1.0              | Ratified          |
+
+<image>
+
+For RV32, the pack instruction with rs2= x0 is the zext.h instruction. Hence, for RV32, any extension that contains the pack instruction also contains the zext.h instruction (but not necessarily the c.zext.h instruction, which is only guaranteed to exist if both the Zcb and Zbb extensions are implemented).

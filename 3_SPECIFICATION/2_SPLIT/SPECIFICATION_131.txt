@@ -1,0 +1,9 @@
+## 23.1. Half-Precision Load and Store Instructions
+
+New 16-bit variants of LOAD-FP and STORE-FP instructions are added, encoded with a new value for the funct3 width field.
+
+<image>
+
+FLH and FSH are only guaranteed to execute atomically if the effective address is naturally aligned.
+
+FLH and FSH do not modify the bits being transferred; in particular, the payloads of non-canonical NaNs are preserved. FLH NaN-boxes the result written to rd , whereas FSH ignores all but the lower 16 bits in rs2 .

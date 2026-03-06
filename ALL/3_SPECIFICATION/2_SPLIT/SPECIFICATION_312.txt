@@ -1,0 +1,26 @@
+## 30.2. Implementation-defined Constant Parameters
+
+Each hart supporting a vector extension defines two parameters:
+
+1. The maximum size in bits of a vector element that any operation can produce or consume, ELEN ≥ 8, which must be a power of 2.
+2. The number of bits in a single vector register, VLEN ≥ ELEN, which must be a power of 2, and must be no greater than 2 16 .
+
+Standard  vector  extensions  (Section  30.18)  and  architecture  profiles  may  set  further  constraints  on ELEN and VLEN .
+
+<image>
+
+Future extensions may allow ELEN > VLEN by holding one element using bits from multiple vector registers, but this current proposal does not include this option.
+
+<image>
+
+The  upper  limit  on  VLEN  allows  software  to  know  that  indices  will  fit  into  16  bits (largest VLMAX of 65,536 occurs for LMUL=8 and SEW=8 with VLEN=65,536). Any future  extension  beyond  64Kib  per  vector  register  will  require  new  configuration instructions such that software using the old configuration instructions does not see greater vector lengths.
+
+The vector extension supports writing binary code that under certain constraints will execute portably on harts with different values for the VLEN parameter, provided the harts support the required element types and instructions.
+
+<image>
+
+Code can be written that will expose differences in implementation parameters.
+
+<image>
+
+In  general,  thread  contexts  with  active  vector  state  cannot  be  migrated  during execution between harts that have any difference in VLEN or ELEN parameters.

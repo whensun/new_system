@@ -1,0 +1,54 @@
+## 32.3.6. vaeskf2.vi
+
+## Synopsis
+
+Vector AES-256 Forward KeySchedule generation
+
+## Mnemonic
+
+vaeskf2.vi vd, vs2, uimm
+
+## Encoding
+
+<image>
+
+## Reserved Encodings
+
+- ⚫ SEW is any value other than 32
+
+## Arguments
+
+| Register   | Direction   | EGW   | EGS   | EEW   | Definition         |
+|------------|-------------|-------|-------|-------|--------------------|
+| Vd         | input       | 128   | 4     | 32    | Previous Round key |
+| uimm       | input       | -     | -     | -     | Round Number (rnd) |
+| Vs2        | input       | 128   | 4     | 32    | Current Round key  |
+| Vd         | output      | 128   | 4     | 32    | Next round key     |
+
+## Description
+
+A single round of the forward AES-256 KeySchedule is performed.
+
+The next round key is generated word by word from the previous round key element group in vd and the immediately  previous  word  of  the  round  key.  The  least  significant  word  of  the  next  round  key  is generated  by  applying  a  function  to  the  most  significant  word  of  the  current  round  key  and  then XORing the result with the round constant. The round number is used to select the round constant as well as the function.
+
+The round number, which ranges from 2 to 14, comes from uimm[3:0] ; uimm[4] is  ignored. The out-ofrange uimm[3:0] values  of  0-1  and  15  are  mapped  to  in-range  values  by  inverting uimm[3] .  Thus,  0-1 maps to 8-9, and 15 maps to 7.
+
+This instruction must always be implemented such that its execution latency does not depend on the data being operated upon.
+
+<image>
+
+We chose to map out-of-range round numbers to in-range values as this allows the instruction's behavior to be fully defined for all values of uimm[4:0] with minimal extra logic.
+
+## Operation
+
+```
+function clause execute (VAESKF2(rnd, vd, vs2)) = { if(LMUL*VLEN < EGW)  then { handle_illegal();  // illegal-instruction exception RETIRE_FAIL
+```
+
+```
+} else { // project out-of-range immediates into in-range values if((unsigned(rnd[3:0]) < 2) |  (unsigned(rnd[3:0]) > 14)) then rnd[3] = ~rnd[3] eg_len = (vl/EGS) eg_start = (vstart/EGS) foreach (i from eg_start to eg_len-1) { let CurrentRoundKey[3:0]  : bits(128)  = get_velem(vs2, EGW=128, i); let RoundKeyB[3:0] : bits(32)  = get_velem(vd, EGW=128, i); // Previous round key let w[0] : bits(32) = if (rnd[0]==1) then aes_subword_fwd(CurrentRoundKey[3]) XOR RoundKeyB[0]; else aes_subword_fwd(aes_rotword(CurrentRoundKey[3])) XOR aes_decode_rcon((rnd>>1) - 1) XOR RoundKeyB[0]; w[1] : bits(32) = w[0] XOR RoundKeyB[1] w[2] : bits(32) = w[1] XOR RoundKeyB[2] w[3] : bits(32) = w[2] XOR RoundKeyB[3] set_velem(vd, EGW=128, i, w[3:0]); } RETIRE_SUCCESS } }
+```
+
+## Included in
+
+Zvkn, Zvknc, Zvkned, Zvkng

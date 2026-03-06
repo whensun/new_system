@@ -1,0 +1,36 @@
+## 28.8. Zcb
+
+Zcb has simple code-size saving instructions which are easy to implement on all CPUs.
+
+All  encodings  are  currently  reserved  for  all  architectures,  and  have  no  conflicts  with  any  existing extensions.
+
+<image>
+
+Zcb  can  be  implemented  on  any  CPU  as  the  instructions  are  16-bit  versions  of existing 32-bit instructions from the application class profile.
+
+The Zcb extension depends on the Zca extension.
+
+As shown on the individual instruction pages, many of the instructions in Zcb depend upon another extension being implemented. For example, c.mul is only implemented if M or Zmmul is implemented,
+
+and c.sext.b is only implemented if Zbb is implemented.
+
+The c.mul encoding uses the CA register format along with other instructions such as c.sub , c.xor etc.
+
+<image>
+
+c.sext.w is a pseudoinstruction for c.addiw rd, 0 (RV64)
+
+| RV32   | RV64   | Mnemonic                 | Instruction                             |
+|--------|--------|--------------------------|-----------------------------------------|
+| yes    | yes    | c.lbu rd' , uimm( rs1' ) | Load unsigned byte, 16-bit encoding     |
+| yes    | yes    | c.lhu rd' , uimm( rs1' ) | Load unsigned halfword, 16-bit encoding |
+| yes    | yes    | c.lh rd' , uimm( rs1' )  | Load signed halfword, 16-bit encoding   |
+| yes    | yes    | c.sb rs2' , uimm( rs1' ) | Store byte, 16-bit encoding             |
+| yes    | yes    | c.sh rs2' , uimm( rs1' ) | Store halfword, 16-bit encoding         |
+| yes    | yes    | c.zext.b rsd'            | Zero extend byte, 16-bit encoding       |
+| yes    | yes    | c.sext.b rsd'            | Sign extend byte, 16-bit encoding       |
+| yes    | yes    | c.zext.h rsd'            | Zero extend halfword, 16-bit encoding   |
+| yes    | yes    | c.sext.h rsd'            | Sign extend halfword, 16-bit encoding   |
+|        | yes    | c.zext.w rsd'            | Zero extend word, 16-bit encoding       |
+| yes    | yes    | c.not rsd'               | Bitwise not, 16-bit encoding            |
+| yes    | yes    | c.mul rsd' , rs2'        | Multiply, 16-bit encoding               |

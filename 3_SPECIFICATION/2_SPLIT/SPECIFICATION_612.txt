@@ -1,0 +1,7 @@
+## 32.2.15.3. add/sub
+
+- ⚫ v[r]sub.v[vx]
+- ⚫ vadd.v[ivx]
+- ⚫ vsub.v[vx]
+- ⚫ vwadd[u].[vw][vx]
+- ⚫ vwsub[u].[vw][vx]

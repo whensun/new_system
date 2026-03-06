@@ -1,0 +1,3 @@
+## 4.1. Register State
+
+RV64I widens the integer registers and supported user address space to 64 bits (XLEN=64 in Table 2).

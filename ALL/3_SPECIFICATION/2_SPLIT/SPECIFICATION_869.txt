@@ -1,0 +1,19 @@
+## 21.2. Hypervisor and Virtual Supervisor CSRs
+
+An  OS  or  hypervisor  running  in  HS-mode  uses  the  supervisor  CSRs  to  interact  with  the  exception, interrupt, and address-translation subsystems. Additional CSRs are provided to HS-mode, but not to VS-mode, to manage two-stage address translation and to control the behavior of a VS-mode guest: hstatus , hedeleg , hideleg , hvip , hip , hie , hgeip , hgeie , henvcfg , henvcfgh , hcounteren , htimedelta , htimedeltah , htval , htinst , and hgatp .
+
+Furthermore, several virtual supervisor CSRs (VS CSRs) are replicas of the normal supervisor CSRs. For example, vsstatus is the VS CSR that duplicates the usual sstatus CSR.
+
+When V=1, the VS CSRs substitute for the corresponding supervisor CSRs, taking over all functions of the usual supervisor CSRs except as specified otherwise. Instructions that normally read or modify a supervisor CSR shall instead access the corresponding VS CSR. When V=1, an attempt to read or write a VS CSR directly by its own separate CSR address causes a virtual-instruction exception. (Attempts from  U-mode  cause  an  illegal-instruction  exception  as  usual.)  The  VS  CSRs  can  be  accessed  as themselves only from M-mode or HS-mode.
+
+While V=1, the normal HS-level supervisor CSRs that are replaced by VS CSRs retain their values but do not affect the behavior of the machine unless specifically documented to do so. Conversely, when V=0, the  VS  CSRs  do  not  ordinarily  affect  the  behavior  of  the  machine  other  than  being  readable  and writable by CSR instructions.
+
+Some standard supervisor CSRs ( senvcfg , scounteren ,  and scontext ,  possibly others) have no matching VS CSR. These supervisor CSRs continue to have their usual function and accessibility even when V=1, except  with  VS-mode  and  VU-mode  substituting  for  HS-mode  and  U-mode.  Hypervisor  software  is expected to manually swap the contents of these registers as needed.
+
+<image>
+
+Matching VS CSRs exist only for the supervisor CSRs that must be duplicated, which are  mainly  those  that  get  automatically  written  by  traps  or  that  impact  instruction execution immediately after trap entry and/or right before SRET, when software alone
+
+is unable to swap a CSR at exactly the right moment. Currently, most supervisor CSRs fall into this category, but future ones might not.
+
+In this chapter, we use the term HSXLEN to refer to the effective XLEN when executing in HS-mode, and VSXLEN to refer to the effective XLEN when executing in VS-mode.

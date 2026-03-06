@@ -1,0 +1,5 @@
+## 11.1.2. Supervisor Control Transfer Records Control Register ( sctrctl )
+
+The sctrctl register provides supervisor mode access to a subset of mctrctl .
+
+Bits 2 and 9 in sctrctl are read-only 0. As a result, the M and MTE fields in mctrctl are not accessible through sctrctl . All other mctrctl fields are accessible through sctrctl .

@@ -1,0 +1,19 @@
+## 34.5.6. c.sd
+
+## Synopsis
+
+Store doubleword from even/odd register pair, 16-bit encoding
+
+## Mnemonic
+
+c.sd rs2', offset(rs1')
+
+## Encoding (RV32)
+
+<image>
+
+## Description
+
+Stores a 64-bit value from registers rs2' and rs2'+1 . It computes an effective address by adding the zero-extended  offset,  scaled  by  8,  to  the  base  address  in  register  rs1'.  It  expands  to sd  rs2', offset(rs1') .
+
+Included in: Zclsd

@@ -1,0 +1,7 @@
+## 3.5. Non-Maskable Interrupts
+
+Non-maskable interrupts (NMIs) are only used for hardware error conditions, and cause an immediate jump to an implementation-defined NMI vector running in M-mode regardless of the state of a hart's interrupt enable bits. The mepc register  is  written  with  the  virtual  address  of  the  instruction  that  was interrupted, and mcause is set to a value indicating the source of the NMI. The NMI can thus overwrite state in an active machine-mode interrupt handler.
+
+The values written to mcause on an NMI are implementation-defined. The high Interrupt bit of mcause should  be  set  to  indicate  that  this  was  an  interrupt.  An  Exception  Code  of  0  is  reserved  to  mean "unknown cause" and implementations that do not distinguish sources of NMIs via the mcause register should return 0 in the Exception Code.
+
+Unlike  resets,  NMIs  do  not  reset  processor  state,  enabling  diagnosis,  reporting,  and  possible containment of the hardware error.

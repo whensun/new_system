@@ -1,0 +1,7 @@
+## 28.6. Zcf (RV32 only)
+
+Zcf is the existing set of compressed single precision floating point loads and stores: c.flw , c.flwsp , c.fsw , c.fswsp .
+
+Zcf is only relevant to RV32, it cannot be specified for RV64.
+
+The Zcf extension depends on the Zca and F extensions.

@@ -1,0 +1,29 @@
+## 21.5. Double-Precision Floating-Point Conversion and Move Instructions
+
+Floating-point-to-integer and integer-to-floating-point conversion instructions are encoded in the OPFP major opcode space. FCVT.W.D or FCVT.L.D converts a double-precision floating-point number in floating-point  register rs1 to  a  signed  32-bit  or  64-bit  integer,  respectively,  in  integer  register rd . FCVT.D.W or FCVT.D.L converts a 32-bit or 64-bit signed integer, respectively, in integer register rs1 into  a  double-precision  floating-point  number  in  floating-point  register rd .  FCVT.WU.D,  FCVT.LU.D, FCVT.D.WU,  and  FCVT.D.LU  variants convert to or from unsigned integer values. For  RV64, FCVT.W[U].D sign-extends the 32-bit result. FCVT.L[U].D and FCVT.D.L[U] are RV64-only instructions. The range of valid inputs for FCVT. int .D and the behavior for invalid inputs are the same as for FCVT. int .S.
+
+All  floating-point  to  integer  and  integer  to  floating-point  conversion  instructions  round  according  to the rm field. Note FCVT.D.W[U] always produces an exact result and is unaffected by rounding mode.
+
+<image>
+
+The double-precision to single-precision and single-precision to double-precision conversion instructions,  FCVT.S.D  and  FCVT.D.S,  are  encoded  in  the  OP-FP  major  opcode  space  and  both  the source and destination are floating-point registers. The rs2 field encodes the datatype of the source, and the fmt field encodes the datatype of the destination. FCVT.S.D rounds according to the RM field; FCVT.D.S will never round.
+
+<image>
+
+Floating-point  to  floating-point  sign-injection  instructions,  FSGNJ.D,  FSGNJN.D,  and  FSGNJX.D  are defined analogously to the single-precision sign-injection instruction.
+
+<image>
+
+For  XLEN≥64  only,  instructions  are  provided  to  move  bit  patterns  between  the  floating-point  and integer  registers.  FMV.X.D  moves  the  double-precision  value  in  floating-point  register rs1 to  a
+
+representation in IEEE 754-2008 standard encoding in integer register rd . FMV.D.X moves the doubleprecision  value  encoded  in  IEEE  754-2008  standard  encoding  from  the  integer  register rs1 to  the floating-point register rd .
+
+FMV.X.D  and  FMV.D.X  do  not  modify  the  bits  being  transferred;  in  particular,  the  payloads  of  noncanonical NaNs are preserved.
+
+<image>
+
+<image>
+
+Early versions of the RISC-V ISA had additional instructions to allow RV32 systems to transfer between the upper and lower portions of a 64-bit floating-point register and an integer register.  However,  these  would  be  the  only  instructions  with  partial register writes and would add complexity in implementations with recoded floatingpoint or register renaming, requiring a pipeline read-modify-write sequence. Scaling up  to  handling  quad-precision  for  RV32  and  RV64  would  also  require  additional instructions  if  they  were  to  follow  this  pattern.  The  ISA  was  defined  to  reduce  the number of explicit int-float register moves, by having conversions and comparisons write  results  to  the  appropriate  register  file,  so  we  expect  the  benefit  of  these instructions to be lower than for other ISAs.
+
+We note that for systems that implement a 64-bit floating-point unit including fused multiply-add  support  and  64-bit  floating-point  loads  and  stores,  the  marginal hardware  cost  of  moving  from  a  32-bit  to  a  64-bit  integer  datapath  is  low,  and  a software  ABI  supporting  32-bit  wide  address-space  and  pointers  can  be  used  to avoid growth of static data and dynamic memory traffic.

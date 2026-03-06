@@ -1,0 +1,19 @@
+## 33.2.4. Push to the Shadow Stack
+
+A shadow stack push operation is defined as decrement of the ssp by XLEN/8 followed by a store of the value in the link register to memory at the new top of the shadow stack.
+
+<image>
+
+Only x1 and x5 registers are supported as rs2 for SSPUSH . Zicfiss provides a 16-bit version of the SSPUSH x1 instruction using the Zcmop defined C.MOP.1 encoding. The C.SSPUSH x1 expands to SSPUSH x1 .
+
+The SSPUSH instruction  and  its  compressed form C.SSPUSH can  be  used  to  push  a  link  register  on  the shadow stack.  The SSPUSH and C.SSPUSH instructions  perform  a  store  identically  to  the  existing  store instructions, with the difference that the base is implicitly ssp and the width is implicitly XLEN .
+
+The operation of the SSPUSH and C.SSPUSH instructions is as follows:
+
+```
+if (xSSE == 1) mem[ssp - (XLEN/8)] = X(src)  # Store src value to ssp - XLEN/8 ssp = ssp - (XLEN/8)          # decrement ssp by XLEN/8 endif
+```
+
+Listing 6. SSPUSH and C.SSPUSH operation
+
+The ssp is  decremented  by SSPUSH and C.SSPUSH only  if  the  store  to  the  shadow  stack  completes successfully.

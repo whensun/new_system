@@ -1,0 +1,19 @@
+## 3.3.1. Environment Call and Breakpoint
+
+<image>
+
+The  ECALL  instruction  is  used  to  make  a  request  to  the  supporting  execution  environment.  When executed in U-mode, S-mode, or M-mode, it generates an environment-call-from-U-mode exception, environment-call-from-S-mode  exception,  or  environment-call-from-M-mode  exception,  respectively, and performs no other operation.
+
+<image>
+
+ECALL generates a different exception for each originating privilege mode so that environment call exceptions can be selectively delegated. A typical use case for Unixlike operating systems is to delegate to S-mode the environment-call-from-U-mode exception but not the others.
+
+The EBREAK instruction is used by debuggers to cause control to be transferred back to a debugging environment.  Unless  overridden  by  an  external  debug  environment,  EBREAK  raises  a  breakpoint exception and performs no other operation.
+
+<image>
+
+As described in the "C" Standard Extension for Compressed Instructions in Volume I of  this  manual,  the  C.EBREAK  instruction  performs  the  same  operation  as  the EBREAK instruction.
+
+ECALL and EBREAK cause the receiving privilege mode's epc register to be set to the address of the
+
+ECALL  or  EBREAK  instruction  itself, not the  address  of  the  following  instruction.  As  ECALL  and EBREAK cause synchronous exceptions, they are not considered to retire, and should not increment the minstret CSR.

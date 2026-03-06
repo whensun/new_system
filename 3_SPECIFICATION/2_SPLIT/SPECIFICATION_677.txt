@@ -1,0 +1,6 @@
+## 36.1.1. Standard versus Non-Standard Extension
+
+Any  RISC-V  processor  implementation  must  support  a  base  integer  ISA  (RV32I,  RV32E,  RV64I,  or RV64E). In addition, an implementation may support one or more extensions. We divide extensions into two broad categories: standard versus non-standard .
+
+- ⚫ A standard extension is one that is generally useful and that is designed to not conflict with any other standard extension. Currently, "MAFDQCBTPV", described in other chapters of this manual, are either complete or planned standard extensions.
+- ⚫ A non-standard extension may be highly specialized and may conflict with other standard or nonstandard extensions.  We  anticipate  a  wide  variety  of  non-standard  extensions  will  be  developed over time, with some eventually being promoted to standard extensions.

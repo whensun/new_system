@@ -1,0 +1,1708 @@
+# 1 # Extension Must Be Active: NONE
+addi x5, x0, 5
+addi x6, x0, 7
+add x7, x5, x6
+# Result: x7 = 12
+
+# 2 # Extension Must Be Active: NONE
+addi x5, x0, -1
+addi x6, x0, 1
+add x7, x5, x6
+# Result: x7 = 0
+
+# 3 # Extension Must Be Active: NONE
+addi x5, x0, 10
+addi x6, x0, 15
+add x7, x5, x6
+# Result: x7 = 25
+
+# 4 # Extension Must Be Active: NONE
+addi x5, x0, -1
+addi x6, x0, 1
+add x7, x5, x6
+# Result: x7 = 0
+
+# 5 # Extension Must Be Active: NONE
+addi a0, x0, 5
+addi a1, x0, 7
+add a2, a0, a1
+# Result: a2 = 12
+
+# 6 # Extension Must Be Active: NONE
+addi x5, x0, 5
+add x6, x5, x5
+# Result: x6 = 10
+
+# 7 # Extension Must Be Active: NONE
+addi x5, x0, -1
+# Result: x5 = 0xffffffffffffffff
+
+# 8 # Extension Must Be Active: NONE
+addi t0, zero, -1
+# Result: t0 = 0xffffffffffffffff
+
+# 9 # Extension Must Be Active: NONE
+li x5, 0x7FFFFFFFFFFFFFFF
+addi x5, x5, 1
+# Result: x5 = 0x8000000000000000
+
+# 10 # Extension Must Be Active: NONE
+addi a0, zero, 0x7F
+# Result: a0 = 0x7f
+
+# 11 # Extension Must Be Active: NONE
+addi t0, x0, 0x7ff
+addi t1, t0, 0
+# Result: t1 = 0x7ff
+
+# 12 # Extension Must Be Active: NONE
+lui x5,0x7ffff
+addi x5, x5, 0xfff
+addiw x6, x5, 1
+# Result: x6 = 0xffffffff80000000
+
+# 13 # Extension Must Be Active: NONE
+addi x5, x0, -1
+addiw x6, x5, 1
+# Result: x6 = 0
+
+# 14 # Extension Must Be Active: NONE
+li x5, 0x7fffffff
+addiw x6, x5, 1
+# Result: x6 = 0xffffffff80000000
+
+# 15 # Extension Must Be Active: NONE
+lui a0, 0x80000
+addi a0, a0, -1
+addiw a0, a0, 1
+# Result: a0 = 0xffffffff80000000
+
+# 16 # Extension Must Be Active: I
+addi x5, x0, -1
+addiw x6, x5, 0
+# Result: x6 = 0xffffffffffffffff
+
+# 17 # Extension Must Be Active: NONE
+li x5, 0xffffffff80000005
+addiw x6, x5, 0
+# Result: x6 = 0xffffffff80000005
+
+# 18 # Extension Must Be Active: NONE
+li a0, -1
+li a1, -1
+addw a2, a0, a1
+# Result: a2 = 0xfffffffffffffffe
+
+# 19 # Extension Must Be Active: NONE
+li a0, 0x7fffffff
+li a1, 1
+addw a2, a0, a1
+# Result: a2 = 0xffffffff80000000
+
+# 20 # Extension Must Be Active: NONE
+li a0, 0x80000001
+li a1, 0x1
+addw a2, a0, a1
+# Result: a2 = 0xffffffff80000002
+
+# 21 # Extension Must Be Active: NONE
+li a0, 0x7fffffff
+li a1, 1
+addw a2, a0, a1
+# Result: a2 = 0xffffffff80000000
+
+# 22 # Extension Must Be Active: NONE
+addi x5, x0, 255
+addi x6, x0, 15
+and x7, x5, x6
+# Result: x7 = 0xf
+
+# 23 # Extension Must Be Active: NONE
+lui x5,0xFF00F
+ori x5,x5,0xF00
+lui x6,0x0F0F0
+ori x6,x6,0xF0F
+and x7,x5,x6
+# Result: x7 = 0x0f000f00
+
+# 24 # Extension Must Be Active: I
+addi t0, zero, -1 # t0 = 0xFFFFFFFFFFFFFFFF
+li t1, 0x0F0F0F0F0F0F0F0F
+and t2, t0, t1 # t2 = t0 & t1
+# Result: t2 = 0x0F0F0F0F0F0F0F0F
+
+# 25 # Extension Must Be Active: NONE
+li t0, 0xF0F0F0F0
+li t1, 0x0F0F0F0F
+and a0, t0, t1
+# Result: a0 = 0
+
+# 26 # Extension Must Be Active: NONE
+li t0, 0xfffffffffffffffe
+li t1, 0x1
+and t2, t0, t1
+# Result: t2 = 0
+
+# 27 # Extension Must Be Active: NONE
+li x5, 0x123456789ABCDEF0
+andi x6, x5, -1
+# Result: x6 = 0x123456789ABCDEF0
+
+# 28 # Extension Must Be Active: NONE
+addi a0, x0, -1
+andi a1, a0, 0xff
+# Result: a1 = 0xff
+
+# 29 # Extension Must Be Active: Zbb
+li t0, 0xF0F0F0F0F0F0F0F0
+li t1, 0x0FF00FF00FF00FF0
+andn t2, t0, t1
+# Result: t2 = 0xF000F000F000F000
+
+# 30 # Extension Must Be Active: I
+addi x5, x0, -1
+andi x6, x5, 0xF
+# Result: x6 = 15
+
+# 31 # Extension Must Be Active: NONE
+addi t0, zero, 0x7ff
+andi t1, t0, 0xf0
+# Result: t1 = 0xf0
+
+# 32 # Extension Must Be Active: NONE
+li x5, 0x123456789ABCDEF0
+andi x6, x5, 0x800
+# Result: x6 = 0x123456789ABCD000
+
+# 33 # Extension Must Be Active: NONE
+addi x5, x0, 255
+andi x6, x5, 0xF
+# Result: x6 = 0xF
+
+# 34 # Extension Must Be Active: NONE
+addi x5, x0, 42
+andi x5, x5, -1
+# Result: x5 = 42
+
+# 35 # Extension Must Be Active: NONE
+addi x5, x0, -1
+andi x6, x5, 0x0F0F
+# Result: x6 = 0x0f0f
+
+# 36 # Extension Must Be Active: NONE
+addi a0, zero, -1
+andi a1, a0, 0xff
+# Result: a1 = 0xff
+
+# 37 # Extension Must Be Active: NONE
+auipc t0, 0x12345
+# Result: t0 = 0x923451f6
+
+# 38 # Extension Must Be Active: NONE
+auipc t0, 0x1
+# Result: t0 = 0x800011f6
+
+# 39 # Extension Must Be Active: NONE
+auipc x5, 0x80000
+# Result: x5 = 0x1f6
+
+# 40 # Extension Must Be Active: NONE
+auipc a0, 0x80000
+# Result: a0 = 0x1fa
+
+# 41 # Extension Must Be Active: NONE
+auipc t0, 1
+# Result: t0 = 0x800011f6
+
+# 42 # Extension Must Be Active: NONE
+auipc t0,0
+jalr ra,8(t0)
+target:
+li a0,0xdeadbeef
+jalr x0,0(ra)
+# Result: a0 = 0xdeadbeef
+
+# 43 # Extension Must Be Active: NONE
+auipc t0,0
+lw t1,0(t0)
+# Result: t1 = 0x00000297
+
+# 44 # Extension Must Be Active: NONE
+auipc x5, 0
+# Result: x5 = 0x800001f6
+
+# 45 # Extension Must Be Active: C
+addi x5, x0, 1
+addi x6, x0, 2
+c.add x5, x6
+# Result: x5 = 0x3
+
+# 46 # Extension Must Be Active: C
+addi x5, x0, 5
+addi x6, x0, 7
+c.add x5, x6
+# Result: x5 = 12
+
+# 47 # Extension Must Be Active: C
+li a0, 5
+li a1, 7
+c.add a0, a1
+# Result: a0 = 12
+
+# 48 # Extension Must Be Active: C
+addi x5, x0, 0
+c.addi x5, 5
+# Result: a0 = 2
+
+# 49 # Extension Must Be Active: C
+c.addi a0, 5
+# Result: a0 = 5
+
+# 50 # Extension Must Be Active: C
+c.addi a0, 5
+# Result: a0 = 5
+
+# 51 # Extension Must Be Active: C
+c.addiw a0, 5
+# Result: a0 = 5
+
+# 52 # Extension Must Be Active: C
+li a0,0x80000001
+c.sext.w a0
+# Result: a0 = 0xffffffff80000001
+
+# 53 # Extension Must Be Active: C
+li a0, -1
+slli a0, a0, 32
+srli a0, a0, 32
+mv a1, a0
+c.sext.w a1
+mv a2, a0
+c.addiw a2, 0
+# Result: a1 = 0xffffffffffffffff & a2 = 0xffffffffffffffff
+
+# 54 # Extension Must Be Active: C
+li a0, 5
+li a1, 10
+c.addw a0, a1
+# Result: a0 = 15
+
+# 55 # Extension Must Be Active: C
+addi s0, x0, 5
+addi s1, x0, 7
+c.addw s0, s1
+# Result: s0 = 12
+
+# 56 # Extension Must Be Active: C
+addi s0, x0, 1
+addi s1, x0, -1
+c.addw s0, s1
+# Result: s0 = 0
+
+# 57 # Extension Must Be Active: RVC
+li a0, 0xff
+li a1, 0xf
+c.and a0, a1
+# Result: a0 = 0xf
+
+# 58 # Extension Must Be Active: RVC
+c.li s0, 15
+c.li s1, 10
+c.and s0, s1
+# Result: s0 = 0xa
+
+# 59 # Extension Must Be Active: C
+li a0, 0xFF00FF00FF00FF00
+li a1, 0x0F0F0F0F0F0F0F0F
+c.and a0, a1
+# Result: a0 = 0x0f000f000f000f00
+
+# 60 # Extension Must Be Active: C
+addi a0, x0, 0xAA
+c.andi a0, 0xF
+# Result: a0 = 0xa
+
+# 61 # Extension Must Be Active: C
+li s0, 0xFF
+c.andi s0, 0xF
+# Result: s0 = 0xF
+
+# 62 # Extension Must Be Active: C
+li a1, 0x1234
+c.or a0, a1
+# Result: a0 = 0x1234
+
+# 63 # Extension Must Be Active: C
+li a0, 0x12345678abcdef00
+li a1, 0x0000ffff0000ffff
+c.or a0, a1
+# Result: a0 = 0x1234ffffabcdffff
+
+# 64 # Extension Must Be Active: C
+li a0, 0x12345678abcdef01
+li a1, 0x1111111100000000
+c.or a0, a1
+# Result: a0 = 0x13355779abcdef01
+
+# 65 # Extension Must Be Active: C
+addi a0, zero, 0x1234
+c.slli a0, 3
+# Result: a0 = 0x91a0
+
+# 66 # Extension Must Be Active: Zkt
+addi x5, x0, 1
+c.slli x5, 3
+# Result: x5 = 0x8
+
+# 67 # Extension Must Be Active: Zkt
+addi x10, x0, -8
+c.srai x10, 3
+# Result: x10 = 0xffffffffffffffff
+
+# 68 # Extension Must Be Active: C
+addi a0, x0, -1
+c.srli a0, 1
+# Result: a0 = 0x7FFFFFFFFFFFFFFF
+
+# 69 # Extension Must Be Active: C
+li a0, -1
+c.srli a0, 1
+# Result: a0 = 0x7FFFFFFFFFFFFFFF
+
+# 70 # Extension Must Be Active: Zkt
+li a0, 0xFF
+c.srli a0, 4
+# Result: a0 = 0xf
+
+# 71 # Extension Must Be Active: C
+addi x8, x0, 0xF
+addi x9, x0, 0x11
+c.xor x8, x9
+# Result: x8 = 0x1e
+
+# 72 # Extension Must Be Active: C
+li a0, 0xF0F0F0F0F0F0F0F0
+li a1, 0x0F0F0F0F0F0F0F0F
+c.xor a0, a1
+# Result: a0 = 0xffffffffffffffff
+
+# 73 # Extension Must Be Active: C
+lui x8,0x12345
+addi x8, x8, 0x678
+lui x9,0xdeadb
+addi x9, x9, 0xeeff
+c.xor x8, x9
+# Result: x8 = 0xcc99e897
+
+# 74 # Extension Must Be Active: Zca
+addi s0, x0, 5
+addi s1, x0, 3
+c.xor s0, s1
+# Result: s0 = 0x6
+
+# 75 # Extension Must Be Active: Zcb
+li x8, 0x123456789ABCDEF0
+li x9, 0xFEDCBA9876543210
+c.xor x8, x9
+# Result: x8 = 0xECE8ECE0ECE8ECE0
+
+# 76 # Extension Must Be Active: M
+li x5, -10
+li x6, 3
+div x7, x5, x6
+# Result: x7 = -3
+
+# 77 # Extension Must Be Active: M
+li t0, 123456789012345
+li t1, 12345
+div t2, t0, t1
+rem t3, t0, t1
+mul t4, t2, t1
+add t4, t4, t3
+sub t4, t4, t0
+mv a0, t4
+# Result: a0 = 0
+
+# 78 # Extension Must Be Active: M
+addi x6, x0, 123
+addi x7, x0, 0
+div x5, x6, x7
+# Result: x5 = 0xffffffffffffffff
+
+# 79 # Extension Must Be Active: M
+li t0, 0x8000000000000000
+li t2, -1
+div t1, t0, t2
+# Result: t1 = 0x8000000000000000
+
+# 80 # Extension Must Be Active: M
+addi a0, x0, 20
+addi a1, x0, 3
+divu a2, a0, a1
+# Result: a2 = 6
+
+# 81 # Extension Must Be Active: M
+li a1, 5
+divu a0, a1, x0
+# Result: a0 = 0xffffffffffffffff
+
+# 82 # Extension Must Be Active: M
+li t0, 0x8000000000000000
+li t1, -1
+divu t2, t0, t1
+# Result: t2 = 0
+
+# 83 # Extension Must Be Active: M
+addi a0, x0, -8
+addi a1, x0, 2
+divw a2, a0, a1
+# Result: a2 = 0xfffffffffffffffc
+
+# 84 # Extension Must Be Active: M
+li a0, -1
+li a1, 2
+divuw a2, a0, a1
+# Result: a2 = 0x7fffffff
+
+# 85 # Extension Must Be Active: M
+addi x5, x0, 10
+addi x6, x0, 3
+div x7, x5, x6
+rem x8, x5, x6
+# Result: x7 = 3 & x8 = 1
+
+# 86 # Extension Must Be Active: M
+addi a0, x0, 10
+addi a1, x0, 3
+divu a2, a0, a1
+# Result: a2 = 3
+
+# 87 # Extension Must Be Active: M
+li a0, 100
+li a1, 3
+divu a2, a0, a1
+# Result: a2 = 33
+
+# 88 # Extension Must Be Active: NONE
+li t1, 0xffffffffffffffff
+li t2, 2
+divu t0, t1, t2
+# Result: t0 = 0x7fffffffffffffff
+
+# 89 # Extension Must Be Active: M
+addi a0, x0, 5
+addi a1, x0, 0
+divu a2, a0, a1
+# Result: a2 = 0xFFFFFFFFFFFFFFFF
+
+# 90 # Extension Must Be Active: M
+li a1, 0x8000000000000000
+li a2, -1
+divu a0, a1, a2
+# Result: a0 = 0
+
+# 91 # Extension Must Be Active: M
+li a0, 100
+li a1, 7
+divu a2, a0, a1
+remu a3, a0, a1
+# Result: a2 = 14 & a3 = 2
+
+# 92 # Extension Must Be Active: M
+addi t1, zero, 10
+addi t2, zero, 3
+divu t0, t1, t2
+# Result: t0 = 3
+
+# 93 # Extension Must Be Active: M
+li a0, 0xFFFFFFFFFFFFF123
+li a1, 0x1000
+divu a2, a0, a1
+remu a3, a0, a1
+mul a4, a2, a1
+add a4, a4, a3
+sub t0, a4, a0
+# Result: t0 = 0
+
+# 94 # Extension Must Be Active: M
+li x10, 0x100000005
+li x11, 0xFFFFFFFF00000002
+divuw x12, x10, x11
+# Result: x12 = 2
+
+# 95 # Extension Must Be Active: M
+li a0, -1
+li a1, 1
+divuw t0, a0, a1
+# Result: t0 = 0xffffffffffffffff
+
+# 96 # Extension Must Be Active: M
+li a1, 0x12345678
+divuw a0, a1, a2
+# Result: a0 = 0xFFFFFFFFFFFFFFFF
+
+# 97 # Extension Must Be Active: M
+li a1, 0xffffffff
+li a2, 2
+divuw a0, a1, a2
+# Result: a0 = 0x7fffffff
+
+# 98 # Extension Must Be Active: M
+addi x5, x0, -10
+addi x6, x0, 3
+divw x7, x5, x6
+# Result: x7 = 0xfffffffffffffffd
+
+# 99 # Extension Must Be Active: M
+addi a0, zero, -10
+addi a1, zero, 3
+divw a2, a0, a1
+# Result: a2 = 0xfffffffffffffffd
+
+# 100 # Extension Must Be Active: M
+addi a0, x0, -7
+addi a1, x0, 3
+divw a2, a0, a1
+# Result: a2 = -2
+
+# 101 # Extension Must Be Active: M
+addi a0, x0, 1000
+addi a1, x0, 25
+divw a2, a0, a1
+remw a3, a0, a1
+mulw a4, a1, a2
+addw a4, a4, a3
+xor a5, a4, a0
+# Result: a5 = 0
+
+# 102 # Extension Must Be Active: M
+addi x10, x0, 123
+addi x11, x0, 0
+divw x12, x10, x11
+# Result: x12 = 0xffffffffffffffff
+
+# 103 # Extension Must Be Active: M
+li t0, 0x80000000
+li t1, -1
+divw t2, t0, t1
+# Result: t2 != 0x80000000
+
+# 104 # Extension Must Be Active: M
+li a0, -2147483648 # dividend = 0xffffffff80000000
+li a1, -1 # divisor = 0xffffffffffffffff
+divw a2, a0, a1 # a2 should get sign‑extended dividend on overflow
+# Result: a2 = 0xffffffff80000000
+
+# 105 # Extension Must Be Active: M
+li a0, 0x1234567880000000
+li a1, -1
+divw a2, a0, a1
+# Result: a2 = 0xffffffff80000000
+
+# 106 # Extension Must Be Active: NONE
+lui a0, 0x12345
+# Result: a0 = 0x12345000
+
+# 107 # Extension Must Be Active: NONE
+lui t0, 0x12345
+# Result: t0 = 0x12345000
+
+# 108 # Extension Must Be Active: NONE
+lui x5, 0x80000
+# Result: x5 = 0xffffffff80000000
+
+# 109 # Extension Must Be Active: M
+addi a0, x0, -1
+addi a1, x0, 2
+mul a2, a0, a1
+# Result: a2 = 0xfffffffffffffffe
+
+# 110 # Extension Must Be Active: M
+addi a0, x0, 3
+addi a1, x0, 7
+mul a2, a0, a1
+csrr t3, misa
+andi t3, t3, 0x1000
+# Result: a2 = 21 & t3 != 0
+
+# 111 # Extension Must Be Active: Zmmul
+addi x5, x0, 7
+addi x6, x0, 3
+mul x7, x5, x6
+# Result: x7 = 21
+
+# 112 # Extension Must Be Active: NONE
+addi a0, x0, 1
+mul a0, a1, a2
+# Result: a0 = 1
+
+# 113 # Extension Must Be Active: M
+li a0, 7
+li a1, 6
+mul a2, a0, a1
+# Result: a2 = 42
+
+# 114 # Extension Must Be Active: M
+li a0, 0x80000000
+li a1, 2
+mul a2, a0, a1
+srai a3, a2, 32
+# Result: a3 != 0xffffffff
+
+# 115 # Extension Must Be Active: M
+li t0, 2
+li t1, 3
+slli t0, t0, 32
+slli t1, t1, 32
+mulh t2, t0, t1
+# Result: t2 = 6
+
+# 116 # Extension Must Be Active: M
+mulh t0, t1, t2
+mul t3, t1, t2
+# Result: t3 = 0
+
+# 117 # Extension Must Be Active: M
+mulh x5, x1, x2
+mul x6, x5, x3
+# Result: x6 = 0
+
+# 118 # Extension Must Be Active: M
+li t0, -1
+li t1, 2
+mulh t2, t0, t1
+mul t3, t0, t1
+# Result: t3 = 0xfffffffffffffffe
+
+# 119 # Extension Must Be Active: M
+li a1, -2
+li a2, 3
+mulh a0, a1, a2
+# Result: a0 = 0xFFFFFFFFFFFFFFFF
+
+# 120 # Extension Must Be Active: M
+li t0,0x8000000000000000
+li t1,2
+mulh t2, t0, t1
+# Result: t2 = 0xffffffffffffffff
+
+# 121 # Extension Must Be Active: M
+li a1, -1
+li a2, 2
+mulh a0, a1, a2
+# Result: a0 = 0xffffffffffffffff
+
+# 122 # Extension Must Be Active: M
+addi t0, x0, -1
+addi t1, x0, 2
+mulh t2, t0, t1
+mul t3, t0, t1
+# Result: t2 = 0xffffffffffffffff
+
+# 123 # Extension Must Be Active: M
+li x5, -1
+li x6, 2
+mulh x7, x5, x6
+mul x8, x5, x6
+# Result: x7 = 0xffffffffffffffff
+
+# 124 # Extension Must Be Active: M
+mulh x10, x11, x12
+# Result: x10 = 0
+
+# 125 # Extension Must Be Active: M
+li a0, -2
+li a1, 3
+mulhsu a2, a0, a1
+# Result: a2 = 0xffffffffffffffff
+
+# 126 # Extension Must Be Active: M
+li a0, -1
+li a1, 1
+mulhsu a2, a0, a1
+# Result: a2 = 0xffffffffffffffff
+
+# 127 # Extension Must Be Active: M
+addi x5, x0, -1
+addi x6, x0, 2
+mulhsu x7, x5, x6
+# Result: x7 = 1
+
+# 128 # Extension Must Be Active: M
+li t0, -1
+li t1, 1
+mulhsu t2, t0, t1
+# Result: t2 = 0xffffffffffffffff
+
+# 129 # Extension Must Be Active: M
+li x5, 0x7FFFFFFFFFFFFFFF
+li x6, 0xFFFFFFFFFFFFFFFF
+mulhsu x7, x5, x6
+# Result: x7 = 0x7FFFFFFFFFFFFFFE
+
+# 130 # Extension Must Be Active: M
+addi a0, zero, -1
+addi a1, zero, 2
+mulhu a2, a0, a1
+# Result: a2 = 1
+
+# 131 # Extension Must Be Active: M
+addi a0, zero, -1
+addi a1, zero, -1
+mulhu a2, a0, a1
+# Result: a2 = 0xfffffffffffffffe
+
+# 132 # Extension Must Be Active: M
+li a0, -1
+li a1, 2
+mulhu a2, a0, a1
+mul a3, a0, a1
+# Result: a2 = 0x1
+
+# 133 # Extension Must Be Active: M
+li a0, 0xFFFFFFFFFFFFFFFF
+li a1, 0x2
+mul a2, a0, a1
+mulhu a3, a0, a1
+# Result: a3 = 0x1
+
+# 134 # Extension Must Be Active: M
+li t0, -1
+li t1, 2
+mulhu t2, t0, t1
+mul t3, t0, t1
+# Result: t2 = 1 & t3 = 0xfffffffffffffffe
+
+# 135 # Extension Must Be Active: M
+li a1, 2
+li a2, 3
+mulw a0, a1, a2
+# Result: a0 = 6
+
+# 136 # Extension Must Be Active: M
+addi x10, x0, -1 # x10 = 0xffffffffffffffff (-1)
+addi x11, x0, 2 # x11 = 2
+mulw x12, x10, x11 # x12 = lower 32-bit product, sign‑extended
+# Result: x12 = 0xfffffffffffffffe
+
+# 137 # Extension Must Be Active: M
+li a0, -1
+li a1, 2
+mulw a2, a0, a1
+# Result: a2 = 0xfffffffffffffffe
+
+# 138 # Extension Must Be Active: M
+addi x5, x0, -2
+addi x6, x0, 3
+mulw x7, x5, x6
+# Result: x7 = 0xfffffffffffffffa
+
+# 139 # Extension Must Be Active: Zmmul
+addi x5, x0, -1
+addi x7, x0, 2
+mulw x6, x5, x7
+# Result: x6 = 0xfffffffffffffffe
+
+# 140 # Extension Must Be Active: NONE
+addi a1, x0, 240
+addi a2, x0, 15
+or a0, a1, a2
+# Result: a0 = 0xff
+
+# 141 # Extension Must Be Active: NONE
+addi x5, x0, 0x0F
+addi x6, x0, 0xF0
+or x7, x5, x6
+# Result: x7 = 0xFF
+
+# 142 # Extension Must Be Active: NONE
+addi x5, x0, 0xF0
+addi x6, x0, 0x0F
+or x7, x5, x6
+# Result: x7 = 0xFF
+
+# 143 # Extension Must Be Active: NONE
+li t0, 0xffffffff00000000
+li t1, 0x00000000ffffffff
+or a0, t0, t1
+# Result: a0 = 0xffffffffffffffff
+
+# 144 # Extension Must Be Active: NONE
+addi t0, x0, 5
+addi t1, x0, 3
+or t2, t0, t1
+# Result: t2 = 0x7
+
+# 145 # Extension Must Be Active: Zicond
+li a1, 5
+li a2, 3
+li a3, 1
+czero.nez a0, a1, a2, a3
+# Result: a0 = 0
+
+# 146 # Extension Must Be Active: Zicond
+addi x5, x0, 5 # rs1 = 0x5
+addi x6, x0, 3 # rs2 = 0x3
+addi x7, x0, 0 # rc = 0 (condition false)
+czero.eqz x10, x5, x6, x7 # rd should remain 0
+addi x7, x0, 1 # rc = 1 (condition true)
+czero.eqz x10, x5, x6, x7 # rd = rs1 OR rs2 = 0x7
+# Result: x10 = 0x7
+
+# 147 # Extension Must Be Active: NONE
+addi a0, x0, -2048
+ori a1, a0, 0x7FF
+# Result: a1 = 0xffffffffffffffff
+
+# 148 # Extension Must Be Active: NONE
+ori a0, x0, 0xfff
+# Result: a0 = 0xffffffffffffffff
+
+# 149 # Extension Must Be Active: NONE
+ori a0, x0, -1
+# Result: a0 = 0xffffffffffffffff
+
+# 150 # Extension Must Be Active: M
+addi t0, x0, -10
+addi t1, x0, 3
+div t2, t0, t1
+rem t3, t0, t1
+# Result: t3 = -1
+
+# 151 # Extension Must Be Active: M
+li t0, -10
+li t1, 3
+rem t2, t0, t1
+# Result: t2 = -1
+
+# 152 # Extension Must Be Active: M
+addi t0, zero, 5
+addi t1, zero, 0
+rem t2, t0, t1
+# Result: t2 = 5
+
+# 153 # Extension Must Be Active: M
+lui t0,0x80000
+slli t0,t0,32
+addi t1,zero,-1
+rem t2,t0,t1
+# Result: t2 = 0
+
+# 154 # Extension Must Be Active: M
+addi x5, x0, 1
+slli x5, x5, 63
+addi x6, x0, -1
+remu x7, x5, x6
+add a0, x7, x0
+# Result: a0 = 0x8000000000000000
+
+# 155 # Extension Must Be Active: M
+li a0, 0x80000000
+li a1, 0xffffffff
+remuw t0, a0, a1
+li a2, 0x80000000
+li a3, 0
+remuw t1, a2, a3
+# Result: t0 = 0xffffffff80000000 & t1 = 0xffffffff80000000
+
+# 156 # Extension Must Be Active: M
+li a0, 0x112210F47B
+li a1, 12345
+rem a2, a0, a1
+div a3, a0, a1
+mul a4, a3, a1
+add a5, a4, a2
+sub a6, a5, a0
+# Result: a6 = 0
+
+# 157 # Extension Must Be Active: M
+addi t0, x0, 10
+addi t1, x0, 3
+remu t2, t0, t1
+# Result: t2 = 1
+
+# 158 # Extension Must Be Active: M
+li a0, 0x1234567887654321
+li a2, 0x100
+remuw a1, a0, a2
+# Result: a1 = 0x21
+
+# 159 # Extension Must Be Active: M
+addi a1, x0, 10
+addi a2, x0, 3
+remu a0, a1, a2
+# Result: a0 = 1
+
+# 160 # Extension Must Be Active: M
+lui a1, 0x80000
+addi a1, a1, 1
+remuw a0, a1, x0
+# Result: a0 = 0xffffffff80000001
+
+# 161 # Extension Must Be Active: M
+li a0, 10
+li a1, 3
+remu a2, a0, a1
+# Result: a2 = 1
+
+# 162 # Extension Must Be Active: M
+li a0, 0x123456789ABCDEF0
+remu a2, a0, zero
+# Result: a2 = 0x123456789ABCDEF0
+
+# 163 # Extension Must Be Active: M
+addi a0, x0, 42
+remu a1, a0, x0
+# Result: a1 = 42
+
+# 164 # Extension Must Be Active: M
+addi a0, x0, -1
+addi a1, x0, 2
+remu a2, a0, a1
+# Result: a2 = 1
+
+# 165 # Extension Must Be Active: M
+li a0, 0x23456789
+li a1, 0x100
+remuw a2, a0, a1
+# Result: a2 = 0x89
+
+# 166 # Extension Must Be Active: M
+addi x5, x0, -2
+addi x6, x0, -1
+remuw x7, x5, x6
+# Result: x7 = 0xfffffffffffffffe
+
+# 167 # Extension Must Be Active: M
+li t0, -1
+li t1, 0
+remuw t2, t0, t1
+# Result: t2 = 0xffffffffffffffff
+
+# 168 # Extension Must Be Active: M
+li a1, 0x12345678
+li a2, 0
+remuw a0, a1, a2
+# Result: a0 = 0x12345678
+
+# 169 # Extension Must Be Active: M
+li t0, -1
+li t1, 0xffffffff
+remuw t2, t0, t1
+# Result: t2 = 0
+
+# 170 # Extension Must Be Active: M
+li a0, -1
+li a2, 2
+remw a1, a0, a2
+# Result: a1 = 0xffffffff
+
+# 171 # Extension Must Be Active: M
+addi x5, x0, 5
+addi x6, x0, -1
+remw x7, x5, x6
+# Result: x7 = 0
+
+# 172 # Extension Must Be Active: M
+addi t0, x0, -10
+addi t2, x0, 3
+remw t1, t0, t2
+# Result: t1 = -1
+
+# 173 # Extension Must Be Active: M
+li t0, 0x80000001
+li t1, 0
+remw t2, t0, t1
+# Result: t2 = 0xffffffff80000001
+
+# 174 # Extension Must Be Active: M
+li a0, -2147483648
+li a1, -1
+remw a2, a0, a1
+# Result: a2 = 0
+
+# 175 # Extension Must Be Active: M
+li a0, -1
+li a1, 2
+remw a2, a0, a1
+# Result: a2 = 0xffffffffffffffff
+
+# 176 # Extension Must Be Active: NONE
+addi x5, x0, 1
+addi x7, x0, 3
+sll x6, x5, x7
+# Result: x6 = 8
+
+# 177 # Extension Must Be Active: NONE
+addi a0, zero, 1
+addi a1, zero, 63
+sllw a2, a0, a1
+# Result: a2 = 0xffffffff80000000
+
+# 178 # Extension Must Be Active: NONE
+addi a1, zero, 1
+addi a2, zero, 127
+sll a0, a1, a2
+# Result: a0 = 0x8000000000000000
+
+# 179 # Extension Must Be Active: NONE
+addi x10, x0, 1
+addi x11, x0, 3
+sll x12, x10, x11
+# Result: a2 = 8
+
+# 180 # Extension Must Be Active: NONE
+lui x5, 0x12345
+addi x5, x5, 0x678
+slli x6, x5, 4
+# Result: x6 = 0x123456780
+
+# 181 # Extension Must Be Active: NONE
+addi x5, x0, 3
+slli x6, x5, 2
+# Result: x6 = 0xc
+
+# 182 # Extension Must Be Active: NONE
+addi a0, x0, 1
+slli a1, a0, 3
+# Result: a1 = 0x8
+
+# 183 # Extension Must Be Active: NONE
+li x1, 1
+slli x2, x1, 0x20
+# Result: x2 = 1
+
+# 184 # Extension Must Be Active: NONE
+addi x10, x0, 1
+slli x11, x10, 64
+# Result: x11 = 1
+
+# 185 # Extension Must Be Active: NONE
+addi t0, zero, 1
+slli t1, t0, 3
+# Result: t1 = 0x8
+
+# 186 # Extension Must Be Active: I
+addi a0, x0, 1
+slli a1, a0, 4
+# Result: a1 = 0x10
+
+# 187 # Extension Must Be Active: NONE
+li x5, 1
+slli x6, x5, 3
+# Result: x6 = 0x8
+
+# 188 # Extension Must Be Active: Zba
+addi x5, x0, 1
+slli x6, x5, 3
+# Result: x6 = 0x8
+
+# 189 # Extension Must Be Active: I
+addi x1, x0, 5
+slliw x2, x1, 2
+# Result: x2 = 0x14
+
+# 190 # Extension Must Be Active: NONE
+li x5, 0x12345678
+slliw x6, x5, 33
+# Result: x6 = 0x000000002468acf0
+
+# 191 # Extension Must Be Active: NONE
+li x5, 0x80000001
+slliw x6, x5, 0
+# Result: x6 = 0xffffffff80000001
+
+# 192 # Extension Must Be Active: NONE
+li x5, 0x80000001
+slliw x6, x5, 0
+# Result: x6 = 0xffffffff80000001
+
+# 193 # Extension Must Be Active: NONE
+lui a0, 0x80000
+slliw a1, a0, 1
+# Result: a1 = 0
+
+# 194 # Extension Must Be Active: NONE
+slliw a0, a1, 32
+# Result: a0 = 0
+
+# 195 # Extension Must Be Active: I
+li x5, 0x12345678
+slliw x6, x5, 4
+# Result: x6 = 0x0000000023456780
+
+# 196 # Extension Must Be Active: NONE
+addi x5, x0, 15
+slliw x6, x5, 2
+# Result: x6 = 60
+
+# 197 # Extension Must Be Active: NONE
+addi a0, zero, 0xf
+addi a1, zero, 2
+sllw a2, a0, a1
+# Result: a2 = 0x3c
+
+# 198 # Extension Must Be Active: NONE
+addi a0, x0, 15
+addi a1, x0, 2
+sllw a2, a0, a1
+# Result: a2 = 0x3c
+
+# 199 # Extension Must Be Active: NONE
+li x5, 0x12345678
+li x6, 0x164
+sllw x7, x5, x6
+# Result: x7 = 0x67800000
+
+# 200 # Extension Must Be Active: NONE
+addi a0, x0, -1
+addi a1, x0, 1
+sllw a2, a0, a1
+# Result: a2 = 0xfffffffffffffffe
+
+# 201 # Extension Must Be Active: NONE
+addi a0, x0, -1
+addi a1, x0, 1
+sllw a2, a0, a1
+# Result: a2 = 0xfffffffffffffffe
+
+# 202 # Extension Must Be Active: NONE
+addi x5, x0, -5
+addi x6, x0, 3
+slt x7, x5, x6
+# Result: x7 = 1
+
+# 203 # Extension Must Be Active: NONE
+addi x5, x0, -5
+addi x6, x0, 3
+slt x7, x5, x6
+# Result: x7 = 1
+
+# 204 # Extension Must Be Active: NONE
+addi x5, x0, -5
+addi x6, x0, 3
+slt x7, x5, x6
+# Result: x7 = 1
+
+# 205 # Extension Must Be Active: NONE
+addi x6, x0, -5
+addi x7, x0, -5
+slt x5, x6, x7
+# Result: x5 = 0
+
+# 206 # Extension Must Be Active: NONE
+li t1, 0x8000000000000000
+li t2, -1
+slt t0, t1, t2
+li t3, 0x7FFFFFFFFFFFFFFF
+li t4, -1
+slt t5, t3, t4
+# Result: t0 = 1 & t5 = 0
+
+# 207 # Extension Must Be Active: NONE
+add x5, x0, x0
+addi x5, x0, -1
+addi x6, x0, 0
+slt x7, x5, x6
+# Result: x7 = 1
+
+# 208 # Extension Must Be Active: NONE
+addi a1, x0, -1
+slt a0, x0, a1
+# Result: a0 = 0
+
+# 209 # Extension Must Be Active: NONE
+slti x5, x0, 0xFFF
+# Result: x5 = 0
+
+# 210 # Extension Must Be Active: NONE
+addi x5, x0, -5
+slti x6, x5, -3
+# Result: x6 = 1
+
+# 211 # Extension Must Be Active: NONE
+addi x5, x0, -5
+slti x6, x5, 0
+# Result: x6 = 1
+
+# 212 # Extension Must Be Active: NONE
+slti x5, x0, -1
+# Result: x5 = 0
+
+# 213 # Extension Must Be Active: NONE
+slti t0, x0, 1
+# Result: t0 = 1
+
+# 214 # Extension Must Be Active: NONE
+addi x5, x0, 5
+sltiu x6, x5, 10
+# Result: x6 = 1
+
+# 215 # Extension Must Be Active: NONE
+li a0, 0
+sltiu t0, a0, -1
+# Result: t0 = 1
+
+# 216 # Extension Must Be Active: I
+li a0, -1
+sltiu a1, a0, -2
+# Result: a1 = 0
+
+# 217 # Extension Must Be Active: NONE
+sltiu t1, x0, 1
+li t0, 5
+sltiu t2, t0, 1
+# Result: t1 = 1 & t2 = 0
+
+# 218 # Extension Must Be Active: NONE
+addi x5, x0, 5
+addi x6, x0, 10
+sltu x7, x5, x6
+# Result: x7 = 1
+
+# 219 # Extension Must Be Active: NONE
+addi t0, x0, 0
+addi t1, x0, 1
+sltu t2, t0, t1
+# Result: t2 = 1
+
+# 220 # Extension Must Be Active: NONE
+li a1, 5
+sltu a0, x0, a1
+# Result: a0 = 1
+
+# 221 # Extension Must Be Active: NONE
+addi x5, x0, -1
+addi x6, x0, 0
+sltu x7, x5, x6
+# Result: x7 = 0
+
+# 222 # Extension Must Be Active: NONE
+li t0, 0x80000000
+li t1, 0x7fffffff
+sltu t2, t0, t1
+sltu t3, t1, t0
+# Result: t2 = 0 & t3 = 1
+
+# 223 # Extension Must Be Active: NONE
+li x5, -8
+li x6, 2
+sra x7, x5, x6
+# Result: x7 = 0xfffffffffffffffe
+
+# 224 # Extension Must Be Active: NONE
+li t0, 0x80000000
+li t1, 0xFFFFFFFF
+sra t2, t0, t1
+# Result: t2 = 0xffffffff
+
+# 225 # Extension Must Be Active: NONE
+li a0, 0x8000000000000000
+li a1, 0xFFFFFFFFFFFFFFFF
+sra a2, a0, a1
+# Result: a2 = 0xFFFFFFFFFFFFFFFF
+
+# 226 # Extension Must Be Active: I
+addi x5, x0, -4
+addi x7, x0, 2
+sra x6, x5, x7
+# Result: x6 = 0xffffffffffffffff
+
+# 227 # Extension Must Be Active: NONE
+addi x5, x0, -1
+addi x6, x0, 1
+sra x7, x5, x6
+# Result: x7 = 0xffffffffffffffff
+
+# 228 # Extension Must Be Active: NONE
+addi a0, zero, -8
+addi a2, zero, 2
+sra a1, a0, a2
+# Result: a1 = 0xfffffffffffffffe
+
+# 229 # Extension Must Be Active: NONE
+addi x1, x0, -8
+srai x2, x1, 2
+# Result: x2 = 0xfffffffffffffffe
+
+# 230 # Extension Must Be Active: NONE
+addi a0, zero, 15
+srai a1, a0, 32
+# Result: a1 = 0
+
+# 231 # Extension Must Be Active: NONE
+addi x5, x0, -8
+srai x6, x5, 2
+# Result: x6 = 0xfffffffffffffffe
+
+# 232 # Extension Must Be Active: NONE
+li t0, 0x8000000000000001
+srai t1, t0, 1
+# Result: t1 = 0xC000000000000000
+
+# 233 # Extension Must Be Active: NONE
+addi x6, x0, -8
+srai x5, x6, 2
+# Result: x5 = 0xfffffffffffffffe
+
+# 234 # Extension Must Be Active: I
+addi x5, x0, -8
+srai x6, x5, 2
+# Result: x6 = 0xfffffffffffffffe
+
+# 235 # Extension Must Be Active: NONE
+li a0, 0x80000001
+sraiw a1, a0, 1
+# Result: a1 = 0xffffffffc0000000
+
+# 236 # Extension Must Be Active: NONE
+li a0, -1
+sraiw a1, a0, 16
+# Result: a1 = 0xffffffffffffffff
+
+# 237 # Extension Must Be Active: NONE
+sraiw a0, a0, 32
+# Result: a0 = 0
+
+# 238 # Extension Must Be Active: I
+lui a0,0x80000
+sraiw a1, a0, 0x21
+# Result: a1 = 0xffffffffc0000000
+
+# 239 # Extension Must Be Active: NONE
+li x5, 0x7fffffff
+sraiw x6, x5, 1
+# Result: x6 = 0x3fffffff
+
+# 240 # Extension Must Be Active: NONE
+li x5, 0x12345678FFFFFFFF
+sraiw x6, x5, 1
+# Result: x6 = 0xffffffffffffffff
+
+# 241 # Extension Must Be Active: NONE
+li x5, -8
+li x6, 2
+sraw x7, x5, x6
+# Result: x7 = 0xfffffffffffffffe
+
+# 242 # Extension Must Be Active: NONE
+li a0, 0x80000001
+li a1, 1
+sraw a2, a0, a1
+# Result: a2 = 0xffffffffc0000000
+
+# 243 # Extension Must Be Active: NONE
+addi t0, x0, -8
+addi t1, x0, 34
+sraw t2, t0, t1
+# Result: t2 = 0xfffffffffffffffe
+
+# 244 # Extension Must Be Active: NONE
+addi a0, x0, -2
+addi a1, x0, 1
+sraw a2, a0, a1
+# Result: a2 = 0xffffffffffffffff
+
+# 245 # Extension Must Be Active: B
+li a0, 0xFFFFFFFF80000001
+li a1, 1
+sraw a2, a0, a1
+# Result: a2 = 0xffffffffc0000000
+
+# 246 # Extension Must Be Active: I
+li x10, 0xF0F0F0F0F0F0F0F0
+li x11, 8
+srl x12, x10, x11
+# Result: x12 = 0x0F0F0F0F0F0F0F0F
+
+# 247 # Extension Must Be Active: NONE
+addi x10, x0, 128
+addi x11, x0, -1
+srl x12, x10, x11
+# Result: x12 = 0
+
+# 248 # Extension Must Be Active: NONE
+addi a0, x0, -1
+addi a1, x0, 8
+srl a2, a0, a1
+# Result: a2 = 0x00FFFFFFFFFFFFFF
+
+# 249 # Extension Must Be Active: NONE
+addi x1, x0, -1
+addi x2, x0, 63
+srl x3, x1, x2
+# Result: x3 = 1
+
+# 250 # Extension Must Be Active: NONE
+addi a0, x0, -1
+addi a1, x0, 4
+srl a2, a0, a1
+# Result: a2 = 0x0FFFFFFFFFFFFFFF
+
+# 251 # Extension Must Be Active: I
+addi x5, x0, -1
+srli x6, x5, 8
+# Result: x6 = 0x00FFFFFFFFFFFFFF
+
+# 252 # Extension Must Be Active: NONE
+addi x5, x0, -1
+srli x6, x5, 8
+# Result: x6 = 0x00FFFFFFFFFFFFFF
+
+# 253 # Extension Must Be Active: NONE
+addi a0, zero, -1
+srli a0, a0, 32
+# Result: a0 = 0xffffffffffffffff
+
+# 254 # Extension Must Be Active: NONE
+addi a0, x0, 255
+srli a1, a0, 70
+# Result: a1 = 3
+
+# 255 # Extension Must Be Active: NONE
+li a0, 0xFF00FF00FF00FF00
+srli a1, a0, 8
+# Result: a1 = 0x00FF00FF00FF00FF
+
+# 256 # Extension Must Be Active: I
+addi x5, x0, -1 # x5 = 0xFFFFFFFFFFFFFFFF
+srli x6, x5, 4 # logical right shift by 4
+# Result: x6 = 0x0FFFFFFFFFFFFFFF
+
+# 257 # Extension Must Be Active: NONE
+addi a0, x0, -1
+srliw a1, a0, 1
+# Result: a1 = 0x7fffffff
+
+# 258 # Extension Must Be Active: NONE
+lui x5, 0xfffff
+addi x5, x5, 1
+srliw x6, x5, 4
+# Result: x6 = 0x0fffff00
+
+# 259 # Extension Must Be Active: NONE
+li x5, 0xffffffff12345678
+srliw x6, x5, 4
+# Result: x6 = 0x1234567
+
+# 260 # Extension Must Be Active: NONE
+li a1, 0xffffffff
+srliw a0, a1, 35
+# Result: a0 = 0x1fffffff
+
+# 261 # Extension Must Be Active: NONE
+li x5, 0xFFFFFFFF80000000
+srliw x6, x5, 1
+# Result: x6 = 0x0000000040000000
+
+# 262 # Extension Must Be Active: NONE
+li t0, 0xffffffffff800000
+srliw t1, t0, 0
+# Result: t1 = 0xffffffffff800000
+
+# 263 # Extension Must Be Active: NONE
+li x5, 0x80000000
+srliw x6, x5, 0
+# Result: x6 = 0xffffffff80000000
+
+# 264 # Extension Must Be Active: NONE
+li t0, 0x80000001
+srliw t1, t0, 1
+# Result: t1 = 0x0000000040000000
+
+# 265 # Extension Must Be Active: NONE
+li t0, 0x123456789ABCDEF0
+li t1, 4
+srlw t2, t0, t1
+# Result: t2 = 0x0000000009ABCDEF
+
+# 266 # Extension Must Be Active: NONE
+li a0, 0x80000000
+li a1, 1
+srlw a2, a0, a1
+# Result: a2 = 0x40000000
+
+# 267 # Extension Must Be Active: NONE
+addi t0, x0, -1
+addi t1, x0, 32
+srlw t2, t0, t1
+# Result: t2 = 0xffffffff
+
+# 268 # Extension Must Be Active: NONE
+li x5, 0xffffffff
+li x6, 4
+srlw x7, x5, x6
+# Result: x7 = 0x0fffffff
+
+# 269 # Extension Must Be Active: NONE
+li a1, 0xffffffff80000000
+li a2, 0
+srlw a0, a1, a2
+# Result: a0 = 0xffffffff80000000
+
+# 270 # Extension Must Be Active: NONE
+addi x5, x0, 10
+addi x7, x0, 3
+sub x6, x5, x7
+# Result: x6 = 7
+
+# 271 # Extension Must Be Active: NONE
+li a0, 10
+li a1, 3
+sub a2, a0, a1
+# Result: a2 = 7
+
+# 272 # Extension Must Be Active: NONE
+addi a1, x0, 1
+sub a2, x0, a1
+# Result: a2 = 0xffffffffffffffff
+
+# 273 # Extension Must Be Active: NONE
+li a1, 5
+li a2, 3
+sub a0, a1, a2
+# Result: a0 = 2
+
+# 274 # Extension Must Be Active: NONE
+li a0, 0xFFFFFFFF00000005
+li a1, 3
+subw a2, a0, a1
+# Result: a2 = 0x2
+
+# 275 # Extension Must Be Active: NONE
+addi x5, x0, -1
+slli x5, x5, 32
+ori x5, x5, 5
+addi x6, x0, 3
+subw x7, x5, x6
+# Result: x7 = 2
+
+# 276 # Extension Must Be Active: M
+addi x5, x0, 5
+addi x6, x0, -1
+subw x7, x5, x6
+# Result: x7 = 0x6
+
+# 277 # Extension Must Be Active: NONE
+addi t1, zero, 1
+subw t2, zero, t1
+# Result: t2 = 0xffffffffffffffff
+
+# 278 # Extension Must Be Active: NONE
+li x5, 0x0000000180000000
+subw x6, x5, x0
+# Result: x6 = 0xffffffff80000000
+
+# 279 # Extension Must Be Active: NONE
+li x5, 0xdeadbeefdeadbeef
+li x6, 0x1234567890abcdef
+xor x7, x5, x6
+# Result: x7 = 0xcc99e8974e067300
+
+# 280 # Extension Must Be Active: NONE
+li t0, 0x5A5A5A5A5A5A5A5A
+li t1, 0xFFFFFFFF00000000
+xor t2, t0, t1
+# Result: t2 = 0xA5A5A5A55A5A5A5A
+
+# 281 # Extension Must Be Active: NONE
+addi a0, x0, -1
+addi a1, x0, 1
+xor a2, a0, a1
+# Result: a2 = 0xfffffffffffffffe
+
+# 282 # Extension Must Be Active: C
+addi a0, x0, 0xf
+c.not a1, a0
+# Result: a1 = 0xfffffffffffffff0
+
+# 283 # Extension Must Be Active: Zicond
+li a0, 0xFFFFFFFF00000000
+li a1, 0x00000000FFFFFFFF
+li a2, 1
+c.xor a3, a0, a1, a2
+# Result: a3 = 0xFFFFFFFFFFFFFFFF
+
+# 284 # Extension Must Be Active: vector
+vsetvli t0, zero, e64, m1
+li a0, 0x123456789ABCDEF0
+li a1, 0x0F0F0F0F0F0F0F0F
+vmv.v.x v1, a0
+vmv.v.x v2, a1
+vxor.vv v3, v2, v1
+vmv.x.s a2, v3
+# Result: a2 = 0x1d3b597795b3d1ff
+
+# 285 # Extension Must Be Active: V
+vsetvli t0, zero, e64, m1
+li x5, 0x1122334455667788
+vmv.v.x v2, x5
+li x6, 0xFFEEDDCCBBAA9988
+vxor.vx v1, v2, x6
+vmv.x.s x7, v1
+# Result: x7 = 0xEECCEE88EECCEE00
+
+# 286 # Extension Must Be Active: V
+li a0, 8
+vsetvli a0, a0, e8, m1
+li t0, 0xff
+vmv.v.x v2, t0
+vxor.vi v3, v2, 0x1f
+vmv.x.s t1, v3
+# Result: t1 = 224
+
+# 287 # Extension Must Be Active: V
+li t0, 4
+vsetvli t1, t0, e64, m1
+li t2, 0xF
+vmv.s.x v1, t2
+li t2, 1
+vdup.vx v2, t2
+vredxor.vs v0, v2, v1
+vmv.x.s a0, v0
+# Result: a0 = 0xF
+
+# 288 # Extension Must Be Active: A
+li t0, 0x80001000
+li t1, 0x12345678
+sw t1, 0(t0)
+li t2, 0xdeadbeef
+amoxor.w a0, t2, (t0)
+lw a1, 0(t0)
+# Result: a0 = 0x12345678 & a1 = 0xcc99e897
+
+# 289 # Extension Must Be Active: NONE
+xori a0, x0, -1
+# Result: a0 = 0xffffffffffffffff
+
+# 290 # Extension Must Be Active: NONE
+addi t0, x0, 0x123
+xori t1, t0, 0x0F0
+# Result: t1 = 0x1D3
+
+# 291 # Extension Must Be Active: NONE
+addi x5, x0, -1
+xori x6, x5, 0x7ff
+# Result: x6 = 0xfffffffffffff800
+
+# 292 # Extension Must Be Active: NONE
+addi x5, x0, 0
+xori x6, x5, -1
+# Result: x6 = 0xffffffffffffffff
+
+# 293 # Extension Must Be Active: NONE
+li t0,0x12345678ABCDEF01
+xori t1, t0, -1
+not t2, t0
+# Result: t1 = 0xEDCBA987543210FE
+
+# 294 # Extension Must Be Active: NONE
+addi x5, x0, 0xAA
+xori x5, x5, -1
+# Result: x5 = 0xffffffffffffff55
+
+# 295 # Extension Must Be Active: Zkr
+csrrwi t0, 0x747, 1
+csrr t1, 0x747
+andi t1, t1, 1
+# Result: t1 = 0x1

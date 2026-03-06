@@ -1,0 +1,29 @@
+## 31.6.1. Scope and Goal
+
+An  "ISA  contract"  is  made  between  a  programmer  and  the  RISC-V  implementation  that  Zkt instructions  do  not  leak  information  about  processed  secret  data  (plaintext,  keying  information,  or other "sensitive security parameters" -FIPS 140-3 term) through differences in execution latency. Zkt does not define  a  set  of  instructions  available  in  the  core;  it  just  restricts  the  behaviour  of  certain instructions if those are implemented.
+
+Currently,  the  scope  of  this  document  is  within  scalar  RV32/RV64  processors.  Vector  cryptography
+
+instructions  (and  appropriate  vector  support  instructions)  will  be  added  later,  as  will  other  securityrelated functions that wish to assert leakage-free execution latency properties.
+
+Loads,  stores,  conditional  branches  are  excluded,  along  with  a  set  of  instructions  that  are  rarely necessary  to  process  secret  data.  Also  excluded  are  instructions  for  which  workarounds  exist  in standard cryptographic middleware due to the limitations of other ISA processors.
+
+The stated goal is that OpenSSL, BoringSSL (Android), the Linux Kernel, and similar trusted software will  not  have directly observable timing side channels when compiled and running on a Zkt-enabled RISC-V target. The Zkt extension explicitly states many of the common latency assumptions made by cryptography developers.
+
+Vendors do not have to implement all of the list's instructions to be Zkt compliant; however, if they claim to have Zkt and implement any of the listed instructions, it must have data-independent latency.
+
+For  example,  many  simple  RV32I  and  RV64I  cores  (without  Multiply,  Compressed,  Bitmanip,  or Cryptographic extensions) are technically compliant with Zkt. A constant-time AES can  be implemented on them using "bit-slice" techniques, but it will be excruciatingly slow when compared to implementation  with  AES  instructions.  There  are  no  guarantees  that  even  a  bit-sliced  cipher implementation  (largely  based  on  boolean  logic  instructions)  is  secure  on  a  core  without  Zkt attestation.
+
+Out-of-order  implementations  adhering  to  Zkt  are  still  free  to  fuse,  crack,  change  or  even  ignore sequences of instructions, so long as the optimisations are applied deterministically, and not based on operand data. The guiding principle should be that no information about the data being operated on should be leaked based on the execution latency.
+
+<image>
+
+<image>
+
+It  is  left  to  future  extensions  or  other  techniques  to  tackle  the  problem  of  dataindependent execution in implementations which advanced out-of-order capabilities which use value prediction, or which are otherwise data-dependent.
+
+## Note to software developers
+
+Programming  techniques  can  only  mitigate  leakage  directly  caused  by  arithmetic, caches,  and  branches.  Other  ISAs  have  had  micro-architectural  issues  such  as Spectre, Meltdown, Speculative Store Bypass, Rogue System Register Read, Lazy FP State Restore, Bounds Check Bypass Store, TLBleed, and L1TF/Foreshadow, etc. See e.g. NSA Hardware and Firmware Security Guidance
+
+It  is  not  within  the  remit  of  this  proposal  to  mitigate  these  micro-architectural leakages.

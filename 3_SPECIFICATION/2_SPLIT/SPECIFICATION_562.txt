@@ -1,0 +1,3 @@
+## 31.8.2.4. Deterministic Random Bit Generator (DRBG)
+
+Cryptographic PRNGs are also known as Deterministic Random Bit Generators (DRBGs), a term used by SP 800-90A (Barker & Kelsey, 2015). A strong cryptographic algorithm such as AES (NIST, 2001) or SHA-2/3  (NIST,  2015;  NIST,  2015)  is  used  to  produce  random  bits  from  a  seed.  The  secret  seed material is like a cryptographic key; determining the seed from the DRBG output is as hard as breaking AES or a strong hash function. This also illustrates that the seed/key needs to be long enough and come from  a  trusted  Entropy  Source.  The  DRBG  should  still  be  frequently  refreshed  (reseeded)  for forward and backward security.

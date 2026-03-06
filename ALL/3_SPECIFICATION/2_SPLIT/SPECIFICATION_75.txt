@@ -1,0 +1,3 @@
+## 17.1.4.3. Progress Axiom
+
+No memory operation may be preceded in the global memory order by an infinite sequence of other memory operations.

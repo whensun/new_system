@@ -1,0 +1,13 @@
+## 31.7.4.5. Packing
+
+```
+RV32, RV64:                         RV64: pack   rd, rs1, rs2                 packw  rd, rs1, rs2 packh  rd, rs1, rs2
+```
+
+See Bit-manipulation for Cryptography for details of these instructions.
+
+Notes to software developers
+
+The pack* instructions  are  useful  for  re-arranging  halfwords  within  words,  and generally  getting  data  into  the  right  shape  prior  to  applying  transforms.  This  is particularly useful for cryptographic algorithms which pass inputs around  as (potentially un-aligned) byte strings, but can operate on words made out of those byte strings. This occurs (for example) in AES when loading blocks and keys (which may not be word aligned) into registers to perform the round functions.
+
+<image>

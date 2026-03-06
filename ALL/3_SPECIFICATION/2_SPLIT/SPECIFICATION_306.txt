@@ -1,0 +1,37 @@
+## 29.5.50. zext.h
+
+## Synopsis
+
+Zero-extend halfword
+
+## Mnemonic
+
+zext.h rd , rs
+
+## Encoding (RV32)
+
+<image>
+
+## Encoding (RV64)
+
+<image>
+
+## Description
+
+This instruction zero-extends the least-significant halfword of the source to XLEN by inserting 0's into all of the bits more significant than 15.
+
+## Operation
+
+<formula>
+
+<image>
+
+## Included in
+
+| Extension                    |   Minimum version | Lifecycle state   |
+|------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation) |              0.93 | Ratified          |
+
+Note
+
+The zext.h mnemonic  corresponds  to  different  instruction  encodings  in  RV32  and RV64.

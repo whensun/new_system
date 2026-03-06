@@ -1,0 +1,35 @@
+## 3.3.3. Wait for Interrupt
+
+The Wait for Interrupt instruction (WFI) informs the implementation that the current hart can be stalled until an interrupt might need servicing. Execution of the WFI instruction can also be used to inform the hardware platform that suitable interrupts should preferentially be routed to this hart. WFI is available in  all  privileged  modes,  and  optionally  available  to  U-mode.  This  instruction  may  raise  an  illegalinstruction exception when TW=1 in mstatus , as described in Section 3.1.6.6.
+
+<image>
+
+If an enabled interrupt is present or later becomes present while the hart is stalled, the interrupt trap will be taken on the following instruction, i.e., execution resumes in the trap handler and mepc = pc + 4.
+
+<image>
+
+The following instruction takes the interrupt trap so that a simple return from the trap handler will execute code after the WFI instruction.
+
+Implementations are permitted to resume execution for any reason, even if an enabled interrupt has not become pending. Hence, a legal implementation is to simply implement the WFI instruction as a NOP.
+
+<image>
+
+If the implementation does not stall the hart on execution of the instruction, then the
+
+
+
+interrupt will be taken on some instruction in the idle loop containing the WFI, and on a simple return from the handler, the idle loop will resume execution.
+
+The WFI instruction can also be executed when interrupts are disabled. The operation of WFI must be unaffected by the global interrupt bits in mstatus (MIE and SIE) and the delegation register mideleg (i.e., the hart must resume if a locally enabled interrupt becomes pending, even if it has been delegated to a less-privileged mode), but should honor the individual interrupt enables (e.g, MTIE) (i.e., implementations  should  avoid  resuming  the  hart  if  the  interrupt  is  pending  but  not  individually enabled).  WFI  is  also  required  to  resume  execution  for  locally  enabled  interrupts  pending  at  any privilege level, regardless of the global interrupt enable at each privilege level.
+
+If  the  event  that  causes  the  hart  to  resume  execution  does  not  cause  an  interrupt  to  be  taken, execution will resume at pc + 4, and software must determine what action to take, including looping back to repeat the WFI if there was no actionable event.
+
+By  allowing  wakeup  when  interrupts  are  disabled,  an  alternate  entry  point  to  an interrupt handler can be called that does not require saving the current context, as the current context can be saved or discarded before the WFI is executed.
+
+As implementations are free to implement WFI as a NOP, software must explicitly check for any relevant pending but disabled interrupts in the code following an WFI, and should loop back to the WFI if no suitable interrupt was detected. The mip or sip registers can be interrogated to determine the presence of any interrupt in machine or supervisor mode respectively.
+
+The operation of WFI is unaffected by the delegation register settings.
+
+WFI  is  defined  so  that  an  implementation  can  trap  into  a  higher  privilege  mode, either  immediately  on  encountering  the  WFI  or  after  some  interval  to  initiate  a machine-mode transition to a lower power state, for example.
+
+The same "wait-for-event" template might be used for possible future extensions that wait on memory locations changing, or message arrival.

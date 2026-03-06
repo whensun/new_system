@@ -1,0 +1,55 @@
+## 19.5. Control and Status Register State
+
+Three CSRs control the execution of CMO instructions:
+
+- ⚫ menvcfg
+- ⚫ senvcfg
+- ⚫ henvcfg
+
+The senvcfg register is used by all supervisor modes, including VS-mode. A hypervisor is responsible for saving and restoring senvcfg on guest context switches. The henvcfg register is only present if the Hextension is implemented and enabled.
+
+Each xenvcfg register (where x is m , s , or h ) has the following generic format:
+
+Table 23. Generic Format for xenvcfg CSRs
+
+| Bits   | Name   | Description                                                                                                                                                                                                                                                                                                                   |
+|--------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [5:4]  | CBIE   | Cache Block Invalidate instruction Enable. WARL .                                                                                                                                                                                                                                                                             |
+|        |        | Enables the execution of the cache block invalidate instruction, CBO.INVAL , in a lower privilege mode: ⚫ 00 : The instruction raises an illegal-instruction or virtual-instruction exception ⚫ 01 : The instruction is executed and performs a flush operation ⚫ 10 : Reserved                                            |
+| [6]    | CBCFE  | Cache Block Clean and Flush instruction Enable Enables the execution of the cache block clean instruction, CBO.CLEAN , and the cache block flush instruction, CBO.FLUSH , in a lower privilege mode: ⚫ 0 : The instruction raises an illegal-instruction or virtual-instruction exception ⚫ 1 : The instruction is executed |
+| [7]    | CBZE   | Cache Block Zero instruction Enable Enables the execution of the cache block zero instruction, CBO.ZERO , in a lower privilege mode:                                                                                                                                                                                          |
+|        |        | ⚫ 0 : The instruction raises an illegal-instruction or virtual-instruction exception ⚫ 1 : The instruction is executed                                                                                                                                                                                                      |
+
+The xenvcfg registers control CBO instruction execution based on the current privilege mode and the state of the appropriate CSRs, as detailed below.
+
+A CBO.INVAL instruction executes or raises either an illegal-instruction exception or a virtual-instruction exception based on the state of the xenvcfg.CBIE fields:
+
+## // illegal-instruction exceptions
+
+```
+if (((priv_mode != M) && (menvcfg.CBIE == 00)) || ((priv_mode == U) && (senvcfg.CBIE == 00))) { <raise illegal-instruction exception> } // virtual-instruction exceptions else if (((priv_mode == VS) && (henvcfg.CBIE == 00)) || ((priv_mode == VU) && ((henvcfg.CBIE == 00) || (senvcfg.CBIE == 00)))) { <raise virtual-instruction exception> } // execute instruction else { if (((priv_mode != M) && (menvcfg.CBIE == 01)) || ((priv_mode == U) && (senvcfg.CBIE == 01)) || ((priv_mode == VS) && (henvcfg.CBIE == 01)) || ((priv_mode == VU) && ((henvcfg.CBIE == 01) || (senvcfg.CBIE == 01)))) { <execute CBO.INVAL and perform flush operation> } else { <execute CBO.INVAL and perform invalidate operation> } }
+```
+
+<image>
+
+Until  a  modified  cache  block  has  updated  memory,  a CBO.INVAL instruction  may expose  stale  data  values  in  memory  if  the  CSRs  are  programmed  to  perform  an invalidate  operation.  This  behavior  may  result  in  a  security  hole  if  lower  privileged level software performs an invalidate operation and accesses sensitive information in memory.
+
+To avoid such holes, higher privileged level software must perform either a clean or flush operation on the cache block before permitting lower privileged level software to perform an invalidate operation on the block. Alternatively, higher privileged level software  may  program  the  CSRs  so  that CBO.INVAL either  traps  or  performs  a  flush operation in a lower privileged level.
+
+A CBO.CLEAN or CBO.FLUSH instruction  executes  or  raises  an  illegal  instruction  or  virtual-instruction exception based on the state of the xenvcfg.CBCFE bits:
+
+```
+// illegal-instruction exceptions if (((priv_mode != M) && !menvcfg.CBCFE) || ((priv_mode == U) && !senvcfg.CBCFE)) { <raise illegal-instruction exception> } // virtual-instruction exceptions else if (((priv_mode == VS) && !henvcfg.CBCFE) ||
+```
+
+```
+((priv_mode == VU) && !(henvcfg.CBCFE && senvcfg.CBCFE))) { <raise virtual-instruction exception> } // execute instruction else { <execute CBO.CLEAN or CBO.FLUSH> }
+```
+
+Finally,  a CBO.ZERO instruction  executes or raises an illegal-instruction or virtual-instruction exception based on the state of the xenvcfg.CBZE bits:
+
+```
+// illegal-instruction exceptions if (((priv_mode != M) && !menvcfg.CBZE) || ((priv_mode == U) && !senvcfg.CBZE)) { <raise illegal-instruction exception> } // virtual-instruction exceptions else if (((priv_mode == VS) && !henvcfg.CBZE) || ((priv_mode == VU) && !(henvcfg.CBZE && senvcfg.CBZE))) { <raise virtual-instruction exception> } // execute instruction else { <execute CBO.ZERO> }
+```
+
+Each xenvcfg register is WARL; however, software should determine the legal values from the execution environment discovery mechanism.

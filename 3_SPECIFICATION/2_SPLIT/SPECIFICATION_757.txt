@@ -1,0 +1,13 @@
+## 3.6.4. Misaligned Atomicity Granule PMA
+
+The misaligned atomicity granule PMA provides constrained support for misaligned AMOs. This PMA, if  present,  specifies  the  size  of  a misaligned  atomicity  granule ,  a  naturally  aligned  power-of-two number  of  bytes.  Specific  supported  values  for  this  PMA  are  represented  by  MAG NN ,  e.g.,  MAG16 indicates the misaligned atomicity granule is at least 16 bytes.
+
+The misaligned atomicity granule PMA applies only to AMOs, loads and stores defined in the base ISAs, and loads and stores of no more than XLEN bits defined in the F, D, and Q extensions. For an instruction  in  that  set,  if  all  accessed  bytes  lie  within  the  same  misaligned  atomicity  granule,  the instruction will not raise an exception for reasons of address alignment, and the instruction will give rise to only one memory operation for the purposes of RVWMO-i.e., it will execute atomically.
+
+If a misaligned AMO accesses a region that does not specify a misaligned atomicity granule PMA, or if not all accessed bytes lie within the same misaligned atomicity granule, then an exception is raised. For regular loads and stores that access such a region or for which not all accessed bytes lie within the
+
+same  atomicity  granule,  then  either  an  exception  is  raised,  or  the  access  proceeds  but  is  not guaranteed  to  be  atomic.  Implementations  may  raise  access-fault  exceptions  instead  of  addressmisaligned  exceptions  for  some  misaligned  accesses,  indicating  the  instruction  should  not  be emulated by a trap handler.
+
+<image>
+
+LR/SC  instructions  are  unaffected  by  this  PMA  and  so  always  raise  an  exception when  misaligned.  Vector  memory  accesses  are  also  unaffected,  so  might  execute non-atomically even when contained within a misaligned atomicity granule. Implicit accesses are similarly unaffected by this PMA.

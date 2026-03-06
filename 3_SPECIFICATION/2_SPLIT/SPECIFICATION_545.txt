@@ -1,0 +1,3 @@
+## 31.7. Instruction Rationale
+
+This section contains various rationale, design notes and usage recommendations for the instructions in  the  scalar  cryptography  extension.  It  also  tries  to  record  how  the  designs  of  instructions  were derived, or where they were contributed from.

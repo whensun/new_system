@@ -1,0 +1,15 @@
+## 30.11.13. Vector Single-Width Integer Multiply-Add Instructions
+
+The  integer  multiply-add  instructions  are  destructive  and  are  provided  in  two  forms,  one  that overwrites the addend or minuend ( vmacc , vnmsac ) and one that overwrites the first multiplicand ( vmadd , vnmsub ).
+
+The low half of the product is added or subtracted from the third operand.
+
+<image>
+
+sac is  intended  to  be  read  as  "subtract  from  accumulator".  The opcode is vnmsac to match the (unfortunately counterintuitive) floating-point fnmsub instruction definition.
+
+Similarly for the vnmsub opcode.
+
+```
+# Integer multiply-add, overwrite addend vmacc.vv vd, vs1, vs2, vm    # vd[i] = +(vs1[i] * vs2[i]) + vd[i] vmacc.vx vd, rs1, vs2, vm    # vd[i] = +(x[rs1] * vs2[i]) + vd[i] # Integer multiply-sub, overwrite minuend vnmsac.vv vd, vs1, vs2, vm    # vd[i] = -(vs1[i] * vs2[i]) + vd[i] vnmsac.vx vd, rs1, vs2, vm    # vd[i] = -(x[rs1] * vs2[i]) + vd[i] # Integer multiply-add, overwrite multiplicand vmadd.vv vd, vs1, vs2, vm    # vd[i] = (vs1[i] * vd[i]) + vs2[i] vmadd.vx vd, rs1, vs2, vm    # vd[i] = (x[rs1] * vd[i]) + vs2[i] # Integer multiply-sub, overwrite multiplicand vnmsub.vv vd, vs1, vs2, vm    # vd[i] = -(vs1[i] * vd[i]) + vs2[i] vnmsub.vx vd, rs1, vs2, vm    # vd[i] = -(x[rs1] * vd[i]) + vs2[i]
+```

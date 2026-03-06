@@ -1,0 +1,13 @@
+## 25.4. Modular Convert-to-Integer Instruction
+
+The  FCVTMOD.W.D  instruction  is  defined  similarly  to  the  FCVT.W.D  instruction,  with  the  following differences.  FCVTMOD.W.D  always  rounds  towards  zero.  Bits  31:0  are  taken  from  the  rounded, unbounded two's complement result, then sign-extended to XLEN bits and written to integer register rd . and NaN are converted to zero.
+
+Floating-point exception flags are raised the same as they would be for FCVT.W.D with the same input operand.
+
+This instruction is only provided if the D extension is implemented. It is encoded like FCVT.W.D, but with the rs2 field set to 8 and the rm field set to 1 (RTZ). Other rm values are reserved .
+
+The assembly syntax requires the RTZ rounding mode to be explicitly specified, i.e., fcvtmod.w.d rd, rs1, rtz .
+
+<image>
+
+The FCVTMOD.W.D instruction was added principally to accelerate the processing of JavaScript  Numbers.  Numbers  are  double-precision  values,  but  some  operators implicitly truncate them to signed integers mod .

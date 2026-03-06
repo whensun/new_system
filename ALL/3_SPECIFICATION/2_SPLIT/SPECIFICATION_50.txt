@@ -1,0 +1,16 @@
+## 11.4.1. Instruction sequences
+
+| Operation                                                                   | Instruction sequence   | Instruction sequence                            | Length                         |
+|-----------------------------------------------------------------------------|------------------------|-------------------------------------------------|--------------------------------|
+| Conditional add, if zero rd = (rc == 0) ? (rs1 + rs2) : rs1                 | czero.nez add          | rd, rs2, rc rd, rs1, rd                         | 2 insns                        |
+| Conditional add, if non-zero rd = (rc != 0) ? (rs1 + rs2) : rs1             | czero.eqz add          | rd, rs2, rc rd, rs1, rd                         | 2 insns                        |
+| Conditional subtract, if zero rd = (rc == 0) ? (rs1 - rs2) : rs1            | czero.nez sub          | rd, rs2, rc rd, rs1, rd                         | 2 insns                        |
+| Conditional subtract, if non-zero rd = (rc != 0) ? (rs1 - rs2) : rs1        | czero.eqz sub          | rd, rs2, rc rd, rs1, rd rd, rs2, rc rd, rs1, rd | 2 insns                        |
+| Conditional bitwise-or, if zero rd = (rc == 0) ? (rs1 | rs2) : rs1     | czero.nez or           | rd, rs2, rc                                     | 2 insns                        |
+| Conditional bitwise-or, if non-zero rd = (rc != 0) ? (rs1 | rs2) : rs1 | czero.eqz or           | rd, rs1, rd rd, rs2, rc                         | 2 insns                        |
+| Conditional bitwise-xor, if zero rd = (rc == 0) ? (rs1 ^ rs2) : rs1         | czero.nez xor          | rd, rs1, rd rd, rs2, rc                         | 2 insns                        |
+| Conditional bitwise-xor, if non-zero rd = (rc != 0) ? (rs1 ^ rs2) : rs1     | czero.eqz xor          | rd, rs1, rd rd, rs1, rs2                        | 2 insns                        |
+| Conditional bitwise-and, if zero rd = (rc == 0) ? (rs1 & rs2) : rs1         | and czero.eqz or       | rtmp, rs1, rc rd, rd, rtmp                      | 3 insns (requires 1 temporary) |
+| Conditional bitwise-and, if non-zero rd = (rc != 0) ? (rs1 & rs2) : rs1     | and czero.nez or       | rd, rs1, rs2 rtmp, rs1, rc rd, rd, rtmp         | 3 insns (requires 1 temporary) |
+| Conditional select, if zero rd = (rc == 0) ? rs1 : rs2                      | czero.nez czero.eqz or | rd, rs1, rc rtmp, rs2, rc rd, rd, rtmp          | 3 insns (requires 1 temporary) |
+| Conditional select, if non-zero rd = (rc != 0) ? rs1 : rs2                  | czero.eqz czero.nez or | rd, rs1, rc rtmp, rs2, rc rd, rd, rtmp          | 3 insns (requires 1 temporary) |

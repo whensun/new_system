@@ -1,0 +1,29 @@
+## 29.5.37. sext.b
+
+## Synopsis
+
+Sign-extend byte
+
+## Mnemonic
+
+sext.b rd , rs
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction sign-extends the least-significant byte in the source to XLEN by copying the mostsignificant bit in the byte (i.e., bit 7) to all of the more-significant bits.
+
+## Operation
+
+```
+X(rd) = EXTS(X(rs)[7..0]);
+```
+
+## Included in
+
+| Extension                    |   Minimum version | Lifecycle state   |
+|------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation) |              0.93 | Ratified          |

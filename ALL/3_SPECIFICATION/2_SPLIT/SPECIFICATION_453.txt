@@ -1,0 +1,19 @@
+## 30.19.1. Element Group Size
+
+The element group size (EGS) is the number of elements in one group, and must be a power-of-two (POT).
+
+<image>
+
+Support for non-POT EGS was considered but causes many practical complications and so has been dropped. Error checking for vl is a little more difficult. For LMUL>1, non-POT  EGSs  will  result  in  groups  straddling  the  individual  vector  registers  in  a vector  register  group.  Non-POT  EGS  can  also  cause  large  increases  in  the  lowestcommon-multiple  of  element  group  sizes,  which  adds  constraints  to vl setting  in order  to  avoid  splitting  an  element  group  across  stripmine  iterations  in  vectorlength-agnostic code.
+
+The element group size is statically encoded in the instruction, often implicitly as part of the opcode.
+
+Executing a vector instruction with EGS > VLMAX causes an illegal instruction exception to be raised.
+
+<image>
+
+The  vector  instructions  in  the  base  V  vector  ISA  can  be  viewed  as  all  having  an element group size of 1 for all operands statically encoded in the instruction.
+
+<image>
+
+Many operations only make sense with a certain number of elements per group (e.g., complex  operations  require  a  element  group  size  of  2  and  SHA-256  requires  an element group size of 4).

@@ -1,0 +1,11 @@
+## Chapter 20. "Sscofpmf" Extension for Count Overflow and Mode-Based Filtering, Version 1.0
+
+The current Privileged specification defines mhpmevent CSRs to select and control event counting by the associated hpmcounter CSRs, but provides no standardization of any fields within these CSRs. For at  least  Linux-class  rich-OS  systems  it  is  desirable  to  standardize  certain  basic  features  that  are broadly desired (and have come up over the past year plus on RISC-V lists, as well as have been the subject  of  past  proposals).  This  enables  there  to  be  standard  upstream  software  support  that eliminates the need for implementations to provide their own custom software support.
+
+This extension serves to accomplish  exactly this  within  the  existing  mhpmevent  CSRs  (and correspondingly avoids the unnecessary creation of whole new sets of CSRs - past just one new CSR).
+
+This  extension  sticks  to  addressing  two  basic  well-understood  needs  that  have  been  requested  by various people. To make it easy to understand the deltas from the current Priv 1.11/1.12 specs, this is written as the actual exact changes to be made to existing paragraphs of Priv spec text (or additional paragraphs within the existing text).
+
+The extension name is "Sscofpmf" ('Ss' for Privileged arch and Supervisor-level extensions, and 'cofpmf' for Count OverFlow and Privilege Mode Filtering).
+
+Note that the new count overflow interrupt will be treated as a standard local interrupt that is assigned to bit 13 in the mip/mie/sip/sie registers.

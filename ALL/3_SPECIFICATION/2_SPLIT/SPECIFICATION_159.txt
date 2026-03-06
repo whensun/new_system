@@ -1,0 +1,17 @@
+## 25.2. Minimum and Maximum Instructions
+
+The FMINM.S and FMAXM.S instructions are defined like the FMIN.S and FMAX.S instructions, except that if either input is NaN, the result is the canonical NaN.
+
+If  the  D  extension  is  implemented,  FMINM.D and FMAXM.D instructions are analogously defined to
+
+operate on double-precision numbers.
+
+If the Zfh extension is implemented, FMINM.H and FMAXM.H instructions are analogously defined to operate on half-precision numbers.
+
+If  the  Q  extension is implemented, FMINM.Q and FMAXM.Q instructions are analogously defined to operate on quad-precision numbers.
+
+These instructions are encoded like their FMIN and FMAX counterparts, but with instruction bit 13 set to 1.
+
+<image>
+
+These instructions implement the IEEE 754-2019 minimum and  maximum operations.

@@ -1,0 +1,8 @@
+## 31.3.8. Zksh - ShangMi Suite: SM3 Hash Function Instructions
+
+Instructions for accelerating the SM3 hash function.
+
+| RV32   | RV64   | Mnemonic   | Instruction      |
+|--------|--------|------------|------------------|
+| ✓      | ✓      | sm3p0      | SM3 P0 transform |
+| ✓      | ✓      | sm3p1      | SM3 P1 transform |

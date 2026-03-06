@@ -1,0 +1,29 @@
+# 169 # Extension Must Be Active: NONE
+jal ra, machine_to_supervisor
+machine_to_supervisor:
+li t0, 0x80001001
+csrw mtvec, t0
+li t1, 0x20
+csrs sip, t1
+li t2, 0x2
+csrs sstatus, t2
+wfi
+csrr x10, scause
+j .
+# Result: a0 = 5
+
+# 171 # Extension Must Be Active: NONE
+li t0, 0x80000100
+ori t0, t0, 0
+csrw 0x305, t0          # mtvec (writable CSR)
+li t1, 32               # (1 << 5)
+csrs 0x304, t1          # mie (valid writable CSR)
+li t2, 8                # (1 << 3) set MIE in mstatus
+csrs 0x300, t2
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+auipc x10, 0
+wfi
+# Result: a0 = 0x80000114

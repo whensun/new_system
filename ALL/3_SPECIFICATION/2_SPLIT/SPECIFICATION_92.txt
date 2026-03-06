@@ -1,0 +1,11 @@
+## 19.4.3. Effects on Constrained LR/SC Loops
+
+The following event is added to the list of events that satisfy the eventuality guarantee provided by constrained LR/SC loops, as defined in the A extension:
+
+- ⚫ Some other hart executes a cache-block management instruction or a cache-block zero instruction to the reservation set of the LR instruction in H 's constrained LR/SC loop.
+
+The above event has been added to accommodate cache coherence protocols that cannot distinguish between invalidations for stores and invalidations for cache-block management operations.
+
+<image>
+
+Aside  from  the  above  event,  CMO  instructions  neither  change  the  properties  of constrained LR/SC loops nor modify the eventuality guarantee provided by them. For example, executing a CMO instruction may cause a constrained LR/SC loop on any hart to fail periodically or may cause a unconstrained LR/SC sequence on the same hart to fail always. Additionally, executing a cache-block prefetch instruction does not impact the eventuality guarantee provided by constrained LR/SC loops executed on any hart.

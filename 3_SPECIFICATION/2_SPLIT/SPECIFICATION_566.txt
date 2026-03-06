@@ -1,0 +1,7 @@
+## 31.8.3.4. Virtual Sources
+
+## Section 31.5.2.3.
+
+All  sources  that  are  not  direct  physical  sources  (meeting  the  SP  800-90B  or  the  AIS-31  PTG.2 requirements) need to meet the security requirements of virtual entropy sources. It is assumed that a virtual entropy source is not a limiting, shared bandwidth resource (but a software DRBG).
+
+DRBGs can be used to feed other (virtual) DRBGs, but that does not increase the absolute amount of entropy  in  the  system.  The  entropy  source  must  be  able  to  support  current  and  future  security standards  and  applications.  The  256-bit  requirement  maps  to  "Category  5"  of  NIST  Post-Quantum Cryptography (4.A.5 "Security Strength Categories" in (NIST, 2016)) and TOP SECRET schemes in Suite B and the newer U.S. Government CNSA Suite (NSA/CSS, 2015).

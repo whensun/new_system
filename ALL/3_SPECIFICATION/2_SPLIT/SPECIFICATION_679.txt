@@ -1,0 +1,18 @@
+## 36.1.3. Greenfield versus Brownfield Extensions
+
+We  use  the  term greenfield  extension to  describe  an  extension  that  begins  populating  a  new instruction encoding space, and hence can only cause encoding conflicts at the prefix level. We use the  term brownfield  extension to  describe  an  extension  that  fits  around  existing  encodings  in  a previously  defined  instruction  space.  A  brownfield  extension  is  necessarily  tied  to  a  particular greenfield parent encoding, and there may be multiple brownfield extensions to the same greenfield parent encoding. For example, the base ISAs are greenfield encodings of a 30-bit instruction space, while the FDQ floating-point extensions are all brownfield extensions adding to the parent base ISA 30-bit encoding space.
+
+Note that we consider the standard A extension to have a greenfield encoding as it defines a new previously  empty  25-bit  encoding  space  in  the  leftmost  bits  of  the  full  32-bit  base  instruction encoding,  even  though  its  standard  prefix  locates  it  within  the  30-bit  encoding  space  of  its  parent base  ISA.  Changing  only  its  single  7-bit  prefix  could  move  the  A  extension  to  a  different  30-bit encoding space while only worrying about conflicts at the prefix level, not within the encoding space itself.
+
+Table 77. Two-dimensional characterization of standard instruction-set extensions.
+
+|            | Adds state           | No new state   |
+|------------|----------------------|----------------|
+| Greenfield | RV32I(30), RV64I(30) | A(25)          |
+| Brownfield | F(I), D(F), Q(D)     | M(I)           |
+
+Table 77 shows the bases and standard extensions placed in a simple two-dimensional taxonomy. One axis is whether the extension is greenfield or brownfield, while the other axis is whether the extension
+
+adds architectural state. For greenfield extensions, the size of the instruction encoding space is given in  parentheses.  For  brownfield  extensions,  the  name  of  the  extension  (greenfield  or  brownfield)  it builds upon is given in parentheses. Additional user-level architectural state usually implies changes to the supervisor-level system or possibly to the standard calling convention.
+
+Note that RV64I is not considered an extension of RV32I, but a different complete base encoding.

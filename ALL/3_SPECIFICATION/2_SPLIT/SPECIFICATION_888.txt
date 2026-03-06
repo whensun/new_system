@@ -1,0 +1,3 @@
+## 21.3. Hypervisor Instructions
+
+The hypervisor extension adds virtual-machine load and store instructions and two privileged fence instructions.

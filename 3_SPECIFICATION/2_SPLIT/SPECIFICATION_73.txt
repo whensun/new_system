@@ -1,0 +1,6 @@
+## 17.1.4.1. Load Value Axiom
+
+Each byte of each load i returns the value written to that byte by the store that is the latest in global memory order among the following stores:
+
+1. Stores that write that byte and that precede i in the global memory order
+2. Stores that write that byte and that precede i in program order

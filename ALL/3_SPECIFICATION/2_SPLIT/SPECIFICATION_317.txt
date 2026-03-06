@@ -1,0 +1,38 @@
+## 30.3.4. Vector Type ( vtype ) Register
+
+The  read-only  XLEN-wide vector type CSR, vtype provides  the  default  type  used  to  interpret  the contents of the vector register file, and can only be updated by vset{i}vl{i} instructions. The vector type determines the organization of elements in each vector register, and how multiple vector registers are grouped. The vtype register also indicates how masked-off elements and elements past the current vector length in a vector result are handled.
+
+<image>
+
+Allowing updates only via the vset{i}vl{i} instructions simplifies maintenance of the vtype register state.
+
+The vtype register has five fields, vill , vma , vta , vsew[2:0] , and vlmul[2:0] . Bits vtype[XLEN-2:8] should be written with zero, and non-zero values in this field are reserved.
+
+<image>
+
+<image>
+
+<image>
+
+This diagram shows the layout for RV32 systems, whereas in general vill should be at bit XLEN-1.
+
+Table 44. vtype register layout
+
+| Bits     | Name       | Description                                     |
+|----------|------------|-------------------------------------------------|
+| XLEN-1   | vill       | Illegal value if set                            |
+| XLEN-2:8 | 0          | Reserved if non-zero                            |
+| 7        | vma        | Vector mask agnostic                            |
+| 6        | vta        | Vector tail agnostic                            |
+| 5:3      | vsew[2:0]  | Selected element width (SEW) setting            |
+| 2:0      | vlmul[2:0] | Vector register group multiplier (LMUL) setting |
+
+A  small  implementation  supporting  ELEN=32  requires  only  seven  bits  of  state  in vtype :  two bits for ma and ta ,  two bits for vsew[1:0] and three bits for vlmul[2:0] .  The illegal  value  represented by vill can  be  internally  encoded using the illegal 64-bit combination in vsew[1:0] without requiring an additional storage bit to hold vill .
+
+<image>
+
+<image>
+
+Further standard and custom vector extensions may extend these fields to support a greater variety of data types.
+
+The primary motivation for the vtype CSR is to allow the vector instruction set to fit into a 32-bit instruction encoding space. A separate vset{i}vl{i} instruction can be used  to  set vl and/or vtype fields  before  execution  of  a  vector  instruction,  and implementations  may  choose  to  fuse  these  two  instructions  into  a  single  internal vector microop. In many cases, the vl and vtype values can be reused across multiple instructions, reducing the static and dynamic instruction overhead from the vset{i}vl{i} instructions.  It  is  anticipated  that  a  future  extended  64-bit  instruction encoding  would  allow  these  fields  to  be  specified  statically  in  the  instruction encoding.

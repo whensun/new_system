@@ -1,0 +1,5 @@
+## 30.18.4. Zvfhmin: Vector Extension for Minimal Half-Precision Floating-Point
+
+The Zvfhmin extension provides minimal support for vectors of IEEE 754-2008 binary16 values, adding conversions to and from binary32. When the Zvfhmin extension is implemented, the vfwcvt.f.f.v and vfncvt.f.f.w instructions become defined when SEW=16. The EEW=16 floating-point operands of these instructions use the binary16 format.
+
+The Zvfhmin extension depends on the Zve32f extension.

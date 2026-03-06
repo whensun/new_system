@@ -1,0 +1,9 @@
+## 37.9. Non-Standard Extension Names
+
+Non-standard extensions are named by using a single "X" followed by the alphanumeric name. The name must end with an alphabetic character. The second letter from the end cannot be numeric if the last letter is "p". For example, "Xhwacha" names the Hwacha vector-fetch ISA extension.
+
+Non-standard  extensions  must  be  listed  after  all  standard  extensions,  and,  like  other  multi-letter extensions, must be separated from other multi-letter extensions by an underscore. For example, an
+
+ISA with non-standard extensions Argle and Bargle may be named "RV64IZifencei\_Xargle\_Xbargle".
+
+If multiple non-standard extensions are listed, they should be ordered alphabetically. Like other multiletter extensions, they should be separated from other multi-letter extensions by an underscore.

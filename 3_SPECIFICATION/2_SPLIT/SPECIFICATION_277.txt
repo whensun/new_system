@@ -1,0 +1,29 @@
+## 29.5.21. maxu
+
+## Synopsis
+
+Unsigned maximum
+
+## Mnemonic
+
+maxu rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction returns the larger of two unsigned integers.
+
+## Operation
+
+```
+let rs1_val = X(rs1); let rs2_val = X(rs2); let result = if   rs1_val <_u rs2_val then rs2_val else rs1_val; X(rd) = result;
+```
+
+## Included in
+
+| Extension                    | Minimum version   | Lifecycle state   |
+|------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation) | v1.0              | Ratified          |

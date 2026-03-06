@@ -1,0 +1,13 @@
+## 3.6.7. Idempotency PMAs
+
+Idempotency  PMAs  describe  whether  reads  and  writes  to  an  address  region  are  idempotent.  Main memory regions are assumed to be idempotent. For I/O regions, idempotency on reads and writes can be specified separately (e.g., reads are idempotent but writes are not). If accesses are non-idempotent, i.e.,  there  is  potentially  a  side  effect  on  any  read  or  write  access,  then  speculative  or  redundant accesses must be avoided.
+
+For the purposes of defining the idempotency PMAs, changes in observed memory ordering created by redundant accesses are not considered a side effect.
+
+<image>
+
+While  hardware  should  always  be  designed  to  avoid  speculative  or  redundant accesses  to  memory  regions  marked  as  non-idempotent,  it  is  also  necessary  to ensure software or compiler optimizations do not generate spurious accesses to nonidempotent memory regions.
+
+Non-idempotent regions might not support misaligned accesses. Misaligned accesses to such regions should raise access-fault exceptions rather than addressmisaligned exceptions,  indicating  that  software  should  not  emulate  the  misaligned access using multiple smaller accesses, which could cause unexpected side effects.
+
+For non-idempotent regions, implicit reads and writes must not be performed early or speculatively, with the following exceptions. When a non-speculative implicit read is performed, an implementation is permitted to additionally read any of the bytes within a naturally aligned power-of-2 region containing the address of the non-speculative implicit read. Furthermore, when a non-speculative instruction fetch is  performed,  an  implementation  is  permitted  to  additionally  read  any  of  the  bytes  within  the next naturally aligned power-of-2 region of the same size (with the address of the region taken modulo 2 XLEN .  The  results  of  these  additional  reads  may  be  used  to  satisfy  subsequent  early  or  speculative implicit reads. The size of these naturally aligned power-of-2 regions is implementation-defined, but, for systems with page-based virtual memory, must not exceed the smallest supported page size.

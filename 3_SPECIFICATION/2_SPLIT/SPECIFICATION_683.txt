@@ -1,0 +1,7 @@
+## 36.3. Extensions within fixed-width 32-bit instruction format
+
+In  this  section,  we  discuss  adding  extensions  to  implementations  that  only  support  the  base  fixedwidth 32-bit instruction format.
+
+<image>
+
+We  anticipate  the  simplest  fixed-width  32-bit  encoding  will  be  popular  for  many restricted accelerators and research prototypes.

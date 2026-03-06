@@ -1,0 +1,29 @@
+## 30.16.4. Vector Register Gather Instructions
+
+The  vector  register  gather  instructions  read  elements  from  a  first  source  vector  register  group  at locations given by a second source vector register group. The index values in the second vector are treated as unsigned integers. The source vector can be read at any index < VLMAX regardless of vl . The maximum number of elements to write to the destination register is given by vl , and the remaining elements past vl are handled according to the current tail policy (Section 30.3.4.3). The operation can be masked, and the mask undisturbed/agnostic policy is followed for inactive elements.
+
+```
+vrgather.vv vd, vs2, vs1, vm     # vd[i] = (vs1[i] >= VLMAX) ? 0 : vs2[vs1[i]]; vrgatherei16.vv vd, vs2, vs1, vm # vd[i] = (vs1[i] >= VLMAX) ? 0 : vs2[vs1[i]];
+```
+
+The vrgather.vv form  uses  SEW/LMUL  for  both  the  data  and  indices.  The vrgatherei16.vv form  uses SEW/LMUL for the data in vs2 but EEW=16 and EMUL = (16/SEW)*LMUL for the indices in vs1 .
+
+<image>
+
+When SEW=8, vrgather.vv can only reference vector elements 0-255. The vrgatherei16 form  can  index  64K  elements,  and  can  also  be  used  to  reduce  the register capacity needed to hold indices when SEW > 16.
+
+If an element index is out of range ( vs1[i] ≥ VLMAX ) then zero is returned for the element value.
+
+Vector-scalar  and  vector-immediate  forms  of  the  register  gather  are  also  provided.  These  read  one element from the source vector at the given index, and write this value to the active elements of the destination vector register. The index value in the scalar register and the immediate, zero-extended to XLEN bits, are treated as unsigned integers. If XLEN > SEW, the index value is not truncated to SEW
+
+bits.
+
+These forms allow any vector element to be "splatted" to an entire vector.
+
+<image>
+
+```
+vrgather.vx vd, vs2, rs1, vm  # vd[i] = (x[rs1] >= VLMAX) ? 0 : vs2[x[rs1]] vrgather.vi vd, vs2, uimm, vm # vd[i] =  (uimm >= VLMAX)  ? 0 : vs2[uimm]
+```
+
+For any vrgather instruction, the destination vector register group cannot overlap with the source vector register groups, otherwise the instruction encoding is reserved.

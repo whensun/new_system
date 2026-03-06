@@ -1,0 +1,52 @@
+## 32.3.7. vaesz.vs
+
+## Synopsis
+
+Vector AES round zero encryption/decryption
+
+## Mnemonic
+
+vaesz.vs vd, vs2
+
+## Encoding (Vector-Scalar)
+
+<image>
+
+## Reserved Encodings
+
+- ⚫ SEW is any value other than 32
+- ⚫ The vd register group overlaps the vs2 register
+
+## Arguments
+
+| Register   | Direction   |   EGW |   EGS |   EEW | Definition      |
+|------------|-------------|-------|-------|-------|-----------------|
+| vd         | input       |   128 |     4 |    32 | round state     |
+| vs2        | input       |   128 |     4 |    32 | round key       |
+| vd         | output      |   128 |     4 |    32 | new round state |
+
+## Description
+
+A round-0 AES block cipher operation is performed. This operation is used for both encryption and decryption.
+
+There is only a .vs form of the instruction. Vs2 holds a scalar element group that is used as the round key for all of the round state element groups. The new round state output of each element group is produced by XORing the round key with each element group of vd .
+
+This instruction must always be implemented such that its execution latency does not depend on the data being operated upon.
+
+<image>
+
+This instruction is needed to avoid the need to "splat" a 128-bit vector register group when the round key is the same for all 128-bit "lanes". Such a splat would typically be implemented  with  a vrgather instruction  which  would  hurt  performance  in  many implementations. This instruction only exists in the .vs form  because  the .vv form would be identical to the vxor.vv vd, vs2, vd instruction.
+
+## Operation
+
+```
+function clause execute (VAESZ(vs2, vd) = { if(((vstart%EGS)<>0) | (LMUL*VLEN < EGW))  then { handle_illegal();  // illegal-instruction exception RETIRE_FAIL } else { eg_len = (vl/EGS)
+```
+
+```
+eg_start = (vstart/EGS) foreach (i from eg_start to eg_len-1) { let state : bits(128) = get_velem(vd, EGW=128, i); let rkey  : bits(128) = get_velem(vs2, EGW=128, 0); let ark   : bits(128) = state ^ rkey; set_velem(vd, EGW=128, i, ark); } RETIRE_SUCCESS } }
+```
+
+## Included in
+
+Zvkn, Zvknc, Zvkned, Zvkng

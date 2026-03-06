@@ -1,0 +1,30 @@
+## 31.4.23. ror
+
+## Synopsis
+
+Rotate Right
+
+## Mnemonic
+
+ror rd , rs1 , rs2
+
+## Encoding
+
+<image>
+
+## Description
+
+This instruction performs a rotate right of rs1 by the amount in least-significant log2(XLEN) bits of rs2 .
+
+## Operation
+
+```
+let shamt = if   xlen == 32 then X(rs2)[4..0] else X(rs2)[5..0]; let result = (X(rs1) >> shamt) | (X(rs1) << (xlen - shamt)); X(rd) = result;
+```
+
+## Included in
+
+| Extension                    | Minimum version   | Lifecycle state   |
+|------------------------------|-------------------|-------------------|
+| Zbb (Basic bit-manipulation) | v1.0.0            | Ratified          |
+| Zbkb (Zbkb-sc)               | v1.0.0-rc4        | Ratified          |

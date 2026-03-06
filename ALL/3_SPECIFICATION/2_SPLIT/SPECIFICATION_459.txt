@@ -1,0 +1,6 @@
+## 31.1. Changelog
+
+| Version   | Changes                                                                           |
+|-----------|-----------------------------------------------------------------------------------|
+| v1.0.1    | Fix typos to show that c.srli , c.srai , and c.slli are Zkt instructions in RV64. |
+| v1.0.0    | Initial Release                                                                   |

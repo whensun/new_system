@@ -1,0 +1,29 @@
+INSTRUCTION: FADD.D
+FORMAT: fadd.d fd, fs1, fs2, rm
+
+INSTRUCTION: FCLASS.D
+FORMAT: fclass.d rd, fs1
+
+INSTRUCTION: FCVT.D.H
+FORMAT: fcvt.d.h fd, fs1, rm
+
+INSTRUCTION: FMIN.D
+FORMAT: fmin.d fd, fs1, fs2
+
+INSTRUCTION: FSUB.D
+FORMAT: fsub.d fd, fs1, fs2, rm
+
+INSTRUCTION: VAADD.VV
+FORMAT: vaadd.vv vd, vs2, vs1, vm
+
+INSTRUCTION: VADC.VIM
+FORMAT: vadc.vim vd, vs2, simm5, v0
+
+INSTRUCTION: VADD.VI
+FORMAT: vadd.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VAND.VI
+FORMAT: vand.vi vd, vs2, simm5, vm
+
+INSTRUCTION: VSUB.VV
+FORMAT: vsub.vv vd, vs2, vs1, vm

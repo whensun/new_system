@@ -1,0 +1,9 @@
+## 21.2.16. Virtual Supervisor Cause ( vscause ) Register
+
+The vscause register  is  a  VSXLEN-bit  read/write  register  that  is  VS-mode's  version  of  supervisor register scause , formatted as shown in Figure 107. When V=1, vscause substitutes for the usual scause , so instructions  that  normally  read  or  modify scause actually  access vscause instead.  When  V=0, vscause does not directly affect the behavior of the machine.
+
+vscause is a WLRL register that must be able to hold the same set of values that scause can hold.
+
+Figure 107. Virtual supervisor cause register ( vscause ).
+
+<image>

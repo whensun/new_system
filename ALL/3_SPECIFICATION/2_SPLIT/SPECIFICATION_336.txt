@@ -1,0 +1,11 @@
+## 30.5.1. Scalar Operands
+
+Scalar operands can be immediates, or taken from the x registers, the f registers, or element 0 of a vector register. Scalar results are written to an x or f register or to element 0 of a vector register. Any vector register can be used to hold a scalar regardless of the current LMUL setting.
+
+<image>
+
+Zfinx  ("F  in  X")  is  a  new  ISA  extension  where  floating-point  instructions  take  their arguments from the integer register file. The vector extension is also compatible with Zfinx, where the Zfinx vector extension has vector-scalar floating-point instructions taking their scalar argument from the x registers.
+
+<image>
+
+We  considered  but  did  not  pursue  overlaying  the f registers  on v registers.  The adopted  approach  reduces  vector  register  pressure,  avoids  interactions  with  the standard calling convention, simplifies high-performance scalar floating-point design, and  provides  compatibility  with  the  Zfinx  ISA  option.  Overlaying f with v would provide the advantage of lowering the number of state bits in some implementations, but complicates high-performance designs and would prevent compatibility with the Zfinx ISA option.

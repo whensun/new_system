@@ -1,0 +1,5 @@
+## 21.6.3.
+
+When an instruction fetch or a misaligned memory access straddles a page boundary, two different address translations are involved. When a guest-page fault occurs in such a circumstance, the faulting virtual address written to mtval / stval is the same as would be required for a regular page fault. Thus, the  faulting  virtual  address  may  be  a  page-boundary  address  that  is  higher  than  the  instruction's original virtual address, if the byte at that page boundary is among the accessed bytes.
+
+When a guest-page fault is not due to an implicit memory access for VS-stage address translation, a nonzero guest physical address written to mtval2 / htval shall  correspond  to  the  exact  virtual  address written to mtval / stval .

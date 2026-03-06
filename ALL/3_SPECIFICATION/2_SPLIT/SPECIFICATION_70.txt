@@ -1,0 +1,46 @@
+## 17.1.2. Syntactic Dependencies
+
+The definition of the RVWMO memory model depends in part on the notion of a syntactic dependency, defined as follows.
+
+In the context of defining dependencies, a register refers either to an entire general-purpose register, some portion of a CSR, or an entire CSR. The granularity at which dependencies are tracked through CSRs is specific to each CSR and is defined in Section 17.2.
+
+Syntactic dependencies are defined in terms of instructions' source registers , instructions' destination registers , and the way instructions carry a dependency from their source registers to their destination registers.  This  section  provides  a  general  definition  of  all  of  these  terms;  however,  Section  17.3 provides a complete listing of the specifics for each instruction.
+
+In general, a register r other than x0 is a source register for an instruction i if any of the following hold:
+
+- ⚫ In the opcode of i , rs1 , rs2 , or rs3 is set to r
+- ⚫ i is a CSR instruction, and in the opcode of i , csr is set to r , unless i is CSRRW or CSRRWI and rd is set to x0
+- ⚫ r is a CSR and an implicit source register for i , as defined in Section 17.3
+- ⚫ r is a CSR that aliases with another source register for i
+
+Memory  instructions  also  further  specify  which  source  registers  are address  source  registers and which are data source registers .
+
+In general, a register r other than x0 is a destination register for an instruction i if any of the following hold:
+
+- ⚫ In the opcode of i , rd is set to r
+- ⚫ i is a CSR instruction, and in the opcode of i , csr is set to r , unless i is CSRRS or CSRRC and rs1 is set to x0 or i is CSRRSI or CSRRCI and uimm[4:0] is set to zero.
+- ⚫ r is a CSR and an implicit destination register for i , as defined in Section 17.3
+- ⚫ r is a CSR that aliases with another destination register for i
+
+Most non-memory instructions carry a dependency from each of their source registers to each of their destination registers. However, there are exceptions to this rule; see Section 17.3.
+
+Instruction j has  a syntactic  dependency on  instruction i via  destination  register s of i and  source register r of j if either of the following hold:
+
+- ⚫ s is  the  same  as r ,  and  no  instruction  program-ordered  between i and j has r as  a  destination
+
+## register
+
+- ⚫ There is an instruction m program-ordered between i and j such that all of the following hold:
+1. j has a syntactic dependency on m via destination register q and source register r
+2. m has a syntactic dependency on i via destination register s and source register p
+3. m carries a dependency from p to q
+
+Finally,  in  the  definitions  that  follow,  let a and b be  two  memory  operations,  and  let i and j be  the instructions that generate a and b , respectively.
+
+b has a syntactic address dependency on a if r is an address source register for j and j has a syntactic dependency on i via source register r b has a syntactic data dependency on a if b is a store operation, r is a data source register for j , and j has a syntactic dependency on i via source register r
+
+b has a syntactic control dependency on a if there is an instruction m program-ordered between i and j such that m is a branch or indirect jump and m has a syntactic dependency on i .
+
+<image>
+
+Generally  speaking,  non-AMO  load  instructions  do  not  have  data  source  registers, and  unconditional  non-AMO  store  instructions  do  not  have  destination  registers. However, a successful SC instruction is considered to have the register specified in rd  as  a  destination  register,  and  hence  it  is  possible  for  an  instruction  to  have  a syntactic  dependency  on  a  successful  SC  instruction  that  precedes  it  in  program order.
